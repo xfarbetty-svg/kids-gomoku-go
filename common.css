@@ -1,0 +1,59 @@
+/* ============ 小朋友樂園 KPOP 少女風共用樣式 ============ */
+body.kpop-bg {
+  background: linear-gradient(180deg,#ffe4f2 0%,#fff0f7 35%,#f0e8ff 70%,#e8f7ff 100%);
+}
+.title-grad {
+  background: linear-gradient(90deg,#ff5fa2,#ff9ecb 40%,#9a7fff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 3px 0 rgba(255,255,255,.9);
+}
+.title-shine {
+  position: relative; display: inline-block;
+}
+.title-shine::after {
+  content:'✨'; position:absolute; right:-22px; top:-8px; font-size:18px; animation:sparkleTwinkle 1.6s ease-in-out infinite;
+}
+@keyframes sparkleTwinkle { 0%,100%{opacity:1; transform:scale(1) rotate(0)} 50%{opacity:.3; transform:scale(.7) rotate(20deg)} }
+
+.glossy {
+  background: linear-gradient(135deg,#ffb6d9,#ff7ab5 55%,#b78bff);
+  box-shadow: 0 6px 0 #d95d96, 0 10px 22px rgba(224,90,156,.35), inset 0 2px 3px rgba(255,255,255,.6);
+}
+.glossy-mint {
+  background: linear-gradient(135deg,#aef0d6,#62d6a5 55%,#7cc2ff);
+  box-shadow: 0 6px 0 #3ba87c, 0 10px 22px rgba(98,214,165,.35), inset 0 2px 3px rgba(255,255,255,.6);
+}
+.glossy-lav {
+  background: linear-gradient(135deg,#d6c8ff,#9a7fff 55%,#ff8fb3);
+  box-shadow: 0 6px 0 #7059d0, 0 10px 22px rgba(154,127,255,.35), inset 0 2px 3px rgba(255,255,255,.6);
+}
+.glossy-yellow {
+  background: linear-gradient(135deg,#ffe9a3,#ffc93c 55%,#ff9ecb);
+  box-shadow: 0 6px 0 #d9a800, 0 10px 22px rgba(255,201,60,.4), inset 0 2px 3px rgba(255,255,255,.7);
+}
+.glossy:active, .glossy-mint:active, .glossy-lav:active, .glossy-yellow:active { transform: translateY(4px); }
+
+.card-cute {
+  background: linear-gradient(180deg,#fff,#fff8fc);
+  border: 3px solid #ffd1e6; border-radius: 24px;
+  box-shadow: 0 10px 28px rgba(224,90,156,.18);
+}
+
+.sparkle {
+  position: fixed; pointer-events: none; opacity: 0; z-index: 999;
+  animation: sparkleFloat 4s linear infinite;
+}
+@keyframes sparkleFloat {
+  0% { opacity:0; transform: translateY(0) rotate(0) scale(.5); }
+  20% { opacity:.9; }
+  100% { opacity:0; transform: translateY(-46px) rotate(200deg) scale(1.15); }
+}
+
+.ribbon-bar {
+  height: 6px; width: 100%; background: linear-gradient(90deg,#ff8fb3,#ffc93c,#9a7fff,#62d6a5,#ff8fb3);
+  background-size: 200% 100%; animation: ribbonMove 6s linear infinite;
+}
+@keyframes ribbonMove { to { background-position: 200% 0; } }
+
+@keyframes bounceIn { 0%{transform:scale(0)} 60%{transform:scale(1.25)} 100%{transform:scale(1)} }
+.sticker-pop { animation: bounceIn .5s ease; }

@@ -7,6 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#e05a9c">
+<link rel="stylesheet" href="common.css">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="動物五子棋">
@@ -264,7 +265,7 @@ function place(r, c, who){
   var win = checkWin(r, c);
   if(win){
     over = true;
-    if(who === ME){ scores.me++; sWinMe(); confetti(); setStatus('你贏了！太厲害啦！🎉'); $('fb').textContent = '🐱 勝利！再來一局吧！'; }
+    if(who === ME){ scores.me++; sWinMe(); confetti(); setStatus('你贏了！太厲害啦！🎉'); $('fb').textContent = '🐱 勝利！再來一局吧！'; if(window.KidsApp) KidsApp.reportWin('gomoku','🐱'); }
     else { scores.ai++; sWinAi(); setStatus('熊貓 AI 贏了…再挑戰一次！'); $('fb').textContent = '🐻 AI 勝利！沒關係，再來！'; }
     $('wMe').textContent = scores.me; $('wAi').textContent = scores.ai;
     return;
@@ -397,5 +398,6 @@ newBoard(); buildBoard(); render();
 setStatus('輪到你囉！放一顆棋子吧 ✨');
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 </script>
+<script src="common.js"></script>
 </body>
 </html>

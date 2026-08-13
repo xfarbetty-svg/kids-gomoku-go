@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>星星跳棋 🐰🐻</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#e05a9c">
+<link rel="stylesheet" href="common.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(180deg,#ffe3f1 0%,#fff0f7 45%,#e8f7ff 100%); min-height:100vh; overflow-x:hidden; text-align:center; }
+  button { font-family:inherit; }
+  .hidden { display:none !important; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(224,90,156,.3); z-index:10; }
+  .title { font-size:32px; color:#e05a9c; text-shadow:0 3px 0 #fff, 0 0 16px #ffc7e3; margin-top:18px; }
+  .subtitle { color:#b06a92; font-size:15px; margin:6px 0 12px; }
+  .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  .dif { display:flex; gap:6px; }
+  .difBtn { border:3px solid #f0cfe0; background:#fff; color:#7a4a63; border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; cursor:pointer; }
+  .difBtn.on { background:#e05a9c; color:#fff; border-color:#e05a9c; }
+  .status { display:flex; align-items:center; justify-content:center; background:#fff; border-radius:18px; padding:8px 18px;
+    box-shadow:0 3px 12px rgba(224,90,156,.15); font-weight:800; color:#5a3a4d; margin:0 auto 10px; font-size:15px;
+    white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw; }
+  .boardBox { display:block; margin:0 auto; width:max-content; transform-origin:top center; padding:8px; }
+  #board { position:relative; background:linear-gradient(145deg,#f5d9a8,#eec98e); border:6px solid #fff; border-radius:20px; box-shadow:0 12px 34px rgba(180,140,90,.3); }
+  .hole { position:absolute; border-radius:50%; transform:translate(-50%,-50%); z-index:1; }
+  .hole.target { box-shadow:0 0 0 4px #8be0c4, 0 0 12px rgba(98,214,165,.8); z-index:3; cursor:pointer; }
+  .piece { position:absolute; border-radius:50%; transform:translate(-50%,-50%); z-index:2; box-shadow:0 2px 4px rgba(0,0,0,.3), inset 0 2px 3px rgba(255,255,255,.35);
+    display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:left .2s, top .2s; }
+  .piece.me { background:radial-gradient(circle at 35% 30%, #ff9d9d, #ff4d4d 60%, #d92626); border:2px solid #fff; color:#fff; }
+  .piece.ai { background:radial-gradient(circle at 35% 30%, #7cc2ff, #3399ff 60%, #1a73d9); border:2px solid #fff; color:#fff; }
+  .piece.sel { box-shadow:0 0 0 4px #ffc93c, 0 4px 8px rgba(0,0,0,.3); z-index:4; }
+  .piece.done { opacity:.85; }
+  .ctrl { margin-top:12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
+    background:linear-gradient(135deg,#ff9ecb,#ff7ab5); box-shadow:0 5px 0 #d95d96, 0 8px 18px rgba(224,90,156,.3); transition:.12s; user-select:none; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #d95d96; }
+  .btn.mint { background:linear-gradient(135deg,#9be8c9,#62d6a5); box-shadow:0 5px 0 #3ba87c, 0 8px 18px rgba(98,214,165,.3); }
+  .btn.lav { background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.3); }
+  .fb { font-size:15px; font-weight:800; color:#7a4a63; margin-top:8px; height:22px; overflow:hidden; white-space:nowrap; }
+  .confetti { position:fixed; font-size:22px; z-index:95; pointer-events:none; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translateY(105vh) rotate(360deg); opacity:.4; } }
+</style>
+</head>
+<body>
+
+<a class="homeLink" href="index.html">🏠</a>
+<div class="title">星星跳棋 <span style="font-size:22px;">🐰</span>vs<span style="font-size:22px;">🐻</span></div>
+<div class="subtitle">把自己的 10 顆棋子，跳到對面的星星角！可一步一步走，也可跳過棋子連跳</div>
+
+<div class="topbar">
+  <div class="dif">
+    <button class="difBtn on" data-d="0">🌱 簡單</button>
+    <button class="difBtn" data-d="1">🌻 普通</button>
+    <button class="difBtn" data-d="2">🍀 高手</button>
+  </div>
+</div>
+
+<div class="status"><span id="statusMsg">輪到你囉！點一顆紅棋選它 🔴</span></div>
+<div class="boardBox" id="boardBox"><div id="board"></div></div>
+
+<div class="ctrl">
+  <button class="btn" id="restartBtn">🔄 重來</button>
+</div>
+<div class="fb" id="fb"></div>
+
+<script>
+/* ================= 設定 ================= */
+var R = 4;                    // 半徑，每邊 5 格
+var S = 21;                   // 六邊形邊長(px)
+var ME = 1, AI = 2;
+var cells = [];               // {q,r,s, x, y}
+var map = {};                 // "q,r,s" -> idx
+var boardState = [];          // idx -> ME/AI/0
+var pieceEls = {};
+var T0 = [], T1 = [];         // 對角兩個三角形的 idx 集合
+var turn = ME, over = false, aiThinking = false;
+var selected = -1, targets = [];
+var difficulty = 0;
+var offX = 0, offY = 0, boardW = 0, boardH = 0;
+
+function $(id){ return document.getElementById(id); }
+function clamp(v,m,M){ return Math.max(m,Math.min(M,v)); }
+
+/* ================= 棋盤生成 ================= */
+function isValid(q,r,s){
+  if(q+r+s !== 0) return false;
+  var a=Math.abs(q), b=Math.abs(r), c=Math.abs(s);
+  if(a<=R&&b<=R&&c<=R) return true;
+  var bigs=0; if(a>R)bigs++; if(b>R)bigs++; if(c>R)bigs++;
+  if(bigs!==1) return false;
+  if(a>R) return b<=R && c<=R;
+  if(b>R) return a<=R && c<=R;
+  return a<=R && b<=R;
+}
+function buildCells(){
+  var idx = 0;
+  for(var q=-2*R;q<=2*R;q++) for(var r=-2*R;r<=2*R;r++){
+    var s = -q-r;
+    if(isValid(q,r,s)){
+      var x = S*(Math.sqrt(3)*q + Math.sqrt(3)/2*r);
+      var y = S*(1.5*r);
+      map[q+','+r+','+s] = idx;
+      cells.push({q:q, r:r, s:s, x:x, y:y});
+      idx++;
+    }
+  }
+}
+function neighborDirs(){
+  return [[1,-1,0],[-1,1,0],[1,0,-1],[-1,0,1],[0,1,-1],[0,-1,1]];
+}
+function cellOf(q,r,s){ return map[q+','+r+','+s]; }
+function idxOf(q,r,s){ return map[q+','+r+','+s]; }
+
+/* 三角形：哪一個座標超出 [−R,R] */
+function triangleCells(d){
+  var list=[];
+  for(var i=0;i<cells.length;i++){
+    var c=cells[i];
+    var a=Math.abs(c.q), b=Math.abs(c.r), s=Math.abs(c.s);
+    if(a>R||b>R||s>R){
+      var dir;
+      if(c.q>R) dir=0; else if(c.r>R) dir=1; else if(c.s>R) dir=2;
+      else if(c.q<-R) dir=3; else if(c.r<-R) dir=4; else dir=5;
+      if(dir===d) list.push(i);
+    }
+  }
+  return list;
+}
+
+/* ================= 合法走法 ================= */
+function legalTargets(idx){
+  var c = cells[idx];
+  var visited = {}, res = [], jumps = [];
+  var dirs = neighborDirs();
+  // 單步
+  for(var d=0;d<6;d++){
+    var nq=c.q+dirs[d][0], nr=c.r+dirs[d][1], ns=c.s+dirs[d][2];
+    var ni = cellOf(nq,nr,ns);
+    if(ni!==undefined && boardState[ni]===0){
+      res.push(ni);
+      if(visited[ni]) visited[ni]=1; else visited[ni]=1;
+    }
+    // 跳
+    var mq=nq+dirs[d][0], mr=nr+dirs[d][1], ms=ns+dirs[d][2];
+    var mid = cellOf(nq,nr,ns);
+    var ti = cellOf(mq,mr,ms);
+    if(mid!==undefined && ti!==undefined && boardState[mid]!==0 && boardState[ti]===0){
+      jumps.push(ti);
+    }
+  }
+  // BFS 連跳
+  var stack = [idx], seenJumps = {};
+  while(stack.length){
+    var cur = stack.pop();
+    var cc = cells[cur];
+    for(var d2=0;d2<6;d2++){
+      var nq2=cc.q+dirs[d2][0], nr2=cc.r+dirs[d2][1], ns2=cc.s+dirs[d2][2];
+      var mid2 = cellOf(nq2,nr2,ns2);
+      var tq2=nq2+dirs[d2][0], tr2=nr2+dirs[d2][1], ts2=ns2+dirs[d2][2];
+      var ti2 = cellOf(tq2,tr2,ts2);
+      if(mid2!==undefined && ti2!==undefined && boardState[mid2]!==0 && boardState[ti2]===0 && !seenJumps[ti2]){
+        seenJumps[ti2]=1;
+        res.push(ti2);
+        stack.push(ti2);
+      }
+    }
+  }
+  var set={};
+  res.forEach(function(t){ set[t]=1; });
+  return Object.keys(set).map(Number);
+}
+
+/* ================= 渲染 ================= */
+function buildBoard(){
+  var b = $('board');
+  var minX=1e9,maxX=-1e9,minY=1e9,maxY=-1e9;
+  cells.forEach(function(c){ minX=Math.min(minX,c.x); maxX=Math.max(maxX,c.x); minY=Math.min(minY,c.y); maxY=Math.max(maxY,c.y); });
+  var pad = S*1.8;
+  boardW = maxX-minX+pad*2;
+  boardH = maxY-minY+pad*2;
+  b.style.width = boardW+'px';
+  b.style.height = boardH+'px';
+  offX = (maxX+minX)/2; offY=(maxY+minY)/2;
+  cells.forEach(function(c, i){
+    var h = document.createElement('div');
+    h.className='hole';
+    h.style.width = (S*0.85)+'px'; h.style.height=(S*0.85)+'px';
+    h.style.background = 'radial-gradient(circle at 35% 30%, #fff, #e8d4c0)';
+    h.style.left = (c.x-offX+boardW/2)+'px';
+    h.style.top = (c.y-offY+boardH/2)+'px';
+    h.style.cursor='pointer';
+    h.addEventListener('click', function(){ clickHole(i); });
+    h.dataset.idx=i;
+    b.appendChild(h);
+  });
+  fitScale();
+}
+function posX(i){ var c=cells[i]; return c.x-offX+boardW/2; }
+function posY(i){ var c=cells[i]; return c.y-offY+boardH/2; }
+function render(){
+  var b=$('board');
+  b.querySelectorAll('.piece').forEach(function(p){ p.remove(); });
+  pieceEls={};
+  for(var i=0;i<boardState.length;i++){
+    if(boardState[i]!==0){
+      var p=document.createElement('div');
+      p.className='piece ' + (boardState[i]===ME?'me':'ai') + (i===selected?' sel':'') + (inGoal(i, boardState[i])?' done':'');
+      p.style.width=(S*0.95)+'px'; p.style.height=(S*0.95)+'px';
+      p.style.left=posX(i)+'px'; p.style.top=posY(i)+'px';
+      p.textContent = boardState[i]===ME ? '🐰' : '🐻';
+      p.dataset.idx=i;
+      p.addEventListener('click', function(e){ e.stopPropagation(); clickPiece(parseInt(this.dataset.idx,10)); });
+      b.appendChild(p);
+      pieceEls[i]=p;
+    }
+  }
+}
+function clearTargets(){
+  $('board').querySelectorAll('.hole.target').forEach(function(h){ h.classList.remove('target'); });
+  targets=[];
+}
+function showTargets(list){
+  clearTargets();
+  targets=list;
+  list.forEach(function(i){
+    $('board').children[i].classList.add('target');
+  });
+}
+function clickHole(i){
+  if(over || aiThinking || turn!==ME) return;
+  if(targets.indexOf(i)>=0){
+    var from=selected;
+    movePiece(from, i, ME);
+  }
+}
+function clickPiece(i){
+  if(over || aiThinking || turn!==ME) return;
+  if(boardState[i]!==ME) return;
+  selected=i;
+  render();
+  showTargets(legalTargets(i));
+  if(targets.length===0){ $('fb').textContent='這顆動不了，換一顆吧～'; setTimeout(function(){ selected=-1; render(); }, 800); }
+  else $('fb').textContent='點綠色圈圈移動～';
+}
+
+/* ================= 移動與勝負 ================= */
+function inGoal(i, who){
+  var c=cells[i];
+  var a=Math.abs(c.q),b=Math.abs(c.r),s=Math.abs(c.s);
+  var wantNeg = (who===ME);   // 紅棋要往 q<0 的方向，藍棋相反
+  if(a>R) return wantNeg ? (c.q<-R) : (c.q>R);
+  if(b>R) return wantNeg ? (c.r<-R) : (c.r>R);
+  if(s>R) return wantNeg ? (c.s<-R) : (c.s>R);
+  return false;
+}
+function movePiece(from, to, who){
+  boardState[to]=boardState[from];
+  boardState[from]=0;
+  selected=-1; clearTargets();
+  render();
+  var m=pieceEls[to]; if(m){ m.classList.add('sel'); setTimeout(function(){ m.classList.remove('sel'); },300); }
+  if(who===ME){
+    if(allInGoal(ME)){ over=true; win(true); return; }
+    turn=AI; setStatus('輪到 AI 思考…🤔'); setTimeout(aiThink, 500+Math.random()*350);
+  } else {
+    if(allInGoal(AI)){ over=true; win(false); return; }
+    turn=ME; setStatus('輪到你了！點一顆紅棋 🔴');
+  }
+}
+function allInGoal(who){
+  for(var i=0;i<boardState.length;i++) if(boardState[i]===who && !inGoal(i, who)) return false;
+  return true;
+}
+function win(me){
+  var em=['🎉','⭐','🎈','💖','🌈','✨'];
+  for(var i=0;i<40;i++) setTimeout(function(){ var c=document.createElement('div'); c.className='confetti'; c.textContent=em[Math.floor(Math.random()*em.length)]; c.style.left=Math.random()*100+'vw'; c.style.top='-30px'; c.style.animationDuration=(2+Math.random()*2)+'s'; document.body.appendChild(c); setTimeout(function(){ c.remove(); },4500); }, Math.random()*1000);
+  if(me){ setStatus('你贏了！全部棋子到對面了！🎉'); $('fb').textContent='🔴 勝利！你好會跳棋！'; if(window.KidsApp) KidsApp.reportWin('jump','🌟'); }
+  else { setStatus('AI 贏了…再挑戰一次！'); $('fb').textContent='🔵 AI 勝利！再試一次！'; }
+}
+function setStatus(m){ $('statusMsg').textContent = m; }
+
+/* ================= AI ================= */
+function goalDist(i, who){
+  // 用「到目標三角形中心」的距離 + 是否已在目標內
+  if(inGoal(i, who)) return 0;
+  var target = who===ME ? T1 : T0;
+  var best=1e9;
+  target.forEach(function(ti){
+    var a=cells[i], b=cells[ti];
+    var d=Math.abs(a.q-b.q)+Math.abs(a.r-b.r)+Math.abs(a.s-b.s);
+    if(d<best) best=d;
+  });
+  return best/2;
+}
+function aiThink(){
+  aiThinking=true;
+  var bestScore=-1e9, bestMove=null;
+  var err = difficulty===0 ? 0.35 : (difficulty===1 ? 0.15 : 0.04);
+  for(var i=0;i<boardState.length;i++){
+    if(boardState[i]!==AI) continue;
+    var ts = legalTargets(i);
+    ts.forEach(function(t){
+      var d0=goalDist(i,AI), d1=goalDist(t,AI);
+      var score = (d0-d1)*10;            // 前進
+      var isJump = (Math.abs(cells[i].q-cells[t].q)+Math.abs(cells[i].r-cells[t].r)+Math.abs(cells[i].s-cells[t].s))>=2;
+      if(isJump) score+=6;
+      if(d0===0 && !inGoal(t, AI)) score-=8; // 別離開目標區
+      score += Math.random()*2;
+      if(Math.random()<err) score -= 15; // 簡單模式偶爾亂走
+      if(score>bestScore){ bestScore=score; bestMove={from:i,to:t}; }
+    });
+  }
+  if(bestMove){ movePiece(bestMove.from, bestMove.to, AI); }
+  else { over=true; win(false); }
+  aiThinking=false;
+}
+
+/* ================= 控制 ================= */
+function reset(){
+  boardState = cells.map(function(){ return 0; });
+  T0 = triangleCells(0);   // q>4 紅棋出發
+  T1 = triangleCells(3);   // q<-4 藍棋出發（對角）
+  T0.forEach(function(i){ boardState[i]=ME; });
+  T1.forEach(function(i){ boardState[i]=AI; });
+  turn=ME; over=false; aiThinking=false; selected=-1;
+  clearTargets();
+  render();
+  setStatus('輪到你囉！點一顆紅棋選它 🔴');
+}
+$('restartBtn').addEventListener('click', reset);
+document.querySelectorAll('.difBtn').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.difBtn').forEach(function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    difficulty = parseInt(b.dataset.d,10);
+  });
+});
+
+function fitScale(){
+  var box=$('boardBox');
+  var avail=Math.min(window.innerWidth-24, 700);
+  var scale=Math.min(1, avail/box.offsetWidth);
+  box.style.transform='scale('+scale+')';
+}
+window.addEventListener('resize', fitScale);
+
+/* ================= 啟動 ================= */
+buildCells();
+buildBoard();
+reset();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+</script>
+<script src="common.js"></script>
+</body>
+</html>

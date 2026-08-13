@@ -7,6 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#e05a9c">
+<link rel="stylesheet" href="common.css">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="圍棋教室">
@@ -331,7 +332,7 @@ function place(r, c, who){
   if(ate > 0){ setStatus(ate + ' 顆被吃掉了！' + (who===ME?'你吃得好！':'好可惜…')); }
   if(captured[who] >= WIN_AT){
     over = true;
-    if(who === ME){ confetti(); sWinMe(); setStatus('你贏了！吃掉 5 顆棋子！🎉'); $('fb').textContent = '⚫ 勝利！你好會下圍棋！'; }
+    if(who === ME){ confetti(); sWinMe(); setStatus('你贏了！吃掉 5 顆棋子！🎉'); $('fb').textContent = '⚫ 勝利！你好會下圍棋！'; if(window.KidsApp) KidsApp.reportWin('go','⚪'); }
     else { sWinAi(); setStatus('AI 贏了…再挑戰一次！'); $('fb').textContent = '⚪ AI 勝利！再試一次！'; }
     return;
   }
@@ -431,5 +432,6 @@ newBoard(); buildBoard(); render();
 setStatus('輪到你囉！點交叉點放黑棋 ⚫');
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 </script>
+<script src="common.js"></script>
 </body>
 </html>

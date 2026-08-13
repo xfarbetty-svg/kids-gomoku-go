@@ -1,10 +1,16 @@
-const CACHE = 'kids-games-v1';
+const CACHE = 'kids-games-v2';
 const FILES = [
   './',
   './index.html',
   './gomoku.html',
   './go.html',
+  './jump.html',
+  './dressup.html',
+  './color.html',
   './manifest.json',
+  './common.css',
+  './common.js',
+  './icon-180.png',
   './icon-192.png',
   './icon-512.png',
   './icon-maskable-512.png'

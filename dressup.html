@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>小小偶像換裝 💖</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#e05a9c">
+<link rel="stylesheet" href="common.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; }
+  button { font-family:inherit; cursor:pointer; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(224,90,156,.3); z-index:10; }
+  #app { max-width:520px; margin:0 auto; padding:12px 10px 30px; text-align:center; }
+  .title { font-size:30px; margin-top:8px; font-weight:900; letter-spacing:1px; }
+  .subtitle { color:#b06a92; font-size:14px; margin:4px 0 10px; font-weight:700; }
+  .topbtns { display:flex; justify-content:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  .miniBtn { border:none; border-radius:999px; font-weight:800; font-size:14px; color:#fff; padding:9px 18px; }
+  .starChip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:6px 14px; font-weight:800; color:#7a4a63; box-shadow:0 3px 10px rgba(224,90,156,.15); font-size:14px; }
+
+  .scene { position:relative; border-radius:26px; overflow:hidden; border:4px solid #fff; box-shadow:0 12px 30px rgba(160,120,180,.3); }
+  .scene .deco { position:absolute; font-size:30px; opacity:.85; pointer-events:none; z-index:1; }
+  #doll { position:relative; width:100%; display:block; z-index:2; }
+  .spotlight { position:absolute; top:0; left:50%; width:180px; height:40px; transform:translateX(-50%); background:radial-gradient(ellipse, rgba(255,255,255,.55), transparent 70%); z-index:0; animation:spin 6s ease-in-out infinite; }
+  @keyframes spin { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+  .cats { display:flex; gap:6px; justify-content:center; margin:12px 0 8px; flex-wrap:wrap; }
+  .catBtn { border:3px solid #ffd1e6; background:#fff; color:#b06a92; border-radius:999px; padding:7px 16px; font-weight:800; font-size:14px; }
+  .catBtn.on { background:#ff7ab5; color:#fff; border-color:#ff7ab5; }
+  .palette { background:#fff; border-radius:20px; border:3px solid #ffd1e6; padding:10px; min-height:64px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; box-shadow:0 6px 16px rgba(224,90,156,.12); }
+  .swatch { width:44px; height:44px; border-radius:50%; border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.2), inset 0 -2px 4px rgba(0,0,0,.15); transition:.12s; }
+  .swatch.on { outline:4px solid #ffc93c; transform:scale(1.12); }
+  .itemBtn { min-width:52px; height:52px; border-radius:16px; border:3px solid #f0cfe0; background:#fff; font-size:26px; display:flex; align-items:center; justify-content:center; transition:.12s; padding:0 8px; }
+  .itemBtn .lb { font-size:11px; font-weight:800; color:#7a4a63; }
+  .itemBtn.on { border-color:#ff7ab5; background:#fff0f7; transform:translateY(-3px); }
+
+  .bottomBtns { display:flex; gap:10px; justify-content:center; margin-top:14px; }
+  .saveBtn { border:none; border-radius:999px; font-size:18px; font-weight:800; color:#fff; padding:13px 30px; }
+  .fb { font-weight:800; color:#e05a9c; margin-top:10px; min-height:22px; font-size:15px; }
+
+  .modal { position:fixed; inset:0; background:rgba(120,60,100,.45); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
+  .modal .card { background:linear-gradient(180deg,#fff,#fff8fc); border-radius:26px; padding:18px; max-width:440px; width:100%; border:4px solid #ffd1e6; box-shadow:0 16px 50px rgba(120,40,90,.35); max-height:86vh; overflow-y:auto; animation:pop .25s ease; }
+  @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
+  .modal h2 { color:#e05a9c; font-size:22px; text-align:center; margin-bottom:12px; }
+  .outfitGrid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .outfitCard { border:3px solid #f0cfe0; border-radius:16px; padding:10px; background:#fff; text-align:center; }
+  .outfitCard .od { font-size:30px; }
+  .outfitCard .on { font-size:12px; font-weight:800; color:#7a4a63; }
+  .center { text-align:center; margin-top:16px; }
+</style>
+</head>
+<body class="kpop-bg">
+<a class="homeLink" href="index.html">🏠</a>
+<div id="app">
+  <div class="title title-grad title-shine">小小偶像換裝</div>
+  <div class="subtitle">幫小偶像打扮漂漂亮亮，準備登台表演！🎤</div>
+  <div class="topbtns">
+    <span class="starChip">⭐ <b id="starChip">0</b></span>
+    <button class="miniBtn glossy-lav" id="albumBtn">📖 收藏冊</button>
+    <button class="miniBtn glossy-mint" id="randomBtn">🎲 隨機打扮</button>
+  </div>
+
+  <div class="scene" id="scene">
+    <div class="spotlight"></div>
+    <div class="deco" style="top:50px; left:12px;">🎤</div>
+    <div class="deco" style="top:70px; right:14px;">🎶</div>
+    <div class="deco" style="bottom:24px; left:18px;">💃</div>
+    <div class="deco" style="bottom:30px; right:20px;">✨</div>
+    <svg id="doll" viewBox="0 0 220 340">
+      <g id="hairBack"></g>
+      <rect x="97" y="256" width="11" height="46" rx="5" fill="#ffe0d0"/>
+      <rect x="112" y="256" width="11" height="46" rx="5" fill="#ffe0d0"/>
+      <text id="shoes" x="110" y="318" font-size="24" text-anchor="middle">🩰</text>
+      <path id="dress" fill="#ff8fb3"/>
+      <rect x="46" y="156" width="11" height="58" rx="5" fill="#ffe0d0"/>
+      <rect x="163" y="156" width="11" height="58" rx="5" fill="#ffe0d0"/>
+      <circle id="head" cx="110" cy="90" r="44" fill="#ffe0d0"/>
+      <g id="faceFeatures">
+        <circle cx="93" cy="90" r="4.5" fill="#3a2a3a"/>
+        <circle cx="127" cy="90" r="4.5" fill="#3a2a3a"/>
+        <circle cx="95" cy="88" r="1.6" fill="#fff"/>
+        <circle cx="129" cy="88" r="1.6" fill="#fff"/>
+        <path d="M102 112 Q110 120 118 112" stroke="#e05a9c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="78" cy="104" rx="9" ry="5" fill="#ffb6c9" opacity=".8"/>
+        <ellipse cx="142" cy="104" rx="9" ry="5" fill="#ffb6c9" opacity=".8"/>
+      </g>
+      <path id="hairFront" fill="#3a2a3a"/>
+      <text id="exprFace" x="110" y="104" font-size="40" text-anchor="middle" opacity="0">🥰</text>
+      <text id="accFace" x="110" y="96" font-size="26" text-anchor="middle"></text>
+      <text id="accHead" x="110" y="28" font-size="30" text-anchor="middle"></text>
+      <text id="accNeck" x="110" y="156" font-size="24" text-anchor="middle"></text>
+      <text id="accHand" x="180" y="184" font-size="26" text-anchor="middle"></text>
+    </svg>
+  </div>
+
+  <div class="cats" id="cats"></div>
+  <div class="palette" id="palette"></div>
+
+  <div class="bottomBtns">
+    <button class="saveBtn glossy" id="saveBtn">💾 存進收藏冊</button>
+  </div>
+  <div class="fb" id="fb"></div>
+</div>
+
+<div id="albumModal" class="modal hidden">
+  <div class="card">
+    <h2>📖 我的收藏冊</h2>
+    <div class="outfitGrid" id="outfitGrid"></div>
+    <div class="center"><button class="miniBtn glossy" id="closeAlbum">知道了</button></div>
+  </div>
+</div>
+
+<script>
+/* ================= 資料 ================= */
+var HAIRS = [{id:'bob',n:'短髮'},{id:'long',n:'長髮'},{id:'twin',n:'雙馬尾'},{id:'buns',n:'包包頭'}];
+var HAIRCOLORS = [{c:'#3a2a3a',n:'黑'},{c:'#8b5a2b',n:'咖'},{c:'#ff8fb3',n:'粉'},{c:'#b78bff',n:'紫'},{c:'#ffd36b',n:'金'},{c:'#d7d7e8',n:'銀'},{c:'#ff4d4d',n:'紅'}];
+var DRESSES = [{id:'a',n:'蓬蓬裙'},{id:'b',n:'A字裙'},{id:'c',n:'吊帶裙'}];
+var DRESSCOLORS = [{c:'#ff8fb3',n:'粉'},{c:'#ff4d4d',n:'紅'},{c:'#62d6a5',n:'薄荷'},{c:'#b78bff',n:'紫'},{c:'#ffc93c',n:'黃'},{c:'#3399ff',n:'藍'},{c:'#ffffff',n:'白'},{c:'#444444',n:'黑'}];
+var SHOES = [{e:'🩰',n:'舞鞋'},{e:'👟',n:'球鞋'},{e:'🥿',n:'平底'},{e:'👢',n:'長靴'}];
+var ACC_HEAD = [{e:'',n:'無'},{e:'🎀',n:'蝴蝶結'},{e:'👑',n:'皇冠'},{e:'🦋',n:'髮夾'},{e:'🌸',n:'花飾'},{e:'🎧',n:'耳機'},{e:'🎤',n:'麥克風'}];
+var ACC_FACE = [{e:'',n:'無'},{e:'🕶️',n:'墨鏡'}];
+var ACC_NECK = [{e:'',n:'無'},{e:'🎀',n:'領結'},{e:'💎',n:'項鍊'}];
+var ACC_HAND = [{e:'',n:'無'},{e:'🪄',n:'魔法棒'},{e:'💐',n:'花束'},{e:'🧸',n:'熊熊'},{e:'🍰',n:'蛋糕'},{e:'🎤',n:'麥克風'}];
+var EXPR = [{e:'',n:'甜甜笑'},{e:'🥰',n:'愛心眼'},{e:'😍',n:'閃閃眼'},{e:'😜',n:'吐舌'},{e:'😴',n:'睡覺'}];
+var BGS = [
+  {id:'stage', n:'舞台', css:'linear-gradient(180deg,#3a1d6e,#7a3fb0)', deco:['🎤','🎶','💃']},
+  {id:'garden', n:'花園', css:'linear-gradient(180deg,#ffd6ec,#eafcff)', deco:['🌸','🌷','🦋']},
+  {id:'castle', n:'城堡', css:'linear-gradient(180deg,#d6d2ff,#fce6ff)', deco:['🏰','💎','👑']},
+  {id:'space', n:'星空', css:'linear-gradient(180deg,#1c2350,#3a2a6e)', deco:['🌌','✨','🌙']},
+  {id:'party', n:'派對', css:'linear-gradient(180deg,#ffe9f3,#fff3c9)', deco:['🎈','🎉','🎁']}
+];
+
+var state = {
+  hair:'bob', hairColor:'#3a2a3a',
+  dress:'a', dressColor:'#ff8fb3',
+  shoes:'🩰',
+  accHead:'', accFace:'', accNeck:'', accHand:'',
+  expr:'', bg:'stage'
+};
+var CATS = {
+  hair:{n:'髮型', items:HAIRS.map(function(x){return {v:x.id, lb:x.n, type:'hair'};}), render:function(){ renderList(this, state.hair); }},
+  hairColor:{n:'髮色', items:HAIRCOLORS.map(function(x){return {v:x.c, lb:x.n, color:x.c};}), render:function(){ renderColors(this, state.hairColor); }},
+  dress:{n:'裙子', items:DRESSES.map(function(x){return {v:x.id, lb:x.n, type:'dress'};}), render:function(){ renderList(this, state.dress); }},
+  dressColor:{n:'裙色', items:DRESSCOLORS.map(function(x){return {v:x.c, lb:x.n, color:x.c};}), render:function(){ renderColors(this, state.dressColor); }},
+  shoes:{n:'鞋子', items:SHOES.map(function(x){return {v:x.e, lb:x.n, emoji:x.e};}), render:function(){ renderEmoji(this, state.shoes); }},
+  accHead:{n:'頭飾', items:ACC_HEAD.map(function(x){return {v:x.e, lb:x.n, emoji:x.e||'∅'};}), render:function(){ renderEmoji(this, state.accHead); }},
+  accFace:{n:'臉飾', items:ACC_FACE.map(function(x){return {v:x.e, lb:x.n, emoji:x.e||'∅'};}), render:function(){ renderEmoji(this, state.accFace); }},
+  accNeck:{n:'頸飾', items:ACC_NECK.map(function(x){return {v:x.e, lb:x.n, emoji:x.e||'∅'};}), render:function(){ renderEmoji(this, state.accNeck); }},
+  accHand:{n:'手持', items:ACC_HAND.map(function(x){return {v:x.e, lb:x.n, emoji:x.e||'∅'};}), render:function(){ renderEmoji(this, state.accHand); }},
+  expr:{n:'表情', items:EXPR.map(function(x){return {v:x.e, lb:x.n, emoji:x.e||'😊'};}), render:function(){ renderEmoji(this, state.expr); }},
+  bg:{n:'背景', items:BGS.map(function(x){return {v:x.id, lb:x.n, emoji:x.deco[0]};}), render:function(){ renderList(this, state.bg); }}
+};
+var order = ['hair','hairColor','dress','dressColor','shoes','accHead','accFace','accNeck','accHand','expr','bg'];
+var currentCat = 'hair';
+
+/* ================= 工具 ================= */
+function $(id){ return document.getElementById(id); }
+function rand(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+
+/* ================= 髮型 ================= */
+var HAIR_PATHS = {
+  bob: '<path d="M110 30 C72 30 58 52 58 84 L58 140 C58 160 76 165 86 152 L86 96 C86 82 134 82 134 96 L134 152 C144 165 162 160 162 140 L162 84 C162 52 148 30 110 30 Z"/>',
+  long: '<path d="M110 30 C72 30 58 52 58 84 L58 214 C58 236 80 240 90 226 L90 96 C90 82 130 82 130 96 L130 226 C140 240 162 236 162 214 L162 84 C162 52 148 30 110 30 Z"/>',
+  twin: '<path d="M110 30 C72 30 58 52 58 84 L58 140 C58 160 76 165 86 152 L86 96 C86 82 134 82 134 96 L134 152 C144 165 162 160 162 140 L162 84 C162 52 148 30 110 30 Z"/>' +
+        '<path d="M62 150 C44 162 32 194 36 224 C40 250 64 248 64 222 C64 200 56 180 64 168 Z"/>' +
+        '<path d="M158 150 C176 162 188 194 184 224 C180 250 156 248 156 222 C156 200 164 180 156 168 Z"/>',
+  buns: '<path d="M110 30 C72 30 58 52 58 84 L58 140 C58 160 76 165 86 152 L86 96 C86 82 134 82 134 96 L134 152 C144 165 162 160 162 140 L162 84 C162 52 148 30 110 30 Z"/>' +
+        '<circle cx="80" cy="28" r="17"/>' +
+        '<circle cx="140" cy="28" r="17"/>'
+};
+var HAIR_FRONT = '<path d="M70 76 C72 46 92 28 110 28 C128 28 148 46 150 76 C140 60 132 68 120 64 C108 60 92 60 82 68 C76 72 72 72 70 76 Z"/>';
+
+var DRESS_PATHS = {
+  a: 'M82 150 L138 150 L156 218 L168 272 C168 290 52 290 52 272 L64 218 Z',
+  b: 'M82 150 L138 150 L152 210 L156 260 C156 274 64 274 64 260 L68 210 Z',
+  c: 'M86 138 L92 152 L128 152 L134 138 L136 152 L158 238 C158 256 62 256 62 238 L84 152 Z'
+};
+
+/* ================= 渲染 ================= */
+function applyHair(){
+  var g = $('hairBack');
+  g.innerHTML = HAIR_PATHS[state.hair];
+  g.setAttribute('fill', state.hairColor);
+  $('hairFront').innerHTML = HAIR_FRONT;
+  $('hairFront').setAttribute('fill', state.hairColor);
+}
+function applyDress(){
+  $('dress').setAttribute('d', DRESS_PATHS[state.dress]);
+  $('dress').setAttribute('fill', state.dressColor);
+}
+function applyAcc(){
+  $('accHead').textContent = state.accHead;
+  $('accFace').textContent = state.accFace;
+  $('accNeck').textContent = state.accNeck;
+  $('accHand').textContent = state.accHand;
+  $('shoes').textContent = state.shoes;
+  if(state.expr){ $('exprFace').textContent = state.expr; $('exprFace').setAttribute('opacity', state.expr? '0.95':'0'); }
+  else $('exprFace').setAttribute('opacity', '0');
+}
+function applyBg(){
+  var bg = BGS.filter(function(b){ return b.id===state.bg; })[0];
+  $('scene').style.background = bg.css;
+  var decos = $('scene').querySelectorAll('.deco');
+  decos.forEach(function(d, i){ if(i < bg.deco.length) d.textContent = bg.deco[i]; });
+}
+function renderDoll(){ applyHair(); applyDress(); applyAcc(); applyBg(); }
+
+function buildCats(){
+  var c = $('cats'); c.innerHTML='';
+  order.forEach(function(key){
+    var b = document.createElement('button');
+    b.className = 'catBtn' + (key===currentCat?' on':'');
+    b.textContent = CATS[key].n;
+    b.addEventListener('click', function(){
+      currentCat = key;
+      document.querySelectorAll('.catBtn').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      renderPalette();
+    });
+    c.appendChild(b);
+  });
+}
+function renderPalette(){
+  var p = $('palette'); p.innerHTML='';
+  CATS[currentCat].render();
+}
+function renderList(cat, curVal){
+  var p = $('palette');
+  cat.items.forEach(function(it){
+    var b = document.createElement('button');
+    b.className = 'itemBtn' + (it.v===curVal?' on':'');
+    b.innerHTML = (it.type==='dress' ? '👗<span class="lb">'+it.lb+'</span>' : '<span class="lb">'+it.lb+'</span>');
+    b.addEventListener('click', function(){
+      state[cat.name] = it.v;   // cat.name === 'hair' | 'dress' | 'bg'
+      renderDoll(); renderPalette();
+    });
+    p.appendChild(b);
+  });
+}
+function renderColors(cat, curVal){
+  var p = $('palette');
+  cat.items.forEach(function(it){
+    var b = document.createElement('button');
+    b.className = 'swatch' + (it.v===curVal?' on':'');
+    b.style.background = it.v;
+    b.title = it.lb;
+    b.addEventListener('click', function(){
+      state[cat.name] = it.v;
+      renderDoll(); renderPalette();
+    });
+    p.appendChild(b);
+  });
+}
+function renderEmoji(cat, curVal){
+  var p = $('palette');
+  cat.items.forEach(function(it){
+    var b = document.createElement('button');
+    b.className = 'itemBtn' + (it.v===curVal?' on':'');
+    b.innerHTML = '<span style="font-size:24px;">'+it.emoji+'</span><span class="lb">'+it.lb+'</span>';
+    b.addEventListener('click', function(){
+      state[cat.name] = it.v;
+      renderDoll(); renderPalette();
+    });
+    p.appendChild(b);
+  });
+}
+
+/* ================= 收藏冊 ================= */
+function getOutfits(){ try{ return JSON.parse(localStorage.getItem('kids_outfits'))||[]; }catch(e){ return []; } }
+function saveOutfits(o){ try{ localStorage.setItem('kids_outfits', JSON.stringify(o)); }catch(e){} }
+$('saveBtn').addEventListener('click', function(){
+  var list = getOutfits();
+  var first = list.length===0;
+  var o = {date: todayStr(), s: JSON.parse(JSON.stringify(state))};
+  list.unshift(o);
+  saveOutfits(list);
+  if(first && window.KidsApp){ KidsApp.reportWin('dressup', '🎀'); }
+  $('fb').textContent = '存進收藏冊了！' + (first ? ' 獲得貼紙 🎀' : '');
+  updateStarChip();
+});
+function todayStr(){ var d=new Date(); return (d.getMonth()+1)+'/'+d.getDate(); }
+function updateStarChip(){ if(window.KidsApp) $('starChip').textContent = KidsApp.getStars(); }
+$('randomBtn').addEventListener('click', function(){
+  state.hair = HAIRS[rand(0,HAIRS.length-1)].id;
+  state.hairColor = HAIRCOLORS[rand(0,HAIRCOLORS.length-1)].c;
+  state.dress = DRESSES[rand(0,DRESSES.length-1)].id;
+  state.dressColor = DRESSCOLORS[rand(0,DRESSCOLORS.length-1)].c;
+  state.shoes = SHOES[rand(0,SHOES.length-1)].e;
+  state.accHead = ACC_HEAD[rand(1,ACC_HEAD.length-1)].e;
+  state.accFace = Math.random()<0.3 ? '🕶️' : '';
+  state.accNeck = ACC_NECK[rand(1,ACC_NECK.length-1)].e;
+  state.accHand = ACC_HAND[rand(1,ACC_HAND.length-1)].e;
+  state.expr = EXPR[rand(1,EXPR.length-1)].e;
+  state.bg = BGS[rand(0,BGS.length-1)].id;
+  renderDoll(); renderPalette();
+  $('fb').textContent = '哇！隨機打扮完成！好漂亮～ ✨';
+});
+$('albumBtn').addEventListener('click', function(){
+  var list = getOutfits();
+  var g = $('outfitGrid'); g.innerHTML='';
+  if(list.length===0) g.innerHTML='<div style="grid-column:1/-1; text-align:center; color:#b98aa5; padding:20px;">還沒有收藏，先幫小偶像打扮一個吧！</div>';
+  list.forEach(function(o){
+    var d = document.createElement('div'); d.className='outfitCard';
+    d.innerHTML = '<div class="od">' + o.s.accHead + o.s.accFace + o.s.accNeck + '👗' + o.s.accHand + '</div>' +
+      '<div class="on">髮色 ' + o.s.hairColor + ' · ' + BGS.filter(function(b){return b.id===o.s.bg;})[0].n + ' · ' + o.date + '</div>';
+    d.style.borderTopColor = o.s.dressColor;
+    d.style.borderTopWidth = '10px';
+    g.appendChild(d);
+  });
+  $('albumModal').classList.remove('hidden');
+});
+$('closeAlbum').addEventListener('click', function(){ $('albumModal').classList.add('hidden'); });
+
+/* ================= 啟動 ================= */
+buildCats();
+renderDoll();
+renderPalette();
+updateStarChip();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+</script>
+<script src="common.js"></script>
+</body>
+</html>

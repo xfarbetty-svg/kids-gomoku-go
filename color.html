@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>彩虹填色屋 🎨</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#e05a9c">
+<link rel="stylesheet" href="common.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; }
+  button { font-family:inherit; cursor:pointer; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(224,90,156,.3); z-index:10; }
+  #app { max-width:520px; margin:0 auto; padding:12px 10px 30px; text-align:center; }
+  .title { font-size:30px; margin-top:8px; font-weight:900; letter-spacing:1px; }
+  .subtitle { color:#b06a92; font-size:14px; margin:4px 0 10px; font-weight:700; }
+  .topbar { display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .starChip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:6px 14px; font-weight:800; color:#7a4a63; box-shadow:0 3px 10px rgba(224,90,156,.15); font-size:14px; }
+
+  .pages { display:flex; gap:8px; justify-content:center; margin-bottom:10px; }
+  .pageBtn { border:3px solid #ffd1e6; background:#fff; color:#b06a92; border-radius:999px; padding:7px 16px; font-weight:800; font-size:14px; }
+  .pageBtn.on { background:#ff7ab5; color:#fff; border-color:#ff7ab5; }
+  .pageBtn.done::after { content:' ✅'; }
+
+  .canvasWrap { background:#fff; border-radius:24px; border:4px solid #fff; box-shadow:0 12px 30px rgba(160,120,180,.3); display:flex; justify-content:center; align-items:center; padding:10px; }
+  #canvas { width:100%; max-width:420px; }
+  #canvas svg { width:100%; height:auto; display:block; }
+  .region { stroke:#555; stroke-width:2.6; stroke-linejoin:round; }
+  .region:hover { filter:brightness(1.12) drop-shadow(0 0 4px rgba(255,201,60,.7)); cursor:pointer; }
+
+  .progress { font-weight:800; color:#e05a9c; margin:10px 0 4px; font-size:15px; }
+  .palette { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; background:#fff; border-radius:20px; border:3px solid #ffd1e6; padding:10px; box-shadow:0 6px 16px rgba(224,90,156,.12); }
+  .swatch { width:42px; height:42px; border-radius:50%; border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.2), inset 0 -2px 4px rgba(0,0,0,.15); transition:.12s; }
+  .swatch.on { outline:4px solid #ffc93c; transform:scale(1.15); }
+  .tools { display:flex; gap:10px; justify-content:center; margin-top:12px; }
+  .toolBtn { border:none; border-radius:999px; font-weight:800; font-size:15px; color:#fff; padding:10px 20px; }
+
+  .modal { position:fixed; inset:0; background:rgba(120,60,100,.45); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
+  .modal .card { background:linear-gradient(180deg,#fff,#fff8fc); border-radius:26px; padding:20px; max-width:340px; width:100%; border:4px solid #ffd1e6; box-shadow:0 16px 50px rgba(120,40,90,.35); text-align:center; animation:pop .25s ease; }
+  @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
+  .modal .big { font-size:60px; display:block; animation:float 2s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .modal h2 { color:#e05a9c; font-size:22px; margin:8px 0; }
+  .modal p { color:#7a4a63; font-weight:800; font-size:16px; margin-bottom:14px; }
+</style>
+</head>
+<body class="kpop-bg">
+<a class="homeLink" href="index.html">🏠</a>
+<div id="app">
+  <div class="title title-grad title-shine">彩虹填色屋</div>
+  <div class="subtitle">選顏色，點一點，把圖畫塗得漂漂亮亮！</div>
+  <div class="topbar"><span class="starChip">⭐ <b id="starChip">0</b></span></div>
+
+  <div class="pages" id="pages"></div>
+  <div class="canvasWrap"><div id="canvas"></div></div>
+  <div class="progress" id="progress"></div>
+
+  <div class="palette" id="palette"></div>
+
+  <div class="tools">
+    <button class="toolBtn glossy-yellow" id="magicBtn">🪄 魔法彩筆</button>
+    <button class="toolBtn glossy-mint" id="clearBtn">🧽 清除本頁</button>
+  </div>
+</div>
+
+<div id="doneModal" class="modal hidden">
+  <div class="card">
+    <span class="big">🌈</span>
+    <h2 id="doneTitle">塗完了！</h2>
+    <p id="doneDesc">這張圖好漂亮！</p>
+    <button class="toolBtn glossy" id="doneOk" style="padding:11px 26px; font-size:16px;">好棒！再塗下一張</button>
+  </div>
+</div>
+
+<script>
+/* ================= 頁面 ================= */
+var PAGES = [
+  {id:'butterfly', n:'🦋 蝴蝶', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="sky" x="0" y="0" width="220" height="220"/>'+
+'<path class="region" data-id="wLT" d="M100 100 C75 60 30 68 28 106 C26 138 60 152 100 140 Z"/>'+
+'<path class="region" data-id="wLB" d="M100 144 C74 158 54 170 58 196 C62 218 92 200 100 178 Z"/>'+
+'<path class="region" data-id="wRT" d="M100 100 C125 60 170 68 172 106 C174 138 140 152 100 140 Z"/>'+
+'<path class="region" data-id="wRB" d="M100 144 C126 158 146 170 142 196 C138 218 108 200 100 178 Z"/>'+
+'<ellipse class="region" data-id="body" cx="100" cy="150" rx="9" ry="32"/>'+
+'<circle class="region" data-id="head" cx="100" cy="106" r="8"/>'+
+'<circle class="region" data-id="spot1" cx="55" cy="112" r="10"/>'+
+'<circle class="region" data-id="spot2" cx="145" cy="112" r="10"/>'+
+'<circle class="region" data-id="spot3" cx="80" cy="168" r="7"/>'+
+'<circle class="region" data-id="spot4" cx="120" cy="168" r="7"/>'+
+'<path d="M100 102 C90 84 92 76 84 64" stroke="#555" stroke-width="3" fill="none"/>'+
+'<path d="M100 102 C110 84 108 76 116 64" stroke="#555" stroke-width="3" fill="none"/>'+
+'<circle cx="100" cy="150" r="3" fill="#555"/><path d="M100 150 L100 162 M97 152 L92 158 M103 152 L108 158" stroke="#555" stroke-width="2" fill="none"/></svg>'},
+  {id:'icecream', n:'🍦 冰淇淋', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="bg" x="0" y="0" width="220" height="220"/>'+
+'<polygon class="region" data-id="cone" points="100,158 78,216 122,216"/>'+
+'<circle class="region" data-id="s1" cx="100" cy="144" r="26"/>'+
+'<circle class="region" data-id="s2" cx="84" cy="122" r="20"/>'+
+'<circle class="region" data-id="s3" cx="114" cy="120" r="18"/>'+
+'<circle class="region" data-id="cherry" cx="112" cy="98" r="8"/>'+
+'<path d="M88 160 L88 205 M100 160 L100 212 M112 160 L112 205 M94 158 L94 210 M106 158 L106 210" stroke="#555" stroke-width="2.5" fill="none"/></svg>'},
+  {id:'house', n:'🏠 小房子', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="sky" x="0" y="0" width="220" height="148"/>'+
+'<rect class="region" data-id="grass" x="0" y="148" width="220" height="72"/>'+
+'<circle class="region" data-id="sun" cx="38" cy="42" r="20"/>'+
+'<ellipse class="region" data-id="cloud" cx="172" cy="40" rx="27" ry="13"/>'+
+'<polygon class="region" data-id="roof" points="38,122 152,122 95,64"/>'+
+'<rect class="region" data-id="wall" x="48" y="122" width="94" height="62"/>'+
+'<rect class="region" data-id="door" x="86" y="146" width="22" height="38"/>'+
+'<circle class="region" data-id="winL" cx="66" cy="142" r="10"/>'+
+'<circle class="region" data-id="winR" cx="124" cy="142" r="10"/>'+
+'<circle cx="38" cy="38" r="2.5" fill="#555"/><path d="M28 52 L34 46 M48 52 L42 46 M30 40 L30 46 M46 40 L46 46" stroke="#555" stroke-width="2" fill="none"/></svg>'},
+  {id:'cat', n:'🐱 小貓咪', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="bg" x="0" y="0" width="220" height="220"/>'+
+'<circle class="region" data-id="head" cx="110" cy="102" r="42"/>'+
+'<path class="region" data-id="earL" d="M76 74 L56 34 L98 58 Z"/>'+
+'<path class="region" data-id="earR" d="M144 74 L164 34 L122 58 Z"/>'+
+'<ellipse class="region" data-id="body" cx="110" cy="190" rx="46" ry="34"/>'+
+'<path class="region" data-id="tail" d="M156 178 C184 168 200 152 196 130 C194 118 182 120 182 130 C182 142 172 152 160 160 Z"/>'+
+'<path class="region" data-id="bow" d="M150 60 C145 48 134 46 130 55 C126 64 137 68 145 63 C153 68 164 64 160 55 C156 46 145 48 150 60 Z"/>'+
+'<circle cx="95" cy="98" r="4.5" fill="#555"/><circle cx="125" cy="98" r="4.5" fill="#555"/>'+
+'<path d="M100 118 Q110 126 120 118" stroke="#555" stroke-width="3" fill="none"/>'+
+'<path d="M70 104 L52 100 M70 110 L52 112 M150 104 L168 100 M150 110 L168 112" stroke="#555" stroke-width="2" fill="none"/></svg>'}
+];
+var COLORS = [
+  {c:'#ff4d4d', n:'紅'}, {c:'#ff8fb3', n:'粉'}, {c:'#ffc93c', n:'黃'}, {c:'#ff9e3d', n:'橘'},
+  {c:'#62d6a5', n:'薄荷'}, {c:'#3399ff', n:'藍'}, {c:'#8a6dff', n:'紫'}, {c:'#e05a9c', n:'桃紅'},
+  {c:'#00b8a9', n:'青'}, {c:'#8b5a2b', n:'咖'}, {c:'#444444', n:'黑'}, {c:'#ffffff', n:'白(擦掉)'}
+];
+var WHITE = '#ffffff';
+
+var pageId = 'butterfly', curColor = '#ff8fb3';
+var completed = {};
+
+function $(id){ return document.getElementById(id); }
+function key(p){ return 'kids_color_' + p; }
+function loadFills(p){ try{ return JSON.parse(localStorage.getItem(key(p)))||{}; }catch(e){ return {}; } }
+function saveFills(p, f){ try{ localStorage.setItem(key(p), JSON.stringify(f)); }catch(e){} }
+
+/* ================= 頁面 ================= */
+function buildPages(){
+  var c = $('pages'); c.innerHTML='';
+  PAGES.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'pageBtn' + (p.id===pageId?' on':'');
+    b.textContent = p.n;
+    b.addEventListener('click', function(){
+      pageId = p.id;
+      document.querySelectorAll('.pageBtn').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      loadPage();
+    });
+    c.appendChild(b);
+  });
+  refreshPageBadges();
+}
+function loadPage(){
+  var p = PAGES.filter(function(x){ return x.id===pageId; })[0];
+  $('canvas').innerHTML = p.svg;
+  var fills = loadFills(pageId);
+  var regions = $('canvas').querySelectorAll('.region');
+  regions.forEach(function(r){ r.setAttribute('fill', fills[r.dataset.id] || WHITE); r.addEventListener('click', function(){ fillRegion(r); }); });
+  updateProgress();
+}
+function fillRegion(r){
+  r.setAttribute('fill', curColor);
+  var fills = loadFills(pageId);
+  fills[r.dataset.id] = curColor;
+  saveFills(pageId, fills);
+  updateProgress();
+}
+function updateProgress(){
+  var total = $('canvas').querySelectorAll('.region').length;
+  var filled = 0;
+  var fills = loadFills(pageId);
+  $('canvas').querySelectorAll('.region').forEach(function(r){ if(fills[r.dataset.id] && fills[r.dataset.id]!==WHITE) filled++; });
+  $('progress').textContent = '🎨 塗了 ' + filled + ' / ' + total + ' 塊';
+  var done = filled === total && total>0;
+  refreshPageBadges();
+  if(done && !completed[pageId]){
+    completed[pageId] = true;
+    sWin();
+    $('doneTitle').textContent = '塗完了！';
+    $('doneDesc').textContent = PAGES.filter(function(x){return x.id===pageId;})[0].n + ' 被你塗得好漂亮！';
+    $('doneModal').classList.remove('hidden');
+    if(window.KidsApp){ KidsApp.reportWin('color', '🎨'); updateStarChip(); }
+  }
+}
+function refreshPageBadges(){
+  document.querySelectorAll('.pageBtn').forEach(function(b, i){
+    var p = PAGES[i];
+    var fills = loadFills(p.id);
+    var total = 0, filled = 0;
+    var svg = document.createElement('div'); svg.innerHTML = p.svg;
+    svg.querySelectorAll('.region').forEach(function(r){ total++; if(fills[r.dataset.id] && fills[r.dataset.id]!==WHITE) filled++; });
+    if(filled === total && total>0) b.classList.add('done');
+    else b.classList.remove('done');
+  });
+}
+
+/* ================= 色盤 ================= */
+function buildPalette(){
+  var p = $('palette'); p.innerHTML='';
+  COLORS.forEach(function(col){
+    var b = document.createElement('button');
+    b.className = 'swatch' + (col.c===curColor?' on':'');
+    b.style.background = col.c;
+    b.title = col.n;
+    b.addEventListener('click', function(){
+      curColor = col.c;
+      document.querySelectorAll('.swatch').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+    });
+    p.appendChild(b);
+  });
+}
+
+/* ================= 工具 ================= */
+$('magicBtn').addEventListener('click', function(){
+  var fills = loadFills(pageId);
+  var pool = COLORS.slice(0, -1).map(function(x){ return x.c; });
+  $('canvas').querySelectorAll('.region').forEach(function(r){
+    var c = pool[Math.floor(Math.random()*pool.length)];
+    fills[r.dataset.id] = c;
+    r.setAttribute('fill', c);
+  });
+  saveFills(pageId, fills);
+  sMagic();
+  updateProgress();
+});
+$('clearBtn').addEventListener('click', function(){
+  var fills = {};
+  $('canvas').querySelectorAll('.region').forEach(function(r){ r.setAttribute('fill', WHITE); });
+  saveFills(pageId, fills);
+  $('progress').textContent = '🧽 清乾淨了，重新塗吧！';
+  refreshPageBadges();
+});
+$('doneOk').addEventListener('click', function(){ $('doneModal').classList.add('hidden'); });
+
+/* ================= 音效 ================= */
+var audioCtx = null;
+function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
+function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle'); }, i*130); }); }
+function sMagic(){ tone(880,.12,'triangle'); setTimeout(function(){ tone(1100,.15,'triangle'); },90); }
+
+/* ================= 啟動 ================= */
+function updateStarChip(){ if(window.KidsApp) $('starChip').textContent = KidsApp.getStars(); }
+buildPages();
+buildPalette();
+loadPage();
+updateStarChip();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+</script>
+<script src="common.js"></script>
+</body>
+</html>
