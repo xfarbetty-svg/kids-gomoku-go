@@ -1,0 +1,16 @@
+{
+  "name": "小朋友棋類樂園",
+  "short_name": "棋類樂園",
+  "description": "給小朋友玩的五子棋與圍棋，內建 AI 教練提示。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffe3f1",
+  "theme_color": "#e05a9c",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
