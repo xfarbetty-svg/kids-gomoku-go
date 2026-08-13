@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>動物五子棋 🐱🐻</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(180deg,#ffe3f1 0%,#fff0f7 45%,#e8f7ff 100%); min-height:100vh; overflow-x:hidden; text-align:center; }
+  button { font-family:inherit; }
+  .hidden { display:none !important; }
+
+  .title { font-size:34px; color:#e05a9c; text-shadow:0 3px 0 #fff, 0 0 16px #ffc7e3; margin-top:18px; letter-spacing:1px; }
+  .subtitle { color:#b06a92; font-size:15px; margin:6px 0 12px; }
+
+  .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  .score { display:flex; align-items:center; gap:10px; background:#fff; border-radius:999px; padding:6px 16px; box-shadow:0 3px 10px rgba(224,90,156,.18); font-weight:800; color:#7a4a63; }
+  .score .me { color:#e60000; font-size:17px; }
+  .score .ai { color:#0066cc; font-size:17px; }
+  .score .mid { color:#d9b3c8; font-size:15px; }
+  .score b { font-size:18px; }
+
+  .dif { display:flex; gap:6px; }
+  .difBtn { border:3px solid #f0cfe0; background:#fff; color:#7a4a63; border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; cursor:pointer; }
+  .difBtn.on { background:#e05a9c; color:#fff; border-color:#e05a9c; }
+
+  .status {
+    display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; border-radius:18px; padding:8px 18px;
+    box-shadow:0 3px 12px rgba(224,90,156,.15); font-weight:800; color:#5a3a4d; margin:0 auto 10px; font-size:15px;
+    white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw;
+  }
+  .status .dot { width:16px; height:16px; border-radius:50%; display:inline-block; }
+  .dot.me { background:#ff4d4d; }
+  .dot.ai { background:#3399ff; }
+
+  .boardBox { display:block; margin:0 auto; width:max-content; transform-origin:top center; }
+  #board {
+    display:grid; grid-template-columns:repeat(15, 1fr); gap:0;
+    background:linear-gradient(145deg,#fff3dd,#ffedf6); border:6px solid #fff; border-radius:20px;
+    box-shadow:0 12px 34px rgba(200,120,150,.3); padding:4px; overflow:hidden;
+  }
+  .cell { position:relative; width:32px; height:32px; }
+  .cell::before { content:''; position:absolute; left:-1px; top:-1px; width:34px; height:34px;
+    background:repeating-linear-gradient(0deg, transparent 0 30px, #e8cdd9 30px 31px),
+               repeating-linear-gradient(90deg, transparent 0 30px, #e8cdd9 30px 31px); }
+  .stone {
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:26px; height:26px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:13px; z-index:2;
+    box-shadow:0 2px 4px rgba(0,0,0,.22), inset 0 -3px 5px rgba(0,0,0,.18), inset 0 3px 5px rgba(255,255,255,.5);
+  }
+  .stone.me { background:radial-gradient(circle at 35% 30%, #ff9d9d, #ff4d4d 60%, #d92626); border:2px solid #fff; color:#fff; }
+  .stone.ai { background:radial-gradient(circle at 35% 30%, #7cc2ff, #3399ff 60%, #1a73d9); border:2px solid #fff; color:#fff; }
+  .stone.last::after { content:'✨'; position:absolute; font-size:11px; }
+  .stone.place { animation:place .25s ease; }
+  @keyframes place { 0%{transform:translate(-50%,-50%) scale(.3); opacity:.3} 100%{transform:translate(-50%,-50%) scale(1); opacity:1} }
+
+  .ctrl { margin-top:12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(224,90,156,.3); z-index:10; }
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
+    background:linear-gradient(135deg,#ff9ecb,#ff7ab5); box-shadow:0 5px 0 #d95d96, 0 8px 18px rgba(224,90,156,.3); transition:.12s; user-select:none; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #d95d96; }
+  .btn.mint { background:linear-gradient(135deg,#9be8c9,#62d6a5); box-shadow:0 5px 0 #3ba87c, 0 8px 18px rgba(98,214,165,.3); }
+  .btn.lav { background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.3); }
+
+  .confetti { position:fixed; font-size:22px; z-index:95; pointer-events:none; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translateY(105vh) rotate(360deg); opacity:.4; } }
+  .fb { font-size:16px; font-weight:800; color:#7a4a63; margin-top:8px; height:24px; overflow:hidden; white-space:nowrap; }
+
+  .suggPulse { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:34px; height:34px; border-radius:50%;
+    border:4px solid #ffc93c; animation:pulse .7s ease-in-out infinite; z-index:200; box-shadow:0 0 18px rgba(255,201,60,.95); }
+  @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1); opacity:1} 50%{transform:translate(-50%,-50%) scale(1.35); opacity:.5} }
+  .btn.yellow { background:linear-gradient(135deg,#ffe08a,#ffc93c); color:#8a6200; box-shadow:0 5px 0 #d9a800, 0 8px 18px rgba(255,201,60,.4); }
+
+  .modal { position:fixed; inset:0; background:rgba(120,60,100,.45); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
+  .modal.align-bottom { align-items:flex-end; padding-bottom:24px; background:rgba(120,60,100,.12); backdrop-filter:none; pointer-events:none; }
+  .modal.align-bottom .card { margin-bottom:8px; pointer-events:auto; }
+  .suggLabel { position:fixed; transform:translate(-50%,-100%); font-size:13px; font-weight:800; color:#8a6200; background:#ffe08a;
+    border-radius:999px; padding:3px 10px; white-space:nowrap; z-index:201; box-shadow:0 2px 8px rgba(0,0,0,.2); animation:float 1s ease-in-out infinite; }
+  .modal .card { background:linear-gradient(180deg,#fff,#fff7fb); border-radius:26px; padding:22px; max-width:340px; width:100%;
+    box-shadow:0 16px 50px rgba(120,40,90,.35); border:4px solid #ffd1e6; animation:pop .25s ease; text-align:center; }
+  @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
+  .modal .coachFace { font-size:52px; display:block; animation:float 2s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .modal h2 { color:#e05a9c; font-size:22px; margin:6px 0 8px; }
+  .modal p { color:#7a4a63; font-size:16px; font-weight:800; margin-bottom:16px; }
+  .modalBtns { display:flex; gap:10px; justify-content:center; }
+</style>
+</head>
+<body>
+<a class="homeLink" href="index.html">🏠</a>
+
+<div class="title">動物五子棋 <span style="font-size:24px;">🐱</span>vs<span style="font-size:24px;">🐻</span></div>
+<div class="subtitle">你和 AI 輪流下棋，先連成 5 顆就贏！</div>
+
+<div class="topbar">
+  <div class="score">
+    <span class="me">🐱 你</span><b id="wMe">0</b><span class="mid">—</span><b id="wAi">0</b><span class="ai">AI 🐻</span>
+    <span style="color:#c0a0b0; font-size:13px;">和：<b id="wTie" style="color:#c0a0b0;">0</b></span>
+  </div>
+  <div class="dif">
+    <button class="difBtn on" data-d="0">🌱 簡單</button>
+    <button class="difBtn" data-d="1">🌻 普通</button>
+    <button class="difBtn" data-d="2">🍀 高手</button>
+  </div>
+</div>
+
+<div class="status"><span class="dot me" id="turnDot"></span><span id="statusMsg">輪到你囉！放一顆棋子吧 ✨</span></div>
+
+<div class="boardBox" id="boardBox"><div id="board"></div></div>
+
+<div class="ctrl">
+  <button class="btn lav" id="firstBtn">我先下 🐱</button>
+  <button class="btn mint" id="aiFirstBtn">讓 AI 先下 🐻</button>
+  <button class="btn" id="restartBtn">🔄 重來</button>
+  <button class="btn yellow" id="coachBtn">🎓 教練：開</button>
+</div>
+<div class="fb" id="fb"></div>
+
+<div id="coachModal" class="modal align-bottom hidden">
+  <div class="card">
+    <span class="coachFace">🐻</span>
+    <h2>等等！這裡更好喔！</h2>
+    <p id="coachReason">看看閃亮亮的黃圈圈～</p>
+    <p style="font-size:13px; color:#b98aa5; font-weight:700;">點棋盤上閃亮的黃圈＝聽老師的<br>點其他地方＝照你的想法</p>
+  </div>
+</div>
+
+<script>
+/* ================= 設定 ================= */
+var N = 15;
+var EMPTY = 0, ME = 1, AI = 2;
+var board = [], turn = ME, over = false, aiThinking = false;
+var scores = {me:0, ai:0, tie:0};
+var difficulty = 0;
+var lastR = -1, lastC = -1;
+var winCells = [];
+var coachOn = true, pending = null;
+
+var AI_MSG = ['換我了！','我想想喔…🤔','嘿嘿，看我這步！','別以為我會輸！'];
+var ME_PRAISE = ['好棋！','漂亮！','哇！你真厲害！','繼續繼續～'];
+
+/* ================= 工具 ================= */
+function $(id){ return document.getElementById(id); }
+function newBoard(){ board = []; for(var r=0;r<N;r++){ board.push([]); for(var c=0;c<N;c++) board[r].push(EMPTY); } }
+
+/* ================= 音效 ================= */
+var audioCtx = null;
+function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
+function sPlace(){ tone(620,.09,'triangle',.15); }
+function sWinMe(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle'); }, i*130); }); }
+function sWinAi(){ [300,280,260,240].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle',.2); }, i*150); }); }
+function sTie(){ tone(500,.15,'triangle'); setTimeout(function(){ tone(500,.15,'triangle'); },200); }
+function confetti(){ var em=['🎉','⭐','🎈','💖','🌈','✨','🌸','🦋']; for(var i=0;i<45;i++) setTimeout(function(){ var c=document.createElement('div'); c.className='confetti'; c.textContent=em[Math.floor(Math.random()*em.length)]; c.style.left=Math.random()*100+'vw'; c.style.top='-30px'; c.style.animationDuration=(2+Math.random()*2)+'s'; document.body.appendChild(c); setTimeout(function(){ c.remove(); },4500); }, Math.random()*1200); }
+
+/* ================= 棋盤 ================= */
+function buildBoard(){
+  var b = $('board'); b.innerHTML='';
+  for(var r=0;r<N;r++) for(var c=0;c<N;c++){
+    var cell = document.createElement('div');
+    cell.className='cell'; cell.dataset.r=r; cell.dataset.c=c;
+    cell.addEventListener('click', function(){ clickCell(this); });
+    b.appendChild(cell);
+  }
+  fitScale();
+}
+function fitScale(){
+  var box = $('boardBox');
+  var avail = Math.min(window.innerWidth - 24, 580);
+  var scale = Math.min(1, avail / box.offsetWidth);
+  box.style.transform = 'scale(' + scale + ')';
+}
+window.addEventListener('resize', function(){ fitScale(); });
+
+function render(){
+  for(var r=0;r<N;r++) for(var c=0;c<N;c++){
+    var cell = $('board').children[r*N+c];
+    cell.innerHTML='';
+    if(board[r][c] !== EMPTY){
+      var s = document.createElement('div');
+      s.className = 'stone ' + (board[r][c]===ME?'me':'ai') + (r===lastR&&c===lastC?' last':'') + ' place';
+      s.textContent = board[r][c]===ME ? '🐱' : '🐻';
+      cell.appendChild(s);
+    }
+  }
+  var dot = $('turnDot');
+  dot.className = 'dot ' + (turn===ME?'me':'ai');
+}
+function setStatus(msg, emoji){ $('statusMsg').textContent = (emoji||'') + ' ' + msg; }
+
+/* ================= 勝負判斷 ================= */
+function checkWin(r, c){
+  var p = board[r][c];
+  if(p === EMPTY) return null;
+  var dirs = [[1,0],[0,1],[1,1],[1,-1]];
+  for(var d=0;d<4;d++){
+    var cells = [[r,c]], dr=dirs[d][0], dc=dirs[d][1];
+    var rr=r+dr, cc=c+dc;
+    while(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===p){ cells.push([rr,cc]); rr+=dr; cc+=dc; }
+    rr=r-dr; cc=c-dc;
+    while(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===p){ cells.push([rr,cc]); rr-=dr; cc-=dc; }
+    if(cells.length >= 5) return cells;
+  }
+  return null;
+}
+function isFull(){ for(var r=0;r<N;r++) for(var c=0;c<N;c++) if(board[r][c]===EMPTY) return false; return true; }
+
+/* ================= AI（評估式） ================= */
+function patScore(count, open){
+  if(count >= 5) return 100000;
+  if(open === 0) return 0;
+  if(count === 4) return open===2 ? 10000 : 1000;
+  if(count === 3) return open===2 ? 1000 : 100;
+  if(count === 2) return open===2 ? 100 : 10;
+  if(count === 1) return open===2 ? 1 : 0;
+  return 0;
+}
+function scoreCell(r, c, p){
+  var total = 0;
+  var dirs = [[1,0],[0,1],[1,1],[1,-1]];
+  for(var d=0;d<4;d++){
+    var dr=dirs[d][0], dc=dirs[d][1];
+    var count=1, open=0;
+    var rr=r+dr, cc=c+dc;
+    while(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===p){ count++; rr+=dr; cc+=dc; }
+    if(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===EMPTY) open++;
+    rr=r-dr; cc=c-dc;
+    while(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===p){ count++; rr-=dr; cc-=dc; }
+    if(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===EMPTY) open++;
+    total += patScore(count, open);
+  }
+  return total;
+}
+function aiMove(){
+  var atk = difficulty===0 ? 1.0 : 1.0;
+  var def = difficulty===0 ? 0.6 : (difficulty===1 ? 1.05 : 1.25);
+  var best = -1, cands = [];
+  for(var r=0;r<N;r++) for(var c=0;c<N;c++){
+    if(board[r][c] !== EMPTY) continue;
+    var s = scoreCell(r,c,AI)*atk + scoreCell(r,c,ME)*def;
+    // 越靠近中心 + 小加分（開局引導）
+    var center = (N-1)/2;
+    s += (1 - (Math.abs(r-center)+Math.abs(c-center))/(N*2)) * 2;
+    if(s > best){ best = s; cands = [{r:r,c:c,s:s}]; }
+    else if(s === best){ cands.push({r:r,c:c,s:s}); }
+  }
+  // 簡單模式：有時故意失誤
+  if(difficulty===0 && Math.random()<0.25 && cands.length>1){ cands.splice(Math.floor(Math.random()*(cands.length-1))+1,1); }
+  var m = cands[Math.floor(Math.random()*cands.length)];
+  return {r:m.r, c:m.c};
+}
+
+/* ================= 流程 ================= */
+function place(r, c, who){
+  board[r][c] = who;
+  lastR = r; lastC = c;
+  sPlace();
+  render();
+  var win = checkWin(r, c);
+  if(win){
+    over = true;
+    if(who === ME){ scores.me++; sWinMe(); confetti(); setStatus('你贏了！太厲害啦！🎉'); $('fb').textContent = '🐱 勝利！再來一局吧！'; }
+    else { scores.ai++; sWinAi(); setStatus('熊貓 AI 贏了…再挑戰一次！'); $('fb').textContent = '🐻 AI 勝利！沒關係，再來！'; }
+    $('wMe').textContent = scores.me; $('wAi').textContent = scores.ai;
+    return;
+  }
+  if(isFull()){ over = true; scores.tie++; $('wTie').textContent = scores.tie; sTie(); setStatus('和局！你們打成平手 🤝'); return; }
+  turn = (who===ME) ? AI : ME;
+  if(turn === AI){ setStatus('輪到 AI 思考…🤔'); aiThink(); }
+  else { setStatus('輪到你了！放一顆棋子吧 ✨'); }
+}
+function aiThink(){
+  aiThinking = true;
+  setTimeout(function(){
+    var m = aiMove();
+    place(m.r, m.c, AI);
+    aiThinking = false;
+  }, 550 + Math.random()*400);
+}
+function clickCell(el){
+  if(over || aiThinking || turn !== ME) return;
+  var r = parseInt(el.dataset.r, 10), c = parseInt(el.dataset.c, 10);
+  if(board[r][c] !== EMPTY) return;
+  if(pending){
+    var pp = pending; pending = null;
+    clearCoachOverlay();
+    $('coachModal').classList.add('hidden');
+    place(r, c, ME);
+    return;
+  }
+  if(coachOn){
+    var sug = bestPlayerMove();
+    var sA = moveScore(r, c, ME);
+    if((sug.r !== r || sug.c !== c) && (sug.s - sA) >= 60){
+      pending = {r:r, c:c, sr:sug.r, sc:sug.c};
+      $('coachReason').textContent = coachReason(sug.r, sug.c);
+      var pulse = document.createElement('div');
+      pulse.className = 'suggPulse'; pulse.id = 'suggPulse';
+      var sugCell = $('board').children[sug.r*N+sug.c];
+      sugCell.appendChild(pulse);
+      var pr = sugCell.getBoundingClientRect();
+      var lbl = document.createElement('div');
+      lbl.className = 'suggLabel'; lbl.id = 'suggLabel';
+      lbl.textContent = '點這裡 👆';
+      lbl.style.left = (pr.left + pr.width/2) + 'px';
+      lbl.style.top = (pr.top - 6) + 'px';
+      document.body.appendChild(lbl);
+      $('coachModal').classList.remove('hidden');
+      return;
+    }
+  }
+  place(r, c, ME);
+}
+/* 教練：評估玩家下某點的價值（攻擊自己 + 防守 AI） */
+function moveScore(r, c, who){
+  return scoreCell(r, c, ME) + scoreCell(r, c, AI);
+}
+function bestPlayerMove(){
+  var bestR = -1, bestC = -1, bestS = -1;
+  var center = (N-1)/2;
+  for(var r=0;r<N;r++) for(var c=0;c<N;c++){
+    if(board[r][c] !== EMPTY) continue;
+    var s = moveScore(r, c, ME) + (1 - (Math.abs(r-center)+Math.abs(c-center))/(N*2)) * 2;
+    if(s > bestS){ bestS = s; bestR = r; bestC = c; }
+  }
+  return {r:bestR, c:bestC, s:bestS};
+}
+function inb(r, c){ return r>=0 && r<N && c>=0 && c<N; }
+function bestLine(r, c, p){
+  var best = {count:1, open:0};
+  var dirs = [[1,0],[0,1],[1,1],[1,-1]];
+  for(var d=0;d<4;d++){
+    var dr=dirs[d][0], dc=dirs[d][1], cnt=1, op=0;
+    var rr=r+dr, cc=c+dc;
+    while(inb(rr,cc) && board[rr][cc]===p){ cnt++; rr+=dr; cc+=dc; }
+    if(inb(rr,cc) && board[rr][cc]===EMPTY) op++;
+    rr=r-dr; cc=c-dc;
+    while(inb(rr,cc) && board[rr][cc]===p){ cnt++; rr-=dr; cc-=dc; }
+    if(inb(rr,cc) && board[rr][cc]===EMPTY) op++;
+    if(cnt > best.count || (cnt === best.count && op > best.open)) best = {count:cnt, open:op};
+  }
+  return best;
+}
+function coachReason(r, c){
+  var my = bestLine(r, c, ME);
+  var ai = bestLine(r, c, AI);
+  if(my.count >= 4) return '這裡可以連成 '+my.count+' 顆，快要贏了！🎯';
+  if(ai.count >= 4) return '下這裡可以擋住 AI 的 '+ai.count+' 顆，不然牠就贏了！😱';
+  if(ai.count >= 3) return 'AI 快連成 '+ai.count+' 顆了，這裡擋住牠！🛡️';
+  if(my.count >= 3 && my.open >= 2) return '這裡能連成 '+my.count+' 顆（兩邊都通），好機會！✨';
+  if(my.count >= 3) return '幫你連成 '+my.count+' 顆，繼續加油！💪';
+  if(my.count >= 2 && my.open >= 2) return '先把棋子連在一起，之後才好連五顆！🧩';
+  return '棋子靠在一起下，比較容易連成線喔！';
+}
+function clearCoachOverlay(){
+  var p = $('suggPulse'); if(p) p.remove();
+  var l = $('suggLabel'); if(l) l.remove();
+}
+$('coachBtn').addEventListener('click', function(){
+  coachOn = !coachOn;
+  $('coachBtn').textContent = coachOn ? '🎓 教練：開' : '🎓 教練：關';
+  clearCoachOverlay();
+  if(!coachOn && pending){ pending = null; $('coachModal').classList.add('hidden'); }
+});
+
+/* ================= 控制 ================= */
+function reset(meFirst){
+  newBoard();
+  turn = meFirst ? ME : AI;
+  over = false; aiThinking = false;
+  lastR = -1; lastC = -1;
+  pending = null;
+  $('coachModal').classList.add('hidden');
+  clearCoachOverlay();
+  render();
+  if(turn === AI){ setStatus('AI 先下…'); aiThink(); }
+  else setStatus('輪到你囉！放一顆棋子吧 ✨');
+}
+$('firstBtn').addEventListener('click', function(){ reset(true); });
+$('aiFirstBtn').addEventListener('click', function(){ reset(false); });
+$('restartBtn').addEventListener('click', function(){ reset(true); });
+document.querySelectorAll('.difBtn').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.difBtn').forEach(function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    difficulty = parseInt(b.dataset.d, 10);
+  });
+});
+
+/* ================= 啟動 ================= */
+newBoard(); buildBoard(); render();
+setStatus('輪到你囉！放一顆棋子吧 ✨');
+</script>
+</body>
+</html>

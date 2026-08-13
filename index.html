@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>小朋友棋類樂園 🎀</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:linear-gradient(180deg,#ffe3f1 0%,#fff0f7 45%,#e8f7ff 100%); min-height:100vh; text-align:center; padding:36px 18px; }
+  .logo { font-size:72px; display:block; animation:float 2.5s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+  h1 { font-size:40px; color:#e05a9c; text-shadow:0 3px 0 #fff, 0 0 16px #ffc7e3; letter-spacing:1px; }
+  .sub { color:#b06a92; font-size:16px; margin:8px 0 26px; }
+  .cards { display:flex; flex-wrap:wrap; justify-content:center; gap:18px; max-width:640px; margin:0 auto; }
+  .game {
+    width:280px; background:#fff; border-radius:26px; border:4px solid #ffd1e6; padding:22px 18px; cursor:pointer;
+    box-shadow:0 12px 34px rgba(224,90,156,.22); transition:.15s; text-decoration:none; color:inherit;
+  }
+  .game:hover { transform:translateY(-5px); box-shadow:0 16px 40px rgba(224,90,156,.3); }
+  .game .gicon { font-size:56px; display:block; }
+  .game h2 { color:#e05a9c; font-size:24px; margin:8px 0 6px; }
+  .game p { color:#7a4a63; font-size:14px; font-weight:700; line-height:1.6; }
+  .tag { display:inline-block; background:#fff2f9; border:2px solid #ffd1e6; color:#d75a96; border-radius:999px;
+    font-size:12px; font-weight:800; padding:3px 10px; margin:8px 4px 0; }
+</style>
+</head>
+<body>
+  <span class="logo">🎀</span>
+  <h1>小朋友棋類樂園</h1>
+  <div class="sub">選一個遊戲，和可愛的 AI 老師一起玩吧！</div>
+  <div class="cards">
+    <a class="game" href="gomoku.html">
+      <span class="gicon">🐱🐻</span>
+      <h2>動物五子棋</h2>
+      <p>和 AI 老師下五子棋，先連成 5 顆就贏！下棋時老師會提醒你哪裡更好喔～</p>
+      <span class="tag">🎓 教練提示</span><span class="tag">三級難度</span>
+    </a>
+    <a class="game" href="go.html">
+      <span class="gicon">⚫⚪</span>
+      <h2>圍棋教室</h2>
+      <p>9 路小棋盤，誰先吃掉對方 5 顆棋子就贏！老師教你包圍、逃跑、吃子！</p>
+      <span class="tag">🎓 教練提示</span><span class="tag">三級難度</span>
+    </a>
+  </div>
+</body>
+</html>
