@@ -30,10 +30,10 @@
   .cats { display:flex; gap:6px; justify-content:center; margin:0 0 8px; flex-wrap:wrap; }
   .catBtn { border:3px solid #ffd1e6; background:#fff; color:#b06a92; border-radius:999px; padding:7px 16px; font-weight:800; font-size:14px; }
   .catBtn.on { background:#ff7ab5; color:#fff; border-color:#ff7ab5; }
-  .palette { background:#fff; border-radius:20px; border:3px solid #ffd1e6; padding:10px; min-height:64px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; box-shadow:0 6px 16px rgba(224,90,156,.12); }
-  .swatch { width:44px; height:44px; border-radius:50%; border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.2), inset 0 -2px 4px rgba(0,0,0,.15); transition:.12s; }
+  .palette { background:#fff; border-radius:20px; border:3px solid #ffd1e6; padding:10px; min-height:64px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; box-shadow:0 6px 16px rgba(224,90,156,.12); pointer-events:auto; }
+  .swatch { width:44px; height:44px; border-radius:50%; border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.2), inset 0 -2px 4px rgba(0,0,0,.15); transition:.12s; touch-action:manipulation; pointer-events:auto; }
   .swatch.on { outline:4px solid #ffc93c; transform:scale(1.12); }
-  .itemBtn { min-width:52px; height:52px; border-radius:16px; border:3px solid #f0cfe0; background:#fff; font-size:26px; display:flex; align-items:center; justify-content:center; transition:.12s; padding:0 8px; }
+  .itemBtn { min-width:52px; height:52px; border-radius:16px; border:3px solid #f0cfe0; background:#fff; font-size:26px; display:flex; align-items:center; justify-content:center; transition:.12s; padding:0 8px; touch-action:manipulation; pointer-events:auto; }
   .itemBtn .lb { font-size:11px; font-weight:800; color:#7a4a63; }
   .itemBtn.on { border-color:#ff7ab5; background:#fff0f7; transform:translateY(-3px); }
 
@@ -123,22 +123,24 @@
 
 <script>
 /* ================= 資料 ================= */
-var HAIRS = [{id:'bob',n:'短髮'},{id:'long',n:'長髮'},{id:'twin',n:'雙馬尾'},{id:'buns',n:'包包頭'}];
-var HAIRCOLORS = [{c:'#3a2a3a',n:'黑'},{c:'#8b5a2b',n:'咖'},{c:'#ff8fb3',n:'粉'},{c:'#b78bff',n:'紫'},{c:'#ffd36b',n:'金'},{c:'#d7d7e8',n:'銀'},{c:'#ff4d4d',n:'紅'}];
-var DRESSES = [{id:'a',n:'蓬蓬裙'},{id:'b',n:'A字裙'},{id:'c',n:'吊帶裙'}];
-var DRESSCOLORS = [{c:'#ff8fb3',n:'粉'},{c:'#ff4d4d',n:'紅'},{c:'#62d6a5',n:'薄荷'},{c:'#b78bff',n:'紫'},{c:'#ffc93c',n:'黃'},{c:'#3399ff',n:'藍'},{c:'#ffffff',n:'白'},{c:'#444444',n:'黑'}];
-var SHOES = [{e:'🩰',n:'舞鞋'},{e:'👟',n:'球鞋'},{e:'🥿',n:'平底'},{e:'👢',n:'長靴'}];
-var ACC_HEAD = [{e:'',n:'無'},{e:'🎀',n:'蝴蝶結'},{e:'👑',n:'皇冠'},{e:'🦋',n:'髮夾'},{e:'🌸',n:'花飾'},{e:'🎧',n:'耳機'},{e:'🎤',n:'麥克風'}];
-var ACC_FACE = [{e:'',n:'無'},{e:'🕶️',n:'墨鏡'}];
-var ACC_NECK = [{e:'',n:'無'},{e:'🎀',n:'領結'},{e:'💎',n:'項鍊'}];
-var ACC_HAND = [{e:'',n:'無'},{e:'🪄',n:'魔法棒'},{e:'💐',n:'花束'},{e:'🧸',n:'熊熊'},{e:'🍰',n:'蛋糕'},{e:'🎤',n:'麥克風'}];
-var EXPR = [{e:'',n:'甜甜笑'},{e:'🥰',n:'愛心眼'},{e:'😍',n:'閃閃眼'},{e:'😜',n:'吐舌'},{e:'😴',n:'睡覺'}];
+var HAIRS = [{id:'bob',n:'短髮'},{id:'long',n:'長髮'},{id:'twin',n:'雙馬尾'},{id:'buns',n:'包包頭'},{id:'wave',n:'大波浪'},{id:'pony',n:'高馬尾'}];
+var HAIRCOLORS = [{c:'#3a2a3a',n:'黑'},{c:'#8b5a2b',n:'咖'},{c:'#ff8fb3',n:'櫻花粉'},{c:'#b78bff',n:'薰衣草'},{c:'#ffd36b',n:'奶油金'},{c:'#d7d7e8',n:'銀灰'},{c:'#ff4d4d',n:'莓果紅'},{c:'#62d6a5',n:'薄荷綠'},{c:'#3399ff',n:'天空藍'},{c:'#f4c2ff',n:'夢幻紫粉'}];
+var DRESSES = [{id:'a',n:'蓬蓬裙'},{id:'b',n:'A字裙'},{id:'c',n:'吊帶裙'},{id:'stage',n:'亮片舞台裙'},{id:'school',n:'校園百褶裙'},{id:'sport',n:'活力運動服'},{id:'princess',n:'公主長裙'},{id:'denim',n:'牛仔洋裝'}];
+var DRESSCOLORS = [{c:'#ff8fb3',n:'櫻花粉'},{c:'#ff4d4d',n:'莓果紅'},{c:'#62d6a5',n:'薄荷'},{c:'#b78bff',n:'薰衣草'},{c:'#ffc93c',n:'檸檬黃'},{c:'#3399ff',n:'天空藍'},{c:'#ffffff',n:'珍珠白'},{c:'#444444',n:'黑曜石'},{c:'#ff9e3d',n:'蜜桃橘'},{c:'#00b8a9',n:'湖水綠'}];
+var SHOES = [{e:'🩰',n:'芭蕾舞鞋'},{e:'👟',n:'星星球鞋'},{e:'🥿',n:'珍珠平底鞋'},{e:'👢',n:'亮面長靴'},{e:'👠',n:'舞台高跟鞋'},{e:'🥾',n:'甜酷短靴'}];
+var ACC_HEAD = [{e:'',n:'無'},{e:'🎀',n:'蝴蝶結'},{e:'👑',n:'皇冠'},{e:'🦋',n:'蝴蝶髮夾'},{e:'🌸',n:'櫻花花冠'},{e:'🎧',n:'偶像耳機'},{e:'🎤',n:'舞台麥克風'},{e:'🫧',n:'泡泡髮飾'},{e:'💎',n:'水鑽髮箍'},{e:'🧢',n:'甜酷帽子'}];
+var ACC_FACE = [{e:'',n:'無'},{e:'🕶️',n:'星光墨鏡'},{e:'💖',n:'愛心貼紙'},{e:'✨',n:'亮片貼紙'}];
+var ACC_NECK = [{e:'',n:'無'},{e:'🎀',n:'緞帶領結'},{e:'💎',n:'水晶項鍊'},{e:'📿',n:'彩珠項鍊'},{e:'🌙',n:'月亮項鍊'}];
+var ACC_HAND = [{e:'',n:'無'},{e:'🪄',n:'魔法棒'},{e:'💐',n:'應援花束'},{e:'🧸',n:'小熊玩偶'},{e:'🍰',n:'草莓蛋糕'},{e:'🎤',n:'舞台麥克風'},{e:'🎀',n:'粉紅應援棒'},{e:'👜',n:'迷你手提包'}];
+var EXPR = [{e:'',n:'甜甜笑'},{e:'🥰',n:'愛心眼'},{e:'😍',n:'閃閃眼'},{e:'😜',n:'吐舌'},{e:'😴',n:'睡覺'},{e:'🤩',n:'偶像登場'},{e:'😊',n:'溫柔笑'}];
 var BGS = [
   {id:'stage', n:'舞台', css:'linear-gradient(180deg,#3a1d6e,#7a3fb0)', deco:['🎤','🎶','💃']},
   {id:'garden', n:'花園', css:'linear-gradient(180deg,#ffd6ec,#eafcff)', deco:['🌸','🌷','🦋']},
   {id:'castle', n:'城堡', css:'linear-gradient(180deg,#d6d2ff,#fce6ff)', deco:['🏰','💎','👑']},
   {id:'space', n:'星空', css:'linear-gradient(180deg,#1c2350,#3a2a6e)', deco:['🌌','✨','🌙']},
-  {id:'party', n:'派對', css:'linear-gradient(180deg,#ffe9f3,#fff3c9)', deco:['🎈','🎉','🎁']}
+  {id:'party', n:'派對', css:'linear-gradient(180deg,#ffe9f3,#fff3c9)', deco:['🎈','🎉','🎁']},
+  {id:'concert', n:'演唱會', css:'linear-gradient(180deg,#21134f,#7c3fb5)', deco:['🎤','🎶','💜']},
+  {id:'cafe', n:'甜點咖啡廳', css:'linear-gradient(180deg,#ffe9d7,#fff6e5)', deco:['🍰','☕','🧁']}
 ];
 
 var state = {
@@ -177,14 +179,21 @@ var HAIR_PATHS = {
         '<path d="M160 150 C178 164 188 196 182 228 C176 252 152 248 154 222 C156 200 164 180 154 166 Z"/>',
   buns: '<path d="M110 44 C78 44 62 62 62 90 L62 152 C62 170 80 174 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 174 158 170 158 152 L158 90 C158 62 142 44 110 44 Z"/>' +
         '<circle cx="80" cy="30" r="18"/>' +
-        '<circle cx="140" cy="30" r="18"/>'
+        '<circle cx="140" cy="30" r="18"/>',
+  wave: '<path d="M110 44 C78 44 62 64 62 92 C62 116 70 132 60 156 C52 176 72 184 84 166 L90 102 C90 88 130 88 130 102 L136 166 C148 184 168 176 160 156 C150 132 158 116 158 92 C158 64 142 44 110 44 Z"/>',
+  pony: '<path d="M110 44 C78 44 62 62 62 90 L62 154 C62 172 80 176 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 176 158 172 158 154 L158 90 C158 62 142 44 110 44 Z"/><path d="M154 54 C184 45 198 66 188 92 C180 112 168 120 158 108 Z"/>'
 };
 var HAIR_FRONT = '<path d="M68 80 C68 46 90 28 110 28 C130 28 152 46 152 80 C142 62 134 70 122 66 C110 62 98 62 88 70 C80 74 74 74 68 80 Z"/>';
 
 var DRESS_PATHS = {
   a: 'M84 168 C84 152 94 146 110 146 C126 146 136 152 136 168 L142 196 L154 252 C156 272 64 272 66 252 L78 196 Z',
   b: 'M84 168 C84 152 94 146 110 146 C126 146 136 152 136 168 L140 192 L150 240 C152 254 68 254 70 240 L80 192 Z',
-  c: 'M84 158 L136 158 L146 196 L158 254 C160 272 60 272 62 254 L74 196 Z'
+  c: 'M84 158 L136 158 L146 196 L158 254 C160 272 60 272 62 254 L74 196 Z',
+  stage: 'M80 160 L140 160 L148 194 L168 258 C170 278 50 278 52 258 L72 194 Z',
+  school: 'M84 164 L136 164 L145 198 L158 252 C158 268 62 268 62 252 L75 198 Z',
+  sport: 'M82 164 L138 164 L145 205 L154 250 C154 264 66 264 66 250 L75 205 Z',
+  princess: 'M84 160 L136 160 L148 200 L180 278 C180 294 40 294 40 278 L72 200 Z',
+  denim: 'M82 160 L138 160 L150 202 L158 254 C158 270 62 270 62 254 L70 202 Z'
 };
 
 /* ================= 渲染 ================= */
@@ -244,6 +253,7 @@ function renderList(cat, curVal){
     b.addEventListener('click', function(){
       state[cat.name] = it.v;   // cat.name === 'hair' | 'dress' | 'bg'
       renderDoll(); renderPalette();
+      $('fb').textContent = '已換上「'+it.lb+'」✨';
     });
     p.appendChild(b);
   });
@@ -258,6 +268,7 @@ function renderColors(cat, curVal){
     b.addEventListener('click', function(){
       state[cat.name] = it.v;
       renderDoll(); renderPalette();
+      $('fb').textContent = '已選擇「'+it.lb+'」的顏色✨';
     });
     p.appendChild(b);
   });
@@ -271,6 +282,7 @@ function renderEmoji(cat, curVal){
     b.addEventListener('click', function(){
       state[cat.name] = it.v;
       renderDoll(); renderPalette();
+      $('fb').textContent = '造型換好了！✨';
     });
     p.appendChild(b);
   });

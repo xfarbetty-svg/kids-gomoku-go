@@ -19,7 +19,7 @@
   .topbar { display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
   .starChip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:6px 14px; font-weight:800; color:#7a4a63; box-shadow:0 3px 10px rgba(224,90,156,.15); font-size:14px; }
 
-  .pages { display:flex; gap:8px; justify-content:center; margin-bottom:10px; }
+  .pages { display:flex; gap:8px; justify-content:flex-start; flex-wrap:wrap; margin-bottom:10px; padding:0 4px; }
   .pageBtn { border:3px solid #ffd1e6; background:#fff; color:#b06a92; border-radius:999px; padding:7px 16px; font-weight:800; font-size:14px; }
   .pageBtn.on { background:#ff7ab5; color:#fff; border-color:#ff7ab5; }
   .pageBtn.done::after { content:' ✅'; }
@@ -75,7 +75,7 @@
     <span class="big">🌈</span>
     <h2 id="doneTitle">塗完了！</h2>
     <p id="doneDesc">這張圖好漂亮！</p>
-    <button class="toolBtn glossy" id="doneOk" style="padding:11px 26px; font-size:16px;">好棒！再塗下一張</button>
+  <button class="toolBtn glossy" id="doneOk" style="padding:11px 26px; font-size:16px;">好棒！再塗下一張</button>
   </div>
 </div>
 
@@ -117,7 +117,7 @@ var PAGES = [
 '<circle class="region" data-id="winR" cx="124" cy="142" r="10"/>'+
 '<circle cx="38" cy="38" r="2.5" fill="#555"/><path d="M28 52 L34 46 M48 52 L42 46 M30 40 L30 46 M46 40 L46 46" stroke="#555" stroke-width="2" fill="none"/></svg>'},
   {id:'cat', n:'🐱 小貓咪', svg:
-'<svg viewBox="0 0 220 220"><rect class="region" data-id="bg" x="0" y="0" width="220" height="220"/>'+
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="bg" x="0" y="0" width="220" height="220"/>'+ 
 '<circle class="region" data-id="head" cx="110" cy="102" r="42"/>'+
 '<path class="region" data-id="earL" d="M76 74 L56 34 L98 58 Z"/>'+
 '<path class="region" data-id="earR" d="M144 74 L164 34 L122 58 Z"/>'+
@@ -127,7 +127,62 @@ var PAGES = [
 '<circle cx="95" cy="98" r="4.5" fill="#555"/><circle cx="125" cy="98" r="4.5" fill="#555"/>'+
 '<path d="M100 118 Q110 126 120 118" stroke="#555" stroke-width="3" fill="none"/>'+
 '<path d="M70 104 L52 100 M70 110 L52 112 M150 104 L168 100 M150 110 L168 112" stroke="#555" stroke-width="2" fill="none"/></svg>'}
-];
+  ,{id:'rainbow', n:'🌈 彩虹', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="sky" x="0" y="0" width="220" height="220"/>'+ 
+'<path class="region" data-id="arc1" d="M25 150 C25 55 195 55 195 150 L180 150 C180 78 40 78 40 150 Z"/>'+ 
+'<path class="region" data-id="arc2" d="M45 150 C45 88 175 88 175 150 L160 150 C160 108 60 108 60 150 Z"/>'+ 
+'<path class="region" data-id="arc3" d="M65 150 C65 116 155 116 155 150 L140 150 C140 136 80 136 80 150 Z"/>'+ 
+'<path class="region" data-id="cloudL" d="M20 170 C20 152 42 148 50 162 C60 142 88 150 88 172 Z"/>'+ 
+'<path class="region" data-id="cloudR" d="M132 172 C132 150 160 144 170 162 C182 145 205 154 202 174 Z"/></svg>'},
+  {id:'unicorn', n:'🦄 獨角獸', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="bg" x="0" y="0" width="220" height="220"/>'+ 
+'<ellipse class="region" data-id="body" cx="110" cy="138" rx="55" ry="38"/>'+ 
+'<circle class="region" data-id="head" cx="72" cy="100" r="30"/>'+ 
+'<polygon class="region" data-id="horn" points="70,70 82,30 90,74"/>'+ 
+'<path class="region" data-id="mane" d="M52 78 C20 70 28 108 48 112 C20 130 48 150 68 132 Z"/>'+ 
+'<path class="region" data-id="tail" d="M160 132 C205 100 205 158 170 164 C205 178 176 202 150 170 Z"/>'+ 
+'<circle class="region" data-id="wing" cx="122" cy="116" r="20"/>'+ 
+'<circle cx="62" cy="96" r="4" fill="#555"/><path d="M45 110 Q72 124 95 108" stroke="#555" stroke-width="3" fill="none"/></svg>'},
+  {id:'cupcake', n:'🧁 杯子蛋糕', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="bg" x="0" y="0" width="220" height="220"/>'+ 
+'<path class="region" data-id="cup" d="M65 125 L155 125 L142 205 L78 205 Z"/>'+ 
+'<path class="region" data-id="cream" d="M58 128 C42 116 58 96 78 104 C68 76 105 70 112 98 C130 74 166 92 150 116 C178 110 182 136 158 142 L62 142 Z"/>'+ 
+'<circle class="region" data-id="berry" cx="112" cy="83" r="10"/>'+ 
+'<circle class="region" data-id="sprinkle1" cx="82" cy="118" r="5"/><circle class="region" data-id="sprinkle2" cx="142" cy="112" r="5"/><circle class="region" data-id="sprinkle3" cx="112" cy="124" r="5"/></svg>'},
+  {id:'concert', n:'🎤 舞台', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="back" x="0" y="0" width="220" height="220"/>'+ 
+'<rect class="region" data-id="floor" x="0" y="160" width="220" height="60"/>'+ 
+'<circle class="region" data-id="lightL" cx="36" cy="42" r="25"/><circle class="region" data-id="lightR" cx="184" cy="42" r="25"/>'+ 
+'<path class="region" data-id="curtainL" d="M0 0 L55 0 L42 160 L0 160 Z"/><path class="region" data-id="curtainR" d="M220 0 L165 0 L178 160 L220 160 Z"/>'+ 
+'<rect class="region" data-id="mic" x="104" y="84" width="12" height="80" rx="6"/><circle class="region" data-id="micHead" cx="110" cy="76" r="18"/>'+ 
+'<path d="M55 180 L80 165 M165 180 L140 165" stroke="#555" stroke-width="5" fill="none"/></svg>'},
+  {id:'heart', n:'💖 愛心花園', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="sky" x="0" y="0" width="220" height="220"/>'+ 
+'<path class="region" data-id="heart" d="M110 170 C35 120 58 65 92 82 C104 88 110 100 110 100 C110 100 116 88 128 82 C162 65 185 120 110 170 Z"/>'+ 
+'<path class="region" data-id="stem" d="M106 170 L114 170 L114 210 L106 210 Z"/>'+ 
+'<path class="region" data-id="leafL" d="M108 194 C82 180 74 198 106 204 Z"/>'+ 
+'<path class="region" data-id="leafR" d="M112 184 C138 170 146 188 114 194 Z"/>'+ 
+'<circle class="region" data-id="star1" cx="34" cy="48" r="10"/><circle class="region" data-id="star2" cx="186" cy="58" r="10"/></svg>'},
+  {id:'panda', n:'🐼 熊貓', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="bg" x="0" y="0" width="220" height="220"/>'+ 
+'<circle class="region" data-id="earL" cx="75" cy="62" r="18"/><circle class="region" data-id="earR" cx="145" cy="62" r="18"/>'+ 
+'<ellipse class="region" data-id="head" cx="110" cy="104" rx="55" ry="48"/>'+ 
+'<ellipse class="region" data-id="body" cx="110" cy="178" rx="48" ry="35"/>'+ 
+'<ellipse class="region" data-id="eyeL" cx="90" cy="102" rx="14" ry="20"/><ellipse class="region" data-id="eyeR" cx="130" cy="102" rx="14" ry="20"/>'+ 
+'<circle class="region" data-id="belly" cx="110" cy="180" r="20"/><circle cx="92" cy="102" r="4" fill="#555"/><circle cx="128" cy="102" r="4" fill="#555"/><path d="M102 120 Q110 128 118 120" stroke="#555" stroke-width="3" fill="none"/></svg>'},
+  {id:'planet', n:'🪐 星球', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="space" x="0" y="0" width="220" height="220"/>'+ 
+'<circle class="region" data-id="planet" cx="110" cy="120" r="45"/>'+ 
+'<ellipse class="region" data-id="ring" cx="110" cy="120" rx="82" ry="18" transform="rotate(-18 110 120)"/>'+ 
+'<circle class="region" data-id="moon" cx="42" cy="48" r="18"/><circle class="region" data-id="starA" cx="178" cy="52" r="10"/><circle class="region" data-id="starB" cx="178" cy="178" r="13"/><circle class="region" data-id="starC" cx="38" cy="178" r="9"/></svg>'}
+  ,{id:'mermaid', n:'🧜‍♀️ 美人魚', svg:
+'<svg viewBox="0 0 220 220"><rect class="region" data-id="sea" x="0" y="0" width="220" height="220"/>'+ 
+'<circle class="region" data-id="face" cx="110" cy="72" r="28"/>'+ 
+'<path class="region" data-id="hair" d="M82 75 C55 35 95 18 112 40 C142 12 174 48 138 92 C128 104 92 104 82 75 Z"/>'+ 
+'<path class="region" data-id="tail" d="M100 98 C75 124 76 156 104 164 C78 174 72 198 108 207 C144 198 142 174 116 164 C144 156 145 124 120 98 Z"/>'+ 
+'<path class="region" data-id="top" d="M86 96 Q110 112 134 96 L128 126 Q110 138 92 126 Z"/>'+ 
+'<circle class="region" data-id="pearl" cx="110" cy="35" r="8"/><circle cx="101" cy="70" r="3" fill="#555"/><circle cx="119" cy="70" r="3" fill="#555"/><path d="M104 84 Q110 90 116 84" stroke="#555" stroke-width="2" fill="none"/></svg>'}
+ ];
 var COLORS = [
   {c:'#ff4d4d', n:'紅'}, {c:'#ff8fb3', n:'粉'}, {c:'#ffc93c', n:'黃'}, {c:'#ff9e3d', n:'橘'},
   {c:'#62d6a5', n:'薄荷'}, {c:'#3399ff', n:'藍'}, {c:'#8a6dff', n:'紫'}, {c:'#e05a9c', n:'桃紅'},
@@ -166,7 +221,7 @@ function loadPage(){
   var fills = loadFills(pageId);
   var regions = $('canvas').querySelectorAll('.region');
   regions.forEach(function(r){ r.setAttribute('fill', fills[r.dataset.id] || WHITE); r.addEventListener('click', function(){ fillRegion(r); }); });
-  updateProgress();
+  updateProgress(true);
 }
 function fillRegion(r){
   r.setAttribute('fill', curColor);
@@ -175,7 +230,7 @@ function fillRegion(r){
   saveFills(pageId, fills);
   updateProgress();
 }
-function updateProgress(){
+function updateProgress(skipModal){
   var total = $('canvas').querySelectorAll('.region').length;
   var filled = 0;
   var fills = loadFills(pageId);
@@ -188,7 +243,7 @@ function updateProgress(){
     sWin();
     $('doneTitle').textContent = '塗完了！';
     $('doneDesc').textContent = PAGES.filter(function(x){return x.id===pageId;})[0].n + ' 被你塗得好漂亮！';
-    $('doneModal').classList.remove('hidden');
+    if(!skipModal) $('doneModal').classList.remove('hidden');
     if(window.KidsApp){ KidsApp.reportWin('color', '🎨'); updateStarChip(); }
   }
 }
@@ -241,7 +296,13 @@ $('clearBtn').addEventListener('click', function(){
   $('progress').textContent = '🧽 清乾淨了，重新塗吧！';
   refreshPageBadges();
 });
-$('doneOk').addEventListener('click', function(){ $('doneModal').classList.add('hidden'); });
+$('doneOk').addEventListener('click', function(){
+  $('doneModal').classList.add('hidden');
+  var current = PAGES.findIndex(function(p){ return p.id===pageId; });
+  pageId = PAGES[(current + 1) % PAGES.length].id;
+  buildPages();
+  loadPage();
+});
 
 /* ================= 音效 ================= */
 var audioCtx = null;
