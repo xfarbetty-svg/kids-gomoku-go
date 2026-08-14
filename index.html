@@ -127,6 +127,7 @@ $('installBtn').addEventListener('click', function(){
   if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt = null; $('installBtn').classList.add('hidden'); }
 });
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+render();
 </script>
 <script src="common.js"></script>
 </body>
