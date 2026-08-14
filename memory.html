@@ -3,52 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>海洋記憶翻牌 🐬</title>
+<title>封印記憶 🃏</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
-<meta name="theme-color" content="#1e7fc4">
-<link rel="stylesheet" href="common.css?v=3">
+<meta name="theme-color" content="#7c3fb5">
+<link rel="stylesheet" href="common.css?v=4">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; text-align:center; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; text-align:center; background:linear-gradient(180deg,#120a2a,#24144d 45%,#5b2d9b); color:#fff; }
   button { font-family:inherit; }
-  .hidden { display:none !important; }
-  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(55,182,255,.35); z-index:10; }
-  .title { font-size:30px; margin-top:20px; }
-  .subtitle { color:#5a83a0; font-size:15px; margin:6px 0 10px; font-weight:700; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,.3); z-index:10; }
+  .title { font-size:30px; margin-top:20px; text-shadow:0 0 18px rgba(255,216,107,.6); }
+  .subtitle { color:#cdb8ff; font-size:14px; margin:6px 0 12px; font-weight:700; }
   .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
-  .chip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:7px 16px; font-weight:800; color:#5a83a0; box-shadow:0 4px 12px rgba(55,182,255,.18); font-size:14px; }
-  .chip b { color:#1e7fc4; font-size:17px; }
-  .status { display:flex; align-items:center; justify-content:center; background:#fff; border-radius:18px; padding:8px 18px;
-    box-shadow:0 3px 12px rgba(55,182,255,.15); font-weight:800; color:#3a5a73; margin:0 auto 12px; font-size:15px;
-    white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw; }
+  .chip { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:999px; padding:7px 16px; font-weight:800; font-size:14px; }
+  .chip b { color:#ffd86b; font-size:17px; }
+  .status { display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.1); border:2px solid rgba(255,255,255,.22); border-radius:18px; padding:8px 18px; font-weight:800; margin:0 auto 14px; font-size:15px; min-height:42px; max-width:92vw; width:max-content; }
+
   .grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; max-width:420px; margin:0 auto; padding:0 12px; }
-  .card { aspect-ratio:1; border-radius:18px; cursor:pointer; perspective:500px; user-select:none; -webkit-user-select:none; }
+  .card { aspect-ratio:1; border-radius:16px; cursor:pointer; perspective:500px; user-select:none; -webkit-user-select:none; }
   .card .inner { position:relative; width:100%; height:100%; transition:transform .35s; transform-style:preserve-3d; }
   .card.flip .inner { transform:rotateY(180deg); }
-  .face { position:absolute; inset:0; border-radius:18px; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
-  .card .back { background:linear-gradient(145deg,#a8dcff,#37b6ff 60%,#1e7fc4); border:3px solid #fff; box-shadow:0 5px 0 #14609a, 0 8px 18px rgba(55,182,255,.3); font-size:34px; }
-  .card .front { background:#fff; border:3px solid #bcd9ff; transform:rotateY(180deg); font-size:44px; box-shadow:0 4px 10px rgba(55,182,255,.18); }
-  .card.match .front { background:#e8fff4; border-color:#5fd6a8; animation:bounceIn .4s ease; }
+  .face { position:absolute; inset:0; border-radius:16px; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+  .card .back { background:linear-gradient(145deg,#4b3a9e,#2c1a5e 60%,#1b1140); border:3px solid #ffd86b; box-shadow:0 5px 0 #160d33, 0 8px 18px rgba(0,0,0,.4); font-size:30px; }
+  .card .front { background:linear-gradient(180deg,#3b2a7a,#24144d); border:3px solid #75f4ff; transform:rotateY(180deg); font-size:44px; box-shadow:0 4px 10px rgba(117,244,255,.2); }
+  .card.match .front { background:linear-gradient(180deg,#2e5e2e,#173d17); border-color:#62d6a5; animation:bounceIn .4s ease; }
   .card.ko .inner { animation:shake .3s ease; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
   .ctrl { margin-top:14px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
   .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
-    background:linear-gradient(135deg,#8fd3ff,#37b6ff); box-shadow:0 5px 0 #14609a, 0 8px 18px rgba(55,182,255,.3); transition:.12s; user-select:none; }
-  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #14609a; }
-  .btn.glossy { background:linear-gradient(135deg,#ffb6d9,#ff7ab5 55%,#b78bff); box-shadow:0 5px 0 #d95d96, 0 8px 18px rgba(224,90,156,.3); }
-  .fb { font-size:15px; font-weight:800; color:#3a5a73; margin-top:10px; height:22px; overflow:hidden; white-space:nowrap; }
+    background:linear-gradient(135deg,#d6c8ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); transition:.12s; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #7059d0; }
+  .fb { font-size:15px; font-weight:800; color:#ffd86b; margin-top:10px; min-height:22px; }
+  .modal { position:fixed; inset:0; background:rgba(10,4,30,.8); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; }
+  .modal .card { background:linear-gradient(180deg,#2c1a5e,#1b1140); border:4px solid #ffd86b; border-radius:26px; padding:22px; max-width:400px; width:100%; text-align:center; box-shadow:0 0 40px rgba(255,216,107,.3); animation:pop .25s ease; color:#fff; }
+  .modal h2 { color:#ffd86b; font-size:24px; margin-bottom:10px; }
+  .modal .scoreLine { font-size:16px; color:#cdb8ff; margin-bottom:14px; }
+  @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
+  .hidden { display:none !important; }
 </style>
 </head>
-<body class="ocean-bg">
-
+<body>
 <a class="homeLink" href="index.html">🏠</a>
-<div class="title title-grad">海洋記憶翻牌 <span style="font-size:24px;">🐬</span></div>
-<div class="subtitle">翻開兩張牌，找到一模一樣的海洋動物！翻越少次越厲害</div>
+<div class="title title-grad">封印記憶 <span style="font-size:24px;">🃏</span></div>
+<div class="subtitle">這些魔物被封印在牌裡，翻出兩張一樣的來加固封印！</div>
 
 <div class="topbar">
+  <span class="chip">⏰ 時間 <b id="time">90</b></span>
+  <span class="chip">🐚 配對 <b id="pairs">0</b> / 8</span>
   <span class="chip">🃏 翻牌 <b id="moves">0</b></span>
-  <span class="chip">🐚 配對 <b id="pairs">0</b> / 6</span>
 </div>
 
 <div class="status"><span id="statusMsg">開始囉！點一張牌翻開它 👀</span></div>
@@ -56,41 +59,60 @@
 
 <div class="ctrl">
   <button class="btn" id="restartBtn">🔄 重來</button>
-  <button class="btn glossy hidden" id="winBtn">🎉 再玩一次</button>
 </div>
 <div class="fb" id="fb"></div>
 
+<div id="resultModal" class="modal hidden">
+  <div class="card">
+    <h2 id="resultTitle">封印完成！</h2>
+    <div class="scoreLine">用 <b id="finalMoves" style="color:#ffd86b;">0</b> 次翻牌完成封印</div>
+    <button class="btn" id="againBtn">🃏 再來一局</button>
+  </div>
+</div>
+
 <script>
-var EMOJIS = ['🐙','🐬','🐳','🦀','🐟','🐡'];
-var cards = [];   // {emoji, el, match}
-var first = null, lock = false, moves = 0, pairs = 0, over = false;
-var grid = $('grid');
+var EMOJIS = ['👾','💀','👹','🦇','😈','🔥','🕸️','🐍'];
+var TOTAL_TIME = 90;
+var cards = [], first = null, lock = false, moves = 0, pairs = 0, over = false;
+var timeLeft = TOTAL_TIME;
 
 var audioCtx = null;
 function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
 function sFlip(){ tone(520,.08,'triangle',.12); }
 function sMatch(){ tone(660,.1,'triangle',.15); setTimeout(function(){ tone(880,.14,'triangle',.15); },90); }
 function sWrong(){ tone(300,.15,'sine',.18); }
-function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle'); }, i*130); }); }
+function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle',.25); }, i*130); }); }
 
 function $(id){ return document.getElementById(id); }
-
+function rand(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
 function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 
 function build(){
-  grid.innerHTML=''; cards=[]; first=null; lock=false; moves=0; pairs=0; over=false;
-  $('moves').textContent='0'; $('pairs').textContent='0';
+  var g = $('grid'); g.innerHTML=''; cards=[]; first=null; lock=false; moves=0; pairs=0; over=false;
+  timeLeft = TOTAL_TIME;
+  $('moves').textContent='0'; $('pairs').textContent='0'; $('time').textContent=timeLeft;
   $('statusMsg').textContent='開始囉！點一張牌翻開它 👀'; $('fb').textContent='';
   var em = shuffle(EMOJIS.concat(EMOJIS));
   em.forEach(function(e){
     var c = {emoji:e, match:false};
     c.el = document.createElement('div');
     c.el.className = 'card';
-    c.el.innerHTML = '<div class="inner"><div class="face back">🐚</div><div class="face front">' + e + '</div></div>';
+    c.el.innerHTML = '<div class="inner"><div class="face back">🔮</div><div class="face front">' + e + '</div></div>';
     c.el.addEventListener('click', function(){ click(c); });
     cards.push(c);
-    grid.appendChild(c.el);
+    g.appendChild(c.el);
   });
+  countdown();
+}
+var timer = null;
+function countdown(){
+  if(timer) clearInterval(timer);
+  timer = setInterval(function(){
+    if(over){ clearInterval(timer); return; }
+    timeLeft--;
+    $('time').textContent = timeLeft;
+    if(timeLeft <= 0){ clearInterval(timer); timeout(); }
+  }, 1000);
 }
 
 function click(c){
@@ -107,7 +129,7 @@ function click(c){
     first = null;
     setTimeout(function(){
       lock = false;
-      if(pairs === 6) win();
+      if(pairs === EMOJIS.length) win();
     }, 350);
   } else {
     sWrong();
@@ -121,15 +143,24 @@ function click(c){
 }
 
 function win(){
-  over = true; sWin();
-  $('statusMsg').textContent = '全部配對成功！好厲害！🎉';
-  $('fb').textContent = '🏆 用 ' + moves + ' 次翻牌就完成！';
-  var winOk = $('winBtn'); winOk.classList.remove('hidden');
-  if(window.KidsApp) KidsApp.reportWin('memory','🐬');
+  over = true; clearInterval(timer); sWin();
+  $('statusMsg').textContent = '全部封印加固完成！好厲害！🎉';
+  $('resultTitle').textContent = moves <= 10 ? '記憶女神！完美封印！🏆' : (moves <= 14 ? '好厲害！封印加固！🌟' : '封印完成，繼續練習！💪');
+  $('finalMoves').textContent = moves;
+  $('resultModal').classList.remove('hidden');
+  if(window.KidsApp) KidsApp.reportWin('memory','🃏');
 }
-$('restartBtn').addEventListener('click', function(){ $('winBtn').classList.add('hidden'); build(); });
-$('winBtn').addEventListener('click', function(){ $('winBtn').classList.add('hidden'); build(); });
+function timeout(){
+  over = true;
+  $('statusMsg').textContent = '時間到！魔物還沒被封印…再挑戰一次吧！';
+  $('resultTitle').textContent = '時間到了…';
+  $('finalMoves').textContent = moves;
+  $('resultModal').classList.remove('hidden');
+}
+$('restartBtn').addEventListener('click', function(){ $('resultModal').classList.add('hidden'); build(); });
+$('againBtn').addEventListener('click', function(){ $('resultModal').classList.add('hidden'); build(); });
+build();
 </script>
-<script src="common.js?v=3"></script>
+<script src="common.js?v=4"></script>
 </body>
 </html>

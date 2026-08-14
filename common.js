@@ -5,13 +5,10 @@
 
   /* 圖鑑收集物定義：每款遊戲一種主題收藏物 */
   var FIGURES = {
-    gomoku:  { e:'🐱', n:'貓咪棋王',  t:'森林' },
-    go:      { e:'⚪', n:'圍棋大師',  t:'海洋' },
-    jump:    { e:'⭐', n:'跳跳星',    t:'太空' },
-    color:   { e:'🌈', n:'彩虹畫家',  t:'繽紛' },
-    memory:  { e:'🐬', n:'海豚記憶王',t:'海洋' },
-    mole:    { e:'👾', n:'星際獵人',  t:'太空' },
-    puzzle:  { e:'🧁', n:'甜點拼圖師',t:'甜點' }
+    rhythm: { e:'🎵', n:'節奏主唱', t:'舞台' },
+    memory: { e:'🃏', n:'封印守護', t:'封印' },
+    puzzle: { e:'🧩', n:'拼圖獵人', t:'拼圖' },
+    gomoku: { e:'⭐', n:'五子棋王', t:'對弈' }
   };
 
   function defaultState(){ return { stars:0, wins:{}, figures:{} }; }

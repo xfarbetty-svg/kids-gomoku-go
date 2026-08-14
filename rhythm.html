@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>節奏打怪 🎵</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#7c3fb5">
+<link rel="stylesheet" href="common.css?v=4">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; text-align:center; background:linear-gradient(180deg,#120a2a,#24144d 45%,#5b2d9b); color:#fff; }
+  button { font-family:inherit; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,.3); z-index:10; }
+  .title { font-size:30px; margin-top:20px; text-shadow:0 0 18px rgba(255,216,107,.6); }
+  .subtitle { color:#cdb8ff; font-size:14px; margin:6px 0 12px; font-weight:700; }
+  .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .chip { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:999px; padding:7px 16px; font-weight:800; font-size:14px; }
+  .chip b { color:#ffd86b; font-size:17px; }
+  .combo { font-size:15px; font-weight:900; color:#75f4ff; min-height:22px; text-shadow:0 0 12px rgba(117,244,255,.8); }
+
+  .stage { position:relative; max-width:420px; margin:0 auto; padding:0 12px; }
+  .lanes { position:relative; border:4px solid #ffd86b; border-radius:22px; overflow:hidden; background:linear-gradient(180deg,#1b1140,#2c1a5e); box-shadow:0 0 30px rgba(255,216,107,.25); }
+  .lane { position:relative; height:120px; border-right:1px dashed rgba(255,255,255,.12); }
+  .lane:last-child { border-right:none; }
+  .lane::after { content:attr(data-k); position:absolute; bottom:6px; left:50%; transform:translateX(-50%); font-size:24px; opacity:.35; }
+  .hitline { position:absolute; top:82px; left:0; right:0; height:4px; background:#ff5ca8; box-shadow:0 0 14px #ff5ca8; z-index:2; }
+  .note { position:absolute; top:0; width:34px; height:34px; margin-left:-17px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; z-index:3;
+    box-shadow:0 0 14px rgba(255,255,255,.35); transition:opacity .1s; }
+  .note.demon { background:radial-gradient(circle at 35% 30%,#ff8fb3,#d14b4b); border:2px solid #ffe58a; }
+  .note.gold { background:radial-gradient(circle at 35% 30%,#ffe9a3,#d9a800); border:2px solid #fff; }
+  .note.hit { opacity:0; transform:scale(.3); }
+  .laneFlash { position:absolute; top:0; bottom:0; left:0; right:0; background:rgba(255,255,255,.28); opacity:0; pointer-events:none; }
+  .laneFlash.on { animation:flash .15s ease; }
+  @keyframes flash { 0%{opacity:1} 100%{opacity:0} }
+
+  .pads { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:420px; margin:12px auto 0; padding:0 12px; }  .pad { height:64px; border-radius:18px; border:3px solid rgba(255,216,107,.6); background:linear-gradient(180deg,#3b2a7a,#24144d); color:#fff; font-size:13px; font-weight:900; box-shadow:0 5px 0 #160d33, 0 8px 16px rgba(0,0,0,.4); }
+  .pad:active { transform:translateY(4px); box-shadow:0 1px 0 #160d33; }
+
+  .ctrl { margin-top:16px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
+    background:linear-gradient(135deg,#d6c8ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); transition:.12s; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #7059d0; }
+  .fb { font-size:15px; font-weight:800; color:#ffd86b; margin-top:10px; min-height:22px; }
+  .modal { position:fixed; inset:0; background:rgba(10,4,30,.8); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; }
+  .modal .card { background:linear-gradient(180deg,#2c1a5e,#1b1140); border:4px solid #ffd86b; border-radius:26px; padding:22px; max-width:400px; width:100%; text-align:center; box-shadow:0 0 40px rgba(255,216,107,.3); animation:pop .25s ease; color:#fff; }
+  .modal h2 { color:#ffd86b; font-size:24px; margin-bottom:10px; }
+  .modal .scoreLine { font-size:16px; color:#cdb8ff; margin-bottom:14px; }
+  @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+<a class="homeLink" href="index.html">🏠</a>
+<div class="title title-grad">節奏打怪 <span style="font-size:24px;">🎵</span></div>
+<div class="subtitle">音樂一下，惡魔就冒出來！對準節拍把它們打回封印！</div>
+
+<div class="topbar">
+  <span class="chip">⏰ 時間 <b id="time">60</b></span>
+  <span class="chip">🎯 分數 <b id="score">0</b></span>
+  <span class="chip">💥 連擊 <b id="comboNum">0</b></span>
+</div>
+<div class="combo" id="comboTxt"></div>
+
+<div class="stage">
+  <div class="lanes" id="lanes"></div>
+</div>
+
+<div class="pads" id="pads"></div>
+
+<div class="ctrl">
+  <button class="btn" id="startBtn">🎵 開始演唱</button>
+</div>
+<div class="fb" id="fb"></div>
+
+<div id="resultModal" class="modal hidden">
+  <div class="card">
+    <h2 id="resultTitle">完美舞台！</h2>
+    <div class="scoreLine">得分 <b id="finalScore" style="font-size:30px; color:#ffd86b;">0</b></div>
+    <div class="scoreLine">最高連擊 <b id="finalCombo" style="color:#75f4ff;">0</b> 連擊</div>
+    <button class="btn" id="againBtn">🎤 再唱一次</button>
+  </div>
+</div>
+
+<script>
+var LANE_KEYS = ['🎤','⚔️','🪭','🏹'];
+var TOTAL_TIME = 60;
+var W = 1;   // lane width in "note units"
+var score = 0, combo = 0, maxCombo = 0, timeLeft = TOTAL_TIME, running = false;
+var notes = [], spawnTimers = [], beatTimer = null;
+var perfect = 0, good = 0, miss = 0;
+
+var audioCtx = null;
+function tone(f,dur,type,vol,when){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var t=(when||0)+audioCtx.currentTime; var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,t); g.gain.exponentialRampToValueAtTime(.001,t+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+(dur||.2)+.05); }catch(e){} }
+function sHit(){ tone(760,.09,'triangle',.25); }
+function sPerfect(){ tone(1040,.12,'triangle',.25); setTimeout(function(){ tone(1560,.16,'triangle',.2); },60); }
+function sMiss(){ tone(220,.2,'sawtooth',.18); }
+function beat(){ tone(120,.05,'square',.3); }
+function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.22,'triangle',.25); }, i*120); }); }
+
+function $(id){ return document.getElementById(id); }
+function rand(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+
+var lanes = [];
+function buildLanes(){
+  var l = $('lanes'); l.innerHTML='';
+  l.style.display = 'grid';
+  l.style.gridTemplateColumns = 'repeat(4,1fr)';
+  for(var i=0;i<4;i++){
+    (function(i){
+      var d = document.createElement('div');
+      d.className = 'lane';
+      d.setAttribute('data-k', LANE_KEYS[i]);
+      d.innerHTML = '<div class="laneFlash" id="flash'+i+'"></div>';
+      l.appendChild(d);
+      lanes.push({el:d, flash:$('flash'+i)});
+    })(i);
+  }
+}
+
+/* 產生節拍音訊的簡易節奏 */
+function startBeat(){
+  var bpm = 132;
+  var step = 60/bpm/2;   // 八分音符
+  var t = 0;
+  beatTimer = setInterval(function(){
+    beat();
+    t += step;
+  }, step*1000);
+}
+
+function buildPads(){
+  var p = $('pads'); p.innerHTML='';
+  for(var i=0;i<4;i++){
+    (function(i){
+      var b = document.createElement('button');
+      b.className = 'pad';
+      b.innerHTML = LANE_KEYS[i] + '<br><small>敲</small>';
+      b.addEventListener('click', function(){ tap(i); });
+      p.appendChild(b);
+    })(i);
+  }
+  document.addEventListener('keydown', function(e){
+    var map = {1:0,2:1,3:2,4:3};
+    if(map[e.key]) tap(map[e.key]);
+  });
+}
+
+function spawn(){
+  var laneIdx = rand(0,3);
+  var note = {
+    lane: laneIdx,
+    el: document.createElement('div'),
+    y: -40,
+    hit: false
+  };
+  var gold = Math.random() < 0.18;
+  note.gold = gold;
+  note.el.className = 'note' + (gold?' gold':' demon');
+  note.el.textContent = gold ? '★' : '👾';
+  note.el.style.left = (laneIdx*100/4 + 100/8) + '%';
+  note.el.style.top = '-40px';
+  lanes[laneIdx].el.appendChild(note.el);
+  notes.push(note);
+  requestAnimationFrame(function(){ animate(note); });
+}
+
+function animate(n){
+  if(!running || n.hit){ return; }
+  n.y += 4.2;
+  n.el.style.top = n.y + 'px';
+  if(n.y > 140){
+    if(!n.hit){ missNote(n); }
+    return;
+  }
+  requestAnimationFrame(function(){ animate(n); });
+}
+
+function tap(laneIdx){
+  if(!running) return;
+  var best = null;
+  notes.forEach(function(n){
+    if(n.lane===laneIdx && !n.hit){
+      var d = Math.abs(n.y - 67);
+      if(!best || d < best.d) best = n;
+    }
+  });
+  if(best){
+    if(best.gold){
+      hitNote(best, 3);   // 金色封印：3 分
+      return;
+    }
+    hitNote(best, 1);
+  } else {
+    /* 空敲：掉連擊 */
+    combo = 0; $('comboNum').textContent='0'; $('comboTxt').textContent='';
+    sMiss();
+    $('fb').textContent = '空敲了…小心對準節拍！';
+  }
+  lanes[laneIdx].flash.classList.remove('on');
+  void lanes[laneIdx].flash.offsetWidth;
+  lanes[laneIdx].flash.classList.add('on');
+}
+
+function hitNote(n, mult){
+  n.hit = true;
+  var d = Math.abs(n.y - 67);
+  var gained;
+  if(d <= 12){ perfect++; gained = 30 * mult; sPerfect(); }
+  else if(d <= 26){ good++; gained = 15 * mult; sHit(); }
+  else { gained = 5 * mult; sHit(); }
+  combo++; maxCombo = Math.max(maxCombo, combo);
+  score += gained;
+  n.el.classList.add('hit');
+  $('score').textContent = score;
+  $('comboNum').textContent = combo;
+  $('comboTxt').textContent = combo>=5 ? '🔥 '+combo+' 連擊！' : '';
+  $('fb').textContent = (d<=12?'完美封印！✨':'不錯！') + ' +'+gained;
+}
+
+function missNote(n){
+  n.hit = true;
+  n.el.remove();
+  combo = 0; $('comboNum').textContent='0'; $('comboTxt').textContent='';
+  sMiss();
+  miss++;
+}
+
+function start(){
+  if(running) return;
+  running = true;
+  $('startBtn').classList.add('hidden');
+  score=0; combo=0; maxCombo=0; perfect=0; good=0; miss=0; timeLeft=TOTAL_TIME;
+  $('score').textContent='0'; $('time').textContent=timeLeft; $('comboNum').textContent='0'; $('comboTxt').textContent='';
+  $('fb').textContent='音樂開始！對準節拍敲下去！';
+  startBeat();
+  spawnTimer = setInterval(function(){ if(running) spawn(); }, 560);
+  countdown();
+}
+function countdown(){
+  var t = setInterval(function(){
+    if(!running){ clearInterval(t); return; }
+    timeLeft--;
+    $('time').textContent = timeLeft;
+    if(timeLeft <= 0){ clearInterval(t); finish(); }
+  }, 1000);
+}
+function finish(){
+  running = false;
+  clearInterval(spawnTimer);
+  clearInterval(beatTimer);
+  notes.forEach(function(n){ n.el.remove(); });
+  notes=[];
+  $('resultTitle').textContent = perfect >= 20 ? '完美舞台！C位出道！🏆' : (perfect>=10?'好棒！Hold住全場！🌟':'繼續練習，下次更閃亮！💪');
+  $('finalScore').textContent = score;
+  $('finalCombo').textContent = maxCombo;
+  $('resultModal').classList.remove('hidden');
+  sWin();
+  if(window.KidsApp && score >= 300) KidsApp.reportWin('rhythm','🎵');
+}
+$('startBtn').addEventListener('click', start);
+$('againBtn').addEventListener('click', function(){
+  $('resultModal').classList.add('hidden');
+  $('startBtn').classList.remove('hidden');
+});
+buildLanes();
+buildPads();
+</script>
+<script src="common.js?v=4"></script>
+</body>
+</html>

@@ -3,106 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>動物五子棋 🐱🐻</title>
+<title>獵魔五子棋 ⭐👾</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
-<meta name="theme-color" content="#e05a9c">
-<link rel="stylesheet" href="common.css?v=3">
+<meta name="theme-color" content="#7c3fb5">
+<link rel="stylesheet" href="common.css?v=4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="動物五子棋">
+<meta name="apple-mobile-web-app-title" content="獵魔五子棋">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(160deg,#eef8ec 0%,#e8f7ff 40%,#ffe4f2 80%); background-attachment:fixed; min-height:100vh; overflow-x:hidden; text-align:center; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(160deg,#120a2a 0%,#24144d 50%,#5b2d9b 100%); background-attachment:fixed; min-height:100vh; overflow-x:hidden; text-align:center; color:#fff; }
   button { font-family:inherit; }
   .hidden { display:none !important; }
 
-  .title { font-size:34px; color:#e05a9c; text-shadow:0 3px 0 #fff, 0 0 16px #ffc7e3; margin-top:18px; letter-spacing:1px; }
-  .subtitle { color:#b06a92; font-size:15px; margin:6px 0 12px; }
+  .title { font-size:34px; color:#ffd86b; text-shadow:0 3px 0 rgba(0,0,0,.3), 0 0 16px rgba(255,216,107,.6); margin-top:18px; letter-spacing:1px; }
+  .subtitle { color:#cdb8ff; font-size:15px; margin:6px 0 12px; font-weight:700; }
 
   .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
-  .score { display:flex; align-items:center; gap:10px; background:#fff; border-radius:999px; padding:6px 16px; box-shadow:0 3px 10px rgba(224,90,156,.18); font-weight:800; color:#7a4a63; }
-  .score .me { color:#e60000; font-size:17px; }
-  .score .ai { color:#0066cc; font-size:17px; }
-  .score .mid { color:#d9b3c8; font-size:15px; }
-  .score b { font-size:18px; }
+  .score { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 16px; font-weight:800; color:#fff; }
+  .score .me { color:#ffd86b; font-size:17px; }
+  .score .ai { color:#ff5ca8; font-size:17px; }
+  .score .mid { color:#9a8ac8; font-size:15px; }
+  .score b { font-size:18px; color:#75f4ff; }
 
   .dif { display:flex; gap:6px; }
-  .difBtn { border:3px solid #f0cfe0; background:#fff; color:#7a4a63; border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; cursor:pointer; }
-  .difBtn.on { background:#e05a9c; color:#fff; border-color:#e05a9c; }
+  .difBtn { border:3px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1); color:#cdb8ff; border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; cursor:pointer; }
+  .difBtn.on { background:#9a7fff; color:#fff; border-color:#9a7fff; }
 
   .status {
-    display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; border-radius:18px; padding:8px 18px;
-    box-shadow:0 3px 12px rgba(224,90,156,.15); font-weight:800; color:#5a3a4d; margin:0 auto 10px; font-size:15px;
+    display:flex; align-items:center; justify-content:center; gap:10px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:18px; padding:8px 18px;
+    font-weight:800; color:#fff; margin:0 auto 10px; font-size:15px;
     white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw;
   }
   .status .dot { width:16px; height:16px; border-radius:50%; display:inline-block; }
-  .dot.me { background:#ff4d4d; }
-  .dot.ai { background:#3399ff; }
+  .dot.me { background:#ffd86b; box-shadow:0 0 10px #ffd86b; }
+  .dot.ai { background:#ff5ca8; box-shadow:0 0 10px #ff5ca8; }
 
   .boardBox { display:block; margin:0 auto; width:max-content; transform-origin:top center; }
   #board {
     display:grid; grid-template-columns:repeat(15, 1fr); gap:0;
-    background:linear-gradient(145deg,#fff3dd,#ffedf6); border:6px solid #fff; border-radius:20px;
-    box-shadow:0 12px 34px rgba(200,120,150,.3); padding:4px; overflow:hidden;
+    background:linear-gradient(145deg,#2c1a5e,#1b1140); border:5px solid #ffd86b; border-radius:20px;
+    box-shadow:0 0 30px rgba(255,216,107,.25), 0 12px 34px rgba(0,0,0,.4); padding:4px; overflow:hidden;
   }
   .cell { position:relative; width:32px; height:32px; }
   .cell::before { content:''; position:absolute; left:-1px; top:-1px; width:34px; height:34px;
-    background:repeating-linear-gradient(0deg, transparent 0 30px, #e8cdd9 30px 31px),
-               repeating-linear-gradient(90deg, transparent 0 30px, #e8cdd9 30px 31px); }
+    background:repeating-linear-gradient(0deg, transparent 0 30px, rgba(255,216,107,.18) 30px 31px),
+               repeating-linear-gradient(90deg, transparent 0 30px, rgba(255,216,107,.18) 30px 31px); }
   .stone {
     position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:26px; height:26px; border-radius:50%;
     display:flex; align-items:center; justify-content:center; font-size:13px; z-index:2;
-    box-shadow:0 2px 4px rgba(0,0,0,.22), inset 0 -3px 5px rgba(0,0,0,.18), inset 0 3px 5px rgba(255,255,255,.5);
+    box-shadow:0 2px 4px rgba(0,0,0,.4), inset 0 -3px 5px rgba(0,0,0,.18), inset 0 3px 5px rgba(255,255,255,.5);
   }
-  .stone.me { background:radial-gradient(circle at 35% 30%, #ff9d9d, #ff4d4d 60%, #d92626); border:2px solid #fff; color:#fff; }
-  .stone.ai { background:radial-gradient(circle at 35% 30%, #7cc2ff, #3399ff 60%, #1a73d9); border:2px solid #fff; color:#fff; }
+  .stone.me { background:radial-gradient(circle at 35% 30%, #ffe9a3, #ffc93c 60%, #d9a800); border:2px solid #fff; color:#7a5a00; }
+  .stone.ai { background:radial-gradient(circle at 35% 30%, #ff9dbd, #ff4d8d 60%, #d9266a); border:2px solid #fff; color:#fff; }
   .stone.last::after { content:'✨'; position:absolute; font-size:11px; }
   .stone.place { animation:place .25s ease; }
   @keyframes place { 0%{transform:translate(-50%,-50%) scale(.3); opacity:.3} 100%{transform:translate(-50%,-50%) scale(1); opacity:1} }
 
+  /* 技能區 */
+  .skillbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin:10px auto 6px; }
+  .energy { display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; color:#75f4ff; }
+  .energy b { color:#75f4ff; font-size:16px; }
+  .skillBtn { border:none; border-radius:999px; font-weight:800; cursor:pointer; font-size:13px; padding:8px 16px; color:#fff; background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 4px 0 #7059d0, 0 6px 12px rgba(154,127,255,.4); transition:.12s; }
+  .skillBtn:disabled { filter:grayscale(.8) opacity(.5); box-shadow:0 4px 0 #4a3a80; cursor:not-allowed; transform:none; }
+  .skillBtn.on { outline:3px solid #ffd86b; }
+  .skillHint { font-size:12px; font-weight:800; color:#cdb8ff; min-height:16px; margin-bottom:2px; }
+
   .ctrl { margin-top:12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
-  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(224,90,156,.3); z-index:10; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,.3); z-index:10; }
   .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
-    background:linear-gradient(135deg,#ff9ecb,#ff7ab5); box-shadow:0 5px 0 #d95d96, 0 8px 18px rgba(224,90,156,.3); transition:.12s; user-select:none; }
-  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #d95d96; }
+    background:linear-gradient(135deg,#d6c8ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); transition:.12s; user-select:none; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #7059d0; }
   .btn.mint { background:linear-gradient(135deg,#9be8c9,#62d6a5); box-shadow:0 5px 0 #3ba87c, 0 8px 18px rgba(98,214,165,.3); }
-  .btn.lav { background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.3); }
+  .btn.lav { background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); }
 
   .confetti { position:fixed; font-size:22px; z-index:95; pointer-events:none; animation:fall linear forwards; }
   @keyframes fall { to { transform:translateY(105vh) rotate(360deg); opacity:.4; } }
-  .fb { font-size:16px; font-weight:800; color:#7a4a63; margin-top:8px; height:24px; overflow:hidden; white-space:nowrap; }
+  .fb { font-size:16px; font-weight:800; color:#ffd86b; margin-top:8px; height:24px; overflow:hidden; white-space:nowrap; }
 
   .suggPulse { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:34px; height:34px; border-radius:50%;
-    border:4px solid #ffc93c; animation:pulse .7s ease-in-out infinite; z-index:200; box-shadow:0 0 18px rgba(255,201,60,.95); }
+    border:4px solid #75f4ff; animation:pulse .7s ease-in-out infinite; z-index:200; box-shadow:0 0 18px rgba(117,244,255,.95); }
   @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1); opacity:1} 50%{transform:translate(-50%,-50%) scale(1.35); opacity:.5} }
   .btn.yellow { background:linear-gradient(135deg,#ffe08a,#ffc93c); color:#8a6200; box-shadow:0 5px 0 #d9a800, 0 8px 18px rgba(255,201,60,.4); }
 
-  .modal { position:fixed; inset:0; background:rgba(120,60,100,.45); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
-  .modal.align-bottom { align-items:flex-end; padding-bottom:24px; background:rgba(120,60,100,.12); backdrop-filter:none; pointer-events:none; }
+  .modal { position:fixed; inset:0; background:rgba(10,4,30,.8); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
+  .modal.align-bottom { align-items:flex-end; padding-bottom:24px; background:rgba(10,4,30,.4); backdrop-filter:none; pointer-events:none; }
   .modal.align-bottom .card { margin-bottom:8px; pointer-events:auto; }
-  .suggLabel { position:fixed; transform:translate(-50%,-100%); font-size:13px; font-weight:800; color:#8a6200; background:#ffe08a;
+  .suggLabel { position:fixed; transform:translate(-50%,-100%); font-size:13px; font-weight:800; color:#fff; background:#7059d0;
     border-radius:999px; padding:3px 10px; white-space:nowrap; z-index:201; box-shadow:0 2px 8px rgba(0,0,0,.2); animation:float 1s ease-in-out infinite; }
-  .modal .card { background:linear-gradient(180deg,#fff,#fff7fb); border-radius:26px; padding:22px; max-width:340px; width:100%;
-    box-shadow:0 16px 50px rgba(120,40,90,.35); border:4px solid #ffd1e6; animation:pop .25s ease; text-align:center; }
+  .modal .card { background:linear-gradient(180deg,#2c1a5e,#1b1140); border-radius:26px; padding:22px; max-width:340px; width:100%;
+    box-shadow:0 16px 50px rgba(0,0,0,.5); border:4px solid #ffd86b; animation:pop .25s ease; text-align:center; color:#fff; }
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .modal .coachFace { font-size:52px; display:block; animation:float 2s ease-in-out infinite; }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .modal h2 { color:#e05a9c; font-size:22px; margin:6px 0 8px; }
-  .modal p { color:#7a4a63; font-size:16px; font-weight:800; margin-bottom:16px; }
+  .modal h2 { color:#ffd86b; font-size:22px; margin:6px 0 8px; }
+  .modal p { color:#cdb8ff; font-size:16px; font-weight:800; margin-bottom:16px; }
   .modalBtns { display:flex; gap:10px; justify-content:center; }
 </style>
 </head>
 <body>
 <a class="homeLink" href="index.html">🏠</a>
 
-<div class="title">動物五子棋 <span style="font-size:24px;">🐱</span>vs<span style="font-size:24px;">🐻</span></div>
-<div class="subtitle">你和 AI 輪流下棋，先連成 5 顆就贏！</div>
+<div class="title">獵魔五子棋 <span style="font-size:24px;">⭐</span>vs<span style="font-size:24px;">👾</span></div>
+<div class="subtitle">星星獵人 vs 惡魔軍團！先連成 5 顆封印線，就能驅逐惡魔！</div>
 
 <div class="topbar">
   <div class="score">
-    <span class="me">🐱 你</span><b id="wMe">0</b><span class="mid">—</span><b id="wAi">0</b><span class="ai">AI 🐻</span>
-    <span style="color:#c0a0b0; font-size:13px;">和：<b id="wTie" style="color:#c0a0b0;">0</b></span>
+    <span class="me">⭐ 你</span><b id="wMe">0</b><span class="mid">—</span><b id="wAi">0</b><span class="ai">👾 AI</span>
+    <span style="color:#9a8ac8; font-size:13px;">和：<b id="wTie" style="color:#9a8ac8;">0</b></span>
   </div>
   <div class="dif">
     <button class="difBtn on" data-d="0">🌱 簡單</button>
@@ -111,13 +120,20 @@
   </div>
 </div>
 
-<div class="status"><span class="dot me" id="turnDot"></span><span id="statusMsg">輪到你囉！放一顆棋子吧 ✨</span></div>
+<div class="status"><span class="dot me" id="turnDot"></span><span id="statusMsg">輪到你囉！放一顆星星 ✨</span></div>
+
+<div class="skillbar">
+  <span class="energy">⚡ 能量 <b id="energyNum">0</b></span>
+  <button class="skillBtn" id="fireBtn">🔥 火球術（能量3）</button>
+  <button class="skillBtn" id="sealBtn">🔒 封印格（能量2）</button>
+</div>
+<div class="skillHint" id="skillHint"></div>
 
 <div class="boardBox" id="boardBox"><div id="board"></div></div>
 
 <div class="ctrl">
-  <button class="btn lav" id="firstBtn">我先下 🐱</button>
-  <button class="btn mint" id="aiFirstBtn">讓 AI 先下 🐻</button>
+  <button class="btn lav" id="firstBtn">我先下 ⭐</button>
+  <button class="btn mint" id="aiFirstBtn">讓 AI 先下 👾</button>
   <button class="btn" id="restartBtn">🔄 重來</button>
   <button class="btn yellow" id="coachBtn">🎓 教練：開</button>
 </div>
@@ -125,10 +141,10 @@
 
 <div id="coachModal" class="modal align-bottom hidden">
   <div class="card">
-    <span class="coachFace">🐻</span>
+    <span class="coachFace">👾</span>
     <h2>等等！這裡更好喔！</h2>
-    <p id="coachReason">看看閃亮亮的黃圈圈～</p>
-    <p style="font-size:13px; color:#b98aa5; font-weight:700;">點棋盤上閃亮的黃圈＝聽老師的<br>點其他地方＝照你的想法</p>
+    <p id="coachReason">看看亮亮的藍圈圈～</p>
+    <p style="font-size:13px; color:#9a8ac8; font-weight:700;">點棋盤上亮亮的藍圈＝聽老師的<br>點其他地方＝照你的想法</p>
   </div>
 </div>
 
@@ -142,6 +158,8 @@ var difficulty = 0;
 var lastR = -1, lastC = -1;
 var winCells = [];
 var coachOn = true, pending = null;
+var energy = 0, skillMode = '';   // '' | 'fire' | 'seal'
+var sealed = {};                   // "r,c" -> true 封印格（雙方都不能下）
 
 var AI_MSG = ['換我了！','我想想喔…🤔','嘿嘿，看我這步！','別以為我會輸！'];
 var ME_PRAISE = ['好棋！','漂亮！','哇！你真厲害！','繼續繼續～'];
@@ -185,14 +203,52 @@ function render(){
     if(board[r][c] !== EMPTY){
       var s = document.createElement('div');
       s.className = 'stone ' + (board[r][c]===ME?'me':'ai') + (r===lastR&&c===lastC?' last':'') + ' place';
-      s.textContent = board[r][c]===ME ? '🐱' : '🐻';
+      s.textContent = board[r][c]===ME ? '⭐' : '👾';
       cell.appendChild(s);
+    } else if(sealed[r+','+c]){
+      var lk = document.createElement('div');
+      lk.className = 'stone seal';
+      lk.textContent = '🔒';
+      cell.appendChild(lk);
     }
   }
   var dot = $('turnDot');
   dot.className = 'dot ' + (turn===ME?'me':'ai');
+  updateEnergy();
 }
 function setStatus(msg, emoji){ $('statusMsg').textContent = (emoji||'') + ' ' + msg; }
+
+/* ================= 技能 ================= */
+function updateEnergy(){
+  $('energyNum').textContent = energy;
+  $('fireBtn').disabled = energy < 3 || over || aiThinking;
+  $('sealBtn').disabled = energy < 2 || over || aiThinking;
+}
+function setSkill(mode){
+  skillMode = (skillMode === mode) ? '' : mode;
+  $('fireBtn').classList.toggle('on', skillMode==='fire');
+  $('sealBtn').classList.toggle('on', skillMode==='seal');
+  $('skillHint').textContent = skillMode==='fire' ? '🔥 點一顆惡魔（👾）把它打掉！' : (skillMode==='seal' ? '🔒 點一個空格，把它永久封印（雙方都不能下）' : '');
+  clearCoachOverlay(); $('coachModal').classList.add('hidden');
+}
+function useFire(r, c){
+  if(board[r][c] !== AI){ return; }
+  board[r][c] = EMPTY;
+  energy -= 3;
+  sPlace(); render();
+  $('fb').textContent = '🔥 火球術！惡魔被打掉了！';
+  setStatus('火球術！繼續！'); 
+}
+function useSeal(r, c){
+  if(board[r][c] !== EMPTY){ return; }
+  sealed[r+','+c] = true;
+  energy -= 2;
+  sPlace(); render();
+  $('fb').textContent = '🔒 這格被封印了！';
+  setStatus('封印完成！');
+}
+$('fireBtn').addEventListener('click', function(){ setSkill('fire'); });
+$('sealBtn').addEventListener('click', function(){ setSkill('seal'); });
 
 /* ================= 勝負判斷 ================= */
 function checkWin(r, c){
@@ -243,6 +299,7 @@ function aiMove(){
   var best = -1, cands = [];
   for(var r=0;r<N;r++) for(var c=0;c<N;c++){
     if(board[r][c] !== EMPTY) continue;
+    if(sealed[r+','+c]) continue;
     var s = scoreCell(r,c,AI)*atk + scoreCell(r,c,ME)*def;
     // 越靠近中心 + 小加分（開局引導）
     var center = (N-1)/2;
@@ -265,15 +322,18 @@ function place(r, c, who){
   var win = checkWin(r, c);
   if(win){
     over = true;
-    if(who === ME){ scores.me++; sWinMe(); confetti(); setStatus('你贏了！太厲害啦！🎉'); $('fb').textContent = '🐱 勝利！再來一局吧！'; if(window.KidsApp) KidsApp.reportWin('gomoku','🐱'); }
-    else { scores.ai++; sWinAi(); setStatus('熊貓 AI 贏了…再挑戰一次！'); $('fb').textContent = '🐻 AI 勝利！沒關係，再來！'; }
+    if(who === ME){ scores.me++; sWinMe(); confetti(); setStatus('你贏了！驅逐惡魔！🎉'); $('fb').textContent = '⭐ 勝利！封印完成！'; if(window.KidsApp) KidsApp.reportWin('gomoku','⭐'); }
+    else { scores.ai++; sWinAi(); setStatus('惡魔軍團贏了…再挑戰一次！'); $('fb').textContent = '👾 AI 勝利！沒關係，再來！'; }
     $('wMe').textContent = scores.me; $('wAi').textContent = scores.ai;
+    updateEnergy();
     return;
   }
-  if(isFull()){ over = true; scores.tie++; $('wTie').textContent = scores.tie; sTie(); setStatus('和局！你們打成平手 🤝'); return; }
+  if(isFull()){ over = true; scores.tie++; $('wTie').textContent = scores.tie; sTie(); setStatus('和局！封印僵持不下 🤝'); updateEnergy(); return; }
+  if(who === ME && energy < 9) energy++;
+  updateEnergy();
   turn = (who===ME) ? AI : ME;
   if(turn === AI){ setStatus('輪到 AI 思考…🤔'); aiThink(); }
-  else { setStatus('輪到你了！放一顆棋子吧 ✨'); }
+  else { setStatus('輪到你了！放一顆星星 ✨'); }
 }
 function aiThink(){
   aiThinking = true;
@@ -286,7 +346,19 @@ function aiThink(){
 function clickCell(el){
   if(over || aiThinking || turn !== ME) return;
   var r = parseInt(el.dataset.r, 10), c = parseInt(el.dataset.c, 10);
+  /* 技能模式 */
+  if(skillMode === 'fire'){
+    if(board[r][c] === AI){ useFire(r, c); setSkill(''); }
+    else $('fb').textContent = '要點惡魔（👾）的棋子喔！';
+    return;
+  }
+  if(skillMode === 'seal'){
+    if(board[r][c] === EMPTY){ useSeal(r, c); setSkill(''); }
+    else $('fb').textContent = '要點空格喔！';
+    return;
+  }
   if(board[r][c] !== EMPTY) return;
+  if(sealed[r+','+c]){ $('fb').textContent = '這格被封印了，不能下！'; return; }
   if(pending){
     var pp = pending; pending = null;
     clearCoachOverlay();
@@ -376,11 +448,15 @@ function reset(meFirst){
   over = false; aiThinking = false;
   lastR = -1; lastC = -1;
   pending = null;
+  sealed = {};
+  energy = 0;
+  setSkill('');
+  updateEnergy();
   $('coachModal').classList.add('hidden');
   clearCoachOverlay();
   render();
   if(turn === AI){ setStatus('AI 先下…'); aiThink(); }
-  else setStatus('輪到你囉！放一顆棋子吧 ✨');
+  else setStatus('輪到你囉！放一顆星星 ✨');
 }
 $('firstBtn').addEventListener('click', function(){ reset(true); });
 $('aiFirstBtn').addEventListener('click', function(){ reset(false); });
@@ -398,6 +474,6 @@ newBoard(); buildBoard(); render();
 setStatus('輪到你囉！放一顆棋子吧 ✨');
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 </script>
-<script src="common.js?v=3"></script>
+<script src="common.js?v=4"></script>
 </body>
 </html>

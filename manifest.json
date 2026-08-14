@@ -1,13 +1,13 @@
 {
-  "name": "繽紛樂園",
-  "short_name": "繽紛樂園",
-  "description": "給小朋友玩的繽紛遊戲樂園：五子棋、圍棋、跳棋、換裝、填色、記憶、打怪獸、拼圖。",
+  "name": "星光獵魔團",
+  "short_name": "星光獵魔團",
+  "description": "給小朋友玩的 K-pop 獵魔團遊戲：節奏打怪、封印記憶、獵魔拼圖、獵魔五子棋。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffe3f1",
-  "theme_color": "#e05a9c",
+  "background_color": "#120a2a",
+  "theme_color": "#7c3fb5",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
