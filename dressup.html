@@ -75,28 +75,31 @@
     <div class="deco" style="bottom:30px; right:20px;">✨</div>
     <svg id="doll" viewBox="0 0 220 340">
       <g id="hairBack"></g>
-      <rect x="97" y="256" width="11" height="46" rx="5" fill="#ffe0d0"/>
-      <rect x="112" y="256" width="11" height="46" rx="5" fill="#ffe0d0"/>
-      <text id="shoes" x="110" y="318" font-size="24" text-anchor="middle">🩰</text>
+      <rect x="97" y="252" width="11" height="46" rx="5" fill="#ffe3d1"/>
+      <rect x="112" y="252" width="11" height="46" rx="5" fill="#ffe3d1"/>
+      <text id="shoes" x="110" y="314" font-size="26" text-anchor="middle">🩰</text>
       <path id="dress" fill="#ff8fb3"/>
-      <rect x="46" y="156" width="11" height="58" rx="5" fill="#ffe0d0"/>
-      <rect x="163" y="156" width="11" height="58" rx="5" fill="#ffe0d0"/>
-      <circle id="head" cx="110" cy="90" r="44" fill="#ffe0d0"/>
+      <rect id="sash" x="88" y="196" width="44" height="9" rx="4.5" fill="rgba(255,255,255,.65)"/>
+      <rect x="57" y="160" width="12" height="44" rx="6" fill="#ffe3d1"/>
+      <rect x="151" y="160" width="12" height="44" rx="6" fill="#ffe3d1"/>
+      <ellipse id="head" cx="110" cy="96" rx="45" ry="48" fill="#ffe3d1"/>
       <g id="faceFeatures">
-        <circle cx="93" cy="90" r="4.5" fill="#3a2a3a"/>
-        <circle cx="127" cy="90" r="4.5" fill="#3a2a3a"/>
-        <circle cx="95" cy="88" r="1.6" fill="#fff"/>
-        <circle cx="129" cy="88" r="1.6" fill="#fff"/>
-        <path d="M102 112 Q110 120 118 112" stroke="#e05a9c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="78" cy="104" rx="9" ry="5" fill="#ffb6c9" opacity=".8"/>
-        <ellipse cx="142" cy="104" rx="9" ry="5" fill="#ffb6c9" opacity=".8"/>
+        <ellipse cx="92" cy="96" rx="8.5" ry="10.5" fill="#3a2a3a"/>
+        <ellipse cx="128" cy="96" rx="8.5" ry="10.5" fill="#3a2a3a"/>
+        <circle cx="89" cy="92" r="3" fill="#fff"/>
+        <circle cx="125" cy="92" r="3" fill="#fff"/>
+        <circle cx="95" cy="101" r="1.7" fill="#fff"/>
+        <circle cx="131" cy="101" r="1.7" fill="#fff"/>
+        <path d="M102 119 Q110 127 118 119" stroke="#e05a9c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="77" cy="108" rx="9" ry="5.5" fill="#ffb3c7" opacity=".8"/>
+        <ellipse cx="143" cy="108" rx="9" ry="5.5" fill="#ffb3c7" opacity=".8"/>
       </g>
       <path id="hairFront" fill="#3a2a3a"/>
-      <text id="exprFace" x="110" y="104" font-size="40" text-anchor="middle" opacity="0">🥰</text>
-      <text id="accFace" x="110" y="96" font-size="26" text-anchor="middle"></text>
-      <text id="accHead" x="110" y="28" font-size="30" text-anchor="middle"></text>
-      <text id="accNeck" x="110" y="156" font-size="24" text-anchor="middle"></text>
-      <text id="accHand" x="180" y="184" font-size="26" text-anchor="middle"></text>
+      <text id="exprFace" x="110" y="106" font-size="40" text-anchor="middle" opacity="0">🥰</text>
+      <text id="accFace" x="110" y="100" font-size="26" text-anchor="middle"></text>
+      <text id="accHead" x="110" y="26" font-size="30" text-anchor="middle"></text>
+      <text id="accNeck" x="110" y="160" font-size="22" text-anchor="middle"></text>
+      <text id="accHand" x="176" y="192" font-size="26" text-anchor="middle"></text>
     </svg>
   </div>
 
@@ -167,21 +170,21 @@ function rand(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
 
 /* ================= 髮型 ================= */
 var HAIR_PATHS = {
-  bob: '<path d="M110 30 C72 30 58 52 58 84 L58 140 C58 160 76 165 86 152 L86 96 C86 82 134 82 134 96 L134 152 C144 165 162 160 162 140 L162 84 C162 52 148 30 110 30 Z"/>',
-  long: '<path d="M110 30 C72 30 58 52 58 84 L58 214 C58 236 80 240 90 226 L90 96 C90 82 130 82 130 96 L130 226 C140 240 162 236 162 214 L162 84 C162 52 148 30 110 30 Z"/>',
-  twin: '<path d="M110 30 C72 30 58 52 58 84 L58 140 C58 160 76 165 86 152 L86 96 C86 82 134 82 134 96 L134 152 C144 165 162 160 162 140 L162 84 C162 52 148 30 110 30 Z"/>' +
-        '<path d="M62 150 C44 162 32 194 36 224 C40 250 64 248 64 222 C64 200 56 180 64 168 Z"/>' +
-        '<path d="M158 150 C176 162 188 194 184 224 C180 250 156 248 156 222 C156 200 164 180 156 168 Z"/>',
-  buns: '<path d="M110 30 C72 30 58 52 58 84 L58 140 C58 160 76 165 86 152 L86 96 C86 82 134 82 134 96 L134 152 C144 165 162 160 162 140 L162 84 C162 52 148 30 110 30 Z"/>' +
-        '<circle cx="80" cy="28" r="17"/>' +
-        '<circle cx="140" cy="28" r="17"/>'
+  bob: '<path d="M110 44 C78 44 62 62 62 90 L62 152 C62 170 80 174 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 174 158 170 158 152 L158 90 C158 62 142 44 110 44 Z"/>',
+  long: '<path d="M110 44 C78 44 62 62 62 90 L62 214 C62 236 84 240 92 226 L92 102 C92 88 128 88 128 102 L128 226 C136 240 158 236 158 214 L158 90 C158 62 142 44 110 44 Z"/>',
+  twin: '<path d="M110 44 C78 44 62 62 62 90 L62 152 C62 170 80 174 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 174 158 170 158 152 L158 90 C158 62 142 44 110 44 Z"/>' +
+        '<path d="M60 150 C42 164 32 196 38 228 C44 252 68 248 66 222 C64 200 56 180 66 166 Z"/>' +
+        '<path d="M160 150 C178 164 188 196 182 228 C176 252 152 248 154 222 C156 200 164 180 154 166 Z"/>',
+  buns: '<path d="M110 44 C78 44 62 62 62 90 L62 152 C62 170 80 174 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 174 158 170 158 152 L158 90 C158 62 142 44 110 44 Z"/>' +
+        '<circle cx="80" cy="30" r="18"/>' +
+        '<circle cx="140" cy="30" r="18"/>'
 };
-var HAIR_FRONT = '<path d="M70 76 C72 46 92 28 110 28 C128 28 148 46 150 76 C140 60 132 68 120 64 C108 60 92 60 82 68 C76 72 72 72 70 76 Z"/>';
+var HAIR_FRONT = '<path d="M68 80 C68 46 90 28 110 28 C130 28 152 46 152 80 C142 62 134 70 122 66 C110 62 98 62 88 70 C80 74 74 74 68 80 Z"/>';
 
 var DRESS_PATHS = {
-  a: 'M82 150 L138 150 L156 218 L168 272 C168 290 52 290 52 272 L64 218 Z',
-  b: 'M82 150 L138 150 L152 210 L156 260 C156 274 64 274 64 260 L68 210 Z',
-  c: 'M86 138 L92 152 L128 152 L134 138 L136 152 L158 238 C158 256 62 256 62 238 L84 152 Z'
+  a: 'M84 168 C84 152 94 146 110 146 C126 146 136 152 136 168 L142 196 L154 252 C156 272 64 272 66 252 L78 196 Z',
+  b: 'M84 168 C84 152 94 146 110 146 C126 146 136 152 136 168 L140 192 L150 240 C152 254 68 254 70 240 L80 192 Z',
+  c: 'M84 158 L136 158 L146 196 L158 254 C160 272 60 272 62 254 L74 196 Z'
 };
 
 /* ================= 渲染 ================= */
