@@ -21,9 +21,9 @@
   .starChip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:6px 14px; font-weight:800; color:#7a4a63; box-shadow:0 3px 10px rgba(224,90,156,.15); font-size:14px; }
 
   .scene { position:relative; border-radius:26px; overflow:hidden; border:4px solid #fff; box-shadow:0 12px 30px rgba(160,120,180,.3);
-    width:100%; max-width:290px; margin:0 auto; }
+    width:100%; max-width:300px; margin:0 auto; }
   .scene .deco { position:absolute; font-size:24px; opacity:.85; pointer-events:none; z-index:1; }
-  #doll { position:relative; width:100%; display:block; z-index:2; }
+  #doll { position:relative; width:100%; display:block; z-index:2; filter:drop-shadow(0 10px 14px rgba(90,40,100,.25)); }
   .spotlight { position:absolute; top:0; left:50%; width:180px; height:40px; transform:translateX(-50%); background:radial-gradient(ellipse, rgba(255,255,255,.55), transparent 70%); z-index:0; animation:spin 6s ease-in-out infinite; }
   @keyframes spin { 0%,100%{opacity:.5} 50%{opacity:1} }
 
@@ -69,37 +69,69 @@
 
   <div class="scene" id="scene">
     <div class="spotlight"></div>
-    <div class="deco" style="top:50px; left:12px;">🎤</div>
-    <div class="deco" style="top:70px; right:14px;">🎶</div>
-    <div class="deco" style="bottom:24px; left:18px;">💃</div>
-    <div class="deco" style="bottom:30px; right:20px;">✨</div>
-    <svg id="doll" viewBox="0 0 220 340">
+    <div class="deco" style="top:46px; left:10px;">🎤</div>
+    <div class="deco" style="top:64px; right:12px;">🎶</div>
+    <div class="deco" style="bottom:22px; left:16px;">💃</div>
+    <div class="deco" style="bottom:28px; right:18px;">✨</div>
+    <svg id="doll" viewBox="0 0 240 360">
+      <defs>
+        <linearGradient id="gradSkin" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffecdf"/>
+          <stop offset="1" stop-color="#ffd3bb"/>
+        </linearGradient>
+        <linearGradient id="gradHair" x1="0" y1="0" x2="0" y2="1">
+          <stop id="hairStopA" offset="0" stop-color="#6b5656"/>
+          <stop id="hairStopB" offset="1" stop-color="#3a2a3a"/>
+        </linearGradient>
+        <linearGradient id="gradDress" x1="0" y1="0" x2="0" y2="1">
+          <stop id="dressStopA" offset="0" stop-color="#ffb8d4"/>
+          <stop id="dressStopB" offset="1" stop-color="#ff7ab5"/>
+        </linearGradient>
+      </defs>
+
+      <ellipse id="groundShadow" cx="120" cy="336" rx="50" ry="7" fill="rgba(90,40,100,.16)"/>
+
       <g id="hairBack"></g>
-      <rect x="97" y="252" width="11" height="46" rx="5" fill="#ffe3d1"/>
-      <rect x="112" y="252" width="11" height="46" rx="5" fill="#ffe3d1"/>
-      <text id="shoes" x="110" y="314" font-size="26" text-anchor="middle">🩰</text>
-      <path id="dress" fill="#ff8fb3"/>
-      <rect id="sash" x="88" y="196" width="44" height="9" rx="4.5" fill="rgba(255,255,255,.65)"/>
-      <rect x="57" y="160" width="12" height="44" rx="6" fill="#ffe3d1"/>
-      <rect x="151" y="160" width="12" height="44" rx="6" fill="#ffe3d1"/>
-      <ellipse id="head" cx="110" cy="96" rx="45" ry="48" fill="#ffe3d1"/>
-      <g id="faceFeatures">
-        <ellipse cx="92" cy="96" rx="8.5" ry="10.5" fill="#3a2a3a"/>
-        <ellipse cx="128" cy="96" rx="8.5" ry="10.5" fill="#3a2a3a"/>
-        <circle cx="89" cy="92" r="3" fill="#fff"/>
-        <circle cx="125" cy="92" r="3" fill="#fff"/>
-        <circle cx="95" cy="101" r="1.7" fill="#fff"/>
-        <circle cx="131" cy="101" r="1.7" fill="#fff"/>
-        <path d="M102 119 Q110 127 118 119" stroke="#e05a9c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="77" cy="108" rx="9" ry="5.5" fill="#ffb3c7" opacity=".8"/>
-        <ellipse cx="143" cy="108" rx="9" ry="5.5" fill="#ffb3c7" opacity=".8"/>
+
+      <rect x="112" y="146" width="16" height="26" rx="8" fill="url(#gradSkin)"/>
+
+      <rect x="104" y="272" width="13" height="56" rx="6.5" fill="url(#gradSkin)"/>
+      <rect x="123" y="272" width="13" height="56" rx="6.5" fill="url(#gradSkin)"/>
+      <text id="shoes" x="120" y="336" font-size="25" text-anchor="middle">🩰</text>
+
+      <g id="dressWrap">
+        <path id="dress" fill="url(#gradDress)"/>
+        <g id="dressExtras"></g>
+        <path id="sash" d="M84 192 Q120 202 156 192 L154 205 Q120 215 86 205 Z" fill="rgba(255,255,255,.55)"/>
       </g>
-      <path id="hairFront" fill="#3a2a3a"/>
-      <text id="exprFace" x="110" y="106" font-size="40" text-anchor="middle" opacity="0">🥰</text>
-      <text id="accFace" x="110" y="100" font-size="26" text-anchor="middle"></text>
-      <text id="accHead" x="110" y="26" font-size="30" text-anchor="middle"></text>
-      <text id="accNeck" x="110" y="160" font-size="22" text-anchor="middle"></text>
-      <text id="accHand" x="176" y="192" font-size="26" text-anchor="middle"></text>
+
+      <path id="armL" d="M86 170 Q68 182 64 206" fill="none" stroke="url(#gradSkin)" stroke-width="15" stroke-linecap="round"/>
+      <circle id="handL" cx="64" cy="209" r="8" fill="url(#gradSkin)"/>
+      <path id="armR" d="M154 170 Q172 182 176 206" fill="none" stroke="url(#gradSkin)" stroke-width="15" stroke-linecap="round"/>
+      <circle id="handR" cx="176" cy="209" r="8" fill="url(#gradSkin)"/>
+
+      <ellipse cx="120" cy="96" rx="56" ry="60" fill="url(#gradSkin)"/>
+
+      <g id="faceFeatures">
+        <path d="M82 85 Q92 80 102 84" stroke="#6a4a35" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M138 84 Q148 80 158 85" stroke="#6a4a35" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <ellipse cx="92" cy="100" rx="9.5" ry="12.5" fill="#3a2a3a"/>
+        <circle cx="89" cy="95" r="3.4" fill="#fff"/>
+        <circle cx="96" cy="105" r="1.7" fill="#fff"/>
+        <ellipse cx="148" cy="100" rx="9.5" ry="12.5" fill="#3a2a3a"/>
+        <circle cx="151" cy="95" r="3.4" fill="#fff"/>
+        <circle cx="144" cy="105" r="1.7" fill="#fff"/>
+        <ellipse cx="78" cy="114" rx="9" ry="5.5" fill="#ffb3c7" opacity=".85"/>
+        <ellipse cx="162" cy="114" rx="9" ry="5.5" fill="#ffb3c7" opacity=".85"/>
+        <path d="M112 122 Q120 130 128 122" stroke="#e05a9c" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <path id="hairFront" fill="url(#gradHair)"/>
+      <text id="exprFace" x="120" y="114" font-size="42" text-anchor="middle" opacity="0">🥰</text>
+      <text id="accFace" x="120" y="106" font-size="26" text-anchor="middle"></text>
+      <text id="accHead" x="120" y="26" font-size="30" text-anchor="middle"></text>
+      <text id="accNeck" x="120" y="162" font-size="22" text-anchor="middle"></text>
+      <text id="accHand" x="192" y="218" font-size="26" text-anchor="middle"></text>
     </svg>
   </div>
 
@@ -169,44 +201,83 @@ var currentCat = 'hair';
 /* ================= 工具 ================= */
 function $(id){ return document.getElementById(id); }
 function rand(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+function shade(hex, amt){
+  var c = hex.replace('#',''); var r=parseInt(c.substr(0,2),16), g=parseInt(c.substr(2,2),16), b=parseInt(c.substr(4,2),16);
+  r=Math.max(0,Math.min(255,r+amt)); g=Math.max(0,Math.min(255,g+amt)); b=Math.max(0,Math.min(255,b+amt));
+  return '#' + [r,g,b].map(function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
+}
 
 /* ================= 髮型 ================= */
 var HAIR_PATHS = {
-  bob: '<path d="M110 44 C78 44 62 62 62 90 L62 152 C62 170 80 174 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 174 158 170 158 152 L158 90 C158 62 142 44 110 44 Z"/>',
-  long: '<path d="M110 44 C78 44 62 62 62 90 L62 214 C62 236 84 240 92 226 L92 102 C92 88 128 88 128 102 L128 226 C136 240 158 236 158 214 L158 90 C158 62 142 44 110 44 Z"/>',
-  twin: '<path d="M110 44 C78 44 62 62 62 90 L62 152 C62 170 80 174 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 174 158 170 158 152 L158 90 C158 62 142 44 110 44 Z"/>' +
-        '<path d="M60 150 C42 164 32 196 38 228 C44 252 68 248 66 222 C64 200 56 180 66 166 Z"/>' +
-        '<path d="M160 150 C178 164 188 196 182 228 C176 252 152 248 154 222 C156 200 164 180 154 166 Z"/>',
-  buns: '<path d="M110 44 C78 44 62 62 62 90 L62 152 C62 170 80 174 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 174 158 170 158 152 L158 90 C158 62 142 44 110 44 Z"/>' +
-        '<circle cx="80" cy="30" r="18"/>' +
-        '<circle cx="140" cy="30" r="18"/>',
-  wave: '<path d="M110 44 C78 44 62 64 62 92 C62 116 70 132 60 156 C52 176 72 184 84 166 L90 102 C90 88 130 88 130 102 L136 166 C148 184 168 176 160 156 C150 132 158 116 158 92 C158 64 142 44 110 44 Z"/>',
-  pony: '<path d="M110 44 C78 44 62 62 62 90 L62 154 C62 172 80 176 90 162 L90 102 C90 88 130 88 130 102 L130 162 C140 176 158 172 158 154 L158 90 C158 62 142 44 110 44 Z"/><path d="M154 54 C184 45 198 66 188 92 C180 112 168 120 158 108 Z"/>'
+  bob: '<path d="M120 32 C88 32 64 56 64 92 L64 130 C64 150 84 154 94 140 L92 100 C92 88 148 88 148 100 L146 140 C156 154 176 150 176 130 L176 92 C176 56 152 32 120 32 Z"/>',
+  long: '<path d="M120 32 C88 32 64 56 64 92 L64 130 C64 150 84 154 94 140 L92 100 C92 88 148 88 148 100 L146 140 C156 154 176 150 176 130 L176 92 C176 56 152 32 120 32 Z"/><path d="M70 130 C58 160 56 200 64 232 C70 252 92 250 88 230 C84 208 82 178 84 148 Z"/><path d="M170 130 C182 160 184 200 176 232 C170 252 148 250 152 230 C156 208 158 178 156 148 Z"/>',
+  twin: '<path d="M120 32 C88 32 64 56 64 92 L64 130 C64 150 84 154 94 140 L92 100 C92 88 148 88 148 100 L146 140 C156 154 176 150 176 130 L176 92 C176 56 152 32 120 32 Z"/><path d="M66 128 C44 146 36 180 44 210 C50 234 74 230 70 206 C66 184 64 164 72 148 Z"/><path d="M174 128 C196 146 204 180 196 210 C190 234 166 230 170 206 C174 184 176 164 168 148 Z"/>',
+  buns: '<path d="M120 32 C88 32 64 56 64 92 L64 130 C64 150 84 154 94 140 L92 100 C92 88 148 88 148 100 L146 140 C156 154 176 150 176 130 L176 92 C176 56 152 32 120 32 Z"/><circle cx="84" cy="40" r="20"/><circle cx="156" cy="40" r="20"/>',
+  wave: '<path d="M120 32 C88 32 64 56 64 92 C64 114 72 130 62 154 C54 172 78 182 88 162 L92 100 C92 88 148 88 148 100 L152 162 C162 182 186 172 178 154 C168 130 176 114 176 92 C176 56 152 32 120 32 Z"/>',
+  pony: '<path d="M120 32 C88 32 64 56 64 92 L64 130 C64 150 84 154 94 140 L92 100 C92 88 148 88 148 100 L146 140 C156 154 176 150 176 130 L176 92 C176 56 152 32 120 32 Z"/><path d="M168 40 C200 30 212 58 200 86 C190 108 176 112 166 96 C160 84 158 60 168 40 Z"/>'
 };
-var HAIR_FRONT = '<path d="M68 80 C68 46 90 28 110 28 C130 28 152 46 152 80 C142 62 134 70 122 66 C110 62 98 62 88 70 C80 74 74 74 68 80 Z"/>';
+var HAIR_FRONT = '<path d="M74 86 C72 50 94 30 120 30 C146 30 168 50 166 86 C160 64 152 74 140 66 C130 60 116 62 108 70 C100 78 90 76 82 82 Z"/><path d="M96 96 C92 72 102 60 116 63 C110 74 106 86 104 98 Z"/><path d="M144 96 C148 72 138 60 124 63 C130 74 134 86 136 98 Z"/>';
 
 var DRESS_PATHS = {
-  a: 'M84 168 C84 152 94 146 110 146 C126 146 136 152 136 168 L142 196 L154 252 C156 272 64 272 66 252 L78 196 Z',
-  b: 'M84 168 C84 152 94 146 110 146 C126 146 136 152 136 168 L140 192 L150 240 C152 254 68 254 70 240 L80 192 Z',
-  c: 'M84 158 L136 158 L146 196 L158 254 C160 272 60 272 62 254 L74 196 Z',
-  stage: 'M80 160 L140 160 L148 194 L168 258 C170 278 50 278 52 258 L72 194 Z',
-  school: 'M84 164 L136 164 L145 198 L158 252 C158 268 62 268 62 252 L75 198 Z',
-  sport: 'M82 164 L138 164 L145 205 L154 250 C154 264 66 264 66 250 L75 205 Z',
-  princess: 'M84 160 L136 160 L148 200 L180 278 C180 294 40 294 40 278 L72 200 Z',
-  denim: 'M82 160 L138 160 L150 202 L158 254 C158 270 62 270 62 254 L70 202 Z'
+  a: 'M84 168 C84 154 96 148 120 148 C144 148 156 154 156 168 L160 192 C152 224 150 254 164 270 C170 280 152 284 120 284 C88 284 70 280 76 270 C90 254 88 224 80 192 Z',
+  b: 'M84 168 C84 154 96 148 120 148 C144 148 156 154 156 168 L164 194 L172 264 C174 278 66 278 68 264 L76 194 Z',
+  c: 'M84 168 C84 156 96 150 120 150 C144 150 156 156 156 168 L164 194 L172 262 C174 278 66 278 68 262 L76 194 Z',
+  stage: 'M80 164 C80 152 96 146 120 146 C144 146 160 152 160 164 L166 188 C160 210 158 236 172 250 C178 260 160 264 120 264 C80 264 62 260 68 250 C82 236 80 210 74 188 Z',
+  school: 'M84 168 C84 154 96 148 120 148 C144 148 156 154 156 168 L164 194 L170 258 C172 270 68 270 70 258 L76 194 Z',
+  sport: 'M84 164 L156 164 L156 200 C156 208 84 208 84 200 Z',
+  princess: 'M84 166 C84 152 96 146 120 146 C144 146 156 152 156 166 L166 196 L186 296 C192 322 48 322 54 296 L74 196 Z',
+  denim: 'M84 168 C84 154 96 148 120 148 C144 148 156 154 156 168 L164 194 L172 260 C174 274 66 274 68 260 L76 194 Z'
 };
 
 /* ================= 渲染 ================= */
 function applyHair(){
+  $('hairStopA').setAttribute('stop-color', shade(state.hairColor, 42));
+  $('hairStopB').setAttribute('stop-color', shade(state.hairColor, -24));
   var g = $('hairBack');
   g.innerHTML = HAIR_PATHS[state.hair];
-  g.setAttribute('fill', state.hairColor);
+  g.setAttribute('fill', 'url(#gradHair)');
   $('hairFront').innerHTML = HAIR_FRONT;
-  $('hairFront').setAttribute('fill', state.hairColor);
+  $('hairFront').setAttribute('fill', 'url(#gradHair)');
+}
+function dressExtra(id, color){
+  var s = '';
+  var dark = shade(color, -30);
+  if(id==='c'){
+    s += '<path d="M84 158 L92 172 M156 158 L148 172" stroke="' + dark + '" stroke-width="7" stroke-linecap="round" fill="none"/>';
+    s += '<path d="M120 148 Q128 158 120 166 Q112 158 120 148 Z" fill="' + dark + '"/>';
+  }
+  if(id==='stage'){
+    s += '<text x="108" y="232" font-size="18" text-anchor="middle">✨</text><text x="136" y="212" font-size="15" text-anchor="middle">✨</text><text x="98" y="260" font-size="14" text-anchor="middle">⭐</text><text x="150" y="246" font-size="13" text-anchor="middle">✨</text>';
+  }
+  if(id==='school'){
+    s += '<g stroke="' + dark + '" stroke-width="2" opacity=".45" fill="none">' +
+      '<path d="M92 200 L92 262"/><path d="M106 198 L106 266"/><path d="M120 197 L120 268"/><path d="M134 198 L134 266"/><path d="M148 200 L148 262"/></g>';
+  }
+  if(id==='sport'){
+    s += '<path d="M84 200 L156 200 L152 236 C150 248 90 248 88 236 Z" fill="' + dark + '"/>';
+    s += '<path d="M120 164 L120 206" stroke="' + shade(color,-20) + '" stroke-width="2.5"/>';
+  }
+  if(id==='princess'){
+    s += '<path d="M66 302 Q120 326 174 302" stroke="' + dark + '" stroke-width="5" opacity=".5" fill="none"/>';
+    s += '<text x="120" y="196" font-size="16" text-anchor="middle">💎</text>';
+  }
+  if(id==='denim'){
+    s += '<rect x="88" y="198" width="24" height="18" rx="6" fill="' + shade(color,-18) + '" opacity=".5"/>';
+    s += '<rect x="128" y="198" width="24" height="18" rx="6" fill="' + shade(color,-18) + '" opacity=".5"/>';
+    s += '<path d="M120 196 L120 268" stroke="' + dark + '" stroke-width="2.5" opacity=".6"/>';
+  }
+  if(id==='a'){
+    s += '<path d="M120 192 Q126 199 120 206 Q114 199 120 192 Z" fill="' + dark + '"/>';
+    s += '<circle cx="108" cy="198" r="5" fill="' + dark + '"/><circle cx="132" cy="198" r="5" fill="' + dark + '"/>';
+  }
+  return s;
 }
 function applyDress(){
+  var c = state.dressColor;
+  $('dressStopA').setAttribute('stop-color', shade(c, 34));
+  $('dressStopB').setAttribute('stop-color', shade(c, -28));
   $('dress').setAttribute('d', DRESS_PATHS[state.dress]);
-  $('dress').setAttribute('fill', state.dressColor);
+  $('dressExtras').innerHTML = dressExtra(state.dress, c);
 }
 function applyAcc(){
   $('accHead').textContent = state.accHead;
