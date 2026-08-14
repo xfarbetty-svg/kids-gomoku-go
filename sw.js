@@ -1,4 +1,4 @@
-const CACHE = 'kids-games-v5';
+const CACHE = 'kids-games-v6';
 const FILES = [
   './',
   './index.html',
@@ -32,21 +32,14 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  // 頁面（導覽）一律先抓網路，確保手機能看到最新版；離線才用快取
-  if (e.request.mode === 'navigate') {
-    e.respondWith(
-      fetch(e.request)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, copy));
-          return res;
-        })
-        .catch(() => caches.match(e.request).then((r) => r || caches.match('./')))
-    );
-    return;
-  }
-  // 其他檔案用快取優先
+  // 一律「上線優先」：有網路就抓最新，離線才用快取 → 手機永遠拿到新版
   e.respondWith(
-    caches.match(e.request).then((r) => r || fetch(e.request))
+    fetch(e.request)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(e.request, copy));
+        return res;
+      })
+      .catch(() => caches.match(e.request).then((r) => r || caches.match('./')))
   );
 });

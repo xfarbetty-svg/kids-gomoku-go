@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#e05a9c">
-<link rel="stylesheet" href="common.css">
+<link rel="stylesheet" href="common.css?v=2">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(180deg,#ffe3f1 0%,#fff0f7 45%,#e8f7ff 100%); min-height:100vh; overflow-x:hidden; text-align:center; }
@@ -353,6 +353,6 @@ buildBoard();
 reset();
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 </script>
-<script src="common.js"></script>
+<script src="common.js?v=2"></script>
 </body>
 </html>
