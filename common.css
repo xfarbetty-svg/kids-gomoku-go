@@ -1,21 +1,29 @@
-/* ============ 小朋友樂園 KPOP 少女風共用樣式 ============ */
+/* ============ 繽紛樂園：海洋/太空/森林/甜點 混合風共用樣式 ============ */
 .hidden { display:none !important; }
+
+/* 繽紛漸層背景（四大主題融合，可上下顛倒翻轉用） */
 body.kpop-bg {
-  background: linear-gradient(180deg,#ffe4f2 0%,#fff0f7 35%,#f0e8ff 70%,#e8f7ff 100%);
+  background: linear-gradient(160deg,#ffe4f2 0%,#e8f7ff 28%,#eef8ec 52%,#f4ecff 78%,#fff4e0 100%);
+  background-attachment: fixed;
 }
+body.ocean-bg { background: linear-gradient(180deg,#cfe9ff 0%,#e0f4ff 40%,#d9f7ef 100%); background-attachment:fixed; }
+body.space-bg { background: linear-gradient(180deg,#e6daff 0%,#f2ecff 45%,#e8f7ff 100%); background-attachment:fixed; }
+body.forest-bg{ background: linear-gradient(180deg,#d9f2dc 0%,#eef9e6 45%,#fff7e0 100%); background-attachment:fixed; }
+body.dessert-bg{ background: linear-gradient(180deg,#ffe3ee 0%,#fff0f7 45%,#fff6e6 100%); background-attachment:fixed; }
+
 .title-grad {
-  background: linear-gradient(90deg,#ff5fa2,#ff9ecb 40%,#9a7fff);
+  background: linear-gradient(90deg,#ff5fa2,#ff9ecb 22%,#9a7fff 45%,#37b6ff 68%,#5fd6a8 85%,#ffc93c);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   text-shadow: 0 3px 0 rgba(255,255,255,.9);
 }
-.title-shine {
-  position: relative; display: inline-block;
-}
-.title-shine::after {
-  content:'✨'; position:absolute; right:-22px; top:-8px; font-size:18px; animation:sparkleTwinkle 1.6s ease-in-out infinite;
-}
-@keyframes sparkleTwinkle { 0%,100%{opacity:1; transform:scale(1) rotate(0)} 50%{opacity:.3; transform:scale(.7) rotate(20deg)} }
+.title-shine { position: relative; display: inline-block; }
+.title-shine::after { content:'✨'; position:absolute; right:-24px; top:-8px; font-size:18px; animation:sparkleTwinkle 1.6s ease-in-out infinite; }
 
+@keyframes sparkleTwinkle { 0%,100%{opacity:1; transform:scale(1) rotate(0)} 50%{opacity:.3; transform:scale(.7) rotate(20deg)} }
+@keyframes bounceIn { 0%{transform:scale(0)} 60%{transform:scale(1.25)} 100%{transform:scale(1)} }
+@keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+/* 糖果立體按鈕（四大主題配色） */
 .glossy {
   background: linear-gradient(135deg,#ffb6d9,#ff7ab5 55%,#b78bff);
   box-shadow: 0 6px 0 #d95d96, 0 10px 22px rgba(224,90,156,.35), inset 0 2px 3px rgba(255,255,255,.6);
@@ -32,7 +40,11 @@ body.kpop-bg {
   background: linear-gradient(135deg,#ffe9a3,#ffc93c 55%,#ff9ecb);
   box-shadow: 0 6px 0 #d9a800, 0 10px 22px rgba(255,201,60,.4), inset 0 2px 3px rgba(255,255,255,.7);
 }
-.glossy:active, .glossy-mint:active, .glossy-lav:active, .glossy-yellow:active { transform: translateY(4px); }
+.glossy-sky {
+  background: linear-gradient(135deg,#bde5ff,#37b6ff 55%,#9a7fff);
+  box-shadow: 0 6px 0 #1e7fc4, 0 10px 22px rgba(55,182,255,.35), inset 0 2px 3px rgba(255,255,255,.6);
+}
+.glossy:active, .glossy-mint:active, .glossy-lav:active, .glossy-yellow:active, .glossy-sky:active { transform: translateY(4px); }
 
 .card-cute {
   background: linear-gradient(180deg,#fff,#fff8fc);
@@ -51,10 +63,10 @@ body.kpop-bg {
 }
 
 .ribbon-bar {
-  height: 6px; width: 100%; background: linear-gradient(90deg,#ff8fb3,#ffc93c,#9a7fff,#62d6a5,#ff8fb3);
-  background-size: 200% 100%; animation: ribbonMove 6s linear infinite;
+  height: 8px; width: 100%;
+  background: linear-gradient(90deg,#37b6ff,#5fd6a8,#ffc93c,#ff8fb3,#9a7fff,#37b6ff);
+  background-size: 300% 100%; animation: ribbonMove 8s linear infinite; border-radius: 999px;
 }
-@keyframes ribbonMove { to { background-position: 200% 0; } }
+@keyframes ribbonMove { to { background-position: 300% 0; } }
 
-@keyframes bounceIn { 0%{transform:scale(0)} 60%{transform:scale(1.25)} 100%{transform:scale(1)} }
 .sticker-pop { animation: bounceIn .5s ease; }

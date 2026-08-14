@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>太空打怪獸 👾</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#7059d0">
+<link rel="stylesheet" href="common.css?v=3">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; text-align:center; }
+  button { font-family:inherit; }
+  .hidden { display:none !important; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(154,127,255,.4); z-index:10; }
+  .title { font-size:30px; margin-top:20px; }
+  .subtitle { color:#6b5a8f; font-size:15px; margin:6px 0 10px; font-weight:700; }
+  .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .chip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:7px 16px; font-weight:800; color:#6b5a8f; box-shadow:0 4px 12px rgba(154,127,255,.2); font-size:14px; }
+  .chip b { color:#7059d0; font-size:17px; }
+  .status { display:flex; align-items:center; justify-content:center; background:#fff; border-radius:18px; padding:8px 18px;
+    box-shadow:0 3px 12px rgba(154,127,255,.2); font-weight:800; color:#4a3a6b; margin:0 auto 12px; font-size:15px;
+    white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw; }
+  .boardBox { max-width:420px; margin:0 auto; padding:0 12px; }
+  .grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+  .hole { position:relative; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 50% 40%, #fff, #e0d6ff); border:5px solid #fff;
+    box-shadow:inset 0 6px 12px rgba(112,89,208,.25), 0 6px 16px rgba(112,89,208,.3); overflow:hidden; }
+  .hole::after { content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:110%; height:38%; background:linear-gradient(180deg,#b09cff,#7059d0); border-radius:50% 50% 0 0; opacity:.9; }
+  .alien { position:absolute; left:50%; bottom:0; transform:translate(-50%, 100%); font-size:52px; cursor:pointer; user-select:none; -webkit-user-select:none;
+    z-index:3; transition:transform .12s ease-out; filter:drop-shadow(0 6px 8px rgba(60,40,120,.35)); }
+  .alien.up { transform:translate(-50%, -8%); animation:wiggle .5s ease-in-out infinite; }
+  .alien.hit { transform:translate(-50%, 120%) rotate(40deg) scale(.6); transition:.18s; opacity:.3; }
+  @keyframes wiggle { 0%,100%{transform:translate(-50%,-8%) rotate(-4deg)} 50%{transform:translate(-50%,-8%) rotate(4deg)} }
+  .ctrl { margin-top:16px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
+    background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.35); transition:.12s; user-select:none; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #7059d0; }
+  .btn.glossy { background:linear-gradient(135deg,#ffb6d9,#ff7ab5 55%,#b78bff); box-shadow:0 5px 0 #d95d96, 0 8px 18px rgba(224,90,156,.3); }
+  .fb { font-size:15px; font-weight:800; color:#4a3a6b; margin-top:10px; height:22px; overflow:hidden; white-space:nowrap; }
+</style>
+</head>
+<body class="space-bg">
+
+<a class="homeLink" href="index.html">🏠</a>
+<div class="title title-grad">太空打怪獸 <span style="font-size:24px;">👾</span></div>
+<div class="subtitle">外星怪獸冒出洞窟了！快點敲敲敲，把牠們打回太空！</div>
+
+<div class="topbar">
+  <span class="chip">⏰ 時間 <b id="time">30</b></span>
+  <span class="chip">👾 打中 <b id="score">0</b> / 15</span>
+</div>
+
+<div class="status"><span id="statusMsg">預備…開始！</span></div>
+<div class="boardBox"><div class="grid" id="grid"></div></div>
+
+<div class="ctrl">
+  <button class="btn" id="restartBtn">🔄 重新開始</button>
+  <button class="btn glossy" id="startBtn">🚀 開始</button>
+</div>
+<div class="fb" id="fb"></div>
+
+<script>
+var GRID = 9, TOTAL = 30, TARGET = 15;
+var score = 0, timeLeft = TOTAL, running = false, over = false;
+var holes = [], timers = [], spawnTimer = null;
+
+var audioCtx = null;
+function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
+function sPop(){ tone(320,.1,'square',.1); }
+function sHit(){ tone(700,.12,'triangle',.2); setTimeout(function(){ tone(1000,.15,'triangle',.2); },80); }
+function sMiss(){ tone(220,.12,'sine',.15); }
+function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle'); }, i*130); }); }
+
+function $(id){ return document.getElementById(id); }
+
+function build(){
+  var g = $('grid'); g.innerHTML=''; holes=[];
+  for(var i=0;i<GRID;i++){
+    (function(i){
+      var d = document.createElement('div');
+      d.className = 'hole';
+      var al = document.createElement('div');
+      al.className = 'alien';
+      al.innerHTML = '👾';
+      al.addEventListener('click', function(e){ e.stopPropagation(); if(!running||over) return; if(al.classList.contains('up')){ hit(i); } else { sMiss(); } });
+      d.appendChild(al);
+      g.appendChild(d);
+      holes.push({el:d, alien:al, up:false, busy:false});
+    })(i);
+  }
+  resetGame();
+}
+
+function resetGame(){
+  clearInterval(spawnTimer); timers.forEach(function(t){ clearTimeout(t); }); timers=[];
+  score=0; timeLeft=TOTAL; over=false; running=false;
+  $('time').textContent = timeLeft; $('score').textContent = '0';
+  $('statusMsg').textContent = '預備…點「開始」！'; $('fb').textContent='';
+  var b = $('startBtn'); b.classList.remove('hidden');
+  holes.forEach(function(h){ h.alien.classList.remove('up','hit'); h.up=false; h.busy=false; });
+}
+
+function start(){
+  if(running) return;
+  if(over) resetGame();
+  running = true;
+  $('startBtn').classList.add('hidden');
+  $('statusMsg').textContent = '打呀打呀！👾';
+  spawnTimer = setInterval(function(){
+    if(over) return;
+    spawn();
+  }, 850);
+  countdown();
+}
+
+function countdown(){
+  var t = setInterval(function(){
+    if(over){ clearInterval(t); return; }
+    timeLeft--;
+    $('time').textContent = timeLeft;
+    if(timeLeft <= 0){ clearInterval(t); finish(); }
+  }, 1000);
+}
+
+function spawn(){
+  var idle = holes.filter(function(h){ return !h.busy; });
+  if(idle.length < 3) return;
+  var h = idle[Math.floor(Math.random()*idle.length)];
+  h.busy = true; h.up = true;
+  h.alien.classList.add('up'); sPop();
+  var dur = 900 + Math.random()*700;
+  var t = setTimeout(function(){ hide(h); }, dur);
+  timers.push(t);
+}
+
+function hide(h){
+  if(h.up){
+    h.up = false;
+    h.alien.classList.remove('up');
+    h.alien.classList.add('hit');
+    setTimeout(function(){ h.alien.classList.remove('hit'); h.busy=false; }, 180);
+  }
+}
+
+function hit(i){
+  var h = holes[i];
+  h.up = false;
+  score++;
+  $('score').textContent = score;
+  sHit();
+  h.alien.classList.remove('up');
+  h.alien.classList.add('hit');
+  setTimeout(function(){ h.alien.classList.remove('hit'); h.busy=false; }, 180);
+  if(score >= TARGET) finish(true);
+}
+
+function finish(win){
+  over = true;
+  clearInterval(spawnTimer);
+  holes.forEach(function(h){ h.alien.classList.remove('up'); });
+  var b = $('startBtn');
+  if(win){
+    b.classList.remove('hidden'); b.textContent = '🎉 再玩一次';
+    $('statusMsg').textContent = '太厲害了！怪獸全被打敗！🏆';
+    $('fb').textContent = '恭喜過關！';
+    sWin();
+    if(window.KidsApp) KidsApp.reportWin('mole','👾');
+  } else {
+    b.classList.remove('hidden'); b.textContent = '🔄 再試一次';
+    $('statusMsg').textContent = score>=8 ? '差一點點！再試一次吧！💪' : '再加把勁，多打幾隻怪獸！👾';
+    $('fb').textContent = '打中 ' + score + ' 隻，目標 15 隻';
+  }
+}
+
+$('startBtn').addEventListener('click', start);
+$('restartBtn').addEventListener('click', function(){ build(); });
+build();
+</script>
+<script src="common.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>甜點滑塊拼圖 🧁</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#e05a9c">
+<link rel="stylesheet" href="common.css?v=3">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; text-align:center; }
+  button { font-family:inherit; }
+  .hidden { display:none !important; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(255,95,162,.35); z-index:10; }
+  .title { font-size:30px; margin-top:20px; }
+  .subtitle { color:#b06a92; font-size:15px; margin:6px 0 10px; font-weight:700; }
+  .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .chip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:7px 16px; font-weight:800; color:#b06a92; box-shadow:0 4px 12px rgba(255,95,162,.18); font-size:14px; }
+  .chip b { color:#e05a9c; font-size:17px; }
+  .status { display:flex; align-items:center; justify-content:center; background:#fff; border-radius:18px; padding:8px 18px;
+    box-shadow:0 3px 12px rgba(255,95,162,.15); font-weight:800; color:#6a3a52; margin:0 auto 12px; font-size:15px;
+    white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw; }
+  .boardBox { max-width:380px; margin:0 auto; padding:0 12px; }
+  #board { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; background:#fff; border:5px solid #fff; border-radius:22px;
+    box-shadow:0 10px 28px rgba(255,95,162,.25); padding:8px; }
+  .tile { aspect-ratio:1; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;
+    transition:.15s; user-select:none; -webkit-user-select:none; }
+  .tile .num { font-size:30px; font-weight:900; color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.18); }
+  .tile .em { font-size:22px; }
+  .tile.empty { background:transparent; box-shadow:none; cursor:default; }
+  .tile.can { animation:bounceIn .35s ease; }
+  .tile.can:active { transform:scale(.92); }
+  .ctrl { margin-top:16px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
+    background:linear-gradient(135deg,#ffb6d9,#ff7ab5 55%,#ff9ecb); box-shadow:0 5px 0 #d95d96, 0 8px 18px rgba(255,95,162,.3); transition:.12s; user-select:none; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #d95d96; }
+  .btn.lav { background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.35); }
+  .fb { font-size:15px; font-weight:800; color:#6a3a52; margin-top:10px; height:22px; overflow:hidden; white-space:nowrap; }
+</style>
+</head>
+<body class="dessert-bg">
+
+<a class="homeLink" href="index.html">🏠</a>
+<div class="title title-grad">甜點滑塊拼圖 <span style="font-size:24px;">🧁</span></div>
+<div class="subtitle">把打亂的甜點滑回正確的位置！空格旁的小塊塊都可以點</div>
+
+<div class="topbar">
+  <span class="chip">🕹️ 步數 <b id="moves">0</b></span>
+  <span class="chip">🎯 目標 <b>1-8 依序排好</b></span>
+</div>
+
+<div class="status"><span id="statusMsg">點一格可以動的甜點，讓它滑進空格！</span></div>
+<div class="boardBox"><div id="board"></div></div>
+
+<div class="ctrl">
+  <button class="btn" id="restartBtn">🔄 打亂重排</button>
+  <button class="btn lav hidden" id="winBtn">🎉 再玩一次</button>
+</div>
+<div class="fb" id="fb"></div>
+
+<script>
+var SIZE = 3;
+var COLS = ['#ff8fb3','#ffc93c','#9a7fff','#62d6a5','#ff7ab5','#37b6ff','#ffb673','#c77bff','#7cc2ff'];
+var EMS = ['🧁','🍭','🍰','🍩','🍪','🍦','🧋','🍫',''];
+var tiles = [];   // 0..8, value = 圖片編號
+var emptyIdx = 8, moves = 0, over = false;
+
+var audioCtx = null;
+function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
+function sMove(){ tone(520,.07,'triangle',.12); }
+function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle'); }, i*130); }); }
+
+function $(id){ return document.getElementById(id); }
+
+function solved(){
+  for(var i=0;i<SIZE*SIZE-1;i++) if(tiles[i] !== i) return false;
+  return true;
+}
+
+function shuffle(){
+  do {
+    tiles = []; for(var i=0;i<SIZE*SIZE;i++) tiles.push(i);
+    for(var i=0;i<SIZE*SIZE;i++){
+      var j = Math.floor(Math.random()*(i+1));
+      var t = tiles[i]; tiles[i]=tiles[j]; tiles[j]=t;
+    }
+    /* 洗牌後要保證可以解：3x3（奇數邊）只要反序數為偶數即可解 */
+    var inv=0, flat=[];
+    for(var i=0;i<SIZE*SIZE;i++) if(tiles[i]!==SIZE*SIZE-1) flat.push(tiles[i]);
+    for(var i=0;i<flat.length;i++) for(var j=i+1;j<flat.length;j++) if(flat[i]>flat[j]) inv++;
+    if(inv % 2 !== 0) return shuffle();
+  } while(solved());
+}
+
+function render(){
+  var b = $('board'); b.innerHTML='';
+  for(var i=0;i<SIZE*SIZE;i++){
+    (function(i){
+      var v = tiles[i];
+      var d = document.createElement('div');
+      if(v === SIZE*SIZE-1){
+        d.className = 'tile empty';
+      } else {
+        d.className = 'tile';
+        d.style.background = 'linear-gradient(145deg,' + COLS[v] + ',' + shade(COLS[v],-22) + ')';
+        d.style.boxShadow = '0 4px 0 ' + shade(COLS[v],-32) + ', 0 8px 16px rgba(255,95,162,.2)';
+        d.innerHTML = '<span class="em">' + EMS[v] + '</span><span class="num">' + (v+1) + '</span>';
+        d.addEventListener('click', function(){ tryMove(i); });
+      }
+      b.appendChild(d);
+    })(i);
+  }
+}
+
+function shade(hex, amt){
+  var c = hex.replace('#',''); var r=parseInt(c.substr(0,2),16), g=parseInt(c.substr(2,2),16), bl=parseInt(c.substr(4,2),16);
+  r=Math.max(0,Math.min(255,r+amt)); g=Math.max(0,Math.min(255,g+amt)); bl=Math.max(0,Math.min(255,bl+amt));
+  return '#' + [r,g,bl].map(function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
+}
+
+function tryMove(i){
+  if(over) return;
+  /* 找空格上下左右 */
+  var er = Math.floor(emptyIdx/SIZE), ec = emptyIdx%SIZE;
+  var r = Math.floor(i/SIZE), c = i%SIZE;
+  if(Math.abs(er-r) + Math.abs(ec-c) !== 1) return;
+  tiles[emptyIdx] = tiles[i]; tiles[i] = SIZE*SIZE-1;
+  emptyIdx = i; moves++;
+  $('moves').textContent = moves;
+  sMove();
+  render();
+  if(solved()){
+    over = true; sWin();
+    $('statusMsg').textContent = '拼好了！甜點排隊完成！🎉';
+    $('fb').textContent = '🏆 用了 ' + moves + ' 步';
+    $('winBtn').classList.remove('hidden');
+    if(window.KidsApp) KidsApp.reportWin('puzzle','🧁');
+  }
+}
+
+function reset(){
+  over=false; moves=0; $('moves').textContent='0';
+  $('fb').textContent=''; $('statusMsg').textContent='打亂好了，開始拼吧！';
+  $('winBtn').classList.add('hidden');
+  shuffle();
+  emptyIdx = tiles.indexOf(SIZE*SIZE-1);
+  render();
+}
+$('restartBtn').addEventListener('click', reset);
+$('winBtn').addEventListener('click', reset);
+reset();
+</script>
+<script src="common.js?v=3"></script>
+</body>
+</html>

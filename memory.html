@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>海洋記憶翻牌 🐬</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#1e7fc4">
+<link rel="stylesheet" href="common.css?v=3">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; overflow-x:hidden; text-align:center; }
+  button { font-family:inherit; }
+  .hidden { display:none !important; }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(55,182,255,.35); z-index:10; }
+  .title { font-size:30px; margin-top:20px; }
+  .subtitle { color:#5a83a0; font-size:15px; margin:6px 0 10px; font-weight:700; }
+  .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .chip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:7px 16px; font-weight:800; color:#5a83a0; box-shadow:0 4px 12px rgba(55,182,255,.18); font-size:14px; }
+  .chip b { color:#1e7fc4; font-size:17px; }
+  .status { display:flex; align-items:center; justify-content:center; background:#fff; border-radius:18px; padding:8px 18px;
+    box-shadow:0 3px 12px rgba(55,182,255,.15); font-weight:800; color:#3a5a73; margin:0 auto 12px; font-size:15px;
+    white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw; }
+  .grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; max-width:420px; margin:0 auto; padding:0 12px; }
+  .card { aspect-ratio:1; border-radius:18px; cursor:pointer; perspective:500px; user-select:none; -webkit-user-select:none; }
+  .card .inner { position:relative; width:100%; height:100%; transition:transform .35s; transform-style:preserve-3d; }
+  .card.flip .inner { transform:rotateY(180deg); }
+  .face { position:absolute; inset:0; border-radius:18px; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+  .card .back { background:linear-gradient(145deg,#a8dcff,#37b6ff 60%,#1e7fc4); border:3px solid #fff; box-shadow:0 5px 0 #14609a, 0 8px 18px rgba(55,182,255,.3); font-size:34px; }
+  .card .front { background:#fff; border:3px solid #bcd9ff; transform:rotateY(180deg); font-size:44px; box-shadow:0 4px 10px rgba(55,182,255,.18); }
+  .card.match .front { background:#e8fff4; border-color:#5fd6a8; animation:bounceIn .4s ease; }
+  .card.ko .inner { animation:shake .3s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .ctrl { margin-top:14px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
+    background:linear-gradient(135deg,#8fd3ff,#37b6ff); box-shadow:0 5px 0 #14609a, 0 8px 18px rgba(55,182,255,.3); transition:.12s; user-select:none; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #14609a; }
+  .btn.glossy { background:linear-gradient(135deg,#ffb6d9,#ff7ab5 55%,#b78bff); box-shadow:0 5px 0 #d95d96, 0 8px 18px rgba(224,90,156,.3); }
+  .fb { font-size:15px; font-weight:800; color:#3a5a73; margin-top:10px; height:22px; overflow:hidden; white-space:nowrap; }
+</style>
+</head>
+<body class="ocean-bg">
+
+<a class="homeLink" href="index.html">🏠</a>
+<div class="title title-grad">海洋記憶翻牌 <span style="font-size:24px;">🐬</span></div>
+<div class="subtitle">翻開兩張牌，找到一模一樣的海洋動物！翻越少次越厲害</div>
+
+<div class="topbar">
+  <span class="chip">🃏 翻牌 <b id="moves">0</b></span>
+  <span class="chip">🐚 配對 <b id="pairs">0</b> / 6</span>
+</div>
+
+<div class="status"><span id="statusMsg">開始囉！點一張牌翻開它 👀</span></div>
+<div class="grid" id="grid"></div>
+
+<div class="ctrl">
+  <button class="btn" id="restartBtn">🔄 重來</button>
+  <button class="btn glossy hidden" id="winBtn">🎉 再玩一次</button>
+</div>
+<div class="fb" id="fb"></div>
+
+<script>
+var EMOJIS = ['🐙','🐬','🐳','🦀','🐟','🐡'];
+var cards = [];   // {emoji, el, match}
+var first = null, lock = false, moves = 0, pairs = 0, over = false;
+var grid = $('grid');
+
+var audioCtx = null;
+function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
+function sFlip(){ tone(520,.08,'triangle',.12); }
+function sMatch(){ tone(660,.1,'triangle',.15); setTimeout(function(){ tone(880,.14,'triangle',.15); },90); }
+function sWrong(){ tone(300,.15,'sine',.18); }
+function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle'); }, i*130); }); }
+
+function $(id){ return document.getElementById(id); }
+
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+function build(){
+  grid.innerHTML=''; cards=[]; first=null; lock=false; moves=0; pairs=0; over=false;
+  $('moves').textContent='0'; $('pairs').textContent='0';
+  $('statusMsg').textContent='開始囉！點一張牌翻開它 👀'; $('fb').textContent='';
+  var em = shuffle(EMOJIS.concat(EMOJIS));
+  em.forEach(function(e){
+    var c = {emoji:e, match:false};
+    c.el = document.createElement('div');
+    c.el.className = 'card';
+    c.el.innerHTML = '<div class="inner"><div class="face back">🐚</div><div class="face front">' + e + '</div></div>';
+    c.el.addEventListener('click', function(){ click(c); });
+    cards.push(c);
+    grid.appendChild(c.el);
+  });
+}
+
+function click(c){
+  if(over || lock || c.match || c===first) return;
+  c.el.classList.add('flip'); sFlip();
+  if(!first){ first = c; return; }
+  moves++; $('moves').textContent = moves;
+  lock = true;
+  if(first.emoji === c.emoji){
+    first.match = c.match = true;
+    first.el.classList.add('match'); c.el.classList.add('match');
+    pairs++; $('pairs').textContent = pairs;
+    sMatch();
+    first = null;
+    setTimeout(function(){
+      lock = false;
+      if(pairs === 6) win();
+    }, 350);
+  } else {
+    sWrong();
+    var a = first, b = c;
+    a.el.classList.add('ko'); b.el.classList.add('ko');
+    setTimeout(function(){
+      a.el.classList.remove('flip','ko'); b.el.classList.remove('flip','ko');
+      first = null; lock = false;
+    }, 700);
+  }
+}
+
+function win(){
+  over = true; sWin();
+  $('statusMsg').textContent = '全部配對成功！好厲害！🎉';
+  $('fb').textContent = '🏆 用 ' + moves + ' 次翻牌就完成！';
+  var winOk = $('winBtn'); winOk.classList.remove('hidden');
+  if(window.KidsApp) KidsApp.reportWin('memory','🐬');
+}
+$('restartBtn').addEventListener('click', function(){ $('winBtn').classList.add('hidden'); build(); });
+$('winBtn').addEventListener('click', function(){ $('winBtn').classList.add('hidden'); build(); });
+</script>
+<script src="common.js?v=3"></script>
+</body>
+</html>

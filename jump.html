@@ -7,10 +7,10 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#e05a9c">
-<link rel="stylesheet" href="common.css?v=2">
+<link rel="stylesheet" href="common.css?v=3">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(180deg,#ffe3f1 0%,#fff0f7 45%,#e8f7ff 100%); min-height:100vh; overflow-x:hidden; text-align:center; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(160deg,#e6daff 0%,#f2ecff 45%,#fff4e0 100%); background-attachment:fixed; min-height:100vh; overflow-x:hidden; text-align:center; }
   button { font-family:inherit; }
   .hidden { display:none !important; }
   .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(224,90,156,.3); z-index:10; }
@@ -353,6 +353,6 @@ buildBoard();
 reset();
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 </script>
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 </body>
 </html>

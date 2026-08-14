@@ -3,63 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>小朋友遊戲樂園 🎀</title>
+<title>繽紛樂園 🎡</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#e05a9c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="遊戲樂園">
-<link rel="stylesheet" href="common.css?v=2">
+<meta name="apple-mobile-web-app-title" content="繽紛樂園">
+<link rel="stylesheet" href="common.css?v=3">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; text-align:center; padding:28px 14px 40px; }
-  .logo { font-size:64px; display:block; animation:float 2.5s ease-in-out infinite; }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
-  h1 { font-size:40px; font-weight:900; letter-spacing:1px; margin:6px 0 4px; }
-  .sub { color:#b06a92; font-size:15px; font-weight:700; margin-bottom:16px; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; text-align:center; padding:26px 14px 40px; }
+  .logo { font-size:60px; display:block; animation:floatY 2.6s ease-in-out infinite; }
+  h1 { font-size:38px; font-weight:900; letter-spacing:1px; margin:8px 0 4px; }
+  .sub { color:#b06a92; font-size:15px; font-weight:700; margin-bottom:14px; }
 
-  .toprow { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+  /* 四大主題色條 */
+  .themeRow { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+  .themeChip { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:6px 13px; font-size:13px; font-weight:800; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,.12); }
+  .ocean  { background:linear-gradient(135deg,#37b6ff,#1e9fe0); }
+  .space  { background:linear-gradient(135deg,#9a7fff,#7059d0); }
+  .forest { background:linear-gradient(135deg,#5fd6a8,#2fb886); }
+  .dessert{ background:linear-gradient(135deg,#ff8fb3,#ff5fa2); }
+
+  .toprow { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
   .chip { display:inline-flex; align-items:center; gap:6px; background:#fff; border-radius:999px; padding:7px 16px;
     font-weight:800; color:#7a4a63; box-shadow:0 4px 12px rgba(224,90,156,.16); font-size:15px; }
   .chip b { color:#e05a9c; font-size:18px; }
   .chipBtn { border:none; border-radius:999px; font-weight:800; font-size:14px; color:#fff; padding:9px 18px; }
 
-  .cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:16px; max-width:760px; margin:0 auto; }
-  .game { position:relative; background:linear-gradient(180deg,#fff,#fff8fc); border:3px solid #ffd1e6; border-radius:26px;
+  /* 遊戲卡片：繽紛四色邊框 */
+  .cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(225px, 1fr)); gap:16px; max-width:820px; margin:0 auto; }
+  .game { position:relative; background:linear-gradient(180deg,#fff,#fff8fc); border:4px solid #ffd1e6; border-radius:26px;
     padding:20px 14px; cursor:pointer; box-shadow:0 12px 30px rgba(224,90,156,.18); transition:.15s; text-decoration:none; color:inherit; display:block; }
-  .game:hover { transform:translateY(-5px); box-shadow:0 18px 40px rgba(224,90,156,.28); }
-  .game .gicon { font-size:52px; display:block; }
-  .game h2 { color:#e05a9c; font-size:21px; margin:6px 0 4px; }
+  .game:hover { transform:translateY(-5px) rotate(-1deg); box-shadow:0 18px 40px rgba(224,90,156,.28); }
+  .game .gicon { font-size:50px; display:block; animation:floatY 2.8s ease-in-out infinite; }
+  .game .gicon2 { font-size:24px; margin-left:4px; }
+  .game h2 { color:#e05a9c; font-size:20px; margin:6px 0 4px; }
   .game p { color:#7a4a63; font-size:13px; font-weight:700; line-height:1.6; }
   .game .badge { position:absolute; top:10px; right:10px; font-size:24px; filter:grayscale(1) opacity(.35); }
   .game.earned .badge { filter:none; animation:sparkleTwinkle 2s ease-in-out infinite; }
-  .game .wins { display:inline-block; margin-top:8px; background:#fff2f9; border:2px solid #ffd1e6; color:#d75a96;
-    border-radius:999px; font-size:12px; font-weight:800; padding:2px 10px; }
+  .game .tag { display:inline-block; margin-top:6px; border-radius:999px; font-size:11px; font-weight:800; padding:2px 9px; color:#fff; }
+  .game .wins { display:inline-block; margin-top:7px; background:#fff2f9; border:2px solid #ffd1e6; color:#d75a96;
+    border-radius:999px; font-size:12px; font-weight:800; padding:2px 10px; margin-left:4px; }
 
-  .ribbon { margin: 0 0 22px; }
+  /* 主題卡片變體 */
+  .game.theme-ocean  { border-color:#bcd9ff; box-shadow:0 12px 30px rgba(55,182,255,.18); }
+  .game.theme-ocean h2  { color:#1e7fc4; }
+  .game.theme-space  { border-color:#d0c3ff; box-shadow:0 12px 30px rgba(154,127,255,.18); }
+  .game.theme-space h2  { color:#7059d0; }
+  .game.theme-forest { border-color:#bdeccb; box-shadow:0 12px 30px rgba(95,214,168,.18); }
+  .game.theme-forest h2 { color:#2fb886; }
+  .game.theme-dessert{ border-color:#ffc3d8; box-shadow:0 12px 30px rgba(255,95,162,.18); }
+  .game.theme-dessert h2{ color:#e05a9c; }
+
   .install { margin-top:26px; border:none; border-radius:999px; font-size:17px; font-weight:800; cursor:pointer; color:#fff; padding:12px 28px; }
   .hidden { display:none !important; }
 
-  .modal { position:fixed; inset:0; background:rgba(120,60,100,.45); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
-  .modal .card { background:linear-gradient(180deg,#fff,#fff8fc); border-radius:26px; padding:20px; max-width:440px; width:100%;
-    border:4px solid #ffd1e6; box-shadow:0 16px 50px rgba(120,40,90,.35); text-align:center; animation:pop .25s ease; }
+  .modal { position:fixed; inset:0; background:rgba(90,70,110,.5); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
+  .modal .card { background:linear-gradient(180deg,#fff,#fff8fc); border-radius:26px; padding:20px; max-width:480px; width:100%;
+    border:4px solid #ffd1e6; box-shadow:0 16px 50px rgba(90,50,80,.4); text-align:center; animation:pop .25s ease; max-height:86vh; overflow-y:auto; }
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
-  .modal h2 { color:#e05a9c; font-size:22px; margin-bottom:14px; }
+  .modal h2 { color:#e05a9c; font-size:22px; margin-bottom:6px; }
+  .albumProg { font-size:13px; font-weight:800; color:#7a4a63; margin-bottom:12px; }
+  .albumBar { height:12px; background:#ffe9f3; border-radius:999px; overflow:hidden; margin:6px auto 14px; max-width:320px; border:2px solid #ffd1e6; }
+  .albumBar > div { height:100%; width:0; background:linear-gradient(90deg,#ff8fb3,#9a7fff,#37b6ff); transition:width .4s; border-radius:999px; }
   .stickers { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
-  .st { width:64px; height:64px; border-radius:18px; background:#fff4f9; border:3px solid #ffd1e6; display:flex; align-items:center; justify-content:center; font-size:34px; filter:grayscale(1) opacity(.4); }
+  .st { width:74px; padding:8px 4px; border-radius:18px; background:#fff4f9; border:3px solid #ffd1e6; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; filter:grayscale(1) opacity(.4); }
+  .st .e { font-size:34px; }
+  .st .nm { font-size:11px; font-weight:800; color:#7a4a63; }
+  .st .th { font-size:10px; font-weight:700; color:#b06a92; }
   .st.got { background:#fffbe6; border-color:#ffc93c; box-shadow:0 0 14px #ffe9a3; filter:none; animation:sparkleTwinkle 2.5s ease-in-out infinite; }
-  .st .nm { position:absolute; }
 </style>
 </head>
 <body class="kpop-bg">
-  <span class="logo">🎀</span>
-  <h1 class="title-grad title-shine">小朋友遊戲樂園</h1>
-  <div class="sub">集滿 5 張貼紙，就是樂園小明星！✨</div>
+  <span class="logo">🎡</span>
+  <h1 class="title-grad title-shine">繽紛樂園</h1>
+  <div class="sub">收集 8 樣圖鑑寶物，成為樂園大明星！✨</div>
+
+  <div class="themeRow">
+    <span class="themeChip ocean">🌊 海洋</span>
+    <span class="themeChip forest">🌳 森林</span>
+    <span class="themeChip dessert">🍰 甜點</span>
+    <span class="themeChip space">🚀 太空</span>
+  </div>
 
   <div class="toprow">
     <span class="chip">⭐ 星星 <b id="starCount">0</b></span>
-    <button class="chipBtn glossy-lav" id="stickerBtn">🎀 貼紙簿</button>
+    <button class="chipBtn glossy-lav" id="albumBtn">🎁 圖鑑冊</button>
   </div>
 
   <div class="ribbon ribbon-bar"></div>
@@ -68,54 +99,64 @@
 
   <button id="installBtn" class="install glossy hidden">📲 安裝到桌面</button>
 
-  <div id="stickerModal" class="modal hidden">
+  <div id="albumModal" class="modal hidden">
     <div class="card">
-      <h2>🎀 我的貼紙簿</h2>
+      <h2>🎁 我的圖鑑冊</h2>
+      <div class="albumProg" id="albumProg"></div>
+      <div class="albumBar"><div id="albumFill"></div></div>
       <div class="stickers" id="stickerGrid"></div>
-      <button class="chipBtn glossy" id="closeSticker" style="margin-top:18px;">知道了</button>
+      <button class="chipBtn glossy" id="closeSticker" style="margin-top:16px;">知道了</button>
     </div>
   </div>
 
 <script>
 var GAMES = [
-  {id:'gomoku',  name:'動物五子棋', icon:'🐱🐻', desc:'和 AI 下五子棋，先連 5 顆就贏！', link:'gomoku.html',  st:'🐱'},
-  {id:'go',      name:'圍棋教室',   icon:'⚫⚪', desc:'9 路棋盤，先吃 5 顆棋子就贏！', link:'go.html',      st:'⚪'},
-  {id:'jump',    name:'星星跳棋',   icon:'🌟',   desc:'把自己的棋子跳到對面的星星角！', link:'jump.html',    st:'⭐'},
-  {id:'dressup', name:'小小偶像換裝', icon:'💖', desc:'幫小偶像打扮漂漂亮亮上舞台！', link:'dressup.html', st:'🎀'},
-  {id:'color',   name:'彩虹填色屋', icon:'🎨', desc:'把可愛的圖一張張塗上顏色！', link:'color.html',  st:'🌈'}
+  {id:'gomoku',  name:'動物五子棋', icon:'🐱', icon2:'🐻', desc:'和 AI 下五子棋，先連 5 顆就贏！', link:'gomoku.html', st:'🐱', theme:'forest',  tag:'🌳 森林'},
+  {id:'go',      name:'圍棋教室',   icon:'⚫', icon2:'⚪', desc:'9 路棋盤，先吃 5 顆棋子就贏！', link:'go.html',      st:'⚪', theme:'ocean',   tag:'🌊 海洋'},
+  {id:'jump',    name:'星星跳棋',   icon:'🌟', icon2:'⭐', desc:'把自己的棋子跳到對面的星星角！', link:'jump.html',    st:'⭐', theme:'space',   tag:'🚀 太空'},
+  {id:'dressup', name:'小小偶像換裝', icon:'💖', icon2:'🎀', desc:'幫小偶像打扮漂漂亮亮上舞台！', link:'dressup.html', st:'🎀', theme:'dessert', tag:'🍰 甜點'},
+  {id:'color',   name:'彩虹填色屋', icon:'🎨', icon2:'🌈', desc:'把可愛的圖一張張塗上顏色！', link:'color.html',  st:'🌈', theme:'ocean',   tag:'🌊 海洋'},
+  {id:'memory',  name:'海洋記憶翻牌', icon:'🐬', icon2:'🃏', desc:'翻開兩張牌，找到一樣的海洋動物！', link:'memory.html', st:'🐬', theme:'ocean',   tag:'🌊 海洋'},
+  {id:'mole',    name:'太空打怪獸', icon:'👾', icon2:'🔫', desc:'敲敲敲！把冒出來的外星怪獸全部打扁！', link:'mole.html', st:'👾', theme:'space',   tag:'🚀 太空'},
+  {id:'puzzle',  name:'甜點滑塊拼圖', icon:'🧁', icon2:'🧩', desc:'把打亂的甜點拼圖滑回正確位置！', link:'puzzle.html', st:'🧁', theme:'dessert', tag:'🍰 甜點'}
 ];
 function $(id){ return document.getElementById(id); }
 
 function render(){
   var cards = $('cards'); cards.innerHTML='';
-  var s = window.KidsApp ? KidsApp.state() : {stars:0,wins:{},stickers:{}};
+  var s = window.KidsApp ? KidsApp.state() : {stars:0,wins:{},figures:{}};
   $('starCount').textContent = s.stars||0;
   GAMES.forEach(function(g){
-    var earned = !!(s.stickers||{})[g.id];
+    var earned = !!((s.figures||{})[g.id]);
     var wins = (s.wins||{})[g.id]||0;
     var a = document.createElement('a');
-    a.className = 'game' + (earned?' earned':'');
+    a.className = 'game theme-' + g.theme + (earned?' earned':'');
     a.href = g.link;
     a.innerHTML = '<span class="badge">' + (g.st) + '</span>' +
-      '<span class="gicon">' + g.icon + '</span>' +
+      '<span class="gicon">' + g.icon + '<span class="gicon2">' + g.icon2 + '</span></span>' +
       '<h2>' + g.name + '</h2><p>' + g.desc + '</p>' +
-      '<span class="wins">🏆 玩過 ' + wins + ' 次' + (earned?' · 貼紙 GET！':'') + '</span>';
+      '<span class="tag ' + g.theme + '">' + g.tag + '</span>' +
+      '<span class="wins">🏆 玩過 ' + wins + ' 次' + (earned?' · 圖鑑 GET！':'') + '</span>';
     cards.appendChild(a);
   });
-  renderStickers(s);
+  renderAlbum();
 }
-function renderStickers(s){
+function renderAlbum(){
   var g = $('stickerGrid'); g.innerHTML='';
-  GAMES.forEach(function(gm){
-    var got = !!(s.stickers||{})[gm.id];
+  var list = window.KidsApp ? KidsApp.album() : [];
+  var got = 0;
+  list.forEach(function(f){
+    if(f.got) got++;
     var d = document.createElement('div');
-    d.className = 'st' + (got?' got':'');
-    d.textContent = gm.st;
+    d.className = 'st' + (f.got?' got':'');
+    d.innerHTML = '<span class="e">' + f.emoji + '</span><span class="nm">' + f.name + '</span><span class="th">' + f.theme + '</span>';
     g.appendChild(d);
   });
+  $('albumProg').textContent = '已收集 ' + got + ' / ' + list.length + ' 樣';
+  $('albumFill').style.width = list.length ? (got/list.length*100)+'%' : '0%';
 }
-$('stickerBtn').addEventListener('click', function(){ $('stickerModal').classList.remove('hidden'); });
-$('closeSticker').addEventListener('click', function(){ $('stickerModal').classList.add('hidden'); });
+$('albumBtn').addEventListener('click', function(){ renderAlbum(); $('albumModal').classList.remove('hidden'); });
+$('closeSticker').addEventListener('click', function(){ $('albumModal').classList.add('hidden'); });
 
 var deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', function(e){
@@ -129,6 +170,6 @@ $('installBtn').addEventListener('click', function(){
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 render();
 </script>
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
-  "name": "小朋友棋類樂園",
-  "short_name": "棋類樂園",
-  "description": "給小朋友玩的五子棋與圍棋，內建 AI 教練提示。",
+  "name": "繽紛樂園",
+  "short_name": "繽紛樂園",
+  "description": "給小朋友玩的繽紛遊戲樂園：五子棋、圍棋、跳棋、換裝、填色、記憶、打怪獸、拼圖。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
