@@ -20,13 +20,14 @@
   .miniBtn { border:none; border-radius:999px; font-weight:800; font-size:14px; color:#fff; padding:9px 18px; }
   .starChip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:6px 14px; font-weight:800; color:#7a4a63; box-shadow:0 3px 10px rgba(224,90,156,.15); font-size:14px; }
 
-  .scene { position:relative; border-radius:26px; overflow:hidden; border:4px solid #fff; box-shadow:0 12px 30px rgba(160,120,180,.3); }
-  .scene .deco { position:absolute; font-size:30px; opacity:.85; pointer-events:none; z-index:1; }
+  .scene { position:relative; border-radius:26px; overflow:hidden; border:4px solid #fff; box-shadow:0 12px 30px rgba(160,120,180,.3);
+    width:100%; max-width:290px; margin:0 auto; }
+  .scene .deco { position:absolute; font-size:24px; opacity:.85; pointer-events:none; z-index:1; }
   #doll { position:relative; width:100%; display:block; z-index:2; }
   .spotlight { position:absolute; top:0; left:50%; width:180px; height:40px; transform:translateX(-50%); background:radial-gradient(ellipse, rgba(255,255,255,.55), transparent 70%); z-index:0; animation:spin 6s ease-in-out infinite; }
   @keyframes spin { 0%,100%{opacity:.5} 50%{opacity:1} }
 
-  .cats { display:flex; gap:6px; justify-content:center; margin:12px 0 8px; flex-wrap:wrap; }
+  .cats { display:flex; gap:6px; justify-content:center; margin:0 0 8px; flex-wrap:wrap; }
   .catBtn { border:3px solid #ffd1e6; background:#fff; color:#b06a92; border-radius:999px; padding:7px 16px; font-weight:800; font-size:14px; }
   .catBtn.on { background:#ff7ab5; color:#fff; border-color:#ff7ab5; }
   .palette { background:#fff; border-radius:20px; border:3px solid #ffd1e6; padding:10px; min-height:64px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; box-shadow:0 6px 16px rgba(224,90,156,.12); }
@@ -36,9 +37,13 @@
   .itemBtn .lb { font-size:11px; font-weight:800; color:#7a4a63; }
   .itemBtn.on { border-color:#ff7ab5; background:#fff0f7; transform:translateY(-3px); }
 
-  .bottomBtns { display:flex; gap:10px; justify-content:center; margin-top:14px; }
-  .saveBtn { border:none; border-radius:999px; font-size:18px; font-weight:800; color:#fff; padding:13px 30px; }
-  .fb { font-weight:800; color:#e05a9c; margin-top:10px; min-height:22px; font-size:15px; }
+  .bottomBtns { display:flex; gap:10px; justify-content:center; margin-top:8px; }
+  .saveBtn { border:none; border-radius:999px; font-size:16px; font-weight:800; color:#fff; padding:11px 26px; }
+  .fb { font-weight:800; color:#e05a9c; margin-top:6px; min-height:20px; font-size:14px; }
+
+  .dock { position:fixed; left:0; right:0; bottom:0; background:linear-gradient(180deg, rgba(255,240,247,.96), #ffe4f2);
+    border-top:3px solid #ffd1e6; padding:10px 10px 14px; box-shadow:0 -6px 20px rgba(224,90,156,.22); z-index:20; }
+  #app { padding-bottom:210px; }
 
   .modal { position:fixed; inset:0; background:rgba(120,60,100,.45); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
   .modal .card { background:linear-gradient(180deg,#fff,#fff8fc); border-radius:26px; padding:18px; max-width:440px; width:100%; border:4px solid #ffd1e6; box-shadow:0 16px 50px rgba(120,40,90,.35); max-height:86vh; overflow-y:auto; animation:pop .25s ease; }
@@ -95,13 +100,14 @@
     </svg>
   </div>
 
-  <div class="cats" id="cats"></div>
-  <div class="palette" id="palette"></div>
-
-  <div class="bottomBtns">
-    <button class="saveBtn glossy" id="saveBtn">💾 存進收藏冊</button>
+  <div class="dock">
+    <div class="cats" id="cats"></div>
+    <div class="palette" id="palette"></div>
+    <div class="bottomBtns">
+      <button class="saveBtn glossy" id="saveBtn">💾 存進收藏冊</button>
+    </div>
+    <div class="fb" id="fb"></div>
   </div>
-  <div class="fb" id="fb"></div>
 </div>
 
 <div id="albumModal" class="modal hidden">

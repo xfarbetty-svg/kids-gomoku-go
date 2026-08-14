@@ -28,7 +28,7 @@
   .hole { position:absolute; border-radius:50%; transform:translate(-50%,-50%); z-index:1; }
   .hole.target { box-shadow:0 0 0 4px #8be0c4, 0 0 12px rgba(98,214,165,.8); z-index:3; cursor:pointer; }
   .piece { position:absolute; border-radius:50%; transform:translate(-50%,-50%); z-index:2; box-shadow:0 2px 4px rgba(0,0,0,.3), inset 0 2px 3px rgba(255,255,255,.35);
-    display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:left .2s, top .2s; }
+    display:flex; align-items:center; justify-content:center; font-size:11px; cursor:pointer; transition:left .2s, top .2s; }
   .piece.me { background:radial-gradient(circle at 35% 30%, #ff9d9d, #ff4d4d 60%, #d92626); border:2px solid #fff; color:#fff; }
   .piece.ai { background:radial-gradient(circle at 35% 30%, #7cc2ff, #3399ff 60%, #1a73d9); border:2px solid #fff; color:#fff; }
   .piece.sel { box-shadow:0 0 0 4px #ffc93c, 0 4px 8px rgba(0,0,0,.3); z-index:4; }
@@ -69,7 +69,7 @@
 <script>
 /* ================= 設定 ================= */
 var R = 4;                    // 半徑，每邊 5 格
-var S = 21;                   // 六邊形邊長(px)
+var S = 16;                   // 六邊形邊長(px)
 var ME = 1, AI = 2;
 var cells = [];               // {q,r,s, x, y}
 var map = {};                 // "q,r,s" -> idx
@@ -341,7 +341,7 @@ document.querySelectorAll('.difBtn').forEach(function(b){
 
 function fitScale(){
   var box=$('boardBox');
-  var avail=Math.min(window.innerWidth-24, 700);
+  var avail=Math.min(window.innerWidth-16, 540);
   var scale=Math.min(1, avail/box.offsetWidth);
   box.style.transform='scale('+scale+')';
 }
