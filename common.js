@@ -54,4 +54,11 @@
       document.body.appendChild(sp);
     })(i);
   }
+
+  /* 有新版 App 上線時，自動重新整理拿最新版 */
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', function(){
+      location.reload();
+    });
+  }
 })();
