@@ -1,4 +1,5 @@
 /* ============ 小朋友樂園 KPOP 少女風共用樣式 ============ */
+.hidden { display:none !important; }
 body.kpop-bg {
   background: linear-gradient(180deg,#ffe4f2 0%,#fff0f7 35%,#f0e8ff 70%,#e8f7ff 100%);
 }
