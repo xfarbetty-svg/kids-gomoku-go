@@ -15,12 +15,13 @@
   .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(224,90,156,.3); z-index:10; }
   #app { max-width:520px; margin:0 auto; padding:12px 10px 30px; text-align:center; }
   .title { font-size:30px; margin-top:8px; font-weight:900; letter-spacing:1px; }
-  .subtitle { color:#b06a92; font-size:14px; margin:4px 0 10px; font-weight:700; }
+  .subtitle { color:#b06a92; font-size:14px; margin:4px 0 6px; font-weight:700; }
+  .mission { display:inline-block; color:#fff; background:linear-gradient(90deg,#24144d,#7c3fb5,#d9a800); border-radius:999px; padding:5px 13px; font-size:12px; font-weight:900; letter-spacing:.4px; margin-bottom:10px; box-shadow:0 4px 12px rgba(64,30,100,.25); }
   .topbtns { display:flex; justify-content:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
   .miniBtn { border:none; border-radius:999px; font-weight:800; font-size:14px; color:#fff; padding:9px 18px; }
   .starChip { display:inline-flex; align-items:center; gap:5px; background:#fff; border-radius:999px; padding:6px 14px; font-weight:800; color:#7a4a63; box-shadow:0 3px 10px rgba(224,90,156,.15); font-size:14px; }
 
-  .scene { position:relative; border-radius:26px; overflow:hidden; border:4px solid #fff; box-shadow:0 12px 30px rgba(160,120,180,.3);
+  .scene { position:relative; border-radius:26px; overflow:hidden; border:4px solid #ffd86b; box-shadow:0 12px 30px rgba(80,40,120,.35), 0 0 0 3px rgba(255,255,255,.45);
     width:100%; max-width:300px; margin:0 auto; }
   .scene .deco { position:absolute; font-size:24px; opacity:.85; pointer-events:none; z-index:1; }
   #doll { position:relative; width:100%; display:block; z-index:2; filter:drop-shadow(0 10px 14px rgba(90,40,100,.25)); }
@@ -59,8 +60,9 @@
 <body class="kpop-bg">
 <a class="homeLink" href="index.html">🏠</a>
 <div id="app">
-  <div class="title title-grad title-shine">小小偶像換裝</div>
-  <div class="subtitle">幫小偶像打扮漂漂亮亮，準備登台表演！🎤</div>
+  <div class="title title-grad title-shine">星光獵魔團換裝</div>
+  <div class="subtitle">白天是偶像，晚上守護舞台結界！幫她準備今晚的任務。🎤</div>
+  <div class="mission">✨ 任務：完成金色封印演出，守護粉絲的夢 ✨</div>
   <div class="topbtns">
     <span class="starChip">⭐ <b id="starChip">0</b></span>
     <button class="miniBtn glossy-lav" id="albumBtn">📖 收藏冊</button>
@@ -157,13 +159,13 @@
 /* ================= 資料 ================= */
 var HAIRS = [{id:'bob',n:'短髮'},{id:'long',n:'長髮'},{id:'twin',n:'雙馬尾'},{id:'buns',n:'包包頭'},{id:'wave',n:'大波浪'},{id:'pony',n:'高馬尾'}];
 var HAIRCOLORS = [{c:'#3a2a3a',n:'黑'},{c:'#8b5a2b',n:'咖'},{c:'#ff8fb3',n:'櫻花粉'},{c:'#b78bff',n:'薰衣草'},{c:'#ffd36b',n:'奶油金'},{c:'#d7d7e8',n:'銀灰'},{c:'#ff4d4d',n:'莓果紅'},{c:'#62d6a5',n:'薄荷綠'},{c:'#3399ff',n:'天空藍'},{c:'#f4c2ff',n:'夢幻紫粉'}];
-var DRESSES = [{id:'a',n:'蓬蓬裙'},{id:'b',n:'A字裙'},{id:'c',n:'吊帶裙'},{id:'stage',n:'亮片舞台裙'},{id:'school',n:'校園百褶裙'},{id:'sport',n:'活力運動服'},{id:'princess',n:'公主長裙'},{id:'denim',n:'牛仔洋裝'}];
+var DRESSES = [{id:'a',n:'蓬蓬裙'},{id:'b',n:'A字裙'},{id:'c',n:'吊帶裙'},{id:'stage',n:'亮片舞台裙'},{id:'goldstage',n:'金色封印舞台服'},{id:'hunter',n:'霓虹獵魔短裝'},{id:'hanbok',n:'韓風結飾裙'},{id:'moonblade',n:'月影戰鬥裙'},{id:'school',n:'校園百褶裙'},{id:'sport',n:'活力運動服'},{id:'princess',n:'公主長裙'},{id:'denim',n:'牛仔洋裝'}];
 var DRESSCOLORS = [{c:'#ff8fb3',n:'櫻花粉'},{c:'#ff4d4d',n:'莓果紅'},{c:'#62d6a5',n:'薄荷'},{c:'#b78bff',n:'薰衣草'},{c:'#ffc93c',n:'檸檬黃'},{c:'#3399ff',n:'天空藍'},{c:'#ffffff',n:'珍珠白'},{c:'#444444',n:'黑曜石'},{c:'#ff9e3d',n:'蜜桃橘'},{c:'#00b8a9',n:'湖水綠'}];
 var SHOES = [{e:'🩰',n:'芭蕾舞鞋'},{e:'👟',n:'星星球鞋'},{e:'🥿',n:'珍珠平底鞋'},{e:'👢',n:'亮面長靴'},{e:'👠',n:'舞台高跟鞋'},{e:'🥾',n:'甜酷短靴'}];
 var ACC_HEAD = [{e:'',n:'無'},{e:'🎀',n:'蝴蝶結'},{e:'👑',n:'皇冠'},{e:'🦋',n:'蝴蝶髮夾'},{e:'🌸',n:'櫻花花冠'},{e:'🎧',n:'偶像耳機'},{e:'🎤',n:'舞台麥克風'},{e:'🫧',n:'泡泡髮飾'},{e:'💎',n:'水鑽髮箍'},{e:'🧢',n:'甜酷帽子'}];
 var ACC_FACE = [{e:'',n:'無'},{e:'🕶️',n:'星光墨鏡'},{e:'💖',n:'愛心貼紙'},{e:'✨',n:'亮片貼紙'}];
-var ACC_NECK = [{e:'',n:'無'},{e:'🎀',n:'緞帶領結'},{e:'💎',n:'水晶項鍊'},{e:'📿',n:'彩珠項鍊'},{e:'🌙',n:'月亮項鍊'}];
-var ACC_HAND = [{e:'',n:'無'},{e:'🪄',n:'魔法棒'},{e:'💐',n:'應援花束'},{e:'🧸',n:'小熊玩偶'},{e:'🍰',n:'草莓蛋糕'},{e:'🎤',n:'舞台麥克風'},{e:'🎀',n:'粉紅應援棒'},{e:'👜',n:'迷你手提包'}];
+var ACC_NECK = [{e:'',n:'無'},{e:'🎀',n:'緞帶領結'},{e:'💎',n:'水晶項鍊'},{e:'📿',n:'彩珠項鍊'},{e:'🌙',n:'月亮項鍊'},{e:'🪢',n:'韓風結飾'},{e:'🔔',n:'封印鈴鐺'}];
+var ACC_HAND = [{e:'',n:'無'},{e:'🪄',n:'魔法棒'},{e:'⚔️',n:'星紋短劍'},{e:'🪭',n:'月影摺扇'},{e:'🏹',n:'光弦弓'},{e:'💐',n:'應援花束'},{e:'🧸',n:'小熊玩偶'},{e:'🍰',n:'草莓蛋糕'},{e:'🎤',n:'舞台麥克風'},{e:'🎀',n:'粉紅應援棒'},{e:'👜',n:'迷你手提包'}];
 var EXPR = [{e:'',n:'甜甜笑'},{e:'🥰',n:'愛心眼'},{e:'😍',n:'閃閃眼'},{e:'😜',n:'吐舌'},{e:'😴',n:'睡覺'},{e:'🤩',n:'偶像登場'},{e:'😊',n:'溫柔笑'}];
 var BGS = [
   {id:'stage', n:'舞台', css:'linear-gradient(180deg,#3a1d6e,#7a3fb0)', deco:['🎤','🎶','💃']},
@@ -172,15 +174,18 @@ var BGS = [
   {id:'space', n:'星空', css:'linear-gradient(180deg,#1c2350,#3a2a6e)', deco:['🌌','✨','🌙']},
   {id:'party', n:'派對', css:'linear-gradient(180deg,#ffe9f3,#fff3c9)', deco:['🎈','🎉','🎁']},
   {id:'concert', n:'演唱會', css:'linear-gradient(180deg,#21134f,#7c3fb5)', deco:['🎤','🎶','💜']},
-  {id:'cafe', n:'甜點咖啡廳', css:'linear-gradient(180deg,#ffe9d7,#fff6e5)', deco:['🍰','☕','🧁']}
+  {id:'cafe', n:'甜點咖啡廳', css:'linear-gradient(180deg,#ffe9d7,#fff6e5)', deco:['🍰','☕','🧁']},
+  {id:'seal', n:'金色封印', css:'radial-gradient(circle at 50% 65%,#5b2d9b 0,#25124e 58%,#120a2a 100%)', deco:['🔱','✨','🪢']},
+  {id:'neon', n:'霓虹首爾舞台', css:'linear-gradient(135deg,#130d3d,#24217c 48%,#d52d82)', deco:['🌃','💜','🎤']},
+  {id:'underworld', n:'魔界演唱會', css:'linear-gradient(180deg,#160d2e,#5d174f 58%,#d14b4b)', deco:['🌙','🔥','🎶']}
 ];
 
 var state = {
   hair:'bob', hairColor:'#3a2a3a',
-  dress:'a', dressColor:'#ff8fb3',
+  dress:'goldstage', dressColor:'#ffc93c',
   shoes:'🩰',
-  accHead:'', accFace:'', accNeck:'', accHand:'',
-  expr:'', bg:'stage'
+  accHead:'💎', accFace:'', accNeck:'🪢', accHand:'⚔️',
+  expr:'🤩', bg:'seal'
 };
 var CATS = {
   hair:{n:'髮型', items:HAIRS.map(function(x){return {v:x.id, lb:x.n, type:'hair'};}), render:function(){ renderList(this, state.hair); }},
@@ -223,6 +228,10 @@ var DRESS_PATHS = {
   b: 'M84 168 C84 154 96 148 120 148 C144 148 156 154 156 168 L164 194 L172 264 C174 278 66 278 68 264 L76 194 Z',
   c: 'M84 168 C84 156 96 150 120 150 C144 150 156 156 156 168 L164 194 L172 262 C174 278 66 278 68 262 L76 194 Z',
   stage: 'M80 164 C80 152 96 146 120 146 C144 146 160 152 160 164 L166 188 C160 210 158 236 172 250 C178 260 160 264 120 264 C80 264 62 260 68 250 C82 236 80 210 74 188 Z',
+  goldstage: 'M80 164 C80 150 96 144 120 144 C144 144 160 150 160 164 L166 188 C160 210 158 238 176 258 C182 270 158 278 120 278 C82 278 58 270 64 258 C82 238 80 210 74 188 Z',
+  hunter: 'M84 162 L156 162 L160 202 L154 246 C150 258 90 258 86 246 L80 202 Z',
+  hanbok: 'M84 164 C84 152 98 146 120 146 C142 146 156 152 156 164 L162 192 C154 210 166 238 178 264 C184 278 56 278 62 264 C74 238 86 210 78 192 Z',
+  moonblade: 'M84 164 C84 150 98 144 120 144 C142 144 156 150 156 164 L164 192 C158 224 166 252 178 274 C182 284 154 290 120 290 C86 290 58 284 62 274 C74 252 82 224 76 192 Z',
   school: 'M84 168 C84 154 96 148 120 148 C144 148 156 154 156 168 L164 194 L170 258 C172 270 68 270 70 258 L76 194 Z',
   sport: 'M84 164 L156 164 L156 200 C156 208 84 208 84 200 Z',
   princess: 'M84 166 C84 152 96 146 120 146 C144 146 156 152 156 166 L166 196 L186 296 C192 322 48 322 54 296 L74 196 Z',
@@ -248,6 +257,23 @@ function dressExtra(id, color){
   }
   if(id==='stage'){
     s += '<text x="108" y="232" font-size="18" text-anchor="middle">✨</text><text x="136" y="212" font-size="15" text-anchor="middle">✨</text><text x="98" y="260" font-size="14" text-anchor="middle">⭐</text><text x="150" y="246" font-size="13" text-anchor="middle">✨</text>';
+  }
+  if(id==='goldstage'){
+    s += '<path d="M76 190 Q120 204 164 190" stroke="#ffe58a" stroke-width="5" fill="none" opacity=".9"/>';
+    s += '<text x="98" y="232" font-size="17" text-anchor="middle">✦</text><text x="140" y="250" font-size="19" text-anchor="middle">✦</text><text x="120" y="218" font-size="15" text-anchor="middle">☼</text>';
+  }
+  if(id==='hunter'){
+    s += '<path d="M82 202 L158 202" stroke="#75f4ff" stroke-width="5" opacity=".9"/><path d="M88 238 L152 238" stroke="#ff5ca8" stroke-width="4" opacity=".8"/>';
+    s += '<path d="M108 164 L108 202 M132 164 L132 202" stroke="#ffe58a" stroke-width="3"/>';
+  }
+  if(id==='hanbok'){
+    s += '<path d="M82 188 Q120 202 158 188" stroke="#ffe58a" stroke-width="7" fill="none"/>';
+    s += '<path d="M120 150 L120 204" stroke="#fff3bd" stroke-width="3" opacity=".8"/>';
+    s += '<text x="120" y="224" font-size="20" text-anchor="middle">🪢</text>';
+  }
+  if(id==='moonblade'){
+    s += '<path d="M76 192 Q120 208 164 192" stroke="#75f4ff" stroke-width="4" fill="none"/>';
+    s += '<text x="120" y="252" font-size="22" text-anchor="middle">☾</text><path d="M92 224 L148 224" stroke="#b78bff" stroke-width="3" opacity=".8"/>';
   }
   if(id==='school'){
     s += '<g stroke="' + dark + '" stroke-width="2" opacity=".45" fill="none">' +
@@ -369,7 +395,7 @@ $('saveBtn').addEventListener('click', function(){
   list.unshift(o);
   saveOutfits(list);
   if(first && window.KidsApp){ KidsApp.reportWin('dressup', '🎀'); }
-  $('fb').textContent = '存進收藏冊了！' + (first ? ' 獲得貼紙 🎀' : '');
+  $('fb').textContent = '存進收藏冊了！' + (first ? ' 解鎖獵魔團圖鑑 🎀' : '');
   updateStarChip();
 });
 function todayStr(){ var d=new Date(); return (d.getMonth()+1)+'/'+d.getDate(); }
