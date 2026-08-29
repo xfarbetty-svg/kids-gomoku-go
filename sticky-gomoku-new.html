@@ -74,7 +74,7 @@
 
   .ctrl { margin-top:12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
   .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10x rgba(0,0,0,.3); z-index:10; }
-  .btn { border:none; border-radius:999px; font-weight:800; cursor:color:#fff; padding:11px 26px; font-size:17px;
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
     background:linear-gradient(135deg,#ffd1e8,#ff6b9d); box-shadow:0 5px 0 #e6a8c6, 0 8px 18px rgba(230,168,198,.4); transition:.12s; user-select:none; }
   .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #e6a8c6; }
   .btn.mint { background:linear-gradient(135deg,#aef0d6,#62d6a5); box-shadow:0 5px 0 #3ba87c, 0 8px 18px rgba(98,214,165,.3); }
@@ -343,50 +343,6 @@ function aiMove(){
 }
 
 /* ================= 流程 ================= */
-function place(r, c, who){
-  board[r][c] = who;
-  lastR = r; lastC = c;
-  sPlace();
-  render();
-  var win = checkWin(r, c);
-  if(win){
-    over = true;
-    if(who === ME){ scores.me++; sWinMe(); confetti(); setStatus('你贏了！驅逐惡魔！🎉'); $('fb').textContent = '⭐ 勝利！封印完成！'; if(window.KidsApp) KidsApp.reportWin('gomoku','⭐'); }
-    else { scores.ai++; sWinAi(); setStatus('惡魔軍團贏了…再挑戰一次！'); $('fb').textContent = '👾 AI 勝利！沒關係，再來！'; }
-    $('wMe').textContent = scores.me; $('wAi').textContent = scores.ai;
-    updateEnergy();
-    return;
-  }
-  if(isFull()){ over = true; scores.tie++; $('wTie').textContent = scores.tie; sTie(); setStatus('和局！封印僵持不下 🤝'); updateEnergy(); return; }
-
-  // AI 每有 4 顆棋子時，隨機冰凍玩家一顆星星
-  if(who === AI){
-    var aiCount = 0;
-    for(var tr=0; tr<N; tr++) for(var tc=0; tc<N; tc++) if(board[tr][tc] === AI) aiCount++;
-    if(aiCount > 0 && aiCount % 4 === 0){
-      var freeStars = [];
-      for(var tr=0; tr<N; tr++) for(var tc=0; tc<N; tc++){
-        if(board[tr][tc] === ME && !frozen[tr+','+tc]){
-          freeStars.push({r:tr, c:tc});
-        }
-      }
-      if(freeStars.length > 0){
-        var tgt = freeStars[Math.floor(Math.random()*freeStars.length)];
-        frozen[tgt.r+','+tgt.c] = true;
-        sFreeze();
-        render();
-        $('fb').textContent = '❄️ 惡魔施放寒冰魔法！一顆星星被冰凍了 🧊！（消耗3能量火球術可融化）';
-        setStatus('⚠️ 星星被冰凍了！可用火球術融化！');
-      }
-    }
-  }
-
-  if(who === ME && energy < 9) energy++;
-  updateEnergy();
-  turn = (who===ME) ? AI : ME;
-  if(turn === AI){ setStatus('輪到 AI 思考…🤔'); aiThink(); }
-  else { setStatus('輪到你了！放一顆星星 ✨'); }
-}
 function aiThink(){
   aiThinking = true;
   setTimeout(function(){
@@ -609,7 +565,7 @@ function place(r, c, who){
   updateEnergy();
   turn = (who===ME) ? AI : ME;
   if(turn === AI){ setStatus('輪到 AI 思考…🤔'); aiThink(); }
-  else { setStatus('輪到你了！放一顆星星 ✨');
+  else { setStatus('輪到你了！放一顆星星 ✨'); }
 }
 /* ================= 啟動 ================= */
 newBoard(); buildBoard(); render();
