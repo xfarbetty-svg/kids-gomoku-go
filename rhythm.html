@@ -38,6 +38,15 @@
   .pads { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:420px; margin:12px auto 0; padding:0 12px; }  .pad { height:64px; border-radius:18px; border:3px solid rgba(255,216,107,.6); background:linear-gradient(180deg,#3b2a7a,#24144d); color:#fff; font-size:13px; font-weight:900; box-shadow:0 5px 0 #160d33, 0 8px 16px rgba(0,0,0,.4); }
   .pad:active { transform:translateY(4px); box-shadow:0 1px 0 #160d33; }
 
+  .bossBox { max-width:420px; margin:0 auto 10px; padding:8px 14px; background:rgba(0,0,0,.35); border:2px solid #ff5ca8; border-radius:18px; box-shadow:0 0 16px rgba(255,92,168,.3); }
+  .bossInfoRow { display:flex; justify-content:space-between; font-weight:800; font-size:14px; color:#ff9ecb; margin-bottom:4px; }
+  .bossBar { height:14px; background:rgba(255,255,255,.15); border-radius:999px; overflow:hidden; border:2px solid rgba(255,255,255,.3); }
+  .bossBar > div { height:100%; width:100%; background:linear-gradient(90deg,#ff5ca8,#ff2266); transition:width .2s ease; border-radius:999px; }
+
+  .speedRow { display:flex; justify-content:center; align-items:center; gap:8px; margin:6px auto 10px; max-width:420px; flex-wrap:wrap; }
+  .speedBtn { border:2px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1); color:#cdb8ff; border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; cursor:pointer; transition:.15s; }
+  .speedBtn.on { background:#9a7fff; color:#fff; border-color:#ffd86b; box-shadow:0 0 12px rgba(255,216,107,.5); }
+
   .ctrl { margin-top:16px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
   .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
     background:linear-gradient(135deg,#d6c8ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); transition:.12s; }
@@ -50,13 +59,30 @@
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .hidden { display:none !important; }
 </style>
+<script src="common.js?v=4"></script>
 </head>
 <body>
 <a class="homeLink" href="index.html">🏠</a>
 <div class="title title-grad">節奏打怪 <span style="font-size:24px;">🎵</span></div>
-<div class="subtitle">音樂一下，惡魔就冒出來！對準節拍把它們打回封印！</div>
+<div class="subtitle">打出 Perfect (-15 HP) 與 Good (-5 HP) 擊倒魔王！小心別耗盡 ❤️！</div>
+
+<div class="speedRow">
+  <span style="font-weight:800; font-size:13px; color:#cdb8ff;">節奏速度：</span>
+  <button class="speedBtn" data-spd="slow">🐢 慢速</button>
+  <button class="speedBtn on" data-spd="normal">🎵 一般</button>
+  <button class="speedBtn" data-spd="fast">⚡ 快速</button>
+</div>
+
+<div class="bossBox">
+  <div class="bossInfoRow">
+    <span>👾 魔王：噪音怪</span>
+    <span id="bossHpText">300 / 300</span>
+  </div>
+  <div class="bossBar"><div id="bossHpBar"></div></div>
+</div>
 
 <div class="topbar">
+  <span class="chip">❤️ 生命 <b id="livesText">❤️❤️❤️</b></span>
   <span class="chip">⏰ 時間 <b id="time">60</b></span>
   <span class="chip">🎯 分數 <b id="score">0</b></span>
   <span class="chip">💥 連擊 <b id="comboNum">0</b></span>
@@ -70,25 +96,36 @@
 <div class="pads" id="pads"></div>
 
 <div class="ctrl">
-  <button class="btn" id="startBtn">🎵 開始演唱</button>
+  <button class="btn" id="startBtn">🎵 開始挑戰魔王</button>
 </div>
 <div class="fb" id="fb"></div>
 
 <div id="resultModal" class="modal hidden">
   <div class="card">
     <h2 id="resultTitle">完美舞台！</h2>
+    <div id="resultDesc" style="color:#cdb8ff; font-weight:700; margin-bottom:10px;"></div>
     <div class="scoreLine">得分 <b id="finalScore" style="font-size:30px; color:#ffd86b;">0</b></div>
     <div class="scoreLine">最高連擊 <b id="finalCombo" style="color:#75f4ff;">0</b> 連擊</div>
-    <button class="btn" id="againBtn">🎤 再唱一次</button>
+    <button class="btn" id="againBtn">🎤 再試一次</button>
   </div>
 </div>
 
 <script>
 var LANE_KEYS = ['🎤','⚔️','🪭','🏹'];
 var TOTAL_TIME = 60;
-var W = 1;   // lane width in "note units"
+var BOSS_MAX_HP = 300;
+var MAX_LIVES = 3;
+
+var SPEEDS = {
+  slow:   { drop: 2.3, spawn: 950, bpm: 90 },
+  normal: { drop: 3.8, spawn: 620, bpm: 124 },
+  fast:   { drop: 5.2, spawn: 460, bpm: 150 }
+};
+var currentSpeed = 'normal';
+
 var score = 0, combo = 0, maxCombo = 0, timeLeft = TOTAL_TIME, running = false;
-var notes = [], spawnTimers = [], beatTimer = null;
+var bossHp = BOSS_MAX_HP, lives = MAX_LIVES;
+var notes = [], spawnTimer = null, beatTimer = null;
 var perfect = 0, good = 0, miss = 0;
 
 var audioCtx = null;
@@ -107,6 +144,7 @@ function buildLanes(){
   var l = $('lanes'); l.innerHTML='';
   l.style.display = 'grid';
   l.style.gridTemplateColumns = 'repeat(4,1fr)';
+  lanes = [];
   for(var i=0;i<4;i++){
     (function(i){
       var d = document.createElement('div');
@@ -119,14 +157,26 @@ function buildLanes(){
   }
 }
 
-/* 產生節拍音訊的簡易節奏 */
+function updateBossHpUI(){
+  $('bossHpText').textContent = Math.max(0, bossHp) + ' / ' + BOSS_MAX_HP;
+  var pct = Math.max(0, Math.min(100, (bossHp / BOSS_MAX_HP) * 100));
+  $('bossHpBar').style.width = pct + '%';
+}
+
+function updateLivesUI(){
+  var hearts = '';
+  for(var i=0; i<MAX_LIVES; i++){
+    hearts += (i < lives) ? '❤️' : '🖤';
+  }
+  $('livesText').textContent = hearts;
+}
+
 function startBeat(){
-  var bpm = 132;
-  var step = 60/bpm/2;   // 八分音符
-  var t = 0;
+  var spd = SPEEDS[currentSpeed] || SPEEDS.normal;
+  var bpm = spd.bpm;
+  var step = 60/bpm/2;
   beatTimer = setInterval(function(){
     beat();
-    t += step;
   }, step*1000);
 }
 
@@ -143,7 +193,7 @@ function buildPads(){
   }
   document.addEventListener('keydown', function(e){
     var map = {1:0,2:1,3:2,4:3};
-    if(map[e.key]) tap(map[e.key]);
+    if(map[e.key] !== undefined) tap(map[e.key]);
   });
 }
 
@@ -168,13 +218,26 @@ function spawn(){
 
 function animate(n){
   if(!running || n.hit){ return; }
-  n.y += 4.2;
+  var spd = SPEEDS[currentSpeed] || SPEEDS.normal;
+  n.y += spd.drop;
   n.el.style.top = n.y + 'px';
   if(n.y > 140){
     if(!n.hit){ missNote(n); }
     return;
   }
   requestAnimationFrame(function(){ animate(n); });
+}
+
+function loseLife(reason){
+  if(!running) return;
+  lives--;
+  updateLivesUI();
+  combo = 0; $('comboNum').textContent='0'; $('comboTxt').textContent='';
+  sMiss();
+  $('fb').textContent = reason + ' ❤️ -1';
+  if(lives <= 0){
+    fail('生命值耗盡…被魔王擊倒了！💀');
+  }
 }
 
 function tap(laneIdx){
@@ -188,15 +251,12 @@ function tap(laneIdx){
   });
   if(best){
     if(best.gold){
-      hitNote(best, 3);   // 金色封印：3 分
+      hitNote(best, 2);
       return;
     }
     hitNote(best, 1);
   } else {
-    /* 空敲：掉連擊 */
-    combo = 0; $('comboNum').textContent='0'; $('comboTxt').textContent='';
-    sMiss();
-    $('fb').textContent = '空敲了…小心對準節拍！';
+    loseLife('空敲了！小心對準節拍！');
   }
   lanes[laneIdx].flash.classList.remove('on');
   void lanes[laneIdx].flash.offsetWidth;
@@ -206,25 +266,44 @@ function tap(laneIdx){
 function hitNote(n, mult){
   n.hit = true;
   var d = Math.abs(n.y - 67);
-  var gained;
-  if(d <= 12){ perfect++; gained = 30 * mult; sPerfect(); }
-  else if(d <= 26){ good++; gained = 15 * mult; sHit(); }
-  else { gained = 5 * mult; sHit(); }
+  var gained = 0;
+  var bossDmg = 0;
+  if(d <= 12){
+    perfect++;
+    gained = 30 * mult;
+    bossDmg = 15 * mult;
+    sPerfect();
+  } else if(d <= 26){
+    good++;
+    gained = 15 * mult;
+    bossDmg = 5 * mult;
+    sHit();
+  } else {
+    gained = 5 * mult;
+    bossDmg = 2 * mult;
+    sHit();
+  }
   combo++; maxCombo = Math.max(maxCombo, combo);
   score += gained;
+  bossHp = Math.max(0, bossHp - bossDmg);
+  updateBossHpUI();
+
   n.el.classList.add('hit');
   $('score').textContent = score;
   $('comboNum').textContent = combo;
   $('comboTxt').textContent = combo>=5 ? '🔥 '+combo+' 連擊！' : '';
-  $('fb').textContent = (d<=12?'完美封印！✨':'不錯！') + ' +'+gained;
+  $('fb').textContent = (d<=12?'完美封印！✨ 魔王 -'+bossDmg+' HP':'不錯！ 魔王 -'+bossDmg+' HP');
+
+  if(bossHp <= 0){
+    win();
+  }
 }
 
 function missNote(n){
   n.hit = true;
   n.el.remove();
-  combo = 0; $('comboNum').textContent='0'; $('comboTxt').textContent='';
-  sMiss();
   miss++;
+  loseLife('漏掉惡魔音符了！');
 }
 
 function start(){
@@ -232,33 +311,68 @@ function start(){
   running = true;
   $('startBtn').classList.add('hidden');
   score=0; combo=0; maxCombo=0; perfect=0; good=0; miss=0; timeLeft=TOTAL_TIME;
+  bossHp = BOSS_MAX_HP; lives = MAX_LIVES;
+  updateBossHpUI();
+  updateLivesUI();
   $('score').textContent='0'; $('time').textContent=timeLeft; $('comboNum').textContent='0'; $('comboTxt').textContent='';
-  $('fb').textContent='音樂開始！對準節拍敲下去！';
+  $('fb').textContent='音樂開始！擊倒噪音魔王吧！';
   startBeat();
-  spawnTimer = setInterval(function(){ if(running) spawn(); }, 560);
+  var spd = SPEEDS[currentSpeed] || SPEEDS.normal;
+  spawnTimer = setInterval(function(){ if(running) spawn(); }, spd.spawn);
   countdown();
 }
+
 function countdown(){
   var t = setInterval(function(){
     if(!running){ clearInterval(t); return; }
     timeLeft--;
     $('time').textContent = timeLeft;
-    if(timeLeft <= 0){ clearInterval(t); finish(); }
+    if(timeLeft <= 0){
+      clearInterval(t);
+      if(bossHp <= 0) win();
+      else fail('時間到了！魔王 HP 還有剩餘…');
+    }
   }, 1000);
 }
-function finish(){
+
+function win(){
   running = false;
   clearInterval(spawnTimer);
   clearInterval(beatTimer);
   notes.forEach(function(n){ n.el.remove(); });
   notes=[];
-  $('resultTitle').textContent = perfect >= 20 ? '完美舞台！C位出道！🏆' : (perfect>=10?'好棒！Hold住全場！🌟':'繼續練習，下次更閃亮！💪');
+  $('resultTitle').textContent = '🎉 噪音魔王討伐成功！';
+  $('resultDesc').textContent = '太厲害了！你用完美的節奏封印了噪音魔王！';
   $('finalScore').textContent = score;
   $('finalCombo').textContent = maxCombo;
   $('resultModal').classList.remove('hidden');
   sWin();
-  if(window.KidsApp && score >= 300) KidsApp.reportWin('rhythm','🎵');
+  if(window.KidsApp) KidsApp.reportWin('rhythm','🎵');
 }
+
+function fail(msg){
+  running = false;
+  clearInterval(spawnTimer);
+  clearInterval(beatTimer);
+  notes.forEach(function(n){ n.el.remove(); });
+  notes=[];
+  $('resultTitle').textContent = '💔 挑戰失敗…';
+  $('resultDesc').textContent = msg;
+  $('finalScore').textContent = score;
+  $('finalCombo').textContent = maxCombo;
+  $('resultModal').classList.remove('hidden');
+  sMiss();
+}
+
+document.querySelectorAll('.speedBtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    if(running) return;
+    document.querySelectorAll('.speedBtn').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    currentSpeed = btn.dataset.spd;
+  });
+});
+
 $('startBtn').addEventListener('click', start);
 $('againBtn').addEventListener('click', function(){
   $('resultModal').classList.add('hidden');
@@ -266,7 +380,8 @@ $('againBtn').addEventListener('click', function(){
 });
 buildLanes();
 buildPads();
+updateBossHpUI();
+updateLivesUI();
 </script>
-<script src="common.js?v=4"></script>
 </body>
 </html>

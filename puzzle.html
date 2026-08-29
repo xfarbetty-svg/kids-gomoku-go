@@ -20,9 +20,17 @@
   .chip b { color:#ffd86b; font-size:17px; }
   .status { display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.1); border:2px solid rgba(255,255,255,.22); border-radius:18px; padding:8px 18px; font-weight:800; margin:0 auto 14px; font-size:15px; min-height:42px; max-width:92vw; width:max-content; }
 
+  .bossBox { max-width:380px; margin:0 auto 10px; padding:8px 14px; background:rgba(0,0,0,.35); border:2px solid #75f4ff; border-radius:18px; box-shadow:0 0 16px rgba(117,244,255,.3); }
+  .bossInfoRow { display:flex; justify-content:space-between; font-weight:800; font-size:14px; color:#75f4ff; margin-bottom:4px; }
+  .bossBar { height:14px; background:rgba(255,255,255,.15); border-radius:999px; overflow:hidden; border:2px solid rgba(255,255,255,.3); }
+  .bossBar > div { height:100%; width:100%; background:linear-gradient(90deg,#75f4ff,#9a7fff); transition:width .2s ease; border-radius:999px; }
+
   .boardBox { max-width:380px; margin:0 auto; padding:0 12px; }
   #board { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; background:rgba(0,0,0,.35); border:4px solid #ffd86b; border-radius:22px;
-    box-shadow:0 0 30px rgba(255,216,107,.25); padding:8px; }
+    box-shadow:0 0 30px rgba(255,216,107,.25); padding:8px; transition:transform .2s; }
+  #board.shake { animation:boardShake .4s ease; }
+  @keyframes boardShake { 0%,100%{transform:translateX(0) rotate(0)} 20%{transform:translateX(-8px) rotate(-1deg)} 40%{transform:translateX(8px) rotate(1deg)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+
   .tile { aspect-ratio:1; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;
     transition:.15s; user-select:none; -webkit-user-select:none; }
   .tile .num { font-size:28px; font-weight:900; color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.4); }
@@ -42,14 +50,24 @@
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .hidden { display:none !important; }
 </style>
+<script src="common.js?v=4"></script>
 </head>
 <body>
 <a class="homeLink" href="index.html">🏠</a>
-<div class="title title-grad">獵魔拼圖 <span style="font-size:24px;">🧩</span></div>
-<div class="subtitle">把打亂的封印拼圖滑回正確位置！越快越好！</div>
+<div class="title title-grad">獵魔拼圖 🧩</div>
+<div class="subtitle">每次移動對魔王造成 -10 HP 傷害！小心每 15 秒的空間扭曲！</div>
+
+<div class="bossBox">
+  <div class="bossInfoRow">
+    <span>🧩 魔王：混沌魔王</span>
+    <span id="bossHpText">150 / 150</span>
+  </div>
+  <div class="bossBar"><div id="bossHpBar"></div></div>
+</div>
 
 <div class="topbar">
   <span class="chip">⏰ 時間 <b id="time">90</b></span>
+  <span class="chip">🌀 空間扭曲 <b id="bossCd">15s</b></span>
   <span class="chip">🕹️ 步數 <b id="moves">0</b></span>
 </div>
 
@@ -64,7 +82,7 @@
 <div id="resultModal" class="modal hidden">
   <div class="card">
     <h2 id="resultTitle">拼圖完成！</h2>
-    <div class="scoreLine">用 <b id="finalMoves" style="color:#ffd86b;">0</b> 步拼好封印</div>
+    <div class="scoreLine">用 <b id="finalMoves" style="color:#ffd86b;">0</b> 步擊敗混沌魔王</div>
     <button class="btn" id="againBtn">🧩 再來一局</button>
   </div>
 </div>
@@ -72,13 +90,22 @@
 <script>
 var SIZE = 3;
 var TOTAL_TIME = 90;
+var BOSS_MAX_HP = 150;
+var COUNTER_TIME = 15;
+
 var COLS = ['#ff8fb3','#ffc93c','#9a7fff','#62d6a5','#ff7ab5','#75f4ff','#ffb673','#ff5ca8'];
 var EMS = ['👾','💀','👹','🦇','😈','🔥','🕸️','🐍',''];
 var tiles = [], emptyIdx = 8, moves = 0, over = false, timeLeft = TOTAL_TIME;
+var bossHp = BOSS_MAX_HP, counterCd = COUNTER_TIME;
 
 var audioCtx = null;
 function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
 function sMove(){ tone(520,.07,'triangle',.12); }
+function sWarp(){
+  tone(320,.15,'sawtooth',.22);
+  setTimeout(function(){ tone(480,.15,'sawtooth',.22); }, 100);
+  setTimeout(function(){ tone(240,.2,'sawtooth',.25); }, 220);
+}
 function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.22,'triangle',.25); }, i*120); }); }
 
 function $(id){ return document.getElementById(id); }
@@ -91,19 +118,58 @@ function solved(){
   for(var i=0;i<SIZE*SIZE-1;i++) if(tiles[i] !== i) return false;
   return true;
 }
-function shuffle(){
+function shuffle(arr){
+  for(var i=arr.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+  }
+  return arr;
+}
+function shuffleBoard(){
   do {
     tiles = []; for(var i=0;i<SIZE*SIZE;i++) tiles.push(i);
-    for(var i=0;i<SIZE*SIZE;i++){
-      var j = Math.floor(Math.random()*(i+1));
-      var t = tiles[i]; tiles[i]=tiles[j]; tiles[j]=t;
-    }
+    shuffle(tiles);
     var inv=0, flat=[];
     for(var i=0;i<SIZE*SIZE;i++) if(tiles[i]!==SIZE*SIZE-1) flat.push(tiles[i]);
     for(var i=0;i<flat.length;i++) for(var j=i+1;j<flat.length;j++) if(flat[i]>flat[j]) inv++;
-    if(inv % 2 !== 0) return shuffle();
+    if(inv % 2 !== 0) return shuffleBoard();
   } while(solved());
 }
+
+function updateBossHpUI(){
+  $('bossHpText').textContent = Math.max(0, bossHp) + ' / ' + BOSS_MAX_HP;
+  var pct = Math.max(0, Math.min(100, (bossHp / BOSS_MAX_HP) * 100));
+  $('bossHpBar').style.width = pct + '%';
+}
+
+function updateCdUI(){
+  $('bossCd').textContent = counterCd + 's';
+}
+
+function warpSpace(){
+  if(over) return;
+  sWarp();
+  var nonEm = [];
+  for(var i=0; i<tiles.length; i++){
+    if(tiles[i] !== SIZE*SIZE - 1) nonEm.push(i);
+  }
+  if(nonEm.length >= 4){
+    shuffle(nonEm);
+    var p1 = nonEm[0], p2 = nonEm[1];
+    var p3 = nonEm[2], p4 = nonEm[3];
+    var t = tiles[p1]; tiles[p1] = tiles[p2]; tiles[p2] = t;
+    var t2 = tiles[p3]; tiles[p3] = tiles[p4]; tiles[p4] = t2;
+  }
+  $('fb').textContent = '🌀 混沌魔王施放空間扭曲！拼圖位置被調換了！';
+  $('statusMsg').textContent = '⚠️ 空間扭曲！拼圖碎片被調換了！';
+  $('board').classList.add('shake');
+  setTimeout(function(){ $('board').classList.remove('shake'); }, 500);
+  render();
+  if(solved() || bossHp <= 0){
+    win();
+  }
+}
+
 function render(){
   var b = $('board'); b.innerHTML='';
   for(var i=0;i<SIZE*SIZE;i++){
@@ -123,6 +189,7 @@ function render(){
     })(i);
   }
 }
+
 function tryMove(i){
   if(over) return;
   var er = Math.floor(emptyIdx/SIZE), ec = emptyIdx%SIZE;
@@ -130,18 +197,17 @@ function tryMove(i){
   if(Math.abs(er-r) + Math.abs(ec-c) !== 1) return;
   tiles[emptyIdx] = tiles[i]; tiles[i] = SIZE*SIZE-1;
   emptyIdx = i; moves++;
+  bossHp = Math.max(0, bossHp - 10);
   $('moves').textContent = moves;
+  updateBossHpUI();
   sMove();
+  $('fb').textContent = '🧩 碎片移動！魔王受到 10 點傷害！';
   render();
-  if(solved()){
-    over = true; clearInterval(timer); sWin();
-    $('statusMsg').textContent = '拼好了！封印組合完成！🎉';
-    $('resultTitle').textContent = moves <= 25 ? '拼圖天才！完美封印！🏆' : (moves <= 40 ? '好棒！封印拼好！🌟' : '拼好了！下次更快！💪');
-    $('finalMoves').textContent = moves;
-    $('resultModal').classList.remove('hidden');
-    if(window.KidsApp) KidsApp.reportWin('puzzle','🧩');
+  if(solved() || bossHp <= 0){
+    win();
   }
 }
+
 var timer = null;
 function countdown(){
   if(timer) clearInterval(timer);
@@ -149,28 +215,51 @@ function countdown(){
     if(over){ clearInterval(timer); return; }
     timeLeft--;
     $('time').textContent = timeLeft;
+
+    counterCd--;
+    if(counterCd <= 0){
+      counterCd = COUNTER_TIME;
+      warpSpace();
+    }
+    updateCdUI();
+
     if(timeLeft <= 0){ clearInterval(timer); timeout(); }
   }, 1000);
 }
+
+function win(){
+  over = true; clearInterval(timer); sWin();
+  $('statusMsg').textContent = '混沌魔王討伐成功！封印拼圖完成！🎉';
+  $('resultTitle').textContent = '🎉 混沌魔王被擊敗！';
+  $('finalMoves').textContent = moves;
+  $('resultModal').classList.remove('hidden');
+  if(window.KidsApp) KidsApp.reportWin('puzzle','🧩');
+}
+
 function timeout(){
   over = true;
-  $('statusMsg').textContent = '時間到！再挑戰一次！';
-  $('resultTitle').textContent = '時間到了…';
+  clearInterval(timer);
+  $('statusMsg').textContent = '時間到！混沌魔王尚未被消滅…';
+  $('resultTitle').textContent = '💔 挑戰失敗（時間到）';
   $('finalMoves').textContent = moves;
   $('resultModal').classList.remove('hidden');
 }
+
 function reset(){
-  over=false; moves=0; timeLeft=TOTAL_TIME; $('moves').textContent='0'; $('time').textContent=timeLeft;
-  $('fb').textContent=''; $('statusMsg').textContent='打亂好了，開始拼吧！';
-  shuffle();
+  over=false; moves=0; timeLeft=TOTAL_TIME; bossHp=BOSS_MAX_HP; counterCd=COUNTER_TIME;
+  $('moves').textContent='0'; $('time').textContent=timeLeft;
+  $('fb').textContent=''; $('statusMsg').textContent='魔王出現了！快滑動拼圖擊倒它！';
+  updateBossHpUI();
+  updateCdUI();
+  shuffleBoard();
   emptyIdx = tiles.indexOf(SIZE*SIZE-1);
   render();
   countdown();
 }
+
 $('restartBtn').addEventListener('click', function(){ $('resultModal').classList.add('hidden'); reset(); });
 $('againBtn').addEventListener('click', function(){ $('resultModal').classList.add('hidden'); reset(); });
 reset();
 </script>
-<script src="common.js?v=4"></script>
 </body>
 </html>

@@ -44,7 +44,11 @@
   .game .tag { display:inline-block; margin-top:6px; border-radius:999px; font-size:11px; font-weight:800; padding:2px 9px; color:#fff; }
   .game .wins { display:inline-block; margin-top:7px; background:rgba(0,0,0,.3); border:2px solid rgba(255,216,107,.4); color:#ffd86b;
     border-radius:999px; font-size:12px; font-weight:800; padding:2px 10px; margin-left:4px; }
-
+  .game.locked { filter:grayscale(0.9) opacity(0.55); cursor:not-allowed; border-color:rgba(255,255,255,.2); box-shadow:none; }
+  .game.locked:hover { transform:none; box-shadow:none; }
+  .game .lockTag { display:inline-block; margin-top:6px; background:rgba(0,0,0,.6); border:1px solid rgba(255,255,255,.3); color:#ffb8b8; border-radius:999px; font-size:11px; font-weight:800; padding:3px 10px; }
+  .game .bossInfo { margin-top:8px; background:rgba(0,0,0,.35); border:1.5px solid rgba(255,216,107,.5); border-radius:12px; padding:4px 8px; font-size:12px; font-weight:800; color:#ffd86b; display:flex; justify-content:space-around; align-items:center; }
+  .game .bossInfo.defeated { border-color:#62d6a5; color:#62d6a5; background:rgba(46,94,46,.35); }
   .install { margin-top:26px; border:none; border-radius:999px; font-size:17px; font-weight:800; cursor:pointer; color:#fff; padding:12px 28px; }
   .hidden { display:none !important; }
 
@@ -63,6 +67,7 @@
   .st .th { font-size:10px; font-weight:700; color:#9a8ac8; }
   .st.got { background:rgba(255,216,107,.18); border-color:#ffc93c; box-shadow:0 0 14px rgba(255,216,107,.5); filter:none; animation:sparkleTwinkle 2.5s ease-in-out infinite; }
 </style>
+<script src="common.js?v=4"></script>
 </head>
 <body>
   <span class="logo">🌟</span>
@@ -100,28 +105,42 @@
 
 <script>
 var GAMES = [
-  {id:'rhythm',  name:'節奏打怪',   icon:'🎵', desc:'跟著節拍敲下去，把冒出的惡魔打回封印！', link:'rhythm.html',  st:'🎵', theme:'stage', tag:'🎤 節奏'},
-  {id:'memory',  name:'封印記憶',   icon:'🃏', desc:'限時 90 秒，翻出兩張一樣的魔物加固封印！', link:'memory.html',  st:'🃏', theme:'seal',  tag:'🃏 封印'},
-  {id:'puzzle',  name:'獵魔拼圖',   icon:'🧩', desc:'限時把打亂的封印拼圖滑回正確位置！', link:'puzzle.html',  st:'🧩', theme:'moon',  tag:'🧩 拼圖'},
-  {id:'gomoku',  name:'獵魔五子棋', icon:'⭐', desc:'對抗惡魔 AI，用技能+連五顆封印線取勝！', link:'gomoku.html',  st:'⭐', theme:'neon',  tag:'⭐ 對弈'}
+  {id:'rhythm',  name:'節奏打怪',   icon:'🎵', boss:'噪音魔王 👾', hp:300, desc:'跟著節拍敲下去，擊退噪音魔王！', link:'rhythm.html',  st:'🎵', theme:'stage', tag:'🎤 節奏'},
+  {id:'memory',  name:'封印記憶',   icon:'🃏', boss:'幻影魔王 🃏', hp:200, desc:'限時 90 秒，破解魔王幻影加固封印！', link:'memory.html',  st:'🃏', theme:'seal',  tag:'🃏 封印'},
+  {id:'puzzle',  name:'獵魔拼圖',   icon:'🧩', boss:'混沌魔王 🧩', hp:150, desc:'解除魔王空間扭曲，將拼圖滑回正確位置！', link:'puzzle.html',  st:'🧩', theme:'moon',  tag:'🧩 拼圖'},
+  {id:'gomoku',  name:'獵魔五子棋', icon:'⭐', boss:'虛空魔王 👑', hp:100, desc:'驅逐虛空魔王 AI，小心冰凍陷阱！', link:'gomoku.html',  st:'⭐', theme:'neon',  tag:'⭐ 對弈'}
 ];
 function $(id){ return document.getElementById(id); }
 
 function render(){
   var cards = $('cards'); cards.innerHTML='';
-  var s = window.KidsApp ? KidsApp.state() : {stars:0,wins:{},figures:{}};
+  var s = window.KidsApp ? KidsApp.state() : {stars:0,wins:{},figures:{},defeated:{},unlocked:{rhythm:true}};
   $('starCount').textContent = s.stars||0;
-  GAMES.forEach(function(g){
+  GAMES.forEach(function(g, idx){
+    var isUnlocked = window.KidsApp ? KidsApp.isUnlocked(g.id) : (idx === 0);
+    var isDefeated = window.KidsApp ? KidsApp.isBossDefeated(g.id) : false;
     var earned = !!((s.figures||{})[g.id]);
     var wins = (s.wins||{})[g.id]||0;
-    var a = document.createElement('a');
-    a.className = 'game' + (earned?' earned':'');
-    a.href = g.link;
-    a.innerHTML = '<span class="badge">' + (g.st) + '</span>' +
-      '<span class="gicon">' + g.icon + '</span>' +
+
+    var a = document.createElement(isUnlocked ? 'a' : 'div');
+    a.className = 'game' + (isUnlocked ? (earned?' earned':'') : ' locked');
+    if(isUnlocked){
+      a.href = g.link;
+    }
+
+    var bossHtml = isDefeated
+      ? '<div class="bossInfo defeated"><span>👑 ' + g.boss + '</span><span>✅ 已討伐</span></div>'
+      : '<div class="bossInfo"><span>👿 魔王：' + g.boss + '</span><span>HP ' + g.hp + '</span></div>';
+
+    var statusHtml = isUnlocked
+      ? '<span class="wins">🏆 玩過 ' + wins + ' 次' + (earned?' · 圖鑑 GET！':'') + '</span>'
+      : '<span class="lockTag">🔒 請先擊敗前一關魔王解鎖</span>';
+
+    a.innerHTML = '<span class="badge">' + (isUnlocked ? g.st : '🔒') + '</span>' +
+      '<span class="gicon">' + (isUnlocked ? g.icon : '🔒') + '</span>' +
       '<h2>' + g.name + '</h2><p>' + g.desc + '</p>' +
-      '<span class="tag ' + g.theme + '">' + g.tag + '</span>' +
-      '<span class="wins">🏆 玩過 ' + wins + ' 次' + (earned?' · 圖鑑 GET！':'') + '</span>';
+      bossHtml +
+      '<div style="margin-top:6px;"><span class="tag ' + g.theme + '">' + g.tag + '</span> ' + statusHtml + '</div>';
     cards.appendChild(a);
   });
   renderAlbum();
@@ -155,6 +174,5 @@ $('installBtn').addEventListener('click', function(){
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
 render();
 </script>
-<script src="common.js?v=4"></script>
 </body>
 </html>

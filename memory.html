@@ -30,6 +30,11 @@
   .card.match .front { background:linear-gradient(180deg,#2e5e2e,#173d17); border-color:#62d6a5; animation:bounceIn .4s ease; }
   .card.ko .inner { animation:shake .3s ease; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .bossBox { max-width:420px; margin:0 auto 10px; padding:8px 14px; background:rgba(0,0,0,.35); border:2px solid #ffc93c; border-radius:18px; box-shadow:0 0 16px rgba(255,201,60,.3); }
+  .bossInfoRow { display:flex; justify-content:space-between; font-weight:800; font-size:14px; color:#ffd86b; margin-bottom:4px; }
+  .bossBar { height:14px; background:rgba(255,255,255,.15); border-radius:999px; overflow:hidden; border:2px solid rgba(255,255,255,.3); }
+  .bossBar > div { height:100%; width:100%; background:linear-gradient(90deg,#ffd86b,#ff5ca8); transition:width .2s ease; border-radius:999px; }
+
   .ctrl { margin-top:14px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
   .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
     background:linear-gradient(135deg,#d6c8ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); transition:.12s; }
@@ -42,14 +47,24 @@
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .hidden { display:none !important; }
 </style>
+<script src="common.js?v=4"></script>
 </head>
 <body>
 <a class="homeLink" href="index.html">🏠</a>
-<div class="title title-grad">封印記憶 <span style="font-size:24px;">🃏</span></div>
-<div class="subtitle">這些魔物被封印在牌裡，翻出兩張一樣的來加固封印！</div>
+<div class="title title-grad">封印記憶 🃏</div>
+<div class="subtitle">配對成功對魔王造成 -25 HP 傷害！小心魔王每 12 秒的反擊！</div>
+
+<div class="bossBox">
+  <div class="bossInfoRow">
+    <span>🃏 魔王：幻影魔王</span>
+    <span id="bossHpText">200 / 200</span>
+  </div>
+  <div class="bossBar"><div id="bossHpBar"></div></div>
+</div>
 
 <div class="topbar">
   <span class="chip">⏰ 時間 <b id="time">90</b></span>
+  <span class="chip">⚠️ 魔王反擊 <b id="bossCd">12s</b></span>
   <span class="chip">🐚 配對 <b id="pairs">0</b> / 8</span>
   <span class="chip">🃏 翻牌 <b id="moves">0</b></span>
 </div>
@@ -73,25 +88,41 @@
 <script>
 var EMOJIS = ['👾','💀','👹','🦇','😈','🔥','🕸️','🐍'];
 var TOTAL_TIME = 90;
+var BOSS_MAX_HP = 200;
+var COUNTER_TIME = 12;
+
 var cards = [], first = null, lock = false, moves = 0, pairs = 0, over = false;
-var timeLeft = TOTAL_TIME;
+var timeLeft = TOTAL_TIME, bossHp = BOSS_MAX_HP, counterCd = COUNTER_TIME;
 
 var audioCtx = null;
 function tone(f,dur,type,vol){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); var o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(vol||.2,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(dur||.2)); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+(dur||.2)+.05); }catch(e){} }
 function sFlip(){ tone(520,.08,'triangle',.12); }
 function sMatch(){ tone(660,.1,'triangle',.15); setTimeout(function(){ tone(880,.14,'triangle',.15); },90); }
 function sWrong(){ tone(300,.15,'sine',.18); }
+function sRoar(){ tone(160,.35,'sawtooth',.25); setTimeout(function(){ tone(120,.4,'sawtooth',.25); }, 120); }
 function sWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ tone(f,.2,'triangle',.25); }, i*130); }); }
 
 function $(id){ return document.getElementById(id); }
 function rand(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
 function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 
+function updateBossHpUI(){
+  $('bossHpText').textContent = Math.max(0, bossHp) + ' / ' + BOSS_MAX_HP;
+  var pct = Math.max(0, Math.min(100, (bossHp / BOSS_MAX_HP) * 100));
+  $('bossHpBar').style.width = pct + '%';
+}
+
+function updateCdUI(){
+  $('bossCd').textContent = counterCd + 's';
+}
+
 function build(){
   var g = $('grid'); g.innerHTML=''; cards=[]; first=null; lock=false; moves=0; pairs=0; over=false;
-  timeLeft = TOTAL_TIME;
+  timeLeft = TOTAL_TIME; bossHp = BOSS_MAX_HP; counterCd = COUNTER_TIME;
   $('moves').textContent='0'; $('pairs').textContent='0'; $('time').textContent=timeLeft;
   $('statusMsg').textContent='開始囉！點一張牌翻開它 👀'; $('fb').textContent='';
+  updateBossHpUI();
+  updateCdUI();
   var em = shuffle(EMOJIS.concat(EMOJIS));
   em.forEach(function(e){
     var c = {emoji:e, match:false};
@@ -104,6 +135,7 @@ function build(){
   });
   countdown();
 }
+
 var timer = null;
 function countdown(){
   if(timer) clearInterval(timer);
@@ -111,8 +143,47 @@ function countdown(){
     if(over){ clearInterval(timer); return; }
     timeLeft--;
     $('time').textContent = timeLeft;
+
+    counterCd--;
+    if(counterCd <= 0){
+      counterCd = COUNTER_TIME;
+      bossCounterAttack();
+    }
+    updateCdUI();
+
     if(timeLeft <= 0){ clearInterval(timer); timeout(); }
   }, 1000);
+}
+
+function bossCounterAttack(){
+  if(over) return;
+  sRoar();
+  // 檢查是否有翻開但未配對的卡片
+  var unsealedFlipped = [];
+  cards.forEach(function(c){
+    if(!c.match && c.el.classList.contains('flip')){
+      unsealedFlipped.push(c);
+    }
+  });
+
+  if(unsealedFlipped.length > 0){
+    unsealedFlipped.forEach(function(c){
+      c.el.classList.remove('flip','ko');
+    });
+    first = null;
+    lock = false;
+    $('fb').textContent = '⚠️ 魔王反擊：幻影黑霧！未配對的卡片被蓋回去了！';
+    $('statusMsg').textContent = '魔王發動反擊！卡片被重新蓋上！';
+  } else {
+    // 沒有翻開中的未配對卡片，扣 5 秒時間
+    timeLeft = Math.max(0, timeLeft - 5);
+    $('time').textContent = timeLeft;
+    $('fb').textContent = '⚠️ 魔王反擊：時間吞噬！剩餘時間扣除 5 秒！⏰ -5s';
+    $('statusMsg').textContent = '魔王發動時間吞噬！扣除 5 秒！';
+    if(timeLeft <= 0){
+      timeout();
+    }
+  }
 }
 
 function click(c){
@@ -125,11 +196,14 @@ function click(c){
     first.match = c.match = true;
     first.el.classList.add('match'); c.el.classList.add('match');
     pairs++; $('pairs').textContent = pairs;
+    bossHp = Math.max(0, bossHp - 25);
+    updateBossHpUI();
     sMatch();
+    $('fb').textContent = '✨ 配對成功！魔王受到 25 點傷害！';
     first = null;
     setTimeout(function(){
       lock = false;
-      if(pairs === EMOJIS.length) win();
+      if(bossHp <= 0 || pairs === EMOJIS.length) win();
     }, 350);
   } else {
     sWrong();
@@ -144,23 +218,25 @@ function click(c){
 
 function win(){
   over = true; clearInterval(timer); sWin();
-  $('statusMsg').textContent = '全部封印加固完成！好厲害！🎉';
-  $('resultTitle').textContent = moves <= 10 ? '記憶女神！完美封印！🏆' : (moves <= 14 ? '好厲害！封印加固！🌟' : '封印完成，繼續練習！💪');
+  $('statusMsg').textContent = '幻影魔王討伐成功！封印完成！🎉';
+  $('resultTitle').textContent = '🎉 幻影魔王被擊敗！';
   $('finalMoves').textContent = moves;
   $('resultModal').classList.remove('hidden');
   if(window.KidsApp) KidsApp.reportWin('memory','🃏');
 }
+
 function timeout(){
   over = true;
-  $('statusMsg').textContent = '時間到！魔物還沒被封印…再挑戰一次吧！';
-  $('resultTitle').textContent = '時間到了…';
+  clearInterval(timer);
+  $('statusMsg').textContent = '時間到！魔王未被消滅…再挑戰一次吧！';
+  $('resultTitle').textContent = '💔 挑戰失敗（時間到）';
   $('finalMoves').textContent = moves;
   $('resultModal').classList.remove('hidden');
 }
+
 $('restartBtn').addEventListener('click', function(){ $('resultModal').classList.add('hidden'); build(); });
 $('againBtn').addEventListener('click', function(){ $('resultModal').classList.add('hidden'); build(); });
 build();
 </script>
-<script src="common.js?v=4"></script>
 </body>
 </html>

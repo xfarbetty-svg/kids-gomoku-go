@@ -3,34 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>獵魔五子棋 ⭐👾</title>
+<title>黏黏五子棋 ⭐👾</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
-<meta name="theme-color" content="#7c3fb5">
+<meta name="theme-color" content="#ff8c42">
 <link rel="stylesheet" href="common.css?v=4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="獵魔五子棋">
+<meta name="apple-mobile-web-app-title" content="黏黏五子棋">
 <script src="common.js?v=4"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(160deg,#120a2a 0%,#24144d 50%,#5b2d9b 100%); background-attachment:fixed; min-height:100vh; overflow-x:hidden; text-align:center; color:#fff; }
+  body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(160deg,#fff0f5 0%,#ffe8f0 50%,#f8c8ff 100%); background-attachment:fixed; min-height:100vh; overflow-x:hidden; text-align:center; color:#fff; }
   button { font-family:inherit; }
   .hidden { display:none !important; }
 
-  .title { font-size:34px; color:#ffd86b; text-shadow:0 3px 0 rgba(0,0,0,.3), 0 0 16px rgba(255,216,107,.6); margin-top:18px; letter-spacing:1px; }
-  .subtitle { color:#cdb8ff; font-size:15px; margin:6px 0 12px; font-weight:700; }
+  .title { font-size:34px; color:#ff6b9d; text-shadow:0 3px 0 rgba(0,0,0,.3), 0 0 16px rgba(255,107,157,.6); margin-top:18px; letter-spacing:1px; }
+  .subtitle { color:#ff69b4; font-size:15px; margin:6px 0 12px; font-weight:700; }
 
   .topbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
   .score { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 16px; font-weight:800; color:#fff; }
-  .score .me { color:#ffd86b; font-size:17px; }
-  .score .ai { color:#ff5ca8; font-size:17px; }
-  .score .mid { color:#9a8ac8; font-size:15px; }
-  .score b { font-size:18px; color:#75f4ff; }
+  .score .me { color:#ff6b9d; font-size:17px; }
+  .score .ai { color:#ff8c42; font-size:17px; }
+  .score .mid { color:#ffd1e8; font-size:15px; }
+  .score b { font-size:18px; color:#ff6b9d; }
 
   .dif { display:flex; gap:6px; }
-  .difBtn { border:3px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1); color:#cdb8ff; border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; cursor:pointer; }
-  .difBtn.on { background:#9a7fff; color:#fff; border-color:#9a7fff; }
+  .difBtn { border:3px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1); color:#ffd1e8; border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; cursor:player; }
+  .difBtn.on { background:#ff6b9d; color:#fff; border-color:#ff6b9d; }
 
   .status {
     display:flex; align-items:center; justify-content:center; gap:10px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:18px; padding:8px 18px;
@@ -38,83 +38,83 @@
     white-space:nowrap; height:42px; overflow:hidden; width:max-content; max-width:92vw;
   }
   .status .dot { width:16px; height:16px; border-radius:50%; display:inline-block; }
-  .dot.me { background:#ffd86b; box-shadow:0 0 10px #ffd86b; }
-  .dot.ai { background:#ff5ca8; box-shadow:0 0 10px #ff5ca8; }
+  .dot.me { background:#ff6b9d; box-shadow:0 0 10px #ff6b9d; }
+  .dot.ai { background:#ff8c42; box-shadow:0 0 10px #ff8c42; }
 
   .boardBox { display:block; margin:0 auto; width:max-content; transform-origin:top center; }
   #board {
-    display:grid; grid-template-columns:repeat(15, 1fr); gap:0;
-    background:linear-gradient(145deg,#2c1a5e,#1b1140); border:5px solid #ffd86b; border-radius:20px;
-    box-shadow:0 0 30px rgba(255,216,107,.25), 0 12px 34px rgba(0,0,0,.4); padding:4px; overflow:hidden;
+    display:grid; grid-template-columns:repeat(9, 1fr); gap:0;
+    background:linear-gradient(145deg,#ffe0f0,#ffc8f7); border:4px solid #ff6b9d; border-radius:20px;
+    box-shadow:0 0 30px rgba(255,107,157,.3), 0 12px 34px rgba(0,0,0,.4); padding:4px; overflow:hidden;
   }
   .cell { position:relative; width:32px; height:32px; }
   .cell::before { content:''; position:absolute; left:-1px; top:-1px; width:34px; height:34px;
-    background:repeating-linear-gradient(0deg, transparent 0 30px, rgba(255,216,107,.18) 30px 31px),
-               repeating-linear-gradient(90deg, transparent 0 30px, rgba(255,216,107,.18) 30px 31px); }
+    background:repeating-linear-gradient(0deg, transparent 0 20px, rgba(255,255,255,.3) 20px 21px),
+               repeating-linear-linear(90deg, transparent 0 20px, rgba(255,255,255,.3) 20px 21px); }
   .stone {
     position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:26px; height:26px; border-radius:50%;
     display:flex; align-items:center; justify-content:center; font-size:13px; z-index:2;
-    box-shadow:0 2px 4px rgba(0,0,0,.4), inset 0 -3px 5px rgba(0,0,0,.18), inset 0 3px 5px rgba(255,255,255,.5);
+    box-shadow:0 2px 4px rgba(0,0,0,.4), inset 0 -3px 5px rgba(255,255,255,.1), inset 0 3px 5px rgba(255,255,255,.5);
   }
-  .stone.me { background:radial-gradient(circle at 35% 30%, #ffe9a3, #ffc93c 60%, #d9a800); border:2px solid #fff; color:#7a5a00; }
-  .stone.ai { background:radial-gradient(circle at 35% 30%, #ff9dbd, #ff4d8d 60%, #d9266a); border:2px solid #fff; color:#fff; }
-  .stone.frozen { background:radial-gradient(circle at 35% 30%, #c8f0ff, #75f4ff 60%, #1e9fe0) !important; border:2px solid #fff !important; color:#004b7a !important; animation:icePulse 1.5s ease-in-out infinite !important; }
-  @keyframes icePulse { 0%,100%{box-shadow:0 0 10px #75f4ff} 50%{box-shadow:0 0 22px #75f4ff, inset 0 0 8px #fff} }
+  .stone.me { background:radial-gradient(circle at 35% 30%, #ffe6f0, #ff8c42 60%, #e75a78); border:2px solid #fff; color:#7a5a00; }
+  .stone.ai { background:radial-gradient(circle at 35% 30%, #ffd1e8, #ff8c42 60%, #e75a78); border:2px solid #fff; color:#fff; }
+  .stone.frozen { background:radial-gradient(circle at 35% 30%, #ffe6f0, #ff6b9d 60%, #e75a78) !important; border:2px solid #fff !important; color:#7a5a00 !important; animation:icePulse 1.5s ease-in-out infinite !important; }
+  @keyframes icePulse { 0%,100%{box-shadow:0 0 10px #ff6b9d} 50%{box-shadow:0 0 22px #ff6b9d, inset 0 0 8px #fff} }
   .stone.last::after { content:'✨'; position:absolute; font-size:11px; }
   .stone.place { animation:place .25s ease; }
   @keyframes place { 0%{transform:translate(-50%,-50%) scale(.3); opacity:.3} 100%{transform:translate(-50%,-50%) scale(1); opacity:1} }
 
-  /* 技能區 */
   .skillbar { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin:10px auto 6px; }
-  .energy { display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; color:#75f4ff; }
-  .energy b { color:#75f4ff; font-size:16px; }
-  .skillBtn { border:none; border-radius:999px; font-weight:800; cursor:pointer; font-size:13px; padding:8px 16px; color:#fff; background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 4px 0 #7059d0, 0 6px 12px rgba(154,127,255,.4); transition:.12s; }
-  .skillBtn:disabled { filter:grayscale(.8) opacity(.5); box-shadow:0 4px 0 #4a3a80; cursor:not-allowed; transform:none; }
-  .skillBtn.on { outline:3px solid #ffd86b; }
-  .skillHint { font-size:12px; font-weight:800; color:#cdb8ff; min-height:16px; margin-bottom:2px; }
+  .energy { display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 14px; font-weight:800; font-size:13px; color:#ff6b9d; }
+  .energy b { color:#ff6b9d; font-size:16px; }
+  .skillBtn { border:none; border-radius:999px; font-weight:800; cursor:pointer; font-size:13px; padding:8px 16px; color:#fff; background:linear-gradient(135deg,#ffd1e8,#ff6b9d); box-shadow:0 4px 0 #e6a8c6, 0 6px 12px rgba(230,168,198,.4); transition:.12s; }
+  .skillBtn:disabled { filter:grayscale(.8) opacity(.5); box-shadow:0 4px 0 #c080a0; cursor:not-allowed; transform:none; }
+  .skillBtn.on { outline:3px solid #ff6b9d; }
+  .skillHint { font-size:12px; font-weight:800; color:#ffd1e8; min-height:16px; margin-bottom:2px; }
 
   .ctrl { margin-top:12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
-  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,.3); z-index:10; }
-  .btn { border:none; border-radius:999px; font-weight:800; cursor:pointer; color:#fff; padding:11px 26px; font-size:17px;
-    background:linear-gradient(135deg,#d6c8ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); transition:.12s; user-select:none; }
-  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #7059d0; }
-  .btn.mint { background:linear-gradient(135deg,#9be8c9,#62d6a5); box-shadow:0 5px 0 #3ba87c, 0 8px 18px rgba(98,214,165,.3); }
-  .btn.lav { background:linear-gradient(135deg,#c4b2ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); }
+  .homeLink { position:fixed; left:12px; top:12px; font-size:22px; text-decoration:none; background:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10x rgba(0,0,0,.3); z-index:10; }
+  .btn { border:none; border-radius:999px; font-weight:800; cursor:color:#fff; padding:11px 26px; font-size:17px;
+    background:linear-gradient(135deg,#ffd1e8,#ff6b9d); box-shadow:0 5px 0 #e6a8c6, 0 8px 18px rgba(230,168,198,.4); transition:.12s; user-select:none; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #e6a8c6; }
+  .btn.mint { background:linear-gradient(135deg,#aef0d6,#62d6a5); box-shadow:0 5px 0 #3ba87c, 0 8px 18px rgba(98,214,165,.3); }
+  .btn.lav { background:linear-gradient(135deg,#d6c8ff,#9a7fff); box-shadow:0 5px 0 #7059d0, 0 8px 18px rgba(154,127,255,.4); }
+  .btn.yellow { background:linear-gradient(135deg,#ffe08a,#ffc93c); color:#8a6200; box-shadow:0 5px 0 #d9a800, 0 8px 18px rgba(255,201,60,.4); }
 
   .confetti { position:fixed; font-size:22px; z-index:95; pointer-events:none; animation:fall linear forwards; }
   @keyframes fall { to { transform:translateY(105vh) rotate(360deg); opacity:.4; } }
-  .fb { font-size:16px; font-weight:800; color:#ffd86b; margin-top:8px; height:24px; overflow:hidden; white-space:nowrap; }
+  .fb { font-size:16px; font-weight:800; color:#ff6b9d; margin-top:8px; height:24px; overflow:hidden; white-space:nowrap; }
 
   .suggPulse { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:34px; height:34px; border-radius:50%;
-    border:4px solid #75f4ff; animation:pulse .7s ease-in-out infinite; z-index:200; box-shadow:0 0 18px rgba(117,244,255,.95); }
+    border:4px solid #ff6b9d; animation:pulse .7s ease-in-out infinite; z-index:200; box-shadow:0 0 18px rgba(255,107,157,.95); }
   @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1); opacity:1} 50%{transform:translate(-50%,-50%) scale(1.35); opacity:.5} }
-  .btn.yellow { background:linear-gradient(135deg,#ffe08a,#ffc93c); color:#8a6200; box-shadow:0 5px 0 #d9a800, 0 8px 18px rgba(255,201,60,.4); }
+  .yellow { background:linear-gradient(135deg,#ffe08a,#ffc93c); color:#8a6200; box-shadow:0 5px 0 #d9a800, 0 8px 18px rgba(255,201,60,.4); }
 
-  .modal { position:fixed; inset:0; background:rgba(10,4,30,.8); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
-  .modal.align-bottom { align-items:flex-end; padding-bottom:24px; background:rgba(10,4,30,.4); backdrop-filter:none; pointer-events:none; }
+  .modal { position:fixed; inset:0; background:rgba(250,40,100,.8); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
+  .modal.align-bottom { align-items:flex-end; padding-bottom:24px; background:rgba(250,40,100,.4); backdrop-filter:none; pointer-events:none; }
   .modal.align-bottom .card { margin-bottom:8px; pointer-events:auto; }
-  .suggLabel { position:fixed; transform:translate(-50%,-100%); font-size:13px; font-weight:800; color:#fff; background:#7059d0;
+  .suggLabel { position:fixed; transform:translate(-50%,-100%); font-size:13px; font-weight:800; color:#fff; background:#e6a8c6;
     border-radius:999px; padding:3px 10px; white-space:nowrap; z-index:201; box-shadow:0 2px 8px rgba(0,0,0,.2); animation:float 1s ease-in-out infinite; }
-  .modal .card { background:linear-gradient(180deg,#2c1a5e,#1b1140); border-radius:26px; padding:22px; max-width:340px; width:100%;
-    box-shadow:0 16px 50px rgba(0,0,0,.5); border:4px solid #ffd86b; animation:pop .25s ease; text-align:center; color:#fff; }
+  .modal .card { background:linear-gradient(180deg,#ffd1e8,#ffc8ff); border-radius:26px; padding:22px; max-width:340px; width:100%;
+    box-shadow:0 16px 50px rgba(0,0,0,.5); border:4px solid #ff6b9d; animation:pop .25s ease; text-align:center; color:#fff; }
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .modal .coachFace { font-size:52px; display:block; animation:float 2s ease-in-out infinite; }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .modal h2 { color:#ffd86b; font-size:22px; margin:6px 0 8px; }
-  .modal p { color:#cdb8ff; font-size:16px; font-weight:800; margin-bottom:16px; }
+  .modal h2 { color:#ff6b9d; font-size:22px; margin:6px 0 8px; }
+  .modal p { color:#ffd1e8; font-size:16px; font-weight:800; margin-bottom:16px; }
   .modalBtns { display:flex; gap:10px; justify-content:center; }
 </style>
 </head>
 <body>
 <a class="homeLink" href="index.html">🏠</a>
 
-<div class="title">獵魔五子棋 <span style="font-size:24px;">⭐</span>vs<span style="font-size:24px;">👾</span></div>
-<div class="subtitle">星星獵人 vs 惡魔軍團！先連成 5 顆封印線，就能驅逐惡魔！</div>
+<div class="title">黏黏五子棋 <span style="font-size:24px;">⭐</span>vs<span style="font-size:24px;">👾</span></div>
+<div class="subtitle">軟趁趁的星星 vs 惡魔軍團！先連成 4 顆軟軟封印線，就能驅逐惡魔！</div>
 
 <div class="topbar">
   <div class="score">
     <span class="me">⭐ 你</span><b id="wMe">0</b><span class="mid">—</span><b id="wAi">0</b><span class="ai">👾 AI</span>
-    <span style="color:#9a8ac8; font-size:13px;">和：<b id="wTie" style="color:#9a8ac8;">0</b></span>
+    <span style="color:#ffd1e8; font-size:13px;">和：<b id="wTie" style="color:#ffd1e8;">0</b></span>
   </div>
   <div class="dif">
     <button class="difBtn on" data-d="0">🌱 簡單</button>
@@ -123,7 +123,7 @@
   </div>
 </div>
 
-<div class="status"><span class="dot me" id="turnDot"></span><span id="statusMsg">輪到你囉！放一顆星星 ✨</span></div>
+<div class="status"><span class="dot me" id="turnDot"></span><span id="statusMsg">輪到你囉！放一顆軟星星 ✨</span></div>
 
 <div class="skillbar">
   <span class="energy">⚡ 能量 <b id="energyNum">0</b></span>
@@ -145,15 +145,15 @@
 <div id="coachModal" class="modal align-bottom hidden">
   <div class="card">
     <span class="coachFace">👾</span>
-    <h2>等等！這裡更好喔！</h2>
-    <p id="coachReason">看看亮亮的藍圈圈～</p>
-    <p style="font-size:13px; color:#9a8ac8; font-weight:700;">點棋盤上亮亮的藍圈＝聽老師的<br>點其他地方＝照你的想法</p>
+    <h2>等等！這裟更軟喔！</h2>
+    <p id="coachReason">看看亮亮的粉色圈圈～</p>
+    <p style="font-size:13px; color:#ffd1e8; font-weight:700;">點棋盤上亮亮的粉色圈＝聽老師的<br>點其他地方＝照你的想法</p>
   </div>
 </div>
 
 <script>
 /* ================= 設定 ================= */
-var N = 15;
+var N = 9;              // 9x9 棋盤（黏黏围棋）
 var EMPTY = 0, ME = 1, AI = 2;
 var board = [], turn = ME, over = false, aiThinking = false;
 var scores = {me:0, ai:0, tie:0};
@@ -164,6 +164,7 @@ var coachOn = true, pending = null;
 var energy = 0, skillMode = '';   // '' | 'fire' | 'seal'
 var sealed = {};                   // "r,c" -> true 封印格（雙方都不能下）
 var frozen = {};                   // "r,c" -> true 冰凍棋子（不能作為連線）
+var stickyCells = {};              // "r,c" -> true 黏著點（落在這裡得 1 能量）
 
 var AI_MSG = ['換我了！','我想想喔…🤔','嘿嘿，看我這步！','別以為我會輸！'];
 var ME_PRAISE = ['好棋！','漂亮！','哇！你真厲害！','繼續繼續～'];
@@ -217,6 +218,11 @@ function render(){
       lk.className = 'stone seal';
       lk.textContent = '🔒';
       cell.appendChild(lk);
+    } else if(stickyCells[r+','+c]){  // 新增：顯示黏著點
+      var sg = document.createElement('div');
+      sg.className = 'stone suggest';
+      sg.textContent = '●';
+      cell.appendChild(sg);
     }
   }
   var dot = $('turnDot');
@@ -242,7 +248,7 @@ function useFire(r, c){
   if(board[r][c] === ME && frozen[r+','+c]){
     delete frozen[r+','+c];
     energy -= 3;
-    sFire(); render();
+    sFreeze(); render();
     $('fb').textContent = '🔥 火球術！冰凍被融化了，星星恢復光芒！✨';
     setStatus('火球術融化了冰凍！');
     var win = checkWin(r, c);
@@ -279,12 +285,12 @@ function checkWin(r, c){
   if(p === ME && frozen[r+','+c]) return null;
   var dirs = [[1,0],[0,1],[1,1],[1,-1]];
   for(var d=0;d<4;d++){
-    var cells = [[r,c]], dr=dirs[d][0], dc=dirs[d][1];
+    var cells = [[r,c]], dr=dirs[d][0], dc=dirs[d];
     var rr=r+dr, cc=c+dc;
     while(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===p && !(p===ME && frozen[rr+','+cc])){ cells.push([rr,cc]); rr+=dr; cc+=dc; }
     rr=r-dr; cc=c-dc;
     while(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===p && !(p===ME && frozen[rr+','+cc])){ cells.push([rr,cc]); rr-=dr; cc-=dc; }
-    if(cells.length >= 5) return cells;
+    if(cells.length >= 4) return cells;  // 黏黏围棋：連 4 即獲勝
   }
   return null;
 }
@@ -304,7 +310,7 @@ function scoreCell(r, c, p){
   var total = 0;
   var dirs = [[1,0],[0,1],[1,1],[1,-1]];
   for(var d=0;d<4;d++){
-    var dr=dirs[d][0], dc=dirs[d][1];
+    var dr=dirs[d][0], dc=dirs[d];
     var count=1, open=0;
     var rr=r+dr, cc=c+dc;
     while(rr>=0&&rr<N&&cc>=0&&cc<N&&board[rr][cc]===p && !(p===ME && frozen[rr+','+cc])){ count++; rr+=dr; cc+=dc; }
@@ -325,7 +331,7 @@ function aiMove(){
     if(sealed[r+','+c]) continue;
     var s = scoreCell(r,c,AI)*atk + scoreCell(r,c,ME)*def;
     // 越靠近中心 + 小加分（開局引導）
-    var center = (N-1)/2;
+    var center = (N-1)/2;  // (9-1)/2 = 4
     s += (1 - (Math.abs(r-center)+Math.abs(c-center))/(N*2)) * 2;
     if(s > best){ best = s; cands = [{r:r,c:c,s:s}]; }
     else if(s === best){ cands.push({r:r,c:c,s:s}); }
@@ -406,6 +412,16 @@ function clickCell(el){
     else $('fb').textContent = '要點空格喔！';
     return;
   }
+  /* 黏著機制檢查：落在黏著點額外獲得能量 */
+  if(skillMode === '' && board[r][c] === EMPTY && stickyCells[r+','+c]){
+    energy = Math.min(9, energy + 1);
+    updateEnergy();
+    $('fb').textContent = '💧 落在黏著點！獲得 1 能量！';
+    setStatus('落在黏著點！繼續！');
+    delete stickyCells[r+','+c];  // 清除該黏著點
+    place(r, c, ME);  // 繼續正常下棋流程
+    return;
+  }
   /* 點擊被冰凍的棋子：若能量足夠可直接施放火球術融化 */
   if(board[r][c] === ME && frozen[r+','+c]){
     if(energy >= 3){
@@ -466,7 +482,7 @@ function bestLine(r, c, p){
   var best = {count:1, open:0};
   var dirs = [[1,0],[0,1],[1,1],[1,-1]];
   for(var d=0;d<4;d++){
-    var dr=dirs[d][0], dc=dirs[d][1], cnt=1, op=0;
+    var dr=dirs[d][0], dc=dirs[d], cnt=1, op=0;
     var rr=r+dr, cc=c+dc;
     while(inb(rr,cc) && board[rr][cc]===p){ cnt++; rr+=dr; cc+=dc; }
     if(inb(rr,cc) && board[rr][cc]===EMPTY) op++;
@@ -528,6 +544,73 @@ document.querySelectorAll('.difBtn').forEach(function(b){
   });
 });
 
+/* ================= 黏著點生成 ================= */
+// 在 place 函數最後，建立黏著點（在 isFull 判斷前，who === ME 或 AI 時）
+function placeAfter(r, c, who){
+  board[r][c] = who;
+  lastR = r; lastC = c;
+  // 建立黏著點：該格及其 8 個鄰近格子
+  if(who === ME || who === AI){
+    var cr = r, cc = c;
+    for(var dr=-1; dr<=1; dr++){
+      for(var dc=-1; dc<=1; dc++){
+        if(dr===0 && dc===0) continue;
+        var nr = cr + dr, nc = cc + dc;
+        if(nr>=0 && nr<N && nc>=0 && nc<N && board[nr][nc] === EMPTY){
+          stickyCells[nr+','+nc] = true;
+        }
+      }
+    }
+  }
+}
+// 重寫 place 函數，在結尾呼叫 placeAfter
+function place(r, c, who){
+  board[r][c] = who;
+  lastR = r; lastC = c;
+  sPlace();
+  render();
+  var win = checkWin(r, c);
+  if(win){
+    over = true;
+    if(who === ME){ scores.me++; sWinMe(); confetti(); setStatus('你贏了！驅逐惡魔！🎉'); $('fb').textContent = '⭐ 勝利！封印完成！'; if(window.KidsApp) KidsApp.reportWin('gomoku','⭐'); }
+    else { scores.ai++; sWinAi(); setStatus('惡魔軍團贏了…再挑戰一次！'); $('fb').textContent = '👾 AI 勝利！沒關係，再來！'; }
+    $('wMe').textContent = scores.me; $('wAi').textContent = scores.ai;
+    updateEnergy();
+    return;
+  }
+  if(isFull()){ over = true; scores.tie++; $('wTie').textContent = scores.tie; sTie(); setStatus('和局！封印僵持不下 🤝'); updateEnergy(); return; }
+
+  // AI 每有 4 顆棋子時，隨機冰凍玩家一顆星星
+  if(who === AI){
+    var aiCount = 0;
+    for(var tr=0; tr<N; tr++) for(var tc=0; tc<N; tc++) if(board[tr][tc] === AI) aiCount++;
+    if(aiCount > 0 && aiCount % 4 === 0){
+      var freeStars = [];
+      for(var tr=0; tr<N; tr++) for(var tc=0; tc<N; tc++){
+        if(board[tr][tc] === ME && !frozen[tr+','+tc]){
+          freeStars.push({r:tr, c:tc});
+        }
+      }
+      if(freeStars.length > 0){
+        var tgt = freeStars[Math.floor(Math.random()*freeStars.length)];
+        frozen[tgt.r+','+tgt.c] = true;
+        sFreeze();
+        render();
+        $('fb').textContent = '❄️ 惡魔施放寒冰魔法！一顆星星被冰凍了 🧊！（消耗3能量火球術可融化）';
+        setStatus('⚠️ 星星被冰凍了！可用火球術融化！');
+      }
+    }
+  }
+
+  // 建立黏著點（新增邏輯）
+  placeAfter(r, c, who);
+
+  if(who === ME && energy < 9) energy++;
+  updateEnergy();
+  turn = (who===ME) ? AI : ME;
+  if(turn === AI){ setStatus('輪到 AI 思考…🤔'); aiThink(); }
+  else { setStatus('輪到你了！放一顆星星 ✨');
+}
 /* ================= 啟動 ================= */
 newBoard(); buildBoard(); render();
 setStatus('輪到你囉！放一顆棋子吧 ✨');

@@ -3,19 +3,26 @@
   var KEY = 'kids_app_v2';
   var OLD_KEY = 'kids_app_v1';
 
-  /* 圖鑑收集物定義：每款遊戲一種主題收藏物 */
+  var STAGES = ['rhythm', 'memory', 'puzzle', 'gomoku'];
+
+  /* 圖鑑收集物與魔王定義：每款遊戲一種主題收藏物與對應魔王 */
   var FIGURES = {
-    rhythm: { e:'🎵', n:'節奏主唱', t:'舞台' },
-    memory: { e:'🃏', n:'封印守護', t:'封印' },
-    puzzle: { e:'🧩', n:'拼圖獵人', t:'拼圖' },
-    gomoku: { e:'⭐', n:'五子棋王', t:'對弈' }
+    rhythm: { e:'🎵', n:'節奏主唱', t:'舞台', boss:'噪音魔王 👾', hp:300 },
+    memory: { e:'🃏', n:'封印守護', t:'封印', boss:'幻影魔王 🃏', hp:200 },
+    puzzle: { e:'🧩', n:'拼圖獵人', t:'拼圖', boss:'混沌魔王 🧩', hp:150 },
+    gomoku: { e:'⭐', n:'五子棋王', t:'對弈', boss:'虛空魔王 👑', hp:100 }
   };
 
-  function defaultState(){ return { stars:0, wins:{}, figures:{} }; }
+  function defaultState(){
+    return { stars:0, wins:{}, figures:{}, defeated:{}, unlocked:{ rhythm:true } };
+  }
   function load(){
     var s;
     try{ s = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
     if(!s){ s = defaultState(); }
+    s.defeated = s.defeated || {};
+    s.unlocked = s.unlocked || { rhythm: true };
+    s.unlocked.rhythm = true;
     /* 從舊版搬移已收集貼紙 */
     try{
       var old = JSON.parse(localStorage.getItem(OLD_KEY));
@@ -28,6 +35,17 @@
         localStorage.removeItem(OLD_KEY);
       }
     }catch(e){}
+    /* 根據歷史通關自動解鎖 */
+    for(var i=0; i<STAGES.length; i++){
+      var cur = STAGES[i];
+      if(i === 0) s.unlocked[cur] = true;
+      if(s.defeated[cur] || (s.wins && s.wins[cur] > 0) || (s.figures && s.figures[cur])){
+        s.defeated[cur] = true;
+        if(i + 1 < STAGES.length){
+          s.unlocked[STAGES[i+1]] = true;
+        }
+      }
+    }
     return s;
   }
   function save(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} }
@@ -48,6 +66,15 @@
       s.stars = (s.stars||0) + 1;
       s.wins = s.wins || {};
       s.wins[gameId] = (s.wins[gameId]||0) + 1;
+      s.defeated = s.defeated || {};
+      s.defeated[gameId] = true;
+      s.unlocked = s.unlocked || { rhythm: true };
+
+      var idx = STAGES.indexOf(gameId);
+      if(idx !== -1 && idx + 1 < STAGES.length){
+        s.unlocked[STAGES[idx + 1]] = true;
+      }
+
       var isNew = false;
       if(sticker){
         s.figures = s.figures || {};
@@ -59,6 +86,22 @@
     },
     state: function(){ return load(); },
     album: album,
+    isUnlocked: function(gameId){
+      var s = load();
+      if(gameId === 'rhythm') return true;
+      var idx = STAGES.indexOf(gameId);
+      if(idx > 0){
+        var prev = STAGES[idx - 1];
+        if(s.defeated && s.defeated[prev]) return true;
+      }
+      return !!(s.unlocked && s.unlocked[gameId]);
+    },
+    isBossDefeated: function(gameId){
+      var s = load();
+      return !!(s.defeated && s.defeated[gameId]);
+    },
+    getStages: function(){ return STAGES; },
+    getBossInfo: function(g){ return FIGURES[g] || {}; },
     getStars: function(){ return load().stars || 0; },
     getWins: function(g){ return (load().wins||{})[g] || 0; },
     hasFigure: function(g){ return !!((load().figures||{})[g]); },
