@@ -83,9 +83,9 @@
   .switch-opt {
     border: none;
     background: transparent;
-    padding: 2px 6px;
+    padding: 2px 5px;
     border-radius: 999px;
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 800;
     color: #b33971;
     cursor: pointer;
@@ -99,7 +99,7 @@
     transform: scale(1.03);
   }
 
-  /* 難度切換膠囊 */
+  /* 難度切換膠囊 (🐣 初級 / 🌸 中級 / 👑 大師 / 🔥 宗師) */
   .diff-switch {
     display: inline-flex;
     background: rgba(255,255,255,0.85);
@@ -112,9 +112,9 @@
   .diff-opt {
     border: none;
     background: transparent;
-    padding: 2px 6px;
+    padding: 2px 5px;
     border-radius: 999px;
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 800;
     color: #651fff;
     cursor: pointer;
@@ -126,6 +126,10 @@
     color: #fff;
     box-shadow: 0 2px 6px rgba(124,77,255,0.4);
     transform: scale(1.03);
+  }
+  #diffGrand.active {
+    background: linear-gradient(135deg, #ff3838, #ff9f1a);
+    box-shadow: 0 2px 6px rgba(255, 56, 56, 0.5);
   }
 
   .title-wrap { margin: 1px 0 3px; }
@@ -761,11 +765,12 @@
     <button class="switch-opt" id="opt19" onclick="switchSize(19)">19x19</button>
   </div>
 
-  <!-- 難度切換 (🐣 初級 / 🌸 中級 / 👑 大師) -->
+  <!-- 難度切換 (🐣 初級 / 🌸 中級 / 👑 大師 / 🔥 宗師) -->
   <div class="diff-switch">
     <button class="diff-opt" id="diffEasy" onclick="switchDiff('easy')">🐣 初級</button>
     <button class="diff-opt active" id="diffMed" onclick="switchDiff('medium')">🌸 中級</button>
     <button class="diff-opt" id="diffHard" onclick="switchDiff('hard')">👑 大師</button>
+    <button class="diff-opt" id="diffGrand" onclick="switchDiff('grand')">🔥 宗師</button>
   </div>
 </div>
 
@@ -983,8 +988,15 @@ function switchDiff(newDiff){
   document.getElementById('diffEasy').classList.toggle('active', difficulty === 'easy');
   document.getElementById('diffMed').classList.toggle('active', difficulty === 'medium');
   document.getElementById('diffHard').classList.toggle('active', difficulty === 'hard');
-  var diffNames = { easy: '🐣 初級（休閒萌新）', medium: '🌸 中級（見招拆招）', hard: '👑 大師（魔王算力）' };
-  document.getElementById('statusText').textContent = '已切換為 ' + diffNames[difficulty] + '！';
+  var grandEl = document.getElementById('diffGrand');
+  if(grandEl) grandEl.classList.toggle('active', difficulty === 'grand');
+  var diffNames = {
+    easy: '🐣 初級（休閒萌新）',
+    medium: '🌸 中級（見招拆招）',
+    hard: '👑 大師（戰術高手）',
+    grand: '🔥 宗師（頂級算力魔王）'
+  };
+  document.getElementById('statusText').textContent = '已切換為 ' + (diffNames[difficulty] || difficulty) + '！';
 }
 
 function getCellSize(){
@@ -1807,7 +1819,11 @@ function placeStone(r, c, who){
   if(turn === AI){
     document.getElementById('statusText').textContent = '魔王思考中…👾';
     aiThinking = true;
-    var thinkDelay = (difficulty === 'hard') ? 600 + Math.random() * 300 : 450 + Math.random() * 300;
+    var thinkDelay = 450;
+    if(difficulty === 'grand') thinkDelay = 650 + Math.random() * 300;
+    else if(difficulty === 'hard') thinkDelay = 550 + Math.random() * 250;
+    else if(difficulty === 'medium') thinkDelay = 450 + Math.random() * 200;
+    else thinkDelay = 350 + Math.random() * 150;
     setTimeout(aiTurn, thinkDelay);
   } else {
     document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
@@ -1822,7 +1838,66 @@ function triggerWiggleReject(r, c){
   cellEl.classList.add('jelly-reject-shake');
 }
 
-/* ================= 🧠 AI 棋力難度切換決策系統 (3 段) ================= */
+/* ================= 🧠 AI 輔助演算法 (真眼判定、落子模擬、切斷點) ================= */
+function isTrueEye(r, c, who){
+  if(board[r][c] !== EMPTY) return false;
+  var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+  for(var d=0; d<4; d++){
+    var nr = r + dirs[d][0], nc = c + dirs[d][1];
+    if(inb(nr, nc) && board[nr][nc] !== who) return false;
+  }
+  var diag = [[-1,-1],[-1,1],[1,-1],[1,1]];
+  var diagTotal = 0, diagWho = 0;
+  for(var i=0; i<4; i++){
+    var dr = r + diag[i][0], dc = c + diag[i][1];
+    if(inb(dr, dc)){
+      diagTotal++;
+      if(board[dr][dc] === who) diagWho++;
+    }
+  }
+  // 中央(4個對角在盤內)需至少3個為who；邊緣(2個對角)需至少2個為who；角部(1個對角)需至少1個為who
+  if(diagTotal === 4) return diagWho >= 3;
+  if(diagTotal === 2) return diagWho >= 2;
+  if(diagTotal === 1) return diagWho >= 1;
+  return false;
+}
+
+function simulateMove(r, c, who){
+  var opp = (who === ME) ? AI : ME;
+  board[r][c] = who;
+  var caps = checkCaptures(r, c, who);
+  for(var i=0; i<caps.length; i++){
+    board[caps[i].r][caps[i].c] = EMPTY;
+  }
+  return {
+    captured: caps,
+    revert: function(){
+      board[r][c] = EMPTY;
+      for(var i=0; i<caps.length; i++){
+        board[caps[i].r][caps[i].c] = opp;
+      }
+    }
+  };
+}
+
+function isCutPoint(r, c, who){
+  var opp = (who === ME) ? AI : ME;
+  var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+  var oppGroupRoots = {};
+  for(var d=0; d<4; d++){
+    var nr = r + dirs[d][0], nc = c + dirs[d][1];
+    if(inb(nr, nc) && board[nr][nc] === opp){
+      var g = getGroup(nr, nc, {});
+      if(g.stones.length > 0){
+        var rootKey = g.stones[0].r + ',' + g.stones[0].c;
+        oppGroupRoots[rootKey] = true;
+      }
+    }
+  }
+  return Object.keys(oppGroupRoots).length >= 2;
+}
+
+/* ================= 🧠 AI 棋力難度切換決策系統 (4 段難度) ================= */
 function aiTurn(){
   if(gameOver) return;
   var bestMove = chooseAIMove(difficulty);
@@ -1845,8 +1920,10 @@ function aiTurn(){
 function chooseAIMove(diff){
   var legalMoves = [];
   var center = (N - 1) / 2;
+  var starCoords = getStarCoords();
+  var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
 
-  // 收集所有合法不自殺點
+  // 1. 收集全盤合法且不自殺點
   for(var r=0; r<N; r++){
     for(var c=0; c<N; c++){
       if(board[r][c] === EMPTY && !sealedCells[r+','+c] && !isSuicideMove(r, c, AI)){
@@ -1856,47 +1933,75 @@ function chooseAIMove(diff){
   }
   if(legalMoves.length === 0) return null;
 
-  // 🐣 初級：60% 隨機休閒落子，40% 簡單提子防守
+  // -------------------------------------------------------------
+  // 【🐣 初級 (easy)】：60% 隨機休閒探索，40% 基礎提子
+  // -------------------------------------------------------------
   if(diff === 'easy'){
     if(Math.random() < 0.6){
       return legalMoves[Math.floor(Math.random() * legalMoves.length)];
     }
-    // 40% 機率：若能提子就吃，否則隨機
     var capMoves = [];
     legalMoves.forEach(function(m){
-      board[m.r][m.c] = AI;
-      var caps = checkCaptures(m.r, m.c, AI);
-      board[m.r][m.c] = EMPTY;
-      if(caps.length > 0) capMoves.push(m);
+      var sim = simulateMove(m.r, m.c, AI);
+      if(sim.captured.length > 0) capMoves.push(m);
+      sim.revert();
     });
     if(capMoves.length > 0) return capMoves[Math.floor(Math.random() * capMoves.length)];
     return legalMoves[Math.floor(Math.random() * legalMoves.length)];
   }
 
-  // 🌸 中級：具備救瀕死、吃叫吃與基礎連通能力
+  // -------------------------------------------------------------
+  // 【🌸 中級 (medium)】：提子得分、避開送死叫吃、瀕死逃跑、友軍連通
+  // -------------------------------------------------------------
   if(diff === 'medium'){
+    // 檢查 AI 自身的 1 氣瀕死群組
+    var aiDangerGroups = [];
+    var visitedAiGroup = {};
+    for(var r=0; r<N; r++){
+      for(var c=0; c<N; c++){
+        if(board[r][c] === AI && !visitedAiGroup[r+','+c]){
+          var ag = getGroup(r, c, visitedAiGroup);
+          if(ag.liberties === 1) aiDangerGroups.push(ag);
+        }
+      }
+    }
+
+    var bestScore = -999999;
     var candidates = [];
-    var bestScore = -99999;
 
     legalMoves.forEach(function(m){
-      board[m.r][m.c] = AI;
-      var caps = checkCaptures(m.r, m.c, AI);
+      var sim = simulateMove(m.r, m.c, AI);
       var g = getGroup(m.r, m.c, {});
-      var score = caps.length * 150;
+      var score = sim.captured.length * 180;
 
+      // 瀕死 1 氣逃跑檢驗：若逃跑後氣數 > 1 才能逃，加分 +200；若仍為 1 氣且未吃子則不送死
+      var isSavingGroup = false;
+      aiDangerGroups.forEach(function(dg){
+        if(dg.libertySet[m.r+','+m.c]) isSavingGroup = true;
+      });
+      if(isSavingGroup){
+        if(sim.captured.length > 0 || g.liberties >= 2) score += 200;
+        else score -= 150;
+      }
+
+      // 氣數與避開送死叫吃
       if(g.liberties >= 3) score += 30;
       else if(g.liberties === 2) score += 15;
-      else if(g.liberties === 1) score -= 50;
+      else if(g.liberties === 1 && sim.captured.length === 0) score -= 150;
 
-      var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+      // 友軍連通
+      var adjAi = 0;
       for(var d=0; d<4; d++){
         var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
-        if(inb(nr, nc) && board[nr][nc] === AI) score += 15;
+        if(inb(nr, nc) && board[nr][nc] === AI) adjAi++;
       }
+      score += adjAi * 20;
+
+      // 中央趨近
       var distCenter = Math.abs(m.r - center) + Math.abs(m.c - center);
       score += (N - distCenter) * 2;
 
-      board[m.r][m.c] = EMPTY;
+      sim.revert();
 
       if(score > bestScore){
         bestScore = score;
@@ -1909,63 +2014,328 @@ function chooseAIMove(diff){
     return candidates[Math.floor(Math.random() * candidates.length)];
   }
 
-  // 👑 大師：全方位精準死活、搶佔要道、多步氣數評估與強勢圍地
+  // -------------------------------------------------------------
+  // 【👑 大師 (hard)】：提吃高權重、瀕死精算、叫吃威脅、不填真眼、開局佔星位、連通厚度
+  // -------------------------------------------------------------
   if(diff === 'hard'){
-    var bestCandidate = null;
-    var maxVal = -999999;
+    // 檢查 AI 自身與敵方的瀕死 1 氣群組
+    var hardAiDanger = [];
+    var visitedHardAi = {};
+    for(var r=0; r<N; r++){
+      for(var c=0; c<N; c++){
+        if(board[r][c] === AI && !visitedHardAi[r+','+c]){
+          var hg = getGroup(r, c, visitedHardAi);
+          if(hg.liberties === 1) hardAiDanger.push(hg);
+        }
+      }
+    }
+
+    var bestHardCandidate = null;
+    var maxHardVal = -999999;
 
     legalMoves.forEach(function(m){
-      board[m.r][m.c] = AI;
-      var caps = checkCaptures(m.r, m.c, AI);
+      // 不填己方真眼
+      if(isTrueEye(m.r, m.c, AI)){
+        var trueEyePenalty = -600;
+        if(trueEyePenalty > maxHardVal){ maxHardVal = trueEyePenalty; bestHardCandidate = m; }
+        return;
+      }
+
+      var sim = simulateMove(m.r, m.c, AI);
       var g = getGroup(m.r, m.c, {});
       var val = 0;
 
-      // 1. 提吃對方果凍權重
-      val += caps.length * 320;
+      // 1. 提吃高權重
+      val += sim.captured.length * 380;
 
-      // 2. 氣數安全性評估
-      if(g.liberties >= 4) val += 60;
-      else if(g.liberties === 3) val += 35;
-      else if(g.liberties === 2) val += 5;
-      else if(g.liberties === 1) val -= 120; // 避免送死叫吃
+      // 2. 瀕死群組精算逃脫路徑
+      var isSave = false;
+      hardAiDanger.forEach(function(dg){
+        if(dg.libertySet[m.r+','+m.c]) isSave = true;
+      });
+      if(isSave){
+        if(sim.captured.length > 0 || g.liberties >= 2) val += 400;
+        else val -= 200; // 逃不掉棄子爭先
+      }
 
-      // 3. 破壞對方氣數 (叫吃威脅)
-      var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+      // 3. 氣數與杜絕 1 氣送死
+      if(g.liberties >= 4) val += 70;
+      else if(g.liberties === 3) val += 40;
+      else if(g.liberties === 2) val += 10;
+      else if(g.liberties === 1 && sim.captured.length === 0) val -= 250;
+
+      // 4. 叫吃威脅與壓迫 2 氣
       for(var d=0; d<4; d++){
         var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
         if(inb(nr, nc) && board[nr][nc] === ME){
-          var enemyGroup = getGroup(nr, nc, {});
-          if(enemyGroup.liberties === 1) val += 180; // 製造叫吃
-          else if(enemyGroup.liberties === 2) val += 45;
+          var eg = getGroup(nr, nc, {});
+          if(eg.liberties === 1) val += 220; // 形成叫吃
+          else if(eg.liberties === 2) val += 60; // 壓迫 2 氣
         }
       }
 
-      // 4. 連接己方弱群組 (厚度連通)
-      var connectedAiGroups = 0;
+      // 5. 連接相鄰友軍弱群厚度
+      var connectedAi = 0;
       for(var d=0; d<4; d++){
         var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
-        if(inb(nr, nc) && board[nr][nc] === AI) connectedAiGroups++;
+        if(inb(nr, nc) && board[nr][nc] === AI) connectedAi++;
       }
-      val += connectedAiGroups * 25;
+      val += connectedAi * 35;
 
-      // 5. 搶佔星位與中央戰略制高點
-      var starCoords = getStarCoords();
-      if(starCoords[m.r + ',' + m.c]) val += 30;
+      // 6. 開局搶佔角邊星位，避開 1 路死亡線
+      if(starCoords[m.r + ',' + m.c]) val += 45;
+      if(m.r === 0 || m.r === N-1 || m.c === 0 || m.c === N-1) val -= 80; // 1路死亡線
+
       var distCenter = Math.abs(m.r - center) + Math.abs(m.c - center);
       val += (N - distCenter) * 3;
 
-      board[m.r][m.c] = EMPTY;
+      sim.revert();
 
-      if(val > maxVal){
-        maxVal = val;
-        bestCandidate = m;
+      if(val > maxHardVal){
+        maxHardVal = val;
+        bestHardCandidate = m;
       }
     });
 
-    return bestCandidate;
+    return bestHardCandidate;
   }
 
-  return legalMoves[0];
+  // -------------------------------------------------------------
+  // 【🔥 宗師 (grand)】頂級算力魔王引擎 (Phase 1 啟發式 + Phase 2 2-Ply Minimax 前瞻)
+  // -------------------------------------------------------------
+  var totalStones = 0;
+  for(var r=0; r<N; r++){
+    for(var c=0; c<N; c++){
+      if(board[r][c] !== EMPTY) totalStones++;
+    }
+  }
+  var isEarlyGame = (totalStones < N * N * 0.35);
+  var currTerr = calculateTerritory();
+  var currTerrDiff = currTerr.ai - currTerr.me;
+
+  // 預先找出 AI 自身瀕死 1 氣群組 與 玩家瀕死 1 氣群組
+  var grandAiDanger = [];
+  var grandMeDanger = [];
+  var vAi = {}, vMe = {};
+  for(var r=0; r<N; r++){
+    for(var c=0; c<N; c++){
+      if(board[r][c] === AI && !vAi[r+','+c]){
+        var gag = getGroup(r, c, vAi);
+        if(gag.liberties === 1) grandAiDanger.push(gag);
+      } else if(board[r][c] === ME && !vMe[r+','+c]){
+        var gmg = getGroup(r, c, vMe);
+        if(gmg.liberties === 1) grandMeDanger.push(gmg);
+      }
+    }
+  }
+
+  // === Phase 1: 多維戰術啟發式評分 ===
+  var scoredMoves = [];
+
+  legalMoves.forEach(function(m){
+    // 嚴禁填自己真眼
+    if(isTrueEye(m.r, m.c, AI)){
+      scoredMoves.push({ r: m.r, c: m.c, phase1Score: -2500 });
+      return;
+    }
+
+    var sim = simulateMove(m.r, m.c, AI);
+    var g = getGroup(m.r, m.c, {});
+    var score = 0;
+
+    // 1. 立即提子精算 (+650/子 + 多子切斷獎勵)
+    if(sim.captured.length > 0){
+      score += sim.captured.length * 650;
+      if(sim.captured.length >= 2) score += 150;
+    }
+
+    // 2. 瀕死對殺救援
+    var isRescue = false;
+    grandAiDanger.forEach(function(dg){
+      if(dg.libertySet[m.r+','+m.c]) isRescue = true;
+    });
+    if(isRescue){
+      if(sim.captured.length > 0 || g.liberties >= 3) score += 600;
+      else if(g.liberties === 2) score += 400;
+      else score -= 350; // 逃跑後仍為 1 氣判定為死棋棄子爭先
+    }
+
+    // 3. 封殺追擊 (若為玩家 1 氣群組最後一口氣，直接封殺提吃)
+    grandMeDanger.forEach(function(dmg){
+      if(dmg.libertySet[m.r+','+m.c]) score += 300;
+    });
+
+    // 4. 叫吃與破壞假眼
+    for(var d=0; d<4; d++){
+      var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+      if(inb(nr, nc) && board[nr][nc] === ME){
+        var eg = getGroup(nr, nc, {});
+        if(eg.liberties === 1) score += 320; // 製造 1 氣叫吃
+        else if(eg.liberties === 2) score += 85;  // 逼入 2 氣
+      }
+    }
+    // 點眼破假眼
+    var adjMeCount = 0;
+    for(var d=0; d<4; d++){
+      var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+      if(inb(nr, nc) && board[nr][nc] === ME) adjMeCount++;
+    }
+    if(adjMeCount >= 2 && !isTrueEye(m.r, m.c, ME)){
+      score += 240;
+    }
+
+    // 5. 死活做兩眼 (檢查周圍獨立真眼數)
+    var eyeCount = 0;
+    var checkedEye = {};
+    g.stones.forEach(function(st){
+      for(var d=0; d<4; d++){
+        var er = st.r + dirs[d][0], ec = st.c + dirs[d][1];
+        if(inb(er, ec) && board[er][ec] === EMPTY && !checkedEye[er+','+ec]){
+          checkedEye[er+','+ec] = true;
+          if(isTrueEye(er, ec, AI)) eyeCount++;
+        }
+      }
+    });
+    if(eyeCount >= 2) score += 500;
+
+    // 6. 金角銀邊與佔大場 (開局期評估)
+    if(isEarlyGame){
+      if(starCoords[m.r+','+m.c]) score += 150;
+      // 角部三三/三四要點
+      var isCornerBig = ( (m.r === 2 || m.r === 3 || m.r === N-3 || m.r === N-4) &&
+                          (m.c === 2 || m.c === 3 || m.c === N-3 || m.c === N-4) );
+      if(isCornerBig) score += 130;
+
+      // 拆邊 (3、4 路)
+      var isSideBig = ( (m.r === 2 || m.r === 3 || m.r === N-3 || m.r === N-4) ||
+                        (m.c === 2 || m.c === 3 || m.c === N-3 || m.c === N-4) );
+      if(isSideBig && !isCornerBig) score += 80;
+
+      // 開局扣除 1 路死亡線與 2 路渡線
+      if(m.r === 0 || m.r === N-1 || m.c === 0 || m.c === N-1) score -= 120;
+      else if(m.r === 1 || m.r === N-2 || m.c === 1 || m.c === N-2) score -= 40;
+    }
+
+    // 7. 切斷敵方連接與強化己方連通
+    if(isCutPoint(m.r, m.c, AI)) score += 220;
+
+    for(var d=0; d<4; d++){
+      var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+      if(inb(nr, nc) && board[nr][nc] === AI){
+        var friendGroup = getGroup(nr, nc, {});
+        if(friendGroup.liberties <= 2) score += 180; // 救援強化脆弱友軍
+        else score += 40;
+      }
+    }
+
+    // 8. 官子精準算目 (中後盤)
+    if(!isEarlyGame){
+      var simTerr = calculateTerritory();
+      var simTerrDiff = simTerr.ai - simTerr.me;
+      score += (simTerrDiff - currTerrDiff) * 40;
+      if(m.r === 0 || m.r === N-1 || m.c === 0 || m.c === N-1) score += 70; // 邊界收官
+    }
+
+    // 9. 自身氣數安全性評估
+    if(g.liberties >= 4) score += 120;
+    else if(g.liberties === 3) score += 70;
+    else if(g.liberties === 2) score += 20;
+    else if(g.liberties === 1 && sim.captured.length === 0) score -= 800; // 1 氣送死重扣
+
+    var distCenter = Math.abs(m.r - center) + Math.abs(m.c - center);
+    score += (N - distCenter) * 2;
+
+    sim.revert();
+
+    scoredMoves.push({ r: m.r, c: m.c, phase1Score: score });
+  });
+
+  // 排序選出 Phase 1 最高分的前 7 個候選點
+  scoredMoves.sort(function(a, b){ return b.phase1Score - a.phase1Score; });
+  var topCandidates = scoredMoves.slice(0, Math.min(7, scoredMoves.length));
+
+  // === Phase 2: 2-Ply Minimax 深度前瞻反擊檢驗 (Counter-Move Check) ===
+  var bestGrandCandidate = null;
+  var bestNetScore = -9999999;
+
+  topCandidates.forEach(function(cand){
+    var sim = simulateMove(cand.r, cand.c, AI);
+
+    // 尋找玩家在 (cand.r, cand.c) 周圍或全盤致命點的最強反擊
+    var maxThreat = 0;
+    var oppTested = 0;
+
+    for(var r=0; r<N; r++){
+      for(var c=0; c<N; c++){
+        if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, ME)) continue;
+
+        var dist = Math.abs(r - cand.r) + Math.abs(c - cand.c);
+        // 考慮距離候選點 <= 2 內的反擊，或者能提吃 AI / 救自己 1 氣的全局關鍵點
+        var isLocal = (dist <= 2);
+        var isGlobalCrucial = false;
+
+        if(!isLocal){
+          // 快速檢查是否能吃子
+          board[r][c] = ME;
+          var testCaps = checkCaptures(r, c, ME);
+          board[r][c] = EMPTY;
+          if(testCaps.length > 0) isGlobalCrucial = true;
+        }
+
+        if(!isLocal && !isGlobalCrucial) continue;
+
+        var oppSim = simulateMove(r, c, ME);
+        var oppThreat = 0;
+
+        // 玩家提吃 AI
+        if(oppSim.captured.length > 0){
+          oppThreat += oppSim.captured.length * 600;
+        }
+
+        // 玩家讓 AI 某群組陷入 1 氣叫吃
+        for(var d=0; d<4; d++){
+          var nr = r + dirs[d][0], nc = c + dirs[d][1];
+          if(inb(nr, nc) && board[nr][nc] === AI){
+            var ag = getGroup(nr, nc, {});
+            if(ag.liberties === 1) oppThreat += 320;
+          }
+        }
+
+        // 玩家切斷 AI
+        if(isCutPoint(r, c, ME)) oppThreat += 200;
+
+        // 玩家逃脫自身瀕死群組
+        var oppG = getGroup(r, c, {});
+        if(oppG.liberties >= 2){
+          grandMeDanger.forEach(function(dmg){
+            if(dmg.libertySet[r+','+c]) oppThreat += 260;
+          });
+        }
+
+        if(oppThreat > maxThreat){
+          maxThreat = oppThreat;
+        }
+
+        oppSim.revert();
+        oppTested++;
+        if(oppTested >= 12) break; // 限制單點前瞻深度保證流暢效能
+      }
+      if(oppTested >= 12) break;
+    }
+
+    sim.revert();
+
+    // 扣除反擊風險後的淨評分
+    var netScore = cand.phase1Score - (maxThreat * 0.95);
+    cand.netScore = netScore;
+
+    if(netScore > bestNetScore){
+      bestNetScore = netScore;
+      bestGrandCandidate = cand;
+    }
+  });
+
+  return bestGrandCandidate || topCandidates[0] || legalMoves[0];
 }
 
 /* ================= Pass 功能 ================= */
