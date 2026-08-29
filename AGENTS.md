@@ -28,4 +28,4 @@
 
 - **日期**：2026-08-29
 - **更新者**：opencode @ DESKTOP-6ELKIRH
-- **Git push 狀態**：待推
+- **Git push 狀態**：✅ 已推（commit 4361d0e）
