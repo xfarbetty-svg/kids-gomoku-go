@@ -1,4 +1,4 @@
-const CACHE = 'kids-games-v13';
+const CACHE = 'kids-games-v14';
 const FILES = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const FILES = [
   './memory.html',
   './puzzle.html',
   './gomoku.html',
+  './sticky-gomoku-new.html',
   './manifest.json',
   './common.css',
   './common.js',
