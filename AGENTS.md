@@ -7,7 +7,8 @@
   - 🧲 真實 SVG Gooey Metaball 果凍融合成型（同色相鄰自動流動黏合為大果凍）
   - 🧠 3 段 AI 棋力切換（🐣 初級／🌸 中級／👑 大師）
   - 🎓 AI 星光教練智慧解說系統（救命逃氣、封氣提子、果凍合體、擴大領地推薦與標記）
-  - 📐 7x7 / 9x9 / 13x13 / 19x19 四規格與精準星位配置、自適應縮放 fitScale
+  - 📐 7x7 / 9x9 / 13x13 / 19x19 四規格與精準星位配置、雙向動態縮放 fitScale
+  - 📱 手機版面極致緊湊化、Sticky 吸底控制列與 Pass 放棄下一手雙入口常駐可見
   - 萌系眨眼與 1 氣瀕死顫抖表情、禁自殺反彈、彩色地盤高亮、提子粒子大爆破與 Web Audio 果凍音效庫
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
@@ -18,10 +19,10 @@
 - `common.js`：魔王系統核心（STAGES、defeated／unlocked、isUnlocked()／isBossDefeated()、通關自動解鎖、舊存檔自動補解鎖）
 - `index.html`：首頁卡片顯示魔王資訊（👿 魔王＋HP／✅ 已討伐）、未解鎖關卡顯示 🔒 鎖定
 - `rhythm.html`／`memory.html`／`puzzle.html`／`gomoku.html`：各關魔王血量與討伐邏輯
-- `sw.js`：版本更新（v15）
+- `sw.js`：版本更新（v16）
 
 **黏黏圍棋升級：**
-- `sticky-gomoku-new.html`：Gooey 果凍融合、3段 AI 棋力、AI 教練解說、7x7/9x9/13x13/19x19 規格、圍地彩色高亮、技能與粒子音效系統
+- `sticky-gomoku-new.html`：Gooey 果凍融合、3段 AI 棋力、AI 教練解說、7x7/9x9/13x13/19x19 規格、圍地彩色高亮、Pass 雙入口與 Sticky 吸底控制列
 
 ## ⚠️ 待完成事項
 
@@ -32,4 +33,5 @@
 
 - **日期**：2026-08-29
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **Git push 狀態**：✅ 已推（commit 4b1a4af）
+- **內容**：黏黏圍棋手機版面緊湊化、Pass 雙入口、吸底控制列、fitScale 寬高自適應與 sw.js v16
+- **Git push 狀態**：已提交並推送到 origin/main
