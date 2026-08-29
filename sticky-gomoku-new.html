@@ -16,10 +16,10 @@
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   
   :root {
-    --pink-jelly: #ff4d8d;
+    --pink-jelly: #ff3377;
     --pink-light: #ff85b2;
     --pink-soft: #ffe4ef;
-    --purple-jelly: #8c52ff;
+    --purple-jelly: #7c4dff;
     --purple-light: #b388ff;
     --purple-soft: #ede7f6;
     --accent-gold: #ffbe3b;
@@ -27,7 +27,7 @@
   }
 
   body {
-    font-family:"Segoe UI", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    font-family: "Segoe UI", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
     background: var(--bg-gradient);
     background-attachment: fixed;
     min-height: 100vh;
@@ -35,80 +35,177 @@
     overflow-x: hidden;
     text-align: center;
     color: #4a2040;
-    padding: 10px 8px 30px;
+    padding: 8px 6px 24px;
     user-select: none;
   }
 
-  button { font-family:inherit; }
-  .hidden { display:none !important; }
+  button { font-family: inherit; }
+  .hidden { display: none !important; }
 
-  /* 頂部導航與標題 */
+  /* 頂部導航列 */
   .header-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 480px;
+    max-width: 520px;
     margin: 0 auto 6px;
     padding: 0 4px;
+    gap: 6px;
+    flex-wrap: wrap;
   }
   .home-btn {
-    font-size: 20px;
+    font-size: 18px;
     text-decoration: none;
-    background: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.9);
     border: 2px solid #ff9ec6;
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(255,107,157,0.3);
+    box-shadow: 0 4px 10px rgba(255,107,157,0.25);
     transition: transform 0.15s;
+    flex-shrink: 0;
   }
   .home-btn:active { transform: scale(0.9); }
 
-  /* 規格切換膠囊 */
-  .size-switch {
+  /* 規格切換膠囊 (7x7 / 9x9 / 13x13 / 19x19) */
+  .switch-group {
     display: inline-flex;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.8);
     border: 2px solid #ff9ec6;
     border-radius: 999px;
     padding: 2px;
-    box-shadow: 0 4px 10px rgba(255,107,157,0.2);
+    box-shadow: 0 3px 8px rgba(255,107,157,0.2);
+    gap: 1px;
   }
-  .size-opt {
+  .switch-opt {
     border: none;
     background: transparent;
-    padding: 4px 12px;
+    padding: 3px 8px;
     border-radius: 999px;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 800;
-    color: #ff5596;
+    color: #b33971;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
   }
-  .size-opt.active {
+  .switch-opt.active {
     background: linear-gradient(135deg, #ff6b9d, #ff3377);
     color: #fff;
-    box-shadow: 0 2px 8px rgba(255,51,119,0.4);
-    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(255,51,119,0.4);
+    transform: scale(1.04);
   }
 
-  .title-wrap { margin: 2px 0 6px; }
+  /* 難度切換膠囊 */
+  .diff-switch {
+    display: inline-flex;
+    background: rgba(255,255,255,0.8);
+    border: 2px solid #b388ff;
+    border-radius: 999px;
+    padding: 2px;
+    box-shadow: 0 3px 8px rgba(124,77,255,0.2);
+    gap: 1px;
+  }
+  .diff-opt {
+    border: none;
+    background: transparent;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #651fff;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+  }
+  .diff-opt.active {
+    background: linear-gradient(135deg, #9d65ff, #7c4dff);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(124,77,255,0.4);
+    transform: scale(1.04);
+  }
+
+  .title-wrap { margin: 2px 0 4px; }
   .main-title {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 900;
     color: #ff3377;
-    text-shadow: 0 2px 0 #fff, 0 0 16px rgba(255,51,119,0.4);
+    text-shadow: 0 2px 0 #fff, 0 0 16px rgba(255,51,119,0.35);
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
   }
   .subtitle {
-    font-size: 12px;
-    color: #a04975;
+    font-size: 11px;
+    color: #9c4571;
     font-weight: 700;
+  }
+
+  /* 🎓 AI 教練智慧解說氣泡列 */
+  .coach-box {
+    max-width: 480px;
+    margin: 4px auto 6px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,240,248,0.95));
+    border: 2px solid #ffbe3b;
+    border-radius: 18px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 14px rgba(255,190,59,0.25);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .coach-box:active { transform: scale(0.98); }
+  .coach-avatar {
+    font-size: 26px;
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #ffeaa7, #ffbe3b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(255,190,59,0.4);
+    flex-shrink: 0;
+    animation: avatarFloat 2.4s ease-in-out infinite alternate;
+  }
+  @keyframes avatarFloat {
+    from { transform: translateY(-2px); }
+    to { transform: translateY(2px); }
+  }
+  .coach-content { flex: 1; }
+  .coach-header {
+    font-size: 11px;
+    font-weight: 900;
+    color: #d35400;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .coach-msg {
+    font-size: 12px;
+    font-weight: 700;
+    color: #4a2040;
+    line-height: 1.35;
     margin-top: 1px;
+  }
+  .coach-hint-btn {
+    border: none;
+    background: linear-gradient(135deg, #ffc048, #ff5722);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 5px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(255,87,34,0.3);
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   /* 星光比分板 */
@@ -116,18 +213,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
-    max-width: 440px;
-    margin: 4px auto 8px;
+    gap: 8px;
+    max-width: 480px;
+    margin: 4px auto 6px;
   }
   .score-card {
     flex: 1;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8px);
     border: 2px solid rgba(255, 255, 255, 0.9);
-    border-radius: 16px;
-    padding: 6px 10px;
-    box-shadow: 0 6px 16px rgba(255, 107, 157, 0.15);
+    border-radius: 14px;
+    padding: 4px 8px;
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.12);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -135,11 +232,11 @@
   .score-card.player { border-color: #ff9ec6; }
   .score-card.ai { border-color: #c4a1ff; }
   .score-info { text-align: left; }
-  .score-name { font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+  .score-name { font-size: 11px; font-weight: 900; display: flex; align-items: center; gap: 3px; }
   .player .score-name { color: #ff3377; }
   .ai .score-name { color: #7c4dff; }
-  .score-detail { font-size: 11px; font-weight: 700; color: #885c76; margin-top: 1px; }
-  .score-num { font-size: 22px; font-weight: 900; }
+  .score-detail { font-size: 10px; font-weight: 700; color: #885c76; }
+  .score-num { font-size: 20px; font-weight: 900; }
   .player .score-num { color: #ff2a6d; }
   .ai .score-num { color: #651fff; }
 
@@ -148,59 +245,57 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.85);
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.9);
     border: 2px solid #ff9ec6;
     border-radius: 999px;
-    padding: 6px 16px;
-    font-size: 13px;
+    padding: 4px 14px;
+    font-size: 12px;
     font-weight: 800;
     color: #5d2847;
-    margin: 0 auto 6px;
-    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.15);
-    max-width: 94vw;
-    min-height: 34px;
+    margin: 0 auto 5px;
+    box-shadow: 0 3px 10px rgba(255, 107, 157, 0.12);
+    max-width: 96vw;
+    min-height: 30px;
     transition: all 0.3s;
   }
   .status-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     display: inline-block;
-    transition: all 0.3s;
   }
-  .status-dot.me { background: #ff3377; box-shadow: 0 0 10px #ff3377; animation: dotBlink 1.2s infinite; }
-  .status-dot.ai { background: #7c4dff; box-shadow: 0 0 10px #7c4dff; animation: dotBlink 1.2s infinite; }
-  @keyframes dotBlink { 0%,100%{transform:scale(1);} 50%{transform:scale(1.3);} }
+  .status-dot.me { background: #ff3377; box-shadow: 0 0 8px #ff3377; animation: dotBlink 1.2s infinite; }
+  .status-dot.ai { background: #7c4dff; box-shadow: 0 0 8px #7c4dff; animation: dotBlink 1.2s infinite; }
+  @keyframes dotBlink { 0%,100%{transform:scale(1);} 50%{transform:scale(1.35);} }
 
   /* 能量與技能列 */
   .skill-panel {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
-    max-width: 440px;
-    margin: 0 auto 8px;
+    max-width: 480px;
+    margin: 0 auto 6px;
   }
   .energy-gauge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.85);
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.9);
     border: 2px solid #ffbe3b;
     border-radius: 999px;
-    padding: 4px 12px;
-    box-shadow: 0 4px 10px rgba(255, 190, 59, 0.25);
+    padding: 3px 10px;
+    box-shadow: 0 3px 8px rgba(255, 190, 59, 0.2);
   }
-  .energy-icon { font-size: 14px; }
+  .energy-icon { font-size: 13px; }
   .energy-bar-wrap {
-    width: 50px;
-    height: 10px;
+    width: 44px;
+    height: 8px;
     background: #ffeaa7;
     border-radius: 999px;
     overflow: hidden;
-    position: relative;
   }
   .energy-bar-fill {
     height: 100%;
@@ -209,47 +304,38 @@
     border-radius: 999px;
     transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  .energy-text { font-size: 12px; font-weight: 900; color: #d35400; min-width: 24px; text-align: right; }
+  .energy-text { font-size: 11px; font-weight: 900; color: #d35400; min-width: 22px; text-align: right; }
 
   .skill-btn {
     border: none;
     border-radius: 999px;
     font-weight: 800;
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 11px;
+    padding: 4px 10px;
     color: #fff;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     transition: all 0.15s;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15), 0 3px 8px rgba(0,0,0,0.1);
   }
-  .skill-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
-  .skill-btn:disabled {
-    opacity: 0.45;
-    filter: grayscale(0.8);
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
+  .skill-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+  .skill-btn:disabled { opacity: 0.45; filter: grayscale(0.8); cursor: not-allowed; transform: none; box-shadow: none; }
   .skill-btn.fire { background: linear-gradient(135deg, #ff7675, #d63031); }
   .skill-btn.seal { background: linear-gradient(135deg, #74b9ff, #0984e3); }
-  .skill-btn.active {
-    outline: 3px solid #ffbe3b;
-    animation: skillActivePulse 0.8s infinite alternate;
-  }
+  .skill-btn.active { outline: 3px solid #ffbe3b; animation: skillActivePulse 0.8s infinite alternate; }
   @keyframes skillActivePulse {
     from { transform: scale(1.02); }
-    to { transform: scale(1.08); box-shadow: 0 0 14px #ffbe3b; }
+    to { transform: scale(1.08); box-shadow: 0 0 12px #ffbe3b; }
   }
 
   .skill-hint-msg {
     font-size: 11px;
     font-weight: 800;
     color: #c0392b;
-    min-height: 16px;
-    margin-bottom: 4px;
+    min-height: 15px;
+    margin-bottom: 2px;
   }
 
   /* 棋盤整體容器 */
@@ -259,7 +345,7 @@
     justify-content: center;
     margin: 0 auto;
     width: 100%;
-    max-width: 440px;
+    max-width: 480px;
     touch-action: none;
   }
   .board-scaler {
@@ -273,14 +359,14 @@
     position: relative;
     background: radial-gradient(circle at 50% 50%, #ffffff 0%, #fff2f8 60%, #ffdcec 100%);
     border: 4px solid #ff77a9;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(255, 77, 141, 0.25), 0 0 0 4px rgba(255, 255, 255, 0.8), inset 0 2px 6px rgba(255,255,255,0.8);
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(255, 77, 141, 0.25), 0 0 0 4px rgba(255, 255, 255, 0.8), inset 0 2px 6px rgba(255,255,255,0.8);
     padding: 6px;
     overflow: hidden;
   }
 
-  /* SVG 果凍黏著管道層 */
-  #jellyLinksLayer {
+  /* 🧲 SVG 果凍融合成型層 (Gooey Metaball Layer) */
+  #jellySvgLayer {
     position: absolute;
     inset: 6px;
     pointer-events: none;
@@ -292,7 +378,7 @@
     position: relative;
     display: grid;
     gap: 0;
-    z-index: 3;
+    z-index: 4;
   }
 
   /* 棋格 */
@@ -310,7 +396,7 @@
     left: 0;
     right: 0;
     top: 50%;
-    height: 1.5px;
+    height: 1.2px;
     background: rgba(255, 119, 169, 0.35);
     transform: translateY(-50%);
     pointer-events: none;
@@ -321,19 +407,14 @@
     top: 0;
     bottom: 0;
     left: 50%;
-    width: 1.5px;
+    width: 1.2px;
     background: rgba(255, 119, 169, 0.35);
     transform: translateX(-50%);
     pointer-events: none;
   }
   /* 星位小圓點 */
-  .grid-cell.star-point::before {
-    background: rgba(255, 119, 169, 0.45);
-  }
   .star-dot {
     position: absolute;
-    width: 6px;
-    height: 6px;
     background: #ff5596;
     border-radius: 50%;
     pointer-events: none;
@@ -341,39 +422,18 @@
     opacity: 0.75;
   }
 
-  /* 果凍棋子本體 (Jelly Stone) */
-  .jelly-stone {
+  /* 棋子頂層覆蓋物容器 (高光、表情、氣數徽章) */
+  .stone-overlay {
     position: absolute;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 4;
-    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 -3px 6px rgba(0,0,0,0.18), inset 0 3px 6px rgba(255,255,255,0.7);
-    animation: jellyBreathe 3.2s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 5;
   }
 
-  /* 玩家果凍 (蜜桃粉星光) */
-  .jelly-stone.me {
-    background: radial-gradient(circle at 35% 28%, #ffffff 0%, #ff8fb5 25%, #ff3b81 70%, #d81b60 100%);
-    border: 2px solid rgba(255, 255, 255, 0.9);
-  }
-  /* AI 果凍 (藍莓紫霓虹) */
-  .jelly-stone.ai {
-    background: radial-gradient(circle at 35% 28%, #ffffff 0%, #c499ff 25%, #7c4dff 70%, #512da8 100%);
-    border: 2px solid rgba(255, 255, 255, 0.9);
-  }
-
-  /* 水晶封印格 */
-  .jelly-stone.sealed {
-    background: radial-gradient(circle at 35% 28%, #ffffff 0%, #a0c4ff 30%, #4a90e2 75%, #1d4e89 100%);
-    border: 2px solid #fff;
-    box-shadow: 0 0 12px rgba(74,144,226,0.6);
-    animation: none;
-  }
-
-  /* 頂部高光月牙 */
+  /* 頂部月牙高光 (Shimmer Highlight) */
   .jelly-highlight {
     position: absolute;
     top: 14%;
@@ -381,22 +441,23 @@
     width: 42%;
     height: 25%;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.85);
     transform: rotate(-30deg);
     pointer-events: none;
   }
 
-  /* 萌系表情層 */
+  /* 萌系表情 (Jelly Face) */
   .jelly-face {
     position: relative;
-    font-size: 13px;
     line-height: 1;
-    z-index: 5;
+    z-index: 6;
     pointer-events: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+    color: #ffffff;
+    font-weight: 900;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
   }
   .jelly-face.blink {
     animation: faceBlink 3.8s infinite;
@@ -406,62 +467,61 @@
     96% { transform: scaleY(0.1); }
   }
 
-  /* 瀕死 (1 氣) 叫吃警報狀態 */
-  .jelly-stone.danger {
-    animation: jellyJitter 0.35s infinite, dangerPulse 0.8s infinite alternate !important;
-    box-shadow: 0 0 16px #ff0055, 0 0 28px rgba(255, 0, 85, 0.6) !important;
+  /* 瀕死 (1 氣) 叫吃警報抖動 */
+  .danger-shake {
+    animation: dangerJitter 0.32s infinite, dangerGlow 0.8s infinite alternate !important;
   }
-  @keyframes jellyJitter {
+  @keyframes dangerJitter {
     0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(-1.5px, 1px) rotate(-2deg); }
-    50% { transform: translate(1.5px, -1px) rotate(2deg); }
-    75% { transform: translate(-1px, -1.5px) rotate(-1deg); }
+    25% { transform: translate(-1.5px, 1px) rotate(-3deg); }
+    50% { transform: translate(1.5px, -1px) rotate(3deg); }
+    75% { transform: translate(-1px, -1.5px) rotate(-2deg); }
     100% { transform: translate(0, 0) rotate(0deg); }
   }
-  @keyframes dangerPulse {
-    from { filter: drop-shadow(0 0 4px #ff0055); }
-    to { filter: drop-shadow(0 0 12px #ff0055); }
+  @keyframes dangerGlow {
+    from { filter: drop-shadow(0 0 3px #ff0055); }
+    to { filter: drop-shadow(0 0 10px #ff0055); }
   }
 
   /* 氣數徽章 */
   .liberty-badge {
     position: absolute;
-    right: -4px;
-    bottom: -4px;
-    font-size: 9px;
+    right: -3px;
+    bottom: -3px;
+    font-size: 8.5px;
     font-weight: 900;
     color: #fff;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.7);
     border: 1.5px solid #fff;
     border-radius: 999px;
-    padding: 1px 4px;
-    min-width: 16px;
-    height: 16px;
+    padding: 1px 3px;
+    min-width: 14px;
+    height: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 6;
+    z-index: 7;
     pointer-events: none;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
   .liberty-badge.danger {
     background: #ff0055;
     border-color: #ffbe3b;
-    animation: badgePop 0.6s infinite alternate;
+    animation: badgePop 0.5s infinite alternate;
   }
   @keyframes badgePop {
     from { transform: scale(1); }
-    to { transform: scale(1.25); }
+    to { transform: scale(1.3); }
   }
 
-  /* 落子預覽虛影 (Ghost Preview) */
+  /* 落子預覽虛影 */
   .ghost-preview {
     position: absolute;
     border-radius: 50%;
     border: 2px dashed #ff3377;
     background: rgba(255, 107, 157, 0.35);
     pointer-events: none;
-    z-index: 5;
+    z-index: 8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -473,7 +533,22 @@
   }
   @keyframes ghostPulse {
     from { transform: scale(0.88); opacity: 0.65; }
-    to { transform: scale(1.02); opacity: 0.95; }
+    to { transform: scale(1.04); opacity: 0.95; }
+  }
+
+  /* 🎓 AI 教練推薦落子高亮光環 */
+  .hint-marker {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid #ffbe3b;
+    box-shadow: 0 0 16px #ffbe3b, inset 0 0 8px #ffbe3b;
+    pointer-events: none;
+    z-index: 9;
+    animation: hintRing 1s ease-in-out infinite alternate;
+  }
+  @keyframes hintRing {
+    0% { transform: scale(0.8); opacity: 0.7; }
+    100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 24px #ffbe3b; }
   }
 
   /* 禁自殺果凍晃動拒絕動畫 */
@@ -486,31 +561,16 @@
     40%, 80% { transform: translate3d(6px, 0, 0) rotate(4deg); }
   }
 
-  /* 落子與提子動畫 */
-  .jelly-stone.place-anim {
-    animation: jellyPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  }
-  @keyframes jellyPopIn {
-    0% { transform: scale(0.2); opacity: 0.2; }
-    70% { transform: scale(1.15); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  @keyframes jellyBreathe {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.03); }
-  }
-
   /* 領地結算彩色標記 */
   .territory-mark {
     position: absolute;
-    font-size: 14px;
-    z-index: 2;
+    font-size: 13px;
+    z-index: 3;
     pointer-events: none;
     animation: terrFloat 1.8s ease-in-out infinite alternate;
   }
-  .territory-mark.me { color: #ff2a6d; filter: drop-shadow(0 0 6px #ff85b2); }
-  .territory-mark.ai { color: #7c4dff; filter: drop-shadow(0 0 6px #b388ff); }
+  .territory-mark.me { color: #ff2a6d; filter: drop-shadow(0 0 5px #ff85b2); }
+  .territory-mark.ai { color: #7c4dff; filter: drop-shadow(0 0 5px #b388ff); }
   @keyframes terrFloat {
     from { transform: translateY(-1px) scale(0.9); }
     to { transform: translateY(2px) scale(1.1); }
@@ -519,7 +579,7 @@
   /* 浮空分數 Bounce-up (💥 提子 +N!) */
   .floating-score {
     position: absolute;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 900;
     color: #ffbe3b;
     text-shadow: 0 2px 0 #d35400, 0 0 10px rgba(255,190,59,0.8);
@@ -531,8 +591,8 @@
   @keyframes floatScoreUp {
     0% { transform: translate(-50%, 0) scale(0.6); opacity: 0; }
     30% { transform: translate(-50%, -20px) scale(1.2); opacity: 1; }
-    80% { transform: translate(-50%, -45px) scale(1); opacity: 1; }
-    100% { transform: translate(-50%, -65px) scale(0.8); opacity: 0; }
+    80% { transform: translate(-50%, -42px) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -60px) scale(0.8); opacity: 0; }
   }
 
   /* 粒子 Canvas */
@@ -549,7 +609,7 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 8px;
     flex-wrap: wrap;
   }
   .ctrl-btn {
@@ -557,19 +617,19 @@
     border-radius: 999px;
     font-weight: 800;
     cursor: pointer;
-    padding: 8px 18px;
-    font-size: 14px;
+    padding: 7px 15px;
+    font-size: 13px;
     color: #fff;
     transition: all 0.15s;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15), 0 3px 8px rgba(0,0,0,0.1);
   }
-  .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+  .ctrl-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
   .ctrl-btn.pink { background: linear-gradient(135deg, #ff77a9, #ff3377); }
   .ctrl-btn.purple { background: linear-gradient(135deg, #b388ff, #7c4dff); }
   .ctrl-btn.yellow { background: linear-gradient(135deg, #ffd152, #ff9f1a); color: #5a3200; }
   .ctrl-btn.green { background: linear-gradient(135deg, #55efc4, #00b894); color: #004d40; }
 
-  /* 結算彈窗 */
+  /* 結算與教學彈窗 */
   .modal-mask {
     position: fixed;
     inset: 0;
@@ -584,8 +644,8 @@
   .modal-card {
     background: linear-gradient(180deg, #ffffff 0%, #fff0f7 60%, #ffdcec 100%);
     border: 4px solid #ff77a9;
-    border-radius: 28px;
-    padding: 24px 20px;
+    border-radius: 26px;
+    padding: 22px 18px;
     max-width: 360px;
     width: 100%;
     box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(255,119,169,0.5);
@@ -596,23 +656,23 @@
     0% { transform: scale(0.6); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
   }
-  .modal-title { font-size: 24px; font-weight: 900; color: #ff3377; margin-bottom: 8px; }
+  .modal-title { font-size: 22px; font-weight: 900; color: #ff3377; margin-bottom: 6px; }
   .modal-score-box {
     background: rgba(255, 255, 255, 0.85);
     border: 2px solid #ff9ec6;
-    border-radius: 18px;
-    padding: 12px;
-    margin: 12px 0 18px;
+    border-radius: 16px;
+    padding: 10px;
+    margin: 10px 0 16px;
   }
   .modal-score-row {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
   }
   .modal-detail { font-size: 12px; color: #885c76; margin-top: 6px; font-weight: 700; line-height: 1.5; }
-  .modal-actions { display: flex; gap: 10px; justify-content: center; }
+  .modal-actions { display: flex; gap: 8px; justify-content: center; }
 
   /* 勝利紙花 */
   .confetti-piece {
@@ -628,18 +688,39 @@
 </head>
 <body>
 
-<!-- 頂部導航與規格切換 -->
+<!-- 頂部導航與切換列 -->
 <div class="header-bar">
   <a class="home-btn" href="index.html" title="回首頁">🏠</a>
-  <div class="size-switch">
-    <button class="size-opt" id="opt7" onclick="switchSize(7)">7x7 幼童版</button>
-    <button class="size-opt active" id="opt9" onclick="switchSize(9)">9x9 標準版</button>
+  
+  <!-- 規格切換 (7x7 / 9x9 / 13x13 / 19x19) -->
+  <div class="switch-group">
+    <button class="switch-opt" id="opt7" onclick="switchSize(7)">7x7</button>
+    <button class="switch-opt active" id="opt9" onclick="switchSize(9)">9x9</button>
+    <button class="switch-opt" id="opt13" onclick="switchSize(13)">13x13</button>
+    <button class="switch-opt" id="opt19" onclick="switchSize(19)">19x19</button>
+  </div>
+
+  <!-- 難度切換 (🐣 初級 / 🌸 中級 / 👑 大師) -->
+  <div class="diff-switch">
+    <button class="diff-opt" id="diffEasy" onclick="switchDiff('easy')">🐣 初級</button>
+    <button class="diff-opt active" id="diffMed" onclick="switchDiff('medium')">🌸 中級</button>
+    <button class="diff-opt" id="diffHard" onclick="switchDiff('hard')">👑 大師</button>
   </div>
 </div>
 
 <div class="title-wrap">
   <div class="main-title">💧 黏黏圍棋 ⭐vs👾</div>
-  <div class="subtitle">同色果凍會黏在一起合體！把對手果凍包圍吃光光～</div>
+  <div class="subtitle">🧲 Gooey 果凍融合成型 ‧ 🎓 AI 星光導師解說</div>
+</div>
+
+<!-- 🎓 AI 教練智慧解說氣泡卡片 -->
+<div class="coach-box" id="coachCard" onclick="giveCoachHint()">
+  <div class="coach-avatar" id="coachAvatar">🦊</div>
+  <div class="coach-content">
+    <div class="coach-header">🎓 星光教練解說 <span id="coachTacticsBadge">✨ 戰術指引</span></div>
+    <div class="coach-msg" id="coachMsg">「你好呀！我是星光教練🦊！點我或右邊按鈕，我會幫你分析最好的下法喔！」</div>
+  </div>
+  <button class="coach-hint-btn" onclick="event.stopPropagation(); giveCoachHint();">💡 AI 提示</button>
 </div>
 
 <!-- 星光比分板 -->
@@ -684,9 +765,9 @@
 <div class="board-outer" id="boardOuter">
   <div class="board-scaler" id="boardScaler">
     <div id="boardContainer">
-      <!-- SVG 果凍黏著管道層 -->
-      <svg id="jellyLinksLayer"></svg>
-      <!-- 棋格網格 -->
+      <!-- 🧲 SVG 果凍融合成型層 -->
+      <svg id="jellySvgLayer"></svg>
+      <!-- 棋格網格 (DOM 點擊與表情覆蓋) -->
       <div id="boardGrid"></div>
       <!-- 粒子特效 Canvas -->
       <canvas id="fxCanvas"></canvas>
@@ -697,7 +778,7 @@
 <!-- 控制按鈕列 -->
 <div class="ctrl-bar">
   <button class="ctrl-btn purple" id="passBtn" onclick="userPass()">⏸️ 讓一手 (Pass)</button>
-  <button class="ctrl-btn yellow" id="hintBtn" onclick="giveHint()">💡 提示</button>
+  <button class="ctrl-btn yellow" onclick="giveCoachHint()">💡 教練提示</button>
   <button class="ctrl-btn pink" id="restartBtn" onclick="resetGame()">🔄 重來一局</button>
 </div>
 
@@ -721,7 +802,8 @@
 
 <script>
 /* ================= 全域變數與常數 ================= */
-var N = 9; // 棋盤大小 (7 或 9)
+var N = 9; // 棋盤大小 (7, 9, 13, 19)
+var difficulty = 'medium'; // 'easy', 'medium', 'hard'
 var EMPTY = 0, ME = 1, AI = 2;
 var board = [];
 var turn = ME;
@@ -735,6 +817,7 @@ var skillMode = ''; // 'fire', 'seal' 或 ''
 var sealedCells = {}; // 'r,c' -> true
 var lastMove = null; // {r, c, who}
 var ghostPreviewPos = null; // {r, c, valid, liberties, captures}
+var currentHintPos = null;
 
 /* 粒子系統變數 */
 var particles = [];
@@ -772,7 +855,7 @@ function playTone(freq, dur, type, vol, slideTo){
 }
 
 /* 豐富果凍音效庫 */
-function sPlaceJelly(){ playTone(450, 0.12, 'triangle', 0.28, 720); }
+function sPlaceJelly(){ playTone(460, 0.12, 'triangle', 0.28, 760); }
 function sMergeJelly(){ playTone(580, 0.18, 'sine', 0.25, 920); }
 function sDangerAlert(){
   playTone(850, 0.08, 'sawtooth', 0.2, 400);
@@ -783,12 +866,16 @@ function sRejectBoing(){
   setTimeout(function(){ playTone(160, 0.18, 'sine', 0.25, 80); }, 100);
 }
 function sCaptureBurst(){
-  playTone(300, 0.25, 'sawtooth', 0.35, 950);
-  setTimeout(function(){ playTone(980, 0.2, 'triangle', 0.3, 1400); }, 80);
-  setTimeout(function(){ playTone(1200, 0.25, 'sine', 0.25, 600); }, 150);
+  playTone(320, 0.22, 'sawtooth', 0.35, 980);
+  setTimeout(function(){ playTone(980, 0.18, 'triangle', 0.3, 1400); }, 70);
+  setTimeout(function(){ playTone(1200, 0.22, 'sine', 0.25, 600); }, 140);
 }
 function sSkillFire(){ playTone(280, 0.3, 'sawtooth', 0.4, 750); }
 function sSkillSeal(){ playTone(650, 0.2, 'sine', 0.3, 300); }
+function sCoachHint(){
+  playTone(523, 0.1, 'sine', 0.3, 784);
+  setTimeout(function(){ playTone(784, 0.15, 'triangle', 0.35, 1046); }, 90);
+}
 function sWinSong(){
   var melody = [523, 659, 784, 880, 1047];
   melody.forEach(function(f, i){
@@ -817,17 +904,57 @@ function inb(r, c){ return r >= 0 && r < N && c >= 0 && c < N; }
 function switchSize(newSize){
   if(N === newSize) return;
   N = newSize;
-  document.getElementById('opt7').classList.toggle('active', N === 7);
-  document.getElementById('opt9').classList.toggle('active', N === 9);
+  ['7','9','13','19'].forEach(function(sz){
+    var el = document.getElementById('opt' + sz);
+    if(el) el.classList.toggle('active', N === parseInt(sz));
+  });
   resetGame();
+}
+
+function switchDiff(newDiff){
+  difficulty = newDiff;
+  document.getElementById('diffEasy').classList.toggle('active', difficulty === 'easy');
+  document.getElementById('diffMed').classList.toggle('active', difficulty === 'medium');
+  document.getElementById('diffHard').classList.toggle('active', difficulty === 'hard');
+  var diffNames = { easy: '🐣 初級（休閒萌新）', medium: '🌸 中級（見招拆招）', hard: '👑 大師（魔王算力）' };
+  document.getElementById('statusText').textContent = '已切換為 ' + diffNames[difficulty] + '！';
+}
+
+function getCellSize(){
+  if(N === 7) return 46;
+  if(N === 9) return 38;
+  if(N === 13) return 26;
+  return 18; // 19x19
+}
+
+function getStarCoords(){
+  var starCoords = {};
+  if(N === 7){
+    starCoords['2,2']=true; starCoords['2,4']=true; starCoords['3,3']=true;
+    starCoords['4,2']=true; starCoords['4,4']=true;
+  } else if(N === 9){
+    starCoords['2,2']=true; starCoords['2,6']=true; starCoords['4,4']=true;
+    starCoords['6,2']=true; starCoords['6,6']=true;
+  } else if(N === 13){
+    starCoords['3,3']=true; starCoords['3,9']=true; starCoords['6,6']=true;
+    starCoords['9,3']=true; starCoords['9,9']=true;
+  } else if(N === 19){
+    var pts = [3, 9, 15];
+    for(var i=0; i<3; i++){
+      for(var j=0; j<3; j++){
+        starCoords[pts[i]+','+pts[j]] = true;
+      }
+    }
+  }
+  return starCoords;
 }
 
 function buildGridDOM(){
   var container = document.getElementById('boardContainer');
   var grid = document.getElementById('boardGrid');
-  var svg = document.getElementById('jellyLinksLayer');
+  var svg = document.getElementById('jellySvgLayer');
   
-  var cellSize = (N === 7) ? 44 : 36;
+  var cellSize = getCellSize();
   var totalWidth = cellSize * N;
   var totalHeight = cellSize * N;
   
@@ -842,20 +969,13 @@ function buildGridDOM(){
   
   grid.innerHTML = '';
   
-  // 計算星位點
-  var starCoords = {};
-  if(N === 9){
-    starCoords['2,2']=true; starCoords['2,6']=true; starCoords['4,4']=true;
-    starCoords['6,2']=true; starCoords['6,6']=true;
-  } else if(N === 7){
-    starCoords['2,2']=true; starCoords['2,4']=true; starCoords['3,3']=true;
-    starCoords['4,2']=true; starCoords['4,4']=true;
-  }
+  var starCoords = getStarCoords();
+  var starDotSize = Math.max(3, Math.floor(cellSize * 0.16));
 
   for(var r=0; r<N; r++){
     for(var c=0; c<N; c++){
       var cell = document.createElement('div');
-      cell.className = 'grid-cell' + (starCoords[r+','+c] ? ' star-point' : '');
+      cell.className = 'grid-cell';
       cell.style.width = cellSize + 'px';
       cell.style.height = cellSize + 'px';
       cell.dataset.r = r;
@@ -864,6 +984,8 @@ function buildGridDOM(){
       if(starCoords[r+','+c]){
         var dot = document.createElement('div');
         dot.className = 'star-dot';
+        dot.style.width = starDotSize + 'px';
+        dot.style.height = starDotSize + 'px';
         cell.appendChild(dot);
       }
 
@@ -896,9 +1018,9 @@ function buildGridDOM(){
 
 function fitScale(){
   var scaler = document.getElementById('boardScaler');
-  var cellSize = (N === 7) ? 44 : 36;
+  var cellSize = getCellSize();
   var boardTotal = cellSize * N + 16;
-  var availWidth = Math.min(window.innerWidth - 20, 480);
+  var availWidth = Math.min(window.innerWidth - 16, 480);
   var scale = Math.min(1, availWidth / boardTotal);
   scaler.style.transform = 'scale(' + scale + ')';
 }
@@ -986,7 +1108,7 @@ function isSuicideMove(r, c, who){
 /* 領地洪水填充計算 (Territory Count) */
 function calculateTerritory(){
   var tMe = 0, tAi = 0;
-  var territoryMap = {}; // 'r,c' -> ME or AI or 0
+  var territoryMap = {};
   var visited = {};
 
   for(var r=0; r<N; r++){
@@ -1027,86 +1149,140 @@ function calculateTerritory(){
   return { me: tMe, ai: tAi, map: territoryMap };
 }
 
-/* ================= 渲染果凍連通管道 (Jelly Links) ================= */
-function renderJellyLinks(groups){
-  var svg = document.getElementById('jellyLinksLayer');
+/* ================= 🧲 SVG 果凍融合成型 (Gooey Metaball Layer) ================= */
+function renderGooeySvg(groups){
+  var svg = document.getElementById('jellySvgLayer');
   svg.innerHTML = '';
   
-  var cellSize = (N === 7) ? 44 : 36;
-  var radius = cellSize * 0.38;
-  var pipeWidth = cellSize * 0.58;
+  var cellSize = getCellSize();
+  var radius = cellSize * 0.42;
+  var pipeWidth = cellSize * 0.65;
+  var blurVal = Math.max(3, cellSize * 0.14);
 
-  // 定義漸層濾鏡
+  // 定義 Gooey Metaball 濾鏡與漸層
   var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
   defs.innerHTML = 
-    '<linearGradient id="pinkJellyGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
-      '<stop offset="0%" stop-color="#ff85b2" />' +
-      '<stop offset="100%" stop-color="#ff3377" />' +
+    '<filter id="gooeyPink" x="-30%" y="-30%" width="160%" height="160%">' +
+      '<feGaussianBlur in="SourceGraphic" stdDeviation="' + blurVal + '" result="blur" />' +
+      '<feColorMatrix in="blur" mode="matrix" values="' +
+        '1 0 0 0 1   ' +
+        '0 0.2 0 0 0.1 ' +
+        '0 0 0.47 0 0.35 ' +
+        '0 0 0 22 -9" result="goo" />' +
+      '<feComposite in="SourceGraphic" in2="goo" operator="atop"/>' +
+    '</filter>' +
+    '<filter id="gooeyPurple" x="-30%" y="-30%" width="160%" height="160%">' +
+      '<feGaussianBlur in="SourceGraphic" stdDeviation="' + blurVal + '" result="blur" />' +
+      '<feColorMatrix in="blur" mode="matrix" values="' +
+        '0.48 0 0 0 0.4 ' +
+        '0 0.3 0 0 0.15 ' +
+        '0 0 1 0 0.95 ' +
+        '0 0 0 22 -9" result="goo" />' +
+      '<feComposite in="SourceGraphic" in2="goo" operator="atop"/>' +
+    '</filter>' +
+    '<linearGradient id="pinkGrad" x1="20%" y1="20%" x2="80%" y2="80%">' +
+      '<stop offset="0%" stop-color="#ff85b2"/>' +
+      '<stop offset="60%" stop-color="#ff3377"/>' +
+      '<stop offset="100%" stop-color="#d81b60"/>' +
     '</linearGradient>' +
-    '<linearGradient id="purpleJellyGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
-      '<stop offset="0%" stop-color="#c499ff" />' +
-      '<stop offset="100%" stop-color="#7c4dff" />' +
+    '<linearGradient id="purpleGrad" x1="20%" y1="20%" x2="80%" y2="80%">' +
+      '<stop offset="0%" stop-color="#c499ff"/>' +
+      '<stop offset="60%" stop-color="#7c4dff"/>' +
+      '<stop offset="100%" stop-color="#512da8"/>' +
     '</linearGradient>' +
-    '<filter id="jellyGlow" x="-20%" y="-20%" width="140%" height="140%">' +
-      '<feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.15)"/>' +
-    '</filter>';
+    '<linearGradient id="sealGrad" x1="20%" y1="20%" x2="80%" y2="80%">' +
+      '<stop offset="0%" stop-color="#a0c4ff"/>' +
+      '<stop offset="60%" stop-color="#4a90e2"/>' +
+      '<stop offset="100%" stop-color="#1d4e89"/>' +
+    '</linearGradient>';
   svg.appendChild(defs);
 
-  groups.forEach(function(g){
-    if(g.stones.length <= 1) return;
-    var grad = (g.owner === ME) ? 'url(#pinkJellyGrad)' : 'url(#purpleJellyGrad)';
+  // 建立玩家果凍與 AI 果凍群組容器 (套用 Gooey 濾鏡)
+  var playerG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  playerG.setAttribute('filter', 'url(#gooeyPink)');
+  playerG.setAttribute('fill', 'url(#pinkGrad)');
+
+  var aiG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  aiG.setAttribute('filter', 'url(#gooeyPurple)');
+  aiG.setAttribute('fill', 'url(#purpleGrad)');
+
+  var sealG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+  // 繪製封印冰晶格
+  for(var key in sealedCells){
+    if(!sealedCells[key]) continue;
+    var parts = key.split(',');
+    var sr = parseInt(parts[0]), sc = parseInt(parts[1]);
+    var cx = sc * cellSize + cellSize / 2;
+    var cy = sr * cellSize + cellSize / 2;
     
-    // 找出所有相鄰同組棋子對
+    var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', cx - radius * 0.9);
+    rect.setAttribute('y', cy - radius * 0.9);
+    rect.setAttribute('width', radius * 1.8);
+    rect.setAttribute('height', radius * 1.8);
+    rect.setAttribute('rx', radius * 0.4);
+    rect.setAttribute('fill', 'url(#sealGrad)');
+    rect.setAttribute('stroke', '#ffffff');
+    rect.setAttribute('stroke-width', '2');
+    sealG.appendChild(rect);
+  }
+
+  // 繪製各組果凍實體與黏著管道
+  groups.forEach(function(g){
+    var targetLayer = (g.owner === ME) ? playerG : aiG;
+    var color = (g.owner === ME) ? '#ff3377' : '#7c4dff';
+
+    // 1. 繪製每顆棋子圓形
+    g.stones.forEach(function(s){
+      var cx = s.c * cellSize + cellSize / 2;
+      var cy = s.r * cellSize + cellSize / 2;
+      var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', cx);
+      circle.setAttribute('cy', cy);
+      circle.setAttribute('r', radius);
+      targetLayer.appendChild(circle);
+    });
+
+    // 2. 繪製相鄰同色棋子之間的連通管道 (Gooey 融合)
     var stoneSet = {};
     g.stones.forEach(function(s){ stoneSet[s.r+','+s.c] = true; });
 
     g.stones.forEach(function(s){
-      var x1 = s.c * cellSize + cellSize / 2;
-      var y1 = s.r * cellSize + cellSize / 2;
-      
-      // 檢查向右與向下
+      var cx1 = s.c * cellSize + cellSize / 2;
+      var cy1 = s.r * cellSize + cellSize / 2;
       var neighbors = [{r: s.r, c: s.c + 1}, {r: s.r + 1, c: s.c}];
       neighbors.forEach(function(nb){
         if(stoneSet[nb.r+','+nb.c]){
-          var x2 = nb.c * cellSize + cellSize / 2;
-          var y2 = nb.r * cellSize + cellSize / 2;
-          
-          // 果凍管道本體
+          var cx2 = nb.c * cellSize + cellSize / 2;
+          var cy2 = nb.r * cellSize + cellSize / 2;
           var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          line.setAttribute('x1', x1);
-          line.setAttribute('y1', y1);
-          line.setAttribute('x2', x2);
-          line.setAttribute('y2', y2);
-          line.setAttribute('stroke', grad);
+          line.setAttribute('x1', cx1);
+          line.setAttribute('y1', cy1);
+          line.setAttribute('x2', cx2);
+          line.setAttribute('y2', cy2);
+          line.setAttribute('stroke', color);
           line.setAttribute('stroke-width', pipeWidth);
           line.setAttribute('stroke-linecap', 'round');
-          line.setAttribute('filter', 'url(#jellyGlow)');
-          svg.appendChild(line);
-
-          // 頂部細緻高光條
-          var hl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          hl.setAttribute('x1', x1);
-          hl.setAttribute('y1', y1 - 2);
-          hl.setAttribute('x2', x2);
-          hl.setAttribute('y2', y2 - 2);
-          hl.setAttribute('stroke', 'rgba(255,255,255,0.4)');
-          hl.setAttribute('stroke-width', pipeWidth * 0.35);
-          hl.setAttribute('stroke-linecap', 'round');
-          svg.appendChild(hl);
+          targetLayer.appendChild(line);
         }
       });
     });
   });
+
+  svg.appendChild(playerG);
+  svg.appendChild(aiG);
+  svg.appendChild(sealG);
 }
 
 /* ================= 棋盤主渲染 (Render Board) ================= */
 function render(){
   var grid = document.getElementById('boardGrid');
-  var cellSize = (N === 7) ? 44 : 36;
+  var cellSize = getCellSize();
   var stoneSize = cellSize * 0.84;
 
   var groups = findAllGroups();
-  renderJellyLinks(groups);
+  renderGooeySvg(groups);
 
   var groupMap = {};
   groups.forEach(function(g){
@@ -1128,57 +1304,69 @@ function render(){
         var g = groupMap[r+','+c];
         var isDanger = g && (g.liberties === 1);
         
-        var stone = document.createElement('div');
-        stone.className = 'jelly-stone ' + (who === ME ? 'me' : 'ai') + (isDanger ? ' danger' : '');
-        stone.style.width = stoneSize + 'px';
-        stone.style.height = stoneSize + 'px';
+        var overlay = document.createElement('div');
+        overlay.className = 'stone-overlay' + (isDanger ? ' danger-shake' : '');
+        overlay.style.width = stoneSize + 'px';
+        overlay.style.height = stoneSize + 'px';
 
-        // 高光層
-        var hl = document.createElement('div');
-        hl.className = 'jelly-highlight';
-        stone.appendChild(hl);
+        // 月牙高光層 (小盤面尺寸自動微縮)
+        if(cellSize >= 24){
+          var hl = document.createElement('div');
+          hl.className = 'jelly-highlight';
+          overlay.appendChild(hl);
+        }
 
         // 表情系統 (Jelly Face)
-        var face = document.createElement('div');
-        face.className = 'jelly-face blink';
-        if(isDanger){
-          face.textContent = (who === ME) ? '(>﹏<)' : '(⊙_⊙;)';
-          face.style.fontSize = '10px';
-          face.style.color = '#fff';
-        } else {
-          face.textContent = (who === ME) ? '◕‿◕' : '•̀ᴗ•́';
-          face.style.fontSize = '11px';
-          face.style.color = '#fff';
+        if(cellSize >= 22){
+          var face = document.createElement('div');
+          face.className = 'jelly-face blink';
+          var fontSize = Math.max(9, Math.floor(cellSize * 0.28));
+          face.style.fontSize = fontSize + 'px';
+
+          if(isDanger){
+            face.textContent = (who === ME) ? '(>﹏<)' : '(⊙_⊙;)';
+          } else {
+            face.textContent = (who === ME) ? '◕‿◕' : '•̀ᴗ•́';
+          }
+          overlay.appendChild(face);
         }
-        stone.appendChild(face);
 
         // 氣數徽章 (每個群組在首顆棋子或 1 氣時顯示)
-        if(g && (g.liberties <= 2 || g.stones[0].r === r && g.stones[0].c === c)){
+        if(g && (g.liberties <= 2 || (g.stones[0].r === r && g.stones[0].c === c))){
           var badge = document.createElement('div');
           badge.className = 'liberty-badge' + (isDanger ? ' danger' : '');
           badge.textContent = isDanger ? '⚠️1' : g.liberties;
-          stone.appendChild(badge);
+          if(cellSize <= 24){
+            badge.style.transform = 'scale(0.75)';
+          }
+          overlay.appendChild(badge);
         }
 
-        cellEl.appendChild(stone);
+        cellEl.appendChild(overlay);
       } else if(sealedCells[r+','+c]){
-        // 封印水晶格
-        var sealStone = document.createElement('div');
-        sealStone.className = 'jelly-stone sealed';
-        sealStone.style.width = stoneSize + 'px';
-        sealStone.style.height = stoneSize + 'px';
-        sealStone.textContent = '🔒';
-        sealStone.style.fontSize = '16px';
-        cellEl.appendChild(sealStone);
+        // 封印水晶文字
+        var sealMark = document.createElement('div');
+        sealMark.className = 'stone-overlay';
+        sealMark.style.width = stoneSize + 'px';
+        sealMark.style.height = stoneSize + 'px';
+        sealMark.textContent = '🔒';
+        sealMark.style.fontSize = Math.max(10, Math.floor(cellSize * 0.42)) + 'px';
+        cellEl.appendChild(sealMark);
       } else if(gameOver && terr.map[r+','+c]){
         // 遊戲結束時領地半透明標記
         var tWho = terr.map[r+','+c];
         var tMark = document.createElement('div');
         tMark.className = 'territory-mark ' + (tWho === ME ? 'me' : 'ai');
         tMark.textContent = (tWho === ME) ? '⭐' : '👾';
+        tMark.style.fontSize = Math.max(10, Math.floor(cellSize * 0.4)) + 'px';
         cellEl.appendChild(tMark);
       }
     }
+  }
+
+  // 恢復當前教練推薦標記
+  if(currentHintPos && !gameOver && turn === ME){
+    showHintMarker(currentHintPos.r, currentHintPos.c);
   }
 
   // 更新比分面板
@@ -1225,7 +1413,7 @@ function renderGhost(){
 
   var grid = document.getElementById('boardGrid');
   var cellEl = grid.children[ghostPreviewPos.r * N + ghostPreviewPos.c];
-  var cellSize = (N === 7) ? 44 : 36;
+  var cellSize = getCellSize();
   var ghostSize = cellSize * 0.82;
 
   var ghost = document.createElement('div');
@@ -1235,23 +1423,173 @@ function renderGhost(){
 
   if(!ghostPreviewPos.valid){
     ghost.textContent = '🚫';
-    ghost.style.fontSize = '14px';
+    ghost.style.fontSize = Math.max(10, Math.floor(cellSize * 0.35)) + 'px';
     document.getElementById('statusText').textContent = '🚫 這裡沒有氣，不能自殺喔！';
   } else if(ghostPreviewPos.captures > 0){
     ghost.textContent = '💥' + ghostPreviewPos.captures;
-    ghost.style.fontSize = '12px';
+    ghost.style.fontSize = Math.max(9, Math.floor(cellSize * 0.28)) + 'px';
     ghost.style.fontWeight = '900';
     ghost.style.color = '#fff';
     document.getElementById('statusText').textContent = '💥 下這裡可吃掉 ' + ghostPreviewPos.captures + ' 顆魔王果凍！';
   } else {
     ghost.textContent = ghostPreviewPos.liberties + '氣';
-    ghost.style.fontSize = '11px';
+    ghost.style.fontSize = Math.max(9, Math.floor(cellSize * 0.26)) + 'px';
     ghost.style.fontWeight = '900';
     ghost.style.color = '#ff3377';
     document.getElementById('statusText').textContent = '✨ 下在這裡，果凍群有 ' + ghostPreviewPos.liberties + ' 口氣～';
   }
 
   cellEl.appendChild(ghost);
+}
+
+/* ================= 🎓 AI 教練智慧解說系統 ================= */
+function analyzeTacticsForPlayer(){
+  var candidates = [];
+  var myGroups = [];
+  var oppGroups = [];
+  var visitedMe = {}, visitedAi = {};
+
+  for(var r=0; r<N; r++){
+    for(var c=0; c<N; c++){
+      if(board[r][c] === ME && !visitedMe[r+','+c]){
+        myGroups.push(getGroup(r, c, visitedMe));
+      } else if(board[r][c] === AI && !visitedAi[r+','+c]){
+        oppGroups.push(getGroup(r, c, visitedAi));
+      }
+    }
+  }
+
+  // 1. 檢查是否有我方果凍處於 1 氣瀕死狀態 (🛡️ 救命逃氣)
+  var dangerMyGroup = myGroups.find(function(g){ return g.liberties === 1; });
+  if(dangerMyGroup){
+    var escapeMove = Object.keys(dangerMyGroup.libertySet)[0];
+    if(escapeMove){
+      var parts = escapeMove.split(',');
+      var er = parseInt(parts[0]), ec = parseInt(parts[1]);
+      if(!isSuicideMove(er, ec, ME)){
+        return {
+          r: er, c: ec,
+          type: 'save',
+          badge: '🛡️ 救命逃氣',
+          msg: '我們的果凍只剩 1 氣快被吃掉啦！快下在 (' + (er+1) + ', ' + (ec+1) + ') 逃跑生氣！'
+        };
+      }
+    }
+  }
+
+  // 2. 檢查是否能封氣提子 (💥 封氣提子)
+  var bestCap = null, maxCap = 0;
+  for(var r=0; r<N; r++){
+    for(var c=0; c<N; c++){
+      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, ME)) continue;
+      board[r][c] = ME;
+      var caps = checkCaptures(r, c, ME);
+      board[r][c] = EMPTY;
+      if(caps.length > maxCap){
+        maxCap = caps.length;
+        bestCap = { r: r, c: c, caps: caps.length };
+      }
+    }
+  }
+  if(bestCap && maxCap > 0){
+    return {
+      r: bestCap.r, c: bestCap.c,
+      type: 'capture',
+      badge: '💥 封氣提子',
+      msg: '對手的果凍被包圍了！下在 (' + (bestCap.r+1) + ', ' + (bestCap.c+1) + ') 封住最後一口氣，一口氣吃掉 ' + maxCap + ' 顆！'
+    };
+  }
+
+  // 3. 檢查是否能合體壯大果凍 (🧲 果凍合體)
+  var bestMerge = null, maxMergedLibs = 0;
+  for(var r=0; r<N; r++){
+    for(var c=0; c<N; c++){
+      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, ME)) continue;
+      // 檢查周圍相鄰的己方果凍數量
+      var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+      var adjacentMeCount = 0;
+      for(var d=0; d<4; d++){
+        var nr = r + dirs[d][0], nc = c + dirs[d][1];
+        if(inb(nr, nc) && board[nr][nc] === ME) adjacentMeCount++;
+      }
+      if(adjacentMeCount >= 2){
+        board[r][c] = ME;
+        var g = getGroup(r, c, {});
+        board[r][c] = EMPTY;
+        if(g.liberties > maxMergedLibs){
+          maxMergedLibs = g.liberties;
+          bestMerge = { r: r, c: c, libs: g.liberties };
+        }
+      }
+    }
+  }
+  if(bestMerge && maxMergedLibs >= 4){
+    return {
+      r: bestMerge.r, c: bestMerge.c,
+      type: 'merge',
+      badge: '🧲 果凍合體',
+      msg: '下在 (' + (bestMerge.r+1) + ', ' + (bestMerge.c+1) + ') 可以把分散的小果凍黏成大果凍，氣數暴增到 ' + maxMergedLibs + ' 氣！'
+    };
+  }
+
+  // 4. 搶佔中央與好形狀大場 (🏰 擴大領地)
+  var bestTerr = null, bestScore = -9999;
+  var center = (N - 1) / 2;
+  for(var r=0; r<N; r++){
+    for(var c=0; c<N; c++){
+      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, ME)) continue;
+      board[r][c] = ME;
+      var g = getGroup(r, c, {});
+      board[r][c] = EMPTY;
+      
+      var dist = Math.abs(r - center) + Math.abs(c - center);
+      var score = g.liberties * 10 + (N - dist) * 3;
+      if(score > bestScore){
+        bestScore = score;
+        bestTerr = { r: r, c: c };
+      }
+    }
+  }
+  if(bestTerr){
+    return {
+      r: bestTerr.r, c: bestTerr.c,
+      type: 'expand',
+      badge: '🏰 擴大領地',
+      msg: '這裡地盤很寬闊！下在 (' + (bestTerr.r+1) + ', ' + (bestTerr.c+1) + ') 可以圍出很多漂亮的星星領地喔！'
+    };
+  }
+
+  return null;
+}
+
+function giveCoachHint(){
+  if(gameOver || aiThinking || turn !== ME) return;
+  var tactic = analyzeTacticsForPlayer();
+  if(!tactic) return;
+
+  sCoachHint();
+  currentHintPos = { r: tactic.r, c: tactic.c };
+
+  document.getElementById('coachTacticsBadge').textContent = tactic.badge;
+  document.getElementById('coachMsg').textContent = tactic.msg;
+  document.getElementById('statusText').textContent = tactic.badge + '：' + tactic.msg;
+
+  showHintMarker(tactic.r, tactic.c);
+}
+
+function showHintMarker(r, c){
+  var existingMarker = document.querySelector('.hint-marker');
+  if(existingMarker) existingMarker.remove();
+
+  var grid = document.getElementById('boardGrid');
+  var cellEl = grid.children[r * N + c];
+  var cellSize = getCellSize();
+
+  var marker = document.createElement('div');
+  marker.className = 'hint-marker';
+  marker.style.width = (cellSize * 0.88) + 'px';
+  marker.style.height = (cellSize * 0.88) + 'px';
+  cellEl.appendChild(marker);
 }
 
 /* ================= 能量與技能系統 ================= */
@@ -1291,6 +1629,7 @@ function useFireSkill(r, c){
   spawnParticleBurst(r, c, '#ff5722', g.stones.length * 15);
   showFloatingScore(r, c, '🔥 滅敵 +' + g.stones.length + '!');
   triggerSkill('');
+  currentHintPos = null;
   render();
   document.getElementById('statusText').textContent = '🔥 火球術爆發！消滅了 ' + g.stones.length + ' 顆果凍！';
 }
@@ -1305,6 +1644,7 @@ function useSealSkill(r, c){
   sSkillSeal();
   spawnParticleBurst(r, c, '#74b9ff', 12);
   triggerSkill('');
+  currentHintPos = null;
   render();
   document.getElementById('statusText').textContent = '🔒 成功封印此格！雙方均不可落子！';
 }
@@ -1328,6 +1668,9 @@ function onCellClick(r, c){
     document.getElementById('statusText').textContent = '🚫 不能自殺喔！這裡完全沒有氣～';
     return;
   }
+
+  // 清除教練提示點
+  currentHintPos = null;
 
   // 合法落子
   placeStone(r, c, ME);
@@ -1368,7 +1711,8 @@ function placeStone(r, c, who){
   if(turn === AI){
     document.getElementById('statusText').textContent = '魔王思考中…👾';
     aiThinking = true;
-    setTimeout(aiTurn, 550 + Math.random() * 400);
+    var thinkDelay = (difficulty === 'hard') ? 600 + Math.random() * 300 : 450 + Math.random() * 300;
+    setTimeout(aiTurn, thinkDelay);
   } else {
     document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
   }
@@ -1378,14 +1722,14 @@ function triggerWiggleReject(r, c){
   var grid = document.getElementById('boardGrid');
   var cellEl = grid.children[r * N + c];
   cellEl.classList.remove('jelly-reject-shake');
-  void cellEl.offsetWidth; // 強制重繪觸發動畫
+  void cellEl.offsetWidth;
   cellEl.classList.add('jelly-reject-shake');
 }
 
-/* ================= 智慧 AI 決策系統 ================= */
+/* ================= 🧠 AI 棋力難度切換決策系統 (3 段) ================= */
 function aiTurn(){
   if(gameOver) return;
-  var bestMove = chooseAIMove();
+  var bestMove = chooseAIMove(difficulty);
   if(bestMove){
     placeStone(bestMove.r, bestMove.c, AI);
   } else {
@@ -1402,58 +1746,133 @@ function aiTurn(){
   aiThinking = false;
 }
 
-function chooseAIMove(){
-  var candidates = [];
-  var bestScore = -999999;
+function chooseAIMove(diff){
+  var legalMoves = [];
   var center = (N - 1) / 2;
 
+  // 收集所有合法不自殺點
   for(var r=0; r<N; r++){
     for(var c=0; c<N; c++){
-      if(board[r][c] !== EMPTY || sealedCells[r+','+c]) continue;
-      if(isSuicideMove(r, c, AI)) continue;
-
-      // 試下並評估
-      board[r][c] = AI;
-      var caps = checkCaptures(r, c, AI);
-      var g = getGroup(r, c, {});
-      var score = 0;
-
-      // 1. 提吃對方分數 (極高權重)
-      score += caps.length * 150;
-
-      // 2. 自身氣數安全權重
-      if(g.liberties >= 3) score += 35;
-      else if(g.liberties === 2) score += 15;
-      else if(g.liberties === 1) score -= 40; // 避免自找麻煩
-
-      // 3. 連接己方果凍增加厚度
-      var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
-      for(var d=0; d<4; d++){
-        var nr = r + dirs[d][0], nc = c + dirs[d][1];
-        if(inb(nr, nc) && board[nr][nc] === AI) score += 20;
-        if(inb(nr, nc) && board[nr][nc] === ME) score += 10;
-      }
-
-      // 4. 搶佔中央或星位空間
-      var distCenter = Math.abs(r - center) + Math.abs(c - center);
-      score += (N - distCenter) * 4;
-
-      board[r][c] = EMPTY;
-
-      if(score > bestScore){
-        bestScore = score;
-        candidates = [{r:r, c:c}];
-      } else if(score === bestScore){
-        candidates.push({r:r, c:c});
+      if(board[r][c] === EMPTY && !sealedCells[r+','+c] && !isSuicideMove(r, c, AI)){
+        legalMoves.push({ r: r, c: c });
       }
     }
   }
+  if(legalMoves.length === 0) return null;
 
-  if(candidates.length === 0) return null;
-  return candidates[Math.floor(Math.random() * candidates.length)];
+  // 🐣 初級：60% 隨機休閒落子，40% 簡單提子防守
+  if(diff === 'easy'){
+    if(Math.random() < 0.6){
+      return legalMoves[Math.floor(Math.random() * legalMoves.length)];
+    }
+    // 40% 機率：若能提子就吃，否則隨機
+    var capMoves = [];
+    legalMoves.forEach(function(m){
+      board[m.r][m.c] = AI;
+      var caps = checkCaptures(m.r, m.c, AI);
+      board[m.r][m.c] = EMPTY;
+      if(caps.length > 0) capMoves.push(m);
+    });
+    if(capMoves.length > 0) return capMoves[Math.floor(Math.random() * capMoves.length)];
+    return legalMoves[Math.floor(Math.random() * legalMoves.length)];
+  }
+
+  // 🌸 中級：具備救瀕死、吃叫吃與基礎連通能力
+  if(diff === 'medium'){
+    var candidates = [];
+    var bestScore = -99999;
+
+    legalMoves.forEach(function(m){
+      board[m.r][m.c] = AI;
+      var caps = checkCaptures(m.r, m.c, AI);
+      var g = getGroup(m.r, m.c, {});
+      var score = caps.length * 150;
+
+      if(g.liberties >= 3) score += 30;
+      else if(g.liberties === 2) score += 15;
+      else if(g.liberties === 1) score -= 50;
+
+      var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+      for(var d=0; d<4; d++){
+        var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+        if(inb(nr, nc) && board[nr][nc] === AI) score += 15;
+      }
+      var distCenter = Math.abs(m.r - center) + Math.abs(m.c - center);
+      score += (N - distCenter) * 2;
+
+      board[m.r][m.c] = EMPTY;
+
+      if(score > bestScore){
+        bestScore = score;
+        candidates = [m];
+      } else if(score === bestScore){
+        candidates.push(m);
+      }
+    });
+
+    return candidates[Math.floor(Math.random() * candidates.length)];
+  }
+
+  // 👑 大師：全方位精準死活、搶佔要道、多步氣數評估與強勢圍地
+  if(diff === 'hard'){
+    var bestCandidate = null;
+    var maxVal = -999999;
+
+    legalMoves.forEach(function(m){
+      board[m.r][m.c] = AI;
+      var caps = checkCaptures(m.r, m.c, AI);
+      var g = getGroup(m.r, m.c, {});
+      var val = 0;
+
+      // 1. 提吃對方果凍權重
+      val += caps.length * 320;
+
+      // 2. 氣數安全性評估
+      if(g.liberties >= 4) val += 60;
+      else if(g.liberties === 3) val += 35;
+      else if(g.liberties === 2) val += 5;
+      else if(g.liberties === 1) val -= 120; // 避免送死叫吃
+
+      // 3. 破壞對方氣數 (叫吃威脅)
+      var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+      for(var d=0; d<4; d++){
+        var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+        if(inb(nr, nc) && board[nr][nc] === ME){
+          var enemyGroup = getGroup(nr, nc, {});
+          if(enemyGroup.liberties === 1) val += 180; // 製造叫吃
+          else if(enemyGroup.liberties === 2) val += 45;
+        }
+      }
+
+      // 4. 連接己方弱群組 (厚度連通)
+      var connectedAiGroups = 0;
+      for(var d=0; d<4; d++){
+        var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+        if(inb(nr, nc) && board[nr][nc] === AI) connectedAiGroups++;
+      }
+      val += connectedAiGroups * 25;
+
+      // 5. 搶佔星位與中央戰略制高點
+      var starCoords = getStarCoords();
+      if(starCoords[m.r + ',' + m.c]) val += 30;
+      var distCenter = Math.abs(m.r - center) + Math.abs(m.c - center);
+      val += (N - distCenter) * 3;
+
+      board[m.r][m.c] = EMPTY;
+
+      if(val > maxVal){
+        maxVal = val;
+        bestCandidate = m;
+      }
+    });
+
+    return bestCandidate;
+  }
+
+  return legalMoves[0];
 }
 
-/* ================= 提示與 Pass 功能 ================= */
+/* ================= Pass 功能 ================= */
 function userPass(){
   if(gameOver || aiThinking || turn !== ME) return;
   passCount++;
@@ -1464,40 +1883,7 @@ function userPass(){
     document.getElementById('statusText').textContent = '你選擇了 Pass！魔王思考中…👾';
     render();
     aiThinking = true;
-    setTimeout(aiTurn, 600);
-  }
-}
-
-function giveHint(){
-  if(gameOver || aiThinking || turn !== ME) return;
-  var bestMove = null;
-  var bestScore = -99999;
-  for(var r=0; r<N; r++){
-    for(var c=0; c<N; c++){
-      if(board[r][c] !== EMPTY || sealedCells[r+','+c]) continue;
-      if(isSuicideMove(r, c, ME)) continue;
-
-      board[r][c] = ME;
-      var caps = checkCaptures(r, c, ME);
-      var g = getGroup(r, c, {});
-      var score = caps.length * 120 + g.liberties * 10;
-      board[r][c] = EMPTY;
-
-      if(score > bestScore){
-        bestScore = score;
-        bestMove = {r:r, c:c};
-      }
-    }
-  }
-
-  if(bestMove){
-    var grid = document.getElementById('boardGrid');
-    var cellEl = grid.children[bestMove.r * N + bestMove.c];
-    var hintDot = document.createElement('div');
-    hintDot.style.cssText = 'position:absolute;width:28px;height:28px;border-radius:50%;border:3px solid #ffbe3b;box-shadow:0 0 16px #ffbe3b;animation:badgePop 0.5s infinite alternate;pointer-events:none;z-index:20;';
-    cellEl.appendChild(hintDot);
-    setTimeout(function(){ hintDot.remove(); }, 2200);
-    document.getElementById('statusText').textContent = '💡 提示：試著把果凍放在發光位置～';
+    setTimeout(aiTurn, 550);
   }
 }
 
@@ -1545,16 +1931,19 @@ function resetGame(){
   sealedCells = {};
   lastMove = null;
   ghostPreviewPos = null;
+  currentHintPos = null;
   triggerSkill('');
   document.getElementById('endModal').classList.add('hidden');
   document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
+  document.getElementById('coachTacticsBadge').textContent = '✨ 戰術指引';
+  document.getElementById('coachMsg').textContent = '「新的一局開始囉！隨時點我，我會為你推薦最佳著手喔！」';
   buildGridDOM();
   render();
 }
 
 /* ================= 特效：粒子大爆破與浮空字 ================= */
 function spawnParticleBurst(r, c, color, count){
-  var cellSize = (N === 7) ? 44 : 36;
+  var cellSize = getCellSize();
   var cx = c * cellSize + cellSize / 2;
   var cy = r * cellSize + cellSize / 2;
 
@@ -1568,7 +1957,7 @@ function spawnParticleBurst(r, c, color, count){
       vy: Math.sin(angle) * speed,
       life: 1.0,
       decay: 0.02 + Math.random() * 0.03,
-      size: 3 + Math.random() * 5,
+      size: 3 + Math.random() * 4,
       color: color
     });
   }
@@ -1576,7 +1965,7 @@ function spawnParticleBurst(r, c, color, count){
 
 function showFloatingScore(r, c, text){
   var scaler = document.getElementById('boardScaler');
-  var cellSize = (N === 7) ? 44 : 36;
+  var cellSize = getCellSize();
   var floater = document.createElement('div');
   floater.className = 'floating-score';
   floater.textContent = text;
