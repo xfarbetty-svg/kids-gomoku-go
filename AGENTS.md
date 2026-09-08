@@ -42,17 +42,17 @@
 
 - [ ] 實測魔王系統（手機測試）
 - [ ] 魔王討伐動畫／音效
+- [ ] 影子跟讀**真人音檔載入**（日文老師《稻草富翁》已下載 m4a，待逐句切分整合取代 TTS 音源）
+  - 音檔暫存：`C:\Users\PXP\AppData\Local\Temp\opencode\jp_teacher_ja.m4a`（10.28MB，日文原音）
+  - 工具：yt-dlp 2026.08.19 + deno 2.9.6 + ffmpeg 9.0.1 已就緒；影片含日文字幕(SRT)可供逐句對齊
+- [ ] 語音資源補充：詳見 `handoff.md`「進行中」區塊
 
 ## 🕐 最後更新
 
 - **日期**：2026-09-09
-- **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：依據 `OPENCODE_TASK_SHADOWING_V2.md` 與 `RELAY_TASK_007_DIRECTIVE.md` 完整實作 TASK-007 六大功能：
-  1. Task 1：四階段獨立 UI 行為（`applyStepUI()`）
-  2. Task 2：可調靜音間隔（3/5/7 秒 `#shadowSilenceSelect`）
-  3. Task 3：聽寫模式（`#shadowDictateBtn`、`dictateCurrentSentence()`）
-  4. Task 4：寬容評分（`metaphoneMatch()` + `levenshtein()` 取高）
-  5. Task 5：Tap-to-Lookup（`renderClickableWords()` + `#shadowWordPopup`）
-  6. Task 6：學習進度持久化（`saveProgress()` / `loadProgress()`，故事列表動態進度）
-  7. 測試：`VERIFY_RELAY.js` 24/24 全數通過，`verify_learn.js` 19/19 全數通過，行數 6340 行。
-- **Git 狀態**：已 commit (`e3e5da2`) 並 push 至 `origin/main`，`RELAY_STATUS.json` 轉為 `CODE_DONE`，交付 OpenCode 覆核。
+- **更新者**：opencode @ DESKTOP-6ELKIRH
+- **內容**：完成**語音切換選擇器**（🗣️）並 commit（`ca0cc1e`）；下載日文老師真人音檔待切分。
+  - `SpeechSys` 新增 `getVoicesByLang`/`setPreferredVoice`/`resolveVoice`
+  - ShadowingStudio 新增 `populateVoiceSelect()`/`applyVoiceSelect()`，依語言列語音、localStorage 持久化，`speakSentence()` 優先套用選定語音
+  - 下載日文《稻草富翁》真人音檔（m4a 日文原音），待逐句切分整合
+- **Git 狀態**：待本次 commit + push

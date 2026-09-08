@@ -33,8 +33,33 @@
 - 手機測試建議以 PWA 方式安裝或在 localhost / HTTPS 環境下測試（以確保 Web Speech 與 MediaRecorder 權限正常）
 - 修改 `learn.html` 時務必注意保留 ShadowingStudio 暴露之 4 大生命週期 API（`onModeChange`, `setShadowingLang`, `onTabOpen`, `stopAllAudio`）
 
+## 🔧 進行中：真人語音切換與真人音檔載入
+
+### 已完成並 commit
+- `ca0cc1e`：**語音切換選擇器**（🗣️ 下拉）——`SpeechSys` 新增 `getVoicesByLang` / `setPreferredVoice` / `resolveVoice`；ShadowingStudio 新增 `populateVoiceSelect()` / `applyVoiceSelect()`，依語言列語音、localStorage 持久化，`speakSentence()` 優先套用使用者選定語音。
+  - 本機可用語音僅 4 個（Google）：US English、UK English Male/Female、Google 日本語。
+  - 使用者期望更換為「某位真人老師聲線」，TTS 僅能選最接近合成聲，故決定引入「真人音檔載入」。
+
+### 真人音檔下載進度（尚未 commit）
+- 目標：日文老師 `https://www.youtube.com/watch?v=rLwowh9SBa4`（《稻草富翁》From Straw to a Great Turnaround｜JLPT N5｜11 分鐘）
+- ✅ **已下載日文原音**：`C:\Users\PXP\AppData\Local\Temp\opencode\jp_teacher_ja.m4a`（10.28MB，format 140-1，日文原始音軌）
+- ⚠️ `jp_teacher.webm` 是誤抓的英文配音（format 251-0），可刪除
+- ✅ 影片有**日文自動字幕（ja CC，SRT 可用）**，可取得逐句時間戳
+- ✅ 工具鏈已就緒：
+  - yt-dlp 2026.08.19（`C:\Users\PXP\AppData\Local\Programs\Python\Python310\Scripts\yt-dlp.exe`）
+  - deno 2.9.6（`C:\Users\PXP\AppData\Local\Programs\deno\deno.exe`）
+  - ffmpeg 9.0.1（`C:\Users\PXP\AppData\Local\Programs\ffmpeg\ffmpeg-9.0.1-essentials_build\bin\ffmpeg.exe`）
+- **yt-dlp 抓取指令範例**（需指定 JS runtime 避免 403）：
+  `yt-dlp --no-playlist --js-runtimes "deno:<deno路徑>" -f "140-1" -o "<輸出>.m4a" <影片網址>`
+
+### 下一步（逐句切分整合）
+1. 下載日文字幕 SRT，取得逐句時間戳
+2. 用 ffmpeg 依時間戳切出每句音訊片段
+3. 對齊現有 `SHADOWING_DATA.kids.ja.warashibe` 的逐句文字
+4. 在 ShadowingStudio 加「真人音檔」音源（取代 TTS），支援逐句播放 + 錄音對照
+
 ## 🕐 最後更新
-- 時間：2026-09-09 00:15
-- 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：完成 TASK-007 Shadowing V2 六大功能實作、測試通過 (24/24)、更新藍圖與交接檔
+- 時間：2026-09-09
+- 更新者：opencode @ DESKTOP-6ELKIRH
+- 內容：完成語音切換選擇器並 commit；下載日文老師真人音檔（m4a 日文原音待切分整合）
 - Git push：✅ 已推送到 origin/main

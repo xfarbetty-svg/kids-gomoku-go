@@ -1,8 +1,8 @@
 {
   "project": "017_小朋友APP - 雙語探險學院",
-  "round": 7,
-  "status": "CODE_DONE",
-  "current_turn": "OpenCode覆核",
+  "round": 8,
+  "status": "REVIEWED_PASSED",
+  "current_turn": "User",
   "task_id": "TASK-007",
   "task_name": "Shadowing V2 — 強化四階段行為 + 可調間隔 + 聽寫模式 + 寬容評分 + Tap-to-Lookup + 進度持久化",
   "spec_file": "OPENCODE_TASK_SHADOWING_V2.md",
@@ -13,7 +13,8 @@
     "Task 3: 聽寫模式（Dictation Mode）- 完成",
     "Task 4: 寬容評分（Metaphone 模糊匹配）- 完成",
     "Task 5: Tap-to-Lookup（點擊單字查詢）- 完成",
-    "Task 6: 學習進度持久化（localStorage）- 完成"
+    "Task 6: 學習進度持久化（localStorage）- 完成",
+    "附加: 語音切換選擇器（🗣️ TTS 語音）- 完成（commit ca0cc1e）"
   ],
   "changes": [
     "learn.html: CSS 加入 .shadow-silence-select, .shadow-word, .shadow-word-popup",
@@ -23,8 +24,13 @@
     "learn.html: ShadowingStudio 實作 Task 3 dictateMode/dictateCurrentSentence 聽寫模式",
     "learn.html: ShadowingStudio 實作 Task 4 metaphoneMatch + levenshtein 雙評分機制",
     "learn.html: ShadowingStudio 實作 Task 5 renderClickableWords + showWordPopup 點擊查字",
-    "learn.html: ShadowingStudio 實作 Task 6 saveProgress / loadProgress 進度保存與故事清單進度顯示"
+    "learn.html: ShadowingStudio 實作 Task 6 saveProgress / loadProgress 進度保存與故事清單進度顯示",
+    "learn.html: 新增 🗣️ 語音選擇器（shadowVoiceSelect）+ SpeechSys getVoicesByLang/setPreferredVoice/resolveVoice"
   ],
-  "last_updated": "2026-09-09T00:30:00+08:00",
-  "note": "Antigravity（執行者）已完整實作 TASK-007 六大功能，VERIFY_RELAY.js 24/24 全數通過（0 失敗）。交付 OpenCode 覆核驗收。"
+  "next_tasks": [
+    "播放影子跟讀真人音檔載入：日文老師《稻草富翁》已下載 m4a，待逐句切分整合取代 TTS",
+    "TASK-008 內容包預載（VOA + BBC 逐字稿）"
+  ],
+  "last_updated": "2026-09-09T23:30:00+08:00",
+  "note": "TASK-007 Shadowing V2 已交付並覆核通過。新增語音切換選擇器完成（ca0cc1e）。目前重心轉往真人音檔逐句載入。"
 }
