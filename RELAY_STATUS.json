@@ -1,18 +1,21 @@
 {
   "project": "017_小朋友APP - 雙語探險學院",
-  "round": 6,
-  "status": "CODE_DONE",
-  "current_turn": "User",
-  "task_name": "learn.html ShadowingStudio 啟動修復（補暴露 onModeChange, setShadowingLang API 及 onTabOpen 呼叫）",
-  "spec_file": "RELAY_TASK.md",
-  "target_files": [
-    "learn.html"
-  ],
+  "round": 7,
+  "status": "SPEC_READY",
+  "current_turn": "OpenCode接球",
+  "task_id": "TASK-007",
+  "task_name": "Shadowing V2 — 強化四階段行為 + 可調間隔 + 聽寫模式 + 寬容評分 + Tap-to-Lookup + 進度持久化",
+  "spec_file": "OPENCODE_TASK_SHADOWING_V2.md",
+  "target_files": ["learn.html"],
   "items": [
-    "Task 1: 補暴露缺失的 onModeChange 與 setShadowingLang API 方法 - 完成",
-    "Task 2: switchTab 的 shadowing 分支補上 onTabOpen 呼叫 - 完成",
-    "Task 3: 語法檢驗與 VERIFY_RELAY.js 測試 - 8 項全數通過"
+    "Task 1: 強化四階段各自 UI 行為（applyStepUI）- 待實作",
+    "Task 2: 可調靜音間隔（3/5/7 秒）- 待實作",
+    "Task 3: 聽寫模式（Dictation Mode）- 待實作",
+    "Task 4: 寬容評分（Metaphone 模糊匹配）- 待實作",
+    "Task 5: Tap-to-Lookup（點擊單字查詢）- 待實作",
+    "Task 6: 學習進度持久化（localStorage）- 待實作"
   ],
-  "last_updated": "2026-09-08T23:02:00+08:00",
-  "review_summary": "ANTIGRAVITY 執行完成，VERIFY_RELAY.js 8/8 全數通過，等待規劃者（使用者）進行第三棒覆核。"
+  "changes": [],
+  "last_updated": "2026-09-09T00:00:00+08:00",
+  "note": "OpenCode（規劃）已完成自動化協作機制升級（RELAY_PIPELINE.md v2 + RELAY_QUEUE.json + TRIGGER.md）與 Shadowing V2 任務書。VERIFY_RELAY.js 18/18 全數通過。等待 ANTIGRAVITY（執行）接球實作 TASK-007。"
 }

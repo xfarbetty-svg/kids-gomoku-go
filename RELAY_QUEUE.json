@@ -1,0 +1,67 @@
+{
+  "version": 2,
+  "auto_trigger": true,
+  "current_task": {
+    "id": "TASK-007",
+    "spec": "OPENCODE_TASK_SHADOWING_V2.md",
+    "status": "SPEC_READY",
+    "assigned_to": "OpenCode",
+    "created_at": "2026-09-09"
+  },
+  "queue": [
+    {
+      "id": "TASK-007",
+      "spec": "OPENCODE_TASK_SHADOWING_V2.md",
+      "title": "Shadowing V2 — 強化四階段行為 + 可調間隔 + 聽寫模式 + 寬容評分 + Tap-to-Lookup + 進度持久化",
+      "priority": "high",
+      "status": "SPEC_READY",
+      "created_at": "2026-09-09"
+    },
+    {
+      "id": "TASK-008",
+      "spec": "OPENCODE_TASK_CONTENT_PACK.md",
+      "title": "內容包 — 預載 VOA Learning English + BBC 6 Minute English 逐字稿",
+      "priority": "medium",
+      "status": "pending",
+      "created_at": "2026-09-09"
+    }
+  ],
+  "completed": [
+    {
+      "id": "TASK-001",
+      "spec": "OPENCODE_TASK_SHADOWING.md",
+      "title": "ShadowingStudio 初版實作",
+      "completed_at": "2026-08-28"
+    },
+    {
+      "id": "TASK-002",
+      "spec": "OPENCODE_TASK_V2.md",
+      "title": "V2 升級",
+      "completed_at": "2026-08-29"
+    },
+    {
+      "id": "TASK-003",
+      "spec": "OPENCODE_TASK_V3.md",
+      "title": "V3 升級",
+      "completed_at": "2026-08-29"
+    },
+    {
+      "id": "TASK-004",
+      "spec": "OPENCODE_TASK_V4.md",
+      "title": "V4 升級",
+      "completed_at": "2026-08-30"
+    },
+    {
+      "id": "TASK-005",
+      "spec": "OPENCODE_TASK_V5.md",
+      "title": "V5 逐句互動模式重構",
+      "completed_at": "2026-09-01"
+    },
+    {
+      "id": "TASK-006",
+      "spec": "RELAY_TASK.md",
+      "title": "ShadowingStudio 啟動修復（API 暴露）",
+      "completed_at": "2026-09-08"
+    }
+  ]
+}
