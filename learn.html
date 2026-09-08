@@ -1,0 +1,5588 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>雙語探險學院 🌍 Language Adventure & Lab</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="common.css?v=4">
+<script src="common.js?v=4"></script>
+<style>
+  :root {
+    --bg-grad-kids: linear-gradient(160deg, #ffeef8 0%, #e8f4ff 35%, #eefbf4 70%, #fff7e6 100%);
+    --bg-grad-adult: linear-gradient(160deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
+    --text-kids: #2d3748;
+    --text-adult: #f1f5f9;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    min-height: 100vh;
+    transition: background 0.35s ease, color 0.35s ease;
+    overflow-x: hidden;
+  }
+
+  /* ====== KIDS MODE THEME ====== */
+  body.mode-kids {
+    background: var(--bg-grad-kids);
+    background-attachment: fixed;
+    color: var(--text-kids);
+  }
+  body.mode-kids .top-header {
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 4px 20px rgba(255, 95, 162, 0.15);
+    border-bottom: 3px solid #ffccd5;
+  }
+  body.mode-kids .tab-btn {
+    color: #6b7280;
+    border-radius: 16px;
+  }
+  body.mode-kids .tab-btn.active {
+    background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(255, 95, 162, 0.4);
+  }
+  body.mode-kids .glass-card {
+    background: #ffffff;
+    border: 3px solid #ffd2e2;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(230, 80, 140, 0.12);
+  }
+
+  /* ====== ADULT MODE THEME ====== */
+  body.mode-adult {
+    background: var(--bg-grad-adult);
+    background-attachment: fixed;
+    color: var(--text-adult);
+  }
+  body.mode-adult .top-header {
+    background: rgba(15, 23, 42, 0.94);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  body.mode-adult .tab-btn {
+    color: #94a3b8;
+    border-radius: 10px;
+  }
+  body.mode-adult .tab-btn.active {
+    background: #4f46e5;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45);
+  }
+  body.mode-adult .glass-card {
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ====== HEADER & NAVIGATION ====== */
+  .top-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.3s;
+  }
+
+  .header-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .brand .logo-icon {
+    font-size: 28px;
+    display: inline-block;
+    animation: floatY 3s ease-in-out infinite;
+  }
+  .brand .brand-text h1 {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand .brand-text .sub-text {
+    font-size: 11px;
+    opacity: 0.75;
+    font-weight: 600;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Mode Switcher Toggle */
+  .mode-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+  }
+  body.mode-kids .mode-toggle-btn {
+    background: linear-gradient(135deg, #ffe082, #ffb300);
+    color: #4e342e;
+    box-shadow: 0 4px 12px rgba(255, 179, 0, 0.4);
+  }
+  body.mode-adult .mode-toggle-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #38bdf8;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  }
+  .mode-toggle-btn:active {
+    transform: scale(0.95);
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s;
+  }
+  body.mode-kids .icon-btn {
+    background: #fff;
+    color: #ff5fa2;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ffd2e2;
+  }
+  body.mode-adult .icon-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .icon-btn:hover {
+    transform: scale(1.08);
+  }
+
+  /* Nav Tabs */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .tab-btn {
+    flex: 1;
+    max-width: 240px;
+    padding: 10px 14px;
+    border: none;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+  @media (max-width: 680px) {
+    .nav-tabs {
+      gap: 4px;
+    }
+    .tab-btn {
+      padding: 8px 4px;
+      font-size: 12px;
+      gap: 3px;
+    }
+  }
+
+  /* Main Container */
+  .app-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 16px 80px;
+  }
+
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.25s ease-out;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ====== TAB 1: VOCABULARY BANK ====== */
+  .vocab-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .lang-switcher {
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+  }
+  body.mode-adult .lang-switcher {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .lang-opt {
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: inherit;
+    transition: all 0.2s;
+  }
+  .lang-opt.active {
+    background: #fff;
+    color: #ff5fa2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  body.mode-adult .lang-opt.active {
+    background: #4f46e5;
+    color: #fff;
+  }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 220px;
+    max-width: 420px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+  }
+  body.mode-adult .search-box {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  .search-box input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    color: inherit;
+  }
+
+  .level-pills {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 14px;
+    scrollbar-width: none;
+  }
+  .level-pills::-webkit-scrollbar { display: none; }
+  .pill {
+    white-space: nowrap;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    border: 2px solid transparent;
+    background: rgba(0, 0, 0, 0.05);
+    color: inherit;
+    transition: all 0.2s;
+  }
+  body.mode-adult .pill {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .pill.active {
+    background: linear-gradient(135deg, #a78bfa, #7c3aed);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(124, 58, 237, 0.35);
+  }
+  body.mode-kids .pill.active {
+    background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+    box-shadow: 0 4px 10px rgba(255, 95, 162, 0.35);
+  }
+
+  /* Cards Grid */
+  .words-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+  }
+
+  .word-card {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  .word-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .word-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .word-title-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .word-text {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .word-phonetic {
+    font-size: 13px;
+    color: #8b5cf6;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  body.mode-adult .word-phonetic {
+    color: #38bdf8;
+  }
+
+  .word-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.15s;
+    color: inherit;
+  }
+  body.mode-adult .action-btn {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .action-btn:hover {
+    transform: scale(1.15);
+  }
+  .action-btn.bookmarked {
+    color: #f59e0b;
+  }
+
+  .word-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .level-badge {
+    font-size: 10px;
+    font-weight: 900;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+  body.mode-adult .level-badge {
+    background: rgba(99, 102, 241, 0.25);
+    color: #a5b4fc;
+  }
+  .pos-badge {
+    font-size: 11px;
+    font-weight: 800;
+    opacity: 0.7;
+  }
+
+  .word-meaning {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .word-example {
+    font-size: 13px;
+    opacity: 0.85;
+    line-height: 1.5;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 8px 10px;
+    border-radius: 12px;
+    margin-top: 4px;
+    border-left: 3px solid #ff5fa2;
+  }
+  body.mode-adult .word-example {
+    background: rgba(255, 255, 255, 0.04);
+    border-left-color: #6366f1;
+  }
+  .word-example-zh {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 3px;
+  }
+
+  .add-custom-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+    transition: transform 0.15s;
+  }
+  .add-custom-btn:hover {
+    transform: scale(1.04);
+  }
+
+  /* ====== TAB 2: YOUTUBE SHADOWING PLAYER ====== */
+  .yt-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .yt-loader-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px 16px;
+  }
+  .yt-loader-bar input {
+    flex: 1;
+    min-width: 240px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    outline: none;
+    font-size: 14px;
+    background: #fff;
+  }
+  body.mode-adult .yt-loader-bar input {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+  .yt-btn {
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transition: transform 0.15s;
+  }
+  .yt-btn:hover { transform: scale(1.03); }
+
+  .preset-videos-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .preset-videos-row::-webkit-scrollbar { display: none; }
+  .preset-chip {
+    padding: 8px 14px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    color: inherit;
+  }
+  body.mode-adult .preset-chip {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  .preset-chip.active {
+    border-color: #ef4444;
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+  body.mode-adult .preset-chip.active {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: #ef4444;
+    color: #fca5a5;
+  }
+
+  .player-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 860px) {
+    .player-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .video-wrapper iframe, .video-wrapper #player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .subtitles-panel {
+    display: flex;
+    flex-direction: column;
+    height: 480px;
+    padding: 12px;
+  }
+  .sub-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  body.mode-adult .sub-controls {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .toggle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    user-select: none;
+  }
+  .toggle-switch {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background: #cbd5e1;
+    border-radius: 999px;
+    transition: background 0.25s;
+  }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.25s;
+  }
+  input:checked + .toggle-switch {
+    background: #10b981;
+  }
+  input:checked + .toggle-switch::after {
+    transform: translateX(16px);
+  }
+
+  .sub-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+  }
+  .sub-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .sub-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+
+  .sub-item {
+    padding: 10px 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  body.mode-adult .sub-item {
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .sub-item:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+  body.mode-adult .sub-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .sub-item.active {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  }
+  body.mode-adult .sub-item.active {
+    background: rgba(59, 130, 246, 0.25);
+    border-color: #60a5fa;
+  }
+
+  .sub-time {
+    font-size: 11px;
+    font-weight: 800;
+    color: #6b7280;
+    margin-bottom: 2px;
+  }
+  body.mode-adult .sub-time {
+    color: #94a3b8;
+  }
+  .sub-text-orig {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+  .sub-text-zh {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 4px;
+    transition: filter 0.2s;
+  }
+  .sub-text-zh.blind {
+    filter: blur(5px);
+    user-select: none;
+  }
+  .sub-text-zh.blind:hover {
+    filter: none;
+  }
+
+  .sub-actions {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0.8;
+  }
+  .sub-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 3px;
+  }
+
+  /* ====== TAB 3: INTERACTIVE PRACTICE ====== */
+  /* Kids Mode: Monster Battle */
+  .battle-arena {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .battle-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 2px solid #ffd1e6;
+  }
+  .hearts-meter {
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+  .combo-badge {
+    font-weight: 900;
+    font-size: 14px;
+    color: #ff007a;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .monster-stage {
+    position: relative;
+    width: 100%;
+    padding: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .monster-avatar {
+    font-size: 90px;
+    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: floatY 2.5s ease-in-out infinite;
+    cursor: pointer;
+    user-select: none;
+  }
+  .monster-avatar.hit {
+    animation: shakeHit 0.4s ease;
+    filter: drop-shadow(0 0 20px #ef4444) brightness(1.2);
+  }
+  @keyframes shakeHit {
+    0%, 100% { transform: scale(1) rotate(0); }
+    20% { transform: scale(1.1) rotate(-15deg); }
+    40% { transform: scale(0.9) rotate(15deg); }
+    60% { transform: scale(1.05) rotate(-8deg); }
+    80% { transform: scale(0.95) rotate(8deg); }
+  }
+
+  .monster-name {
+    font-size: 20px;
+    font-weight: 900;
+    margin: 8px 0 4px;
+    color: #ff3366;
+  }
+  .monster-hp-container {
+    width: 80%;
+    max-width: 320px;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 2px solid #ff7eb3;
+    position: relative;
+  }
+  .monster-hp-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #ff5252, #ff7675);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+
+  .quiz-question-box {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+  }
+  .prompt-word {
+    font-size: 32px;
+    font-weight: 900;
+    color: #4f46e5;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  body.mode-kids .prompt-word {
+    color: #ff007a;
+  }
+  .prompt-hint {
+    font-size: 14px;
+    opacity: 0.75;
+  }
+
+  .choices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .choices-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .choice-btn {
+    padding: 16px 14px;
+    border-radius: 18px;
+    font-size: 17px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-align: center;
+    user-select: none;
+  }
+  body.mode-kids .choice-btn {
+    color: #fff;
+  }
+  .btn-c0 { background: linear-gradient(135deg, #ff7675, #d63031); box-shadow: 0 5px 0 #b71540; }
+  .btn-c1 { background: linear-gradient(135deg, #74b9ff, #0984e3); box-shadow: 0 5px 0 #0056b3; }
+  .btn-c2 { background: linear-gradient(135deg, #55efc4, #00b894); box-shadow: 0 5px 0 #008f68; }
+  .btn-c3 { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); box-shadow: 0 5px 0 #e17055; color: #2d3436 !important; }
+  .choice-btn:active {
+    transform: translateY(4px);
+    box-shadow: none !important;
+  }
+
+  /* Adult Mode: Flashcard & Spelling */
+  .adult-practice {
+    max-width: 580px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .practice-mode-switch {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .practice-sub-tab {
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    transition: all 0.2s;
+  }
+  .practice-sub-tab.active {
+    background: #4f46e5;
+    color: #fff;
+  }
+
+  /* Flashcard 3D */
+  .flashcard-wrapper {
+    perspective: 1000px;
+    width: 100%;
+    height: 320px;
+    cursor: pointer;
+  }
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flashcard-wrapper.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+  }
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  }
+  .flashcard-front {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .flashcard-back {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid #6366f1;
+    transform: rotateY(180deg);
+  }
+
+  .srs-ratings {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .rate-btn {
+    padding: 12px 6px;
+    border-radius: 12px;
+    border: none;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: transform 0.15s;
+    color: #fff;
+  }
+  .rate-btn:hover { transform: translateY(-2px); }
+  .rate-btn .kbd-hint {
+    font-size: 10px;
+    opacity: 0.6;
+  }
+  .rate-again { background: #ef4444; }
+  .rate-hard  { background: #f59e0b; }
+  .rate-good  { background: #10b981; }
+  .rate-easy  { background: #3b82f6; }
+
+  /* Spelling Input */
+  .spelling-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    padding: 24px;
+    text-align: center;
+  }
+  .spelling-input {
+    width: 100%;
+    max-width: 380px;
+    padding: 12px 16px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 800;
+    border-radius: 14px;
+    border: 2px solid #6366f1;
+    outline: none;
+    background: rgba(15, 23, 42, 0.8);
+    color: #fff;
+  }
+
+  /* ====== MODALS & OVERLAYS ====== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+  }
+  .modal-dialog {
+    width: 100%;
+    max-width: 460px;
+    padding: 24px;
+    animation: popModal 0.25s ease;
+  }
+  @keyframes popModal {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+    text-align: left;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    opacity: 0.8;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    outline: none;
+  }
+  body.mode-adult .form-group input, body.mode-adult .form-group select {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+
+  .floating-damage {
+    position: absolute;
+    font-size: 26px;
+    font-weight: 900;
+    color: #ff3366;
+    animation: damageUp 0.8s ease-out forwards;
+    pointer-events: none;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  @keyframes damageUp {
+    0% { transform: translateY(0) scale(0.8); opacity: 1; }
+    100% { transform: translateY(-50px) scale(1.3); opacity: 0; }
+  }
+
+  /* ====== TAB 4: ROLEPLAY DIALOGUE ====== */
+  .dialogue-container {
+    max-width: 840px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dialogue-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .dialogue-lang-switcher {
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+  }
+  body.mode-adult .dialogue-lang-switcher {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .dialogue-lang-btn {
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: inherit;
+    transition: all 0.2s;
+  }
+  .dialogue-lang-btn.active {
+    background: #fff;
+    color: #ff5fa2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  body.mode-adult .dialogue-lang-btn.active {
+    background: #4f46e5;
+    color: #fff;
+  }
+
+  .dialogue-tag-info {
+    font-size: 13px;
+    font-weight: 800;
+    opacity: 0.8;
+  }
+
+  /* Scenario Cards Grid */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .scenario-card {
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    user-select: none;
+  }
+  .scenario-card:hover {
+    transform: translateY(-5px) scale(1.02);
+  }
+  body.mode-kids .scenario-card:hover {
+    box-shadow: 0 14px 30px rgba(255, 95, 162, 0.28);
+  }
+  body.mode-adult .scenario-card:hover {
+    box-shadow: 0 14px 32px rgba(79, 70, 229, 0.4);
+    border-color: rgba(99, 102, 241, 0.4);
+  }
+
+  .scenario-icon {
+    font-size: 42px;
+    margin-bottom: 2px;
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  .scenario-card:hover .scenario-icon {
+    transform: scale(1.15) rotate(5deg);
+  }
+
+  .scenario-title {
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.3;
+  }
+  .scenario-subtitle {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.65;
+  }
+  .scenario-desc {
+    font-size: 13px;
+    opacity: 0.85;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .scenario-npc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 999px;
+    align-self: flex-start;
+  }
+  body.mode-kids .scenario-npc-badge {
+    background: #fff0f5;
+    color: #e02f78;
+    border: 1.5px solid #ffd1e6;
+  }
+  body.mode-adult .scenario-npc-badge {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+  }
+
+  /* Chatroom Interface */
+  .chat-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .chat-nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+  }
+
+  .chat-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.06);
+    color: inherit;
+    transition: all 0.2s;
+  }
+  body.mode-adult .chat-back-btn {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .chat-back-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .chat-npc-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .chat-progress-pill {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+
+  /* Messages Scroll List */
+  .chat-history {
+    min-height: 280px;
+    max-height: 460px;
+    overflow-y: auto;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .chat-history::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat-history::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+
+  .chat-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    animation: fadeIn 0.25s ease-out;
+  }
+  .chat-row.npc-row {
+    align-self: flex-start;
+    max-width: 88%;
+  }
+  .chat-row.user-row {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+    max-width: 88%;
+  }
+
+  .bubble-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #fff;
+  }
+  body.mode-adult .bubble-avatar {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .bubble-body {
+    padding: 12px 18px;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  }
+  body.mode-kids .npc-row .bubble-body {
+    background: #ffffff;
+    border: 2px solid #ffd1e6;
+    border-top-left-radius: 4px;
+    color: var(--text-kids);
+  }
+  body.mode-kids .user-row .bubble-body {
+    background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+    color: #ffffff;
+    border-top-right-radius: 4px;
+    box-shadow: 0 6px 16px rgba(255, 95, 162, 0.35);
+  }
+  body.mode-adult .npc-row .bubble-body {
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top-left-radius: 4px;
+    color: var(--text-adult);
+  }
+  body.mode-adult .user-row .bubble-body {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    border-top-right-radius: 4px;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+  }
+
+  .bubble-sender {
+    font-size: 11px;
+    font-weight: 800;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+  .bubble-orig {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+  .bubble-phonetic {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-top: 3px;
+    line-height: 1.35;
+  }
+  .bubble-zh {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+  .bubble-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .bubble-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.8;
+    padding: 2px 4px;
+    transition: transform 0.15s;
+  }
+  .bubble-btn:hover {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  .accuracy-pill {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* User Prompt & Speaking Area */
+  .prompt-panel {
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .prompt-callout {
+    font-size: 13px;
+    font-weight: 800;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .prompt-target {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.35;
+    max-width: 680px;
+  }
+  body.mode-kids .prompt-target {
+    color: #ff007a;
+  }
+  body.mode-adult .prompt-target {
+    color: #38bdf8;
+  }
+
+  .prompt-sub-hint {
+    font-size: 13px;
+    opacity: 0.75;
+    max-width: 640px;
+    line-height: 1.3;
+  }
+  .prompt-meaning {
+    font-size: 15px;
+    font-weight: 800;
+    opacity: 0.9;
+  }
+
+  .prompt-status-msg {
+    min-height: 22px;
+    font-size: 13px;
+    font-weight: 800;
+    transition: color 0.2s ease;
+  }
+
+  /* Mic Controls */
+  .prompt-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: 100%;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  .mic-button {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+    position: relative;
+  }
+  body.mode-kids .mic-button {
+    background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(255, 95, 162, 0.45);
+  }
+  body.mode-adult .mic-button {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.5);
+  }
+  .mic-button:hover {
+    transform: scale(1.08);
+  }
+  .mic-button:active {
+    transform: scale(0.95);
+  }
+
+  @keyframes micPulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1.08); box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  }
+  .mic-button.recording {
+    animation: micPulse 1.2s infinite ease-in-out !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #fff !important;
+  }
+
+  /* Live Sound Waves */
+  .sound-wave-box {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+    margin-top: -4px;
+  }
+  .sound-wave-box.active {
+    display: inline-flex;
+  }
+  .sound-wave-line {
+    width: 3px;
+    height: 100%;
+    background: #ef4444;
+    border-radius: 2px;
+    animation: soundWave 0.6s infinite ease-in-out alternate;
+  }
+  .sound-wave-line:nth-child(1) { animation-delay: 0.1s; }
+  .sound-wave-line:nth-child(2) { animation-delay: 0.3s; }
+  .sound-wave-line:nth-child(3) { animation-delay: 0.15s; }
+  .sound-wave-line:nth-child(4) { animation-delay: 0.35s; }
+  .sound-wave-line:nth-child(5) { animation-delay: 0.2s; }
+  @keyframes soundWave {
+    0% { height: 4px; }
+    100% { height: 18px; }
+  }
+
+  .chat-aux-btn {
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+  body.mode-kids .chat-aux-btn {
+    background: #ffffff;
+    border: 2px solid #ffd1e6;
+    color: #4e342e;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+  }
+  body.mode-adult .chat-aux-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f1f5f9;
+  }
+  .chat-aux-btn:hover {
+    transform: translateY(-2px);
+  }
+  .chat-aux-btn:active {
+    transform: translateY(1px);
+  }
+  .chat-aux-btn.highlight-pulse {
+    animation: btnPulse 1.2s infinite;
+  }
+  @keyframes btnPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+
+  /* Scenario Completion Dialog */
+  .completion-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .completion-star-burst {
+    font-size: 64px;
+    animation: bounceIn 0.5s ease;
+  }
+  .completion-title {
+    font-size: 22px;
+    font-weight: 900;
+  }
+  .completion-npc-quote {
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    background: rgba(0, 0, 0, 0.04);
+  }
+  body.mode-adult .completion-npc-quote {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .completion-reward-badge {
+    font-size: 16px;
+    font-weight: 900;
+    color: #f59e0b;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .completion-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hidden { display: none !important; }
+
+  /* ====== TAB 5: SHADOWING STUDIO ====== */
+  .shadowing-container {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Story Selector Bar */
+  .shadow-story-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 16px;
+  }
+  .shadow-story-bar select {
+    flex: 1;
+    min-width: 180px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 2px solid rgba(0,0,0,0.1);
+    font-size: 14px;
+    font-weight: 700;
+    outline: none;
+    background: #fff;
+    color: #2d3748;
+    cursor: pointer;
+  }
+  body.mode-adult .shadow-story-bar select {
+    background: rgba(15,23,42,0.8);
+    border-color: rgba(255,255,255,0.2);
+    color: #f1f5f9;
+  }
+  .speed-btns {
+    display: flex;
+    gap: 6px;
+  }
+  .speed-btn {
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    border: 2px solid rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: inherit;
+  }
+  body.mode-adult .speed-btn {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .speed-btn.active {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #fff;
+    border-color: #4f46e5;
+    box-shadow: 0 3px 10px rgba(79,70,229,0.35);
+  }
+  body.mode-kids .speed-btn.active {
+    background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+    border-color: #ff5fa2;
+    box-shadow: 0 3px 10px rgba(255,95,162,0.35);
+  }
+
+  /* Step Indicator Tabs */
+  .step-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 0 4px 8px;
+    scrollbar-width: none;
+  }
+  .step-tabs::-webkit-scrollbar { display: none; }
+  .step-tab-btn {
+    white-space: nowrap;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: 2px solid rgba(0,0,0,0.08);
+    background: rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: inherit;
+  }
+  body.mode-adult .step-tab-btn {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .step-tab-btn.active {
+    background: #4f46e5;
+    color: #fff;
+    border-color: #4f46e5;
+    box-shadow: 0 3px 10px rgba(79,70,229,0.35);
+  }
+  body.mode-kids .step-tab-btn.active {
+    background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+    border-color: #ff5fa2;
+    box-shadow: 0 3px 10px rgba(255,95,162,0.35);
+  }
+  .step-tab-btn.done {
+    background: #10b981;
+    color: #fff;
+    border-color: #10b981;
+  }
+
+  /* Training Stage Card */
+  .shadow-stage {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 300px;
+  }
+
+  /* Sound Wave Visualizer */
+  .shadow-wave-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 48px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 14px;
+    padding: 0 16px;
+  }
+  body.mode-adult .shadow-wave-box {
+    background: rgba(255,255,255,0.04);
+  }
+  .shadow-wave-bar {
+    width: 5px;
+    height: 12px;
+    border-radius: 3px;
+    background: #a78bfa;
+    transition: height 0.12s ease;
+  }
+  body.mode-kids .shadow-wave-bar {
+    background: linear-gradient(180deg, #ff7eb3, #ff5fa2);
+  }
+  .shadow-wave-box.playing .shadow-wave-bar {
+    animation: shadowWaveAnim 0.5s infinite ease-in-out alternate;
+  }
+  .shadow-wave-bar:nth-child(1) { animation-delay: 0.0s; }
+  .shadow-wave-bar:nth-child(2) { animation-delay: 0.08s; }
+  .shadow-wave-bar:nth-child(3) { animation-delay: 0.04s; }
+  .shadow-wave-bar:nth-child(4) { animation-delay: 0.12s; }
+  .shadow-wave-bar:nth-child(5) { animation-delay: 0.06s; }
+  .shadow-wave-bar:nth-child(6) { animation-delay: 0.15s; }
+  .shadow-wave-bar:nth-child(7) { animation-delay: 0.03s; }
+  .shadow-wave-bar:nth-child(8) { animation-delay: 0.1s; }
+  .shadow-wave-bar:nth-child(9) { animation-delay: 0.07s; }
+  .shadow-wave-bar:nth-child(10) { animation-delay: 0.13s; }
+  .shadow-wave-bar:nth-child(11) { animation-delay: 0.02s; }
+  .shadow-wave-bar:nth-child(12) { animation-delay: 0.09s; }
+  @keyframes shadowWaveAnim {
+    0% { height: 6px; }
+    100% { height: 40px; }
+  }
+
+  /* Script Display Area */
+  .shadow-script-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    background: rgba(0,0,0,0.02);
+    border-radius: 14px;
+    min-height: 120px;
+  }
+  body.mode-adult .shadow-script-area {
+    background: rgba(255,255,255,0.03);
+  }
+  .shadow-sentence {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .shadow-sentence:hover {
+    background: rgba(99,102,241,0.08);
+  }
+  .shadow-sentence.karaoke-highlight {
+    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(79,70,229,0.2));
+    border-left: 4px solid #4f46e5;
+    transform: scale(1.01);
+  }
+  body.mode-kids .shadow-sentence.karaoke-highlight {
+    background: linear-gradient(135deg, rgba(255,126,179,0.15), rgba(255,95,162,0.2));
+    border-left-color: #ff5fa2;
+  }
+  .shadow-sentence-phonetic {
+    font-size: 13px;
+    opacity: 0.65;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .shadow-sentence-ruby {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 4px;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .shadow-sentence-ruby ruby rt {
+    font-size: 0.72em;
+    opacity: 0.85;
+    font-weight: 500;
+  }
+  .shadow-sentence-text {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.7;
+  }
+  .shadow-sentence-text ruby rt {
+    font-size: 0.62em;
+    opacity: 0.7;
+    font-weight: 500;
+  }
+  .shadow-sentence-zh {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 3px;
+    transition: filter 0.2s;
+  }
+  .shadow-sentence-zh.hidden-text {
+    filter: blur(5px);
+    user-select: none;
+  }
+  .shadow-sentence-zh.hidden-text:hover {
+    filter: none;
+  }
+  .shadow-pause-hint {
+    font-size: 12px;
+    color: #8b5cf6;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  body.mode-adult .shadow-pause-hint {
+    color: #38bdf8;
+  }
+
+  /* Karaoke Progress Bar */
+  .shadow-karaoke-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .shadow-karaoke-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #6366f1, #4f46e5);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  body.mode-kids .shadow-karaoke-fill {
+    background: linear-gradient(90deg, #ff7eb3, #ff5fa2);
+  }
+
+  /* Toggle text visibility */
+  .shadow-toggle-eye {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.04);
+    color: inherit;
+    transition: all 0.2s;
+    align-self: flex-end;
+  }
+  body.mode-adult .shadow-toggle-eye {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .shadow-toggle-eye.active {
+    background: #4f46e5;
+    color: #fff;
+    border-color: #4f46e5;
+  }
+
+  /* Control Dock */
+  .shadow-control-dock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 14px;
+  }
+  .shadow-ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #fff;
+    user-select: none;
+  }
+  .shadow-ctrl-btn:active { transform: scale(0.95); }
+  .shadow-play-btn {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 4px 14px rgba(59,130,246,0.4);
+  }
+  .shadow-record-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 14px rgba(239,68,68,0.4);
+    animation: none;
+  }
+  .shadow-record-btn.recording {
+    animation: micPulse 1.2s infinite ease-in-out;
+  }
+  body.mode-kids .shadow-record-btn {
+    background: linear-gradient(135deg, #ff5fa2, #ff3366);
+    box-shadow: 0 4px 14px rgba(255,51,102,0.4);
+  }
+
+  /* AB Compare Dock (appears after recording) */
+  .shadow-ab-dock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 12px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 14px;
+    animation: fadeIn 0.3s ease;
+  }
+  body.mode-adult .shadow-ab-dock {
+    background: rgba(255,255,255,0.05);
+  }
+  .shadow-ab-btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: 2px solid rgba(0,0,0,0.1);
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: inherit;
+  }
+  body.mode-adult .shadow-ab-btn {
+    background: rgba(30,41,59,0.8);
+    border-color: rgba(255,255,255,0.15);
+    color: #f1f5f9;
+  }
+  .shadow-ab-btn.active {
+    background: #4f46e5;
+    color: #fff;
+    border-color: #4f46e5;
+  }
+  body.mode-kids .shadow-ab-btn.active {
+    background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+    border-color: #ff5fa2;
+  }
+
+  /* AI Feedback Pill */
+  .shadow-feedback-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.1));
+    border: 2px solid rgba(16,185,129,0.25);
+    border-radius: 16px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+  }
+  body.mode-adult .shadow-feedback-pill {
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.08));
+  }
+  .shadow-feedback-score {
+    font-size: 28px;
+    font-weight: 900;
+    color: #10b981;
+  }
+  .shadow-feedback-stars {
+    font-size: 20px;
+    letter-spacing: 4px;
+  }
+  .shadow-feedback-msg {
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0.85;
+    line-height: 1.4;
+  }
+  .shadow-feedback-retry {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    background: #10b981;
+    color: #fff;
+    transition: transform 0.15s;
+  }
+  .shadow-feedback-retry:hover { transform: scale(1.05); }
+
+  /* Empty state for no story selected */
+  .shadow-empty {
+    text-align: center;
+    padding: 40px 20px;
+    opacity: 0.6;
+  }
+  .shadow-empty-icon {
+    font-size: 52px;
+    margin-bottom: 10px;
+  }
+  .shadow-empty-text {
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  /* Countdown overlay */
+  .shadow-countdown {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    animation: fadeIn 0.2s ease;
+  }
+  .shadow-countdown-num {
+    font-size: 96px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    animation: countdownPop 0.4s ease;
+  }
+  @keyframes countdownPop {
+    0% { transform: scale(0.3); opacity: 0; }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
+</head>
+<body class="mode-kids">
+
+<!-- Top Sticky Header -->
+<header class="top-header">
+  <div class="header-main">
+    <a href="index.html" class="brand">
+      <span class="logo-icon">🌍</span>
+      <div class="brand-text">
+        <h1 id="appTitleText">雙語探險學院 🌟</h1>
+        <div class="sub-text" id="appSubText">英語 & 日語 ‧ 影音精聽 ‧ 趣味挑戰</div>
+      </div>
+    </a>
+
+    <div class="header-actions">
+      <!-- Mode Toggle -->
+      <button class="mode-toggle-btn" id="modeToggleBtn" title="切換學習模式">
+        <span id="modeIcon">🧒</span>
+        <span id="modeLabel">小朋友冒險模式</span>
+      </button>
+
+      <!-- Sound Mute Toggle -->
+      <button class="icon-btn" id="soundToggleBtn" title="音效開關">🔊</button>
+
+      <!-- Home Link -->
+      <a href="index.html" class="icon-btn" title="回遊戲大廳">🏠</a>
+    </div>
+  </div>
+
+  <!-- 4 Navigation Tabs -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-tab="vocab">
+      <span>📚</span> <span>分級單字庫</span>
+    </button>
+    <button class="tab-btn" data-tab="video">
+      <span>📺</span> <span>影音精聽室</span>
+    </button>
+    <button class="tab-btn" data-tab="practice">
+      <span id="tabPracticeIcon">🎮</span> <span id="tabPracticeText">打怪闖關</span>
+    </button>
+    <button class="tab-btn" data-tab="dialogue">
+      <span>💬</span> <span id="tabDialogueText">情境對話</span>
+    </button>
+    <button class="tab-btn" data-tab="shadowing">
+      <span>🎙️</span> <span id="tabShadowingText">影子跟讀</span>
+    </button>
+  </nav>
+</header>
+
+<main class="app-container">
+
+  <!-- ==================== TAB 1: 分級單字庫 ==================== -->
+  <section id="tab-vocab" class="tab-content active">
+    <div class="vocab-header">
+      <!-- Language Switcher -->
+      <div class="lang-switcher">
+        <button class="lang-opt active" data-lang="en">🇬🇧 英語 (English)</button>
+        <button class="lang-opt" data-lang="ja">🇯🇵 日語 (Japanese)</button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="vocabSearchInput" placeholder="搜尋單字、讀音或中文釋義...">
+      </div>
+
+      <!-- Custom Word Button -->
+      <button class="add-custom-btn" id="openAddWordModalBtn">
+        <span>➕</span> <span>自訂生字</span>
+      </button>
+    </div>
+
+    <!-- Level Filter Pills -->
+    <div class="level-pills" id="levelPills">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Word Cards Grid -->
+    <div class="words-grid" id="wordsGrid">
+      <!-- Word Cards Injected Here -->
+    </div>
+  </section>
+
+  <!-- ==================== TAB 2: YOUTUBE 雙語影音精聽室 ==================== -->
+  <section id="tab-video" class="tab-content">
+    <div class="yt-container">
+      <!-- Custom URL Input -->
+      <div class="glass-card yt-loader-bar">
+        <span style="font-size: 20px;">🎬</span>
+        <input type="text" id="ytUrlInput" placeholder="貼上 YouTube 影片網址或 ID (例如: dQw4w9WgXcQ)...">
+        <button class="yt-btn" id="ytLoadBtn">▶️ 載入影片</button>
+      </div>
+
+      <!-- Curated Presets Selection -->
+      <div>
+        <div style="font-size: 13px; font-weight: 800; margin-bottom: 8px; opacity: 0.85;">
+          ⚡ 精選推薦雙語片段（點擊立即載入同步字幕）：
+        </div>
+        <div class="preset-videos-row" id="presetVideosRow">
+          <!-- Preset video chips injected here -->
+        </div>
+      </div>
+
+      <!-- Player & Subtitles Layout -->
+      <div class="player-layout">
+        <!-- Video Iframe -->
+        <div class="video-wrapper">
+          <div id="player"></div>
+        </div>
+
+        <!-- Subtitles Sync List -->
+        <div class="glass-card subtitles-panel">
+          <div class="sub-controls">
+            <!-- A-B Loop toggle -->
+            <label class="toggle-label" title="自動重播當前選中的單句">
+              <input type="checkbox" id="abLoopToggle" class="hidden">
+              <span class="toggle-switch"></span>
+              <span>🔂 單句循環 (A-B Loop)</span>
+            </label>
+
+            <!-- Blind listening toggle -->
+            <label class="toggle-label" title="隱藏中文翻譯，先練聽力">
+              <input type="checkbox" id="blindSubToggle" class="hidden">
+              <span class="toggle-switch"></span>
+              <span>🙈 遮蔽翻譯</span>
+            </label>
+          </div>
+
+          <!-- Active Sentence Sync -->
+          <div class="sub-list" id="subList">
+            <!-- Subtitle rows injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TAB 3: 互動測驗與闖關 ==================== -->
+  <section id="tab-practice" class="tab-content">
+    <!-- Kids Mode: 打怪獸闖關 -->
+    <div id="kidsPracticeView" class="battle-arena">
+      <div class="battle-header">
+        <div class="hearts-meter" id="kidsHearts">❤️❤️❤️</div>
+        <div class="combo-badge">
+          <span>🔥</span> <span id="kidsComboText">連擊 x0</span>
+        </div>
+        <div style="font-size: 14px; font-weight: 900; color: #f59e0b;">
+          ⭐ 星星 <b id="kidsScore">0</b>
+        </div>
+      </div>
+
+      <!-- Monster Visual Stage -->
+      <div class="glass-card monster-stage" id="monsterStage">
+        <div class="monster-avatar" id="monsterAvatar">👾</div>
+        <div class="monster-name" id="monsterName">貪吃字魔</div>
+        <div class="monster-hp-container">
+          <div class="monster-hp-fill" id="monsterHpFill"></div>
+        </div>
+        <div style="font-size: 12px; font-weight: 800; margin-top: 4px; opacity: 0.8;" id="monsterHpText">
+          HP 100 / 100
+        </div>
+      </div>
+
+      <!-- Question & Choice Buttons -->
+      <div class="glass-card quiz-question-box">
+        <div class="prompt-word">
+          <span id="quizWord">Apple</span>
+          <button class="action-btn" id="quizSpeakBtn" title="播放發音">🔊</button>
+        </div>
+        <div class="prompt-hint" id="quizHint">請選出正確的中文意思：</div>
+
+        <div class="choices-grid" id="quizChoicesGrid">
+          <!-- 4 Candy Buttons Injected Here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Adult Mode: 閃卡與聽力拼寫 -->
+    <div id="adultPracticeView" class="adult-practice hidden">
+      <!-- Sub-mode toggle: Flashcard vs Spelling -->
+      <div class="practice-mode-switch">
+        <button class="practice-sub-tab active" data-sub="flashcard">🗂️ 智能記憶閃卡 (Anki/FSRS)</button>
+        <button class="practice-sub-tab" data-sub="spelling">✍️ 聽力拼寫默寫</button>
+      </div>
+
+      <!-- Flashcard Section -->
+      <div id="flashcardSection">
+        <div class="flashcard-wrapper" id="flashcardWrapper">
+          <div class="flashcard-inner">
+            <!-- Front -->
+            <div class="flashcard-front">
+              <span class="level-badge" id="fcLevelBadge">B2</span>
+              <div style="font-size: 36px; font-weight: 900; margin: 16px 0 8px;" id="fcWord">Perseverance</div>
+              <div style="font-size: 15px; color: #38bdf8; font-weight: 700;" id="fcPhonetic">/ˌpɜːrsəˈvɪrəns/</div>
+              <button class="action-btn" id="fcSpeakBtn" style="margin-top: 14px;">🔊 聽發音</button>
+              <div style="font-size: 12px; opacity: 0.6; margin-top: 24px;">💡 點擊卡片或按 [空白鍵] 翻面</div>
+            </div>
+
+            <!-- Back -->
+            <div class="flashcard-back">
+              <div style="font-size: 24px; font-weight: 900; color: #60a5fa;" id="fcMeaning">堅持不懈、毅力</div>
+              <div style="font-size: 13px; opacity: 0.8; margin-top: 10px; max-width: 90%; line-height: 1.5;" id="fcExample">
+                "Through perseverance and hard work, she mastered three languages."
+              </div>
+              <div style="font-size: 12px; opacity: 0.65; margin-top: 4px;" id="fcExampleZh">
+                憑藉著毅力與努力，她精通了三門語言。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SRS Rating Buttons -->
+        <div class="srs-ratings">
+          <button class="rate-btn rate-again" data-rate="again">
+            <span>❌ 忘記了</span>
+            <span class="kbd-hint">[1] 重來</span>
+          </button>
+          <button class="rate-btn rate-hard" data-rate="hard">
+            <span>⚠️ 困難</span>
+            <span class="kbd-hint">[2] 短週期</span>
+          </button>
+          <button class="rate-btn rate-good" data-rate="good">
+            <span>✅ 良好</span>
+            <span class="kbd-hint">[3] 正常</span>
+          </button>
+          <button class="rate-btn rate-easy" data-rate="easy">
+            <span>⚡ 簡單</span>
+            <span class="kbd-hint">[4] 掌握</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Spelling Section -->
+      <div id="spellingSection" class="glass-card spelling-box hidden">
+        <button class="icon-btn" id="spellAudioBtn" style="width: 54px; height: 54px; font-size: 26px;">🔊</button>
+        <div style="font-size: 14px; opacity: 0.8;">請聽發音並輸入正確拼寫：</div>
+        <div style="font-size: 18px; font-weight: 800; color: #a5b4fc;" id="spellMeaningHint"></div>
+        <input type="text" class="spelling-input" id="spellingInput" placeholder="在此輸入拼寫..." autocomplete="off">
+        <button class="add-custom-btn" id="checkSpellingBtn" style="padding: 10px 24px;">驗證 (Enter)</button>
+        <div id="spellingResult" style="font-size: 14px; font-weight: 800; min-height: 24px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TAB 4: 💬 情境實境對話 (Roleplay Dialogue) ==================== -->
+  <section id="tab-dialogue" class="tab-content">
+    <div class="dialogue-container">
+
+      <!-- 1. Scenario Selection View -->
+      <div id="dialogueSelectionView">
+        <div class="dialogue-header-bar">
+          <!-- Dialogue Language Switcher -->
+          <div class="dialogue-lang-switcher">
+            <button class="dialogue-lang-btn active" data-dlang="en">🇬🇧 英語 (English)</button>
+            <button class="dialogue-lang-btn" data-dlang="ja">🇯🇵 日語 (Japanese)</button>
+          </div>
+          <div class="dialogue-tag-info" id="dialogueModeHint">
+            ✨ 點選情境卡片立即開啟全語音即時互動對話
+          </div>
+        </div>
+
+        <!-- Scenario Cards Grid -->
+        <div class="scenario-grid" id="dialogueScenarioGrid">
+          <!-- Scenario cards injected here by DialogueSys -->
+        </div>
+      </div>
+
+      <!-- 2. Active Chatroom / Call Interface -->
+      <div id="dialogueChatView" class="chat-panel hidden">
+        <!-- Chat Navigation Bar -->
+        <div class="glass-card chat-nav-bar">
+          <button class="chat-back-btn" id="dialogueBackBtn">
+            <span>◀</span> <span>更換情境</span>
+          </button>
+          <div class="chat-npc-info" id="chatNpcInfo">
+            <span id="chatNpcAvatar">🧙‍♀️</span>
+            <span id="chatNpcName">魔法店長 莉莉</span>
+          </div>
+          <div class="chat-progress-pill" id="chatProgressPill">回合 1 / 3</div>
+        </div>
+
+        <!-- Chat History Container -->
+        <div class="glass-card chat-history" id="dialogueChatList">
+          <!-- Chat bubbles injected here -->
+        </div>
+
+        <!-- User Prompt & Speaking Area -->
+        <div class="glass-card prompt-panel" id="dialoguePromptPanel">
+          <div class="prompt-callout">
+            <span>🎯</span> <span>輪到你了，請跟著說 (Your Turn)：</span>
+          </div>
+          <div class="prompt-target" id="dialogueTargetText">I want a cute and fluffy golden puppy!</div>
+          <div class="prompt-sub-hint" id="dialogueTargetPhonetic">I want a cute and fluffy golden puppy!</div>
+          <div class="prompt-meaning" id="dialogueTargetMeaning">我想要一隻可愛又毛茸茸的黃金小狗！</div>
+
+          <div class="sound-wave-box" id="dialogueSoundWave">
+            <div class="sound-wave-line"></div>
+            <div class="sound-wave-line"></div>
+            <div class="sound-wave-line"></div>
+            <div class="sound-wave-line"></div>
+            <div class="sound-wave-line"></div>
+          </div>
+
+          <div class="prompt-status-msg" id="dialogueStatusMsg">
+            點擊下方 🎙️ 開口練習，或點 🎧 聽示範
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="prompt-actions">
+            <!-- Listen Guide -->
+            <button class="chat-aux-btn" id="dialogueListenGuideBtn" title="聆聽示範發音">
+              <span>🎧</span> <span>聽示範</span>
+            </button>
+
+            <!-- Main Mic Button -->
+            <button class="mic-button" id="dialogueMicBtn" title="點擊開口說話 (語音識別)">
+              <span>🎙️</span>
+            </button>
+
+            <!-- Direct Submit / Quiet Mode -->
+            <button class="chat-aux-btn" id="dialogueDirectSubmitBtn" title="安靜場合代替朗讀直接送出">
+              <span>⌨️</span> <span>直接送出</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== TAB 5: 🎙️ 影子跟讀訓練室 (Shadowing Studio) ==================== -->
+  <section id="tab-shadowing" class="tab-content">
+    <div class="shadowing-container">
+
+      <!-- 1. Story Selector Bar -->
+      <div class="glass-card shadow-story-bar">
+        <span style="font-size: 20px;">📖</span>
+        <select id="shadowStorySelect">
+          <option value="">— 請選擇故事 —</option>
+        </select>
+        <div class="speed-btns">
+          <button class="speed-btn" data-speed="0.8">0.8x 慢速</button>
+          <button class="speed-btn active" data-speed="1.0">1.0x 標準</button>
+          <button class="speed-btn" data-speed="1.2">1.2x 挑戰</button>
+        </div>
+      </div>
+
+      <!-- 2. Step Indicator Tabs -->
+      <div class="step-tabs" id="shadowStepTabs">
+        <button class="step-tab-btn active" data-step="1">👂 純聽</button>
+        <button class="step-tab-btn" data-step="2">📖 精讀</button>
+        <button class="step-tab-btn" data-step="3">📑 視讀跟讀</button>
+        <button class="step-tab-btn" data-step="4">🎙️ 脫稿影子+錄音</button>
+      </div>
+
+      <!-- 3. Training Stage Card -->
+      <div class="glass-card shadow-stage" id="shadowStage">
+        <!-- Empty state -->
+        <div class="shadow-empty" id="shadowEmptyState">
+          <div class="shadow-empty-icon">🎙️</div>
+          <div class="shadow-empty-text">請先從上方選單選擇一個故事，開始影子跟讀訓練！</div>
+        </div>
+
+        <!-- Active training UI (hidden initially) -->
+        <div id="shadowActiveArea" class="hidden" style="display:flex;flex-direction:column;gap:16px;">
+
+          <!-- Sound Wave Visualizer -->
+          <div class="shadow-wave-box" id="shadowWaveBox">
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+            <div class="shadow-wave-bar"></div>
+          </div>
+
+          <!-- Toggle text visibility (for Step 1 & 4) -->
+          <div style="display:flex;justify-content:flex-end;">
+            <button class="shadow-toggle-eye" id="shadowToggleEye" title="顯示/隱藏中文翻譯">
+              <span id="shadowEyeIcon">👁️</span> <span id="shadowEyeLabel">偷看翻譯</span>
+            </button>
+          </div>
+
+          <!-- Script Display Area -->
+          <div class="shadow-script-area" id="shadowScriptArea">
+            <!-- Sentences injected here -->
+          </div>
+
+          <!-- Karaoke Progress Bar -->
+          <div class="shadow-karaoke-bar">
+            <div class="shadow-karaoke-fill" id="shadowKaraokeFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Control Dock -->
+      <div class="shadow-control-dock" id="shadowControlDock">
+        <button class="shadow-ctrl-btn shadow-play-btn" id="shadowPlayBtn" title="播放母語者原音">
+          <span>▶️</span> <span>播放原音</span>
+        </button>
+        <button class="shadow-ctrl-btn shadow-record-btn" id="shadowRecordBtn" title="脫稿跟讀+錄音" disabled>
+          <span>🎙️</span> <span>開始跟讀錄音</span>
+        </button>
+      </div>
+
+      <!-- AB Compare Dock (hidden initially, shown after recording) -->
+      <div class="shadow-ab-dock hidden" id="shadowAbDock">
+        <button class="shadow-ab-btn active" id="shadowAbNative" title="聽母語原音">🔊 聽母語原音</button>
+        <button class="shadow-ab-btn" id="shadowAbUser" title="聽我的錄音">🎧 聽我的錄音</button>
+        <button class="shadow-ab-btn" id="shadowAbRetry" title="重新挑戰">🔄 重新挑戰</button>
+      </div>
+
+      <!-- AI Feedback Pill (hidden initially) -->
+      <div class="shadow-feedback-pill hidden" id="shadowFeedback">
+        <div class="shadow-feedback-score" id="shadowFeedbackScore">85%</div>
+        <div class="shadow-feedback-stars" id="shadowFeedbackStars">⭐⭐⭐</div>
+        <div class="shadow-feedback-msg" id="shadowFeedbackMsg">流暢度極佳，咬字清晰！繼續保持～</div>
+        <button class="shadow-feedback-retry" id="shadowFeedbackRetry">🔄 再練一次</button>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- Modal: 新增自訂生字 -->
+<div id="addWordModal" class="modal-overlay hidden">
+  <div class="glass-card modal-dialog">
+    <h3 style="font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+      <span>✏️</span> <span>新增自訂生詞到單字庫</span>
+    </h3>
+
+    <div class="form-group">
+      <label>語言類別</label>
+      <select id="modalWordLang">
+        <option value="en">🇬🇧 英語 (English)</option>
+        <option value="ja">🇯🇵 日語 (Japanese)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>單字 / 詞彙</label>
+      <input type="text" id="modalWordText" placeholder="例如: serendipity 或 桜 (さくら)">
+    </div>
+
+    <div class="form-group">
+      <label>音標 / 假名讀音</label>
+      <input type="text" id="modalWordPhonetic" placeholder="例如: /ˌserənˈdɪpəti/ 或 さくら">
+    </div>
+
+    <div class="form-group">
+      <label>中文釋義</label>
+      <input type="text" id="modalWordMeaning" placeholder="例如: 意外的驚喜與幸運">
+    </div>
+
+    <div class="form-group">
+      <label>例句 (選填)</label>
+      <input type="text" id="modalWordExample" placeholder="例如: Finding this book was pure serendipity.">
+    </div>
+
+    <div class="form-group">
+      <label>例句中文 (選填)</label>
+      <input type="text" id="modalWordExampleZh" placeholder="例如: 找到這本書完全是一場美妙的奇緣。">
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+      <button class="pill" id="cancelAddWordBtn">取消</button>
+      <button class="add-custom-btn" id="saveCustomWordBtn">儲存生字</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 情境對話完成 -->
+<div id="dialogueCompleteModal" class="modal-overlay hidden">
+  <div class="glass-card modal-dialog completion-card">
+    <div class="completion-star-burst" id="dialogueCompleteIcon">🎉</div>
+    <div class="completion-title" id="dialogueCompleteTitle">情境對話挑戰成功！</div>
+    <div class="completion-npc-quote" id="dialogueCompleteQuote">
+      莉莉店長：「你說得太棒了，發音非常流暢！小狗狗很喜歡你喔！」
+    </div>
+    <div class="completion-reward-badge" id="dialogueCompleteReward">
+      ⭐ 獲得 1 顆冒險星星！
+    </div>
+    <div class="completion-actions">
+      <button class="pill" id="dialogueChooseOtherBtn">📋 選擇其他情境</button>
+      <button class="add-custom-btn" id="dialogueRetryBtn">🔄 再練一次</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   1. 音效合成器 (Web Audio API Synthesizer) - 零外部資源依賴
+   ========================================================================= */
+const AudioSys = (() => {
+  let actx = null;
+  let enabled = true;
+
+  function getCtx() {
+    if (!actx) {
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (actx && actx.state === 'suspended') {
+      actx.resume();
+    }
+    return actx;
+  }
+
+  function playTone(freq, duration = 0.15, type = 'sine', vol = 0.2, slideTo = null) {
+    if (!enabled) return;
+    try {
+      const ctx = getCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      if (slideTo) {
+        osc.frequency.exponentialRampToValueAtTime(slideTo, ctx.currentTime + duration);
+      }
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration + 0.05);
+    } catch (e) {}
+  }
+
+  return {
+    toggle(on) { enabled = on !== undefined ? on : !enabled; return enabled; },
+    isEnabled() { return enabled; },
+    correct() {
+      playTone(523.25, 0.1, 'triangle', 0.25);
+      setTimeout(() => playTone(659.25, 0.1, 'triangle', 0.25), 80);
+      setTimeout(() => playTone(783.99, 0.18, 'triangle', 0.3), 160);
+    },
+    wrong() {
+      playTone(220, 0.15, 'sawtooth', 0.3, 110);
+      setTimeout(() => playTone(140, 0.2, 'sawtooth', 0.25, 70), 90);
+    },
+    hit() {
+      playTone(380, 0.12, 'square', 0.35, 120);
+    },
+    bossDefeated() {
+      playTone(440, 0.12, 'triangle', 0.3);
+      setTimeout(() => playTone(554.37, 0.12, 'triangle', 0.3), 100);
+      setTimeout(() => playTone(659.25, 0.12, 'triangle', 0.3), 200);
+      setTimeout(() => playTone(880, 0.35, 'sine', 0.4), 300);
+    },
+    cardFlip() {
+      playTone(600, 0.05, 'sine', 0.15, 900);
+    }
+  };
+})();
+
+/* =========================================================================
+   2. 語音合成器 (Web Speech API TTS)
+   ========================================================================= */
+const SpeechSys = (() => {
+  let voices = [];
+
+  function loadVoices() {
+    if ('speechSynthesis' in window) {
+      voices = window.speechSynthesis.getVoices();
+    }
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+  }
+
+  return {
+    speak(text, lang = 'en', rate = 0.95) {
+      if (!('speechSynthesis' in window) || !text) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = (lang === 'ja') ? 'ja-JP' : 'en-US';
+      u.rate = rate;
+      window.speechSynthesis.speak(u);
+    }
+  };
+})();
+
+/* =========================================================================
+   3. 核心分級單字資料庫 (English A1-C2 & Japanese 50音-N1)
+   ========================================================================= */
+const DEFAULT_WORDS = [
+  /* 🇬🇧 English A1 入門 */
+  { id: 'en-a1-1', lang: 'en', level: 'A1', word: 'Apple', phonetic: '/ˈæpl/', meaning: '蘋果', pos: 'n.', example: 'I eat a fresh apple every morning.', exampleZh: '我每天早上吃一顆新鮮的蘋果。' },
+  { id: 'en-a1-2', lang: 'en', level: 'A1', word: 'Rainbow', phonetic: '/ˈreɪnboʊ/', meaning: '彩虹', pos: 'n.', example: 'Look at the beautiful rainbow in the sky!', exampleZh: '快看天空那道美麗的彩虹！' },
+  { id: 'en-a1-3', lang: 'en', level: 'A1', word: 'Happy', phonetic: '/ˈhæpi/', meaning: '快樂的', pos: 'adj.', example: 'The children are so happy in the park.', exampleZh: '孩子們在公園裡玩得好開心。' },
+  { id: 'en-a1-4', lang: 'en', level: 'A1', word: 'Friend', phonetic: '/frend/', meaning: '朋友', pos: 'n.', example: 'A true friend is always by your side.', exampleZh: '真正的朋友永遠陪伴在身旁。' },
+  { id: 'en-a1-5', lang: 'en', level: 'A1', word: 'Water', phonetic: '/ˈwɔːtər/', meaning: '水', pos: 'n.', example: 'Drink plenty of water every day.', exampleZh: '每天要記得多喝水。' },
+
+  /* 🇬🇧 English A2 初級 */
+  { id: 'en-a2-1', lang: 'en', level: 'A2', word: 'Adventure', phonetic: '/ədˈventʃər/', meaning: '冒險、奇遇', pos: 'n.', example: 'They embarked on a thrilling forest adventure.', exampleZh: '他們展開了一場刺激的森林冒險。' },
+  { id: 'en-a2-2', lang: 'en', level: 'A2', word: 'Delicious', phonetic: '/dɪˈlɪʃəs/', meaning: '美味的、可口的', pos: 'adj.', example: 'Mom made a delicious chocolate cake.', exampleZh: '媽媽做了一個非常美味的巧克力蛋糕。' },
+  { id: 'en-a2-3', lang: 'en', level: 'A2', word: 'Travel', phonetic: '/ˈtrævl/', meaning: '旅行', pos: 'v./n.', example: 'I love to travel and explore new cultures.', exampleZh: '我喜歡旅行並探索新文化。' },
+  { id: 'en-a2-4', lang: 'en', level: 'A2', word: 'Weather', phonetic: '/ˈweðər/', meaning: '天氣', pos: 'n.', example: 'The weather is sunny and warm today.', exampleZh: '今天的天氣晴朗又溫暖。' },
+
+  /* 🇬🇧 English B1 中級 */
+  { id: 'en-b1-1', lang: 'en', level: 'B1', word: 'Courage', phonetic: '/ˈkɜːrɪdʒ/', meaning: '勇氣、膽量', pos: 'n.', example: 'It takes great courage to speak the truth.', exampleZh: '說出真相需要極大的勇氣。' },
+  { id: 'en-b1-2', lang: 'en', level: 'B1', word: 'Discover', phonetic: '/dɪˈskʌvər/', meaning: '發現、探索', pos: 'v.', example: 'Scientists discovered a new star in galaxy.', exampleZh: '科學家在星系中發現了一顆新恆星。' },
+  { id: 'en-b1-3', lang: 'en', level: 'B1', word: 'Environment', phonetic: '/ɪnˈvaɪrənmənt/', meaning: '環境、大自然', pos: 'n.', example: 'We must protect our natural environment.', exampleZh: '我們必須守護我們的自然環境。' },
+  { id: 'en-b1-4', lang: 'en', level: 'B1', word: 'Confidence', phonetic: '/ˈkɑːnfɪdəns/', meaning: '信心、自信', pos: 'n.', example: 'She spoke on stage with high confidence.', exampleZh: '她在舞台上自信滿滿地發表演說。' },
+
+  /* 🇬🇧 English B2 中高級 */
+  { id: 'en-b2-1', lang: 'en', level: 'B2', word: 'Accomplish', phonetic: '/əˈkɑːmplɪʃ/', meaning: '實現、完成任務', pos: 'v.', example: 'You can accomplish anything with practice.', exampleZh: '只要持續練習，你能實現任何目標。' },
+  { id: 'en-b2-2', lang: 'en', level: 'B2', word: 'Perspective', phonetic: '/pərˈspektɪv/', meaning: '視角、觀點', pos: 'n.', example: 'Traveling gives you a whole new perspective.', exampleZh: '旅行能帶給你全新的視野與觀點。' },
+  { id: 'en-b2-3', lang: 'en', level: 'B2', word: 'Sustainable', phonetic: '/səˈsteɪnəbl/', meaning: '永續的、可持續的', pos: 'adj.', example: 'We should promote sustainable energy.', exampleZh: '我們應提倡可持續的綠色能源。' },
+  { id: 'en-b2-4', lang: 'en', level: 'B2', word: 'Innovative', phonetic: '/ˈɪnəveɪtɪv/', meaning: '創新的、革新的', pos: 'adj.', example: 'The team proposed an innovative solution.', exampleZh: '團隊提出了一個極具創新性的解決方案。' },
+
+  /* 🇬🇧 English C1/C2 精通 & 多益高頻 */
+  { id: 'en-c1-1', lang: 'en', level: 'C1', word: 'Serendipity', phonetic: '/ˌserənˈdɪpəti/', meaning: '意外之喜、美妙的機緣', pos: 'n.', example: 'Meeting my best mentor was pure serendipity.', exampleZh: '遇見我的良師益友純粹是一場美妙的機緣。' },
+  { id: 'en-c1-2', lang: 'en', level: 'C1', word: 'Pragmatic', phonetic: '/præɡˈmætɪk/', meaning: '務實的、注重實效的', pos: 'adj.', example: 'We need a pragmatic approach to this crisis.', exampleZh: '面對這場危機，我們需要務實的因應對策。' },
+  { id: 'en-c1-3', lang: 'en', level: 'C1', word: 'Exacerbate', phonetic: '/ɪɡˈzæsərbeɪt/', meaning: '惡化、加劇', pos: 'v.', example: 'Delaying action will only exacerbate the issue.', exampleZh: '拖延行動只會使問題進一步惡化。' },
+  { id: 'en-c1-4', lang: 'en', level: 'C1', word: 'Paradigm', phonetic: '/ˈpærədaɪm/', meaning: '範式、典型範例', pos: 'n.', example: 'AI brings a new paradigm in digital learning.', exampleZh: '人工智慧為數位學習帶來了全新典範。' },
+
+  /* 🇯🇵 Japanese 五十音基礎 (50音) */
+  { id: 'ja-50-1', lang: 'ja', level: '50音', word: 'あ (ア)', phonetic: 'a', meaning: '五十音：あ段元音', pos: '仮名', example: 'あさ (朝) - 早晨', exampleZh: 'あさごはん：早餐' },
+  { id: 'ja-50-2', lang: 'ja', level: '50音', word: 'い (イ)', phonetic: 'i', meaning: '五十音：い段元音', pos: '仮名', example: 'いぬ (犬) - 狗狗', exampleZh: 'かわいい いぬ：可愛的狗狗' },
+  { id: 'ja-50-3', lang: 'ja', level: '50音', word: 'う (ウ)', phonetic: 'u', meaning: '五十音：う段元音', pos: '仮名', example: 'うみ (海) - 大海', exampleZh: 'あおい うみ：湛藍的大海' },
+  { id: 'ja-50-4', lang: 'ja', level: '50音', word: 'え (エ)', phonetic: 'e', meaning: '五十音：え段元音', pos: '仮名', example: 'えがお (笑顔) - 笑容', exampleZh: 'すてきな えがお：迷人的笑容' },
+  { id: 'ja-50-5', lang: 'ja', level: '50音', word: 'お (オ)', phonetic: 'o', meaning: '五十音：お段元音', pos: '仮名', example: 'おんがく (音楽) - 音樂', exampleZh: 'おんがくを きく：聽音樂' },
+
+  /* 🇯🇵 Japanese N5 入門 */
+  { id: 'ja-n5-1', lang: 'ja', level: 'N5', word: 'こんにちは', phonetic: 'konnichiwa', meaning: '你好 (白天問候)', pos: '挨拶', example: '皆さん、こんにちは！', exampleZh: '各位，大家好！' },
+  { id: 'ja-n5-2', lang: 'ja', level: 'N5', word: '友達 (ともだち)', phonetic: 'tomodachi', meaning: '朋友、同伴', pos: '名詞', example: '公園で友達と遊びます。', exampleZh: '在公園和朋友一起玩耍。' },
+  { id: 'ja-n5-3', lang: 'ja', level: 'N5', word: '食べる (たべる)', phonetic: 'taberu', meaning: '吃 (動詞)', pos: '動詞', example: 'おいしいリンゴを食べます。', exampleZh: '吃著美味的蘋果。' },
+  { id: 'ja-n5-4', lang: 'ja', level: 'N5', word: '猫 (ねこ)', phonetic: 'neko', meaning: '貓咪', pos: '名詞', example: '白い猫が昼寝しています。', exampleZh: '白貓正在悠閒地睡午覺。' },
+
+  /* 🇯🇵 Japanese N4 基礎 */
+  { id: 'ja-n4-1', lang: 'ja', level: 'N4', word: '約束 (やくそく)', phonetic: 'yakusoku', meaning: '約定、承諾', pos: '名詞/自サ', example: '友達と遊ぶ約束をしました。', exampleZh: '我和朋友做好了出去玩的約定。' },
+  { id: 'ja-n4-2', lang: 'ja', level: 'N4', word: '案内 (あんない)', phonetic: 'annai', meaning: '嚮導、引導介紹', pos: '名詞/他サ', example: '街の名所を案内します。', exampleZh: '為您介紹導覽這座城市的名勝。' },
+  { id: 'ja-n4-3', lang: 'ja', level: 'N4', word: '準備 (じゅんび)', phonetic: 'junbi', meaning: '準備、籌劃', pos: '名詞/他サ', example: '旅行の準備を始めましょう。', exampleZh: '開始準備旅行的行李吧。' },
+
+  /* 🇯🇵 Japanese N3 日常 */
+  { id: 'ja-n3-1', lang: 'ja', level: 'N3', word: '経験 (けいけん)', phonetic: 'keiken', meaning: '經驗、體會', pos: '名詞/他サ', example: '留学は素晴らしい経験でした。', exampleZh: '留學是一段非常棒的人生經驗。' },
+  { id: 'ja-n3-2', lang: 'ja', level: 'N3', word: '確かめる (たしかめる)', phonetic: 'tashikameru', meaning: '確認、查明', pos: '動詞', example: '出発時間を確かめてください。', exampleZh: '請再確認一次出發時間。' },
+  { id: 'ja-n3-3', lang: 'ja', level: 'N3', word: '相談 (そうだん)', phonetic: 'soudan', meaning: '商量、諮詢', pos: '名詞/自サ', example: '先生に将来のことを相談した。', exampleZh: '向老師諮詢討論了未來的規劃。' },
+
+  /* 🇯🇵 Japanese N2/N1 進階 */
+  { id: 'ja-n2-1', lang: 'ja', level: 'N2', word: '克服 (こくふく)', phonetic: 'kokufuku', meaning: '克服、戰勝困難', pos: '名詞/他サ', example: '困難を克服して合格した。', exampleZh: '克服一切難關並順利考試合格。' },
+  { id: 'ja-n2-2', lang: 'ja', level: 'N2', word: '貢献 (こうけん)', phonetic: 'kouken', meaning: '貢獻、效勞', pos: '名詞/自サ', example: '地域社会の発展に貢献する。', exampleZh: '為在地社區的繁榮發展做出貢獻。' },
+  { id: 'ja-n1-1', lang: 'ja', level: 'N1', word: '臨機応変 (りんきおうへん)', phonetic: 'rinkiouhen', meaning: '隨機應變', pos: '四字熟語', example: '状況に応じて臨機応変に対応する。', exampleZh: '視現場狀況隨機應變做出最好的應對。' },
+
+  /* 🇬🇧 English 生活高頻擴充 (A2-B1) */
+  { id: 'en-a2-5', lang: 'en', level: 'A2', word: 'Restaurant', phonetic: '/ˈrestrɑːnt/', meaning: '餐廳', pos: 'n.', example: 'We had dinner at a lovely restaurant by the sea.', exampleZh: '我們在海邊一家可愛的餐廳吃了晚餐。' },
+  { id: 'en-a2-6', lang: 'en', level: 'A2', word: 'Difficult', phonetic: '/ˈdɪfɪkəlt/', meaning: '困難的', pos: 'adj.', example: 'This math problem is very difficult for me.', exampleZh: '這道數學題對我來說很難。' },
+  { id: 'en-a2-7', lang: 'en', level: 'A2', word: 'Health', phonetic: '/helθ/', meaning: '健康', pos: 'n.', example: 'Regular exercise is important for good health.', exampleZh: '規律運動對健康很重要。' },
+  { id: 'en-a2-8', lang: 'en', level: 'A2', word: 'Train', phonetic: '/treɪn/', meaning: '火車', pos: 'n.', example: 'The train arrives at the station at noon.', exampleZh: '火車中午抵達車站。' },
+  { id: 'en-b1-5', lang: 'en', level: 'B1', word: 'Experience', phonetic: '/ɪkˈspɪəriəns/', meaning: '經驗、體驗', pos: 'n./v.', example: 'Traveling gives me valuable life experience.', exampleZh: '旅行帶給我寶貴的人生經驗。' },
+  { id: 'en-b1-6', lang: 'en', level: 'B1', word: 'Responsible', phonetic: '/rɪˈspɒnsəbl/', meaning: '負責任的', pos: 'adj.', example: 'She is very responsible and always meets her deadlines.', exampleZh: '她非常負責任，總能如期完成任務。' },
+  { id: 'en-b1-7', lang: 'en', level: 'B1', word: 'Increase', phonetic: '/ɪnˈkriːs/', meaning: '增加', pos: 'v./n.', example: 'The company plans to increase its sales this year.', exampleZh: '公司計畫今年要增加銷售量。' },
+  { id: 'en-b1-8', lang: 'en', level: 'B1', word: 'Opinion', phonetic: '/əˈpɪnjən/', meaning: '意見、看法', pos: 'n.', example: 'In my opinion, learning a language is great fun.', exampleZh: '依我看，學習語言非常有趣。' },
+
+  /* 🇯🇵 Japanese 生活高頻擴充 (N5-N4) */
+  { id: 'ja-n5-5', lang: 'ja', level: 'N5', word: '天気 (てんき)', phonetic: 'tenki', meaning: '天氣', pos: '名詞', example: '今日はいい天気ですね。', exampleZh: '今天天氣真好呢。' },
+  { id: 'ja-n5-6', lang: 'ja', level: 'N5', word: '仕事 (しごと)', phonetic: 'shigoto', meaning: '工作', pos: '名詞', example: '仕事が終わってから、映画を見ます。', exampleZh: '工作結束後，我要看電影。' },
+  { id: 'ja-n5-7', lang: 'ja', level: 'N5', word: '電車 (でんしゃ)', phonetic: 'densha', meaning: '電車', pos: '名詞', example: '電車で学校へ行きます。', exampleZh: '我搭電車去學校。' },
+  { id: 'ja-n5-8', lang: 'ja', level: 'N5', word: '時間 (じかん)', phonetic: 'jikan', meaning: '時間', pos: '名詞', example: '時間がありません。', exampleZh: '我沒有時間了。' },
+  { id: 'ja-n4-4', lang: 'ja', level: 'N4', word: '気持ち (きもち)', phonetic: 'kimochi', meaning: '心情、感受', pos: '名詞', example: 'いい気持ちですね。', exampleZh: '感覺真舒服呢。' },
+  { id: 'ja-n4-5', lang: 'ja', level: 'N4', word: '大切 (たいせつ)', phonetic: 'taisetsu', meaning: '重要的、珍惜的', pos: '形容動詞', example: '家族は大切なものです。', exampleZh: '家人是最重要的存在。' },
+  { id: 'ja-n4-6', lang: 'ja', level: 'N4', word: '予約 (よやく)', phonetic: 'yoyaku', meaning: '預約', pos: '名詞/他サ', example: 'ホテルを予約しました。', exampleZh: '我預約了飯店。' },
+  { id: 'ja-n4-7', lang: 'ja', level: 'N4', word: '利用 (りよう)', phonetic: 'riyou', meaning: '利用、使用', pos: '名詞/他サ', example: 'この機械を利用してください。', exampleZh: '請使用這台機器。' }
+];
+
+/* =========================================================================
+   4. YOUTUBE 精選雙語同步短片資料庫
+   ========================================================================= */
+const PRESET_VIDEOS = [
+  {
+    id: 'peppa-cleaning',
+    title: '🐷 Peppa Pig: Cleaning Up',
+    category: 'kids-en',
+    videoId: '4u_c_X5YxZg',
+    desc: '粉紅豬小妹收拾房間英文日常對話',
+    subtitles: [
+      { start: 0, end: 4, orig: "Peppa and George love playing in their bedroom.", zh: "佩佩和喬治喜歡在他們的臥室裡玩耍。" },
+      { start: 4, end: 8, orig: "Look at all these toys on the floor!", zh: "看看地板上所有的玩具！" },
+      { start: 8, end: 12, orig: "Mummy Pig says it is time to tidy up.", zh: "豬媽媽說現在該收拾乾淨囉。" },
+      { start: 12, end: 16, orig: "Let's see who can pick up the toys the fastest!", zh: "看看誰能最快把玩具收好！" },
+      { start: 16, end: 20, orig: "George puts the green dinosaur in the box.", zh: "喬治把綠色恐龍放進了盒子裡。" },
+      { start: 20, end: 25, orig: "Well done, everyone! The room is sparkling clean!", zh: "大家做得好！房間變得乾淨閃亮！" }
+    ]
+  },
+  {
+    id: 'anpanman-song',
+    title: '🦸 アンパンマンのマーチ',
+    category: 'kids-ja',
+    videoId: 'O25hC0LpDq8',
+    desc: '麵包超人主題曲經典勇氣日語歌詞',
+    subtitles: [
+      { start: 0, end: 5, orig: "そうだ 恐れないで みんなのために", zh: "沒錯 不要害怕 為了大家的幸福" },
+      { start: 5, end: 10, orig: "愛と 勇気だけが 友達さ", zh: "愛與勇氣 就是我們最好的朋友" },
+      { start: 10, end: 15, orig: "ああ アンパンマン やさしい君は", zh: "啊 麵包超人 溫柔善良的你" },
+      { start: 15, end: 21, orig: "行け！みんなの 夢まもるため", zh: "去吧！為了守護大家的夢想" },
+      { start: 21, end: 28, orig: "時は はやくすぎる 光る星は 消える", zh: "時光飛逝 閃耀的星光也會逝去" },
+      { start: 28, end: 35, orig: "だから 君は いくんだ ほほえんで", zh: "所以 你帶著微笑 勇敢前進吧" }
+    ]
+  },
+  {
+    id: 'ted-learning',
+    title: '💡 TED: The Secrets of Learning Languages',
+    category: 'adult-en',
+    videoId: 'o_XVt5rdpFY',
+    desc: '多語言學霸分享高效自學語言的秘密核心',
+    subtitles: [
+      { start: 0, end: 6, orig: "Have you ever wondered how polyglots learn so many languages?", zh: "你是否曾好奇，通曉多國語言的人是如何學會這麼多語言的？" },
+      { start: 6, end: 12, orig: "The secret is simple: they find ways to truly enjoy the process.", zh: "秘訣其實很簡單：他們找到了真正享受這個過程的方法。" },
+      { start: 12, end: 18, orig: "Instead of boring grammar drills, they read books they love.", zh: "他們不枯燥地死背文法，而是閱讀自己熱愛的書籍。" },
+      { start: 18, end: 25, orig: "Consistency is key. Ten minutes every day beats three hours once a week.", zh: "持之以恆是關鍵。每天十分鐘遠勝於每週一次的三小時。" },
+      { start: 25, end: 32, orig: "Embrace mistakes as stepping stones toward natural fluency.", zh: "把犯錯視為通往自然流暢表達的墊腳石。" }
+    ]
+  },
+  {
+    id: 'nhk-conversation',
+    title: '🗼 日常会話：東京の街を散策しよう',
+    category: 'adult-ja',
+    videoId: 'gR3yF3Jj5nI',
+    desc: '日本街頭咖啡廳與問路實用日常對話',
+    subtitles: [
+      { start: 0, end: 5, orig: "すみません、この近くにおいしいカフェはありますか？", zh: "不好意思，請問這附近有美味的咖啡廳嗎？" },
+      { start: 5, end: 11, orig: "はい、あの角を右に曲がると、素敵な喫茶店がありますよ。", zh: "有的，在那個轉角右轉，有一家很棒的復古咖啡館喔。" },
+      { start: 11, end: 17, orig: "ありがとうございます！歩いてどのくらいかかりますか？", zh: "太感謝了！請問走路大概需要多久呢？" },
+      { start: 17, end: 23, orig: "三分ほどです。季節限定の抹茶ラテがおすすめですよ。", zh: "大約三分鐘。我很推薦他們季節限定的抹茶拿鐵喔。" },
+      { start: 23, end: 30, orig: "とても楽しみです！教えていただきありがとうございました。", zh: "好期待呀！非常謝謝您的熱心指引。" }
+    ]
+  }
+];
+
+/* =========================================================================
+   5. 全域狀態管理 (State Store)
+   ========================================================================= */
+const AppState = {
+  mode: localStorage.getItem('lang_app_mode') || 'kids',
+  lang: 'en',
+  currentLevel: 'ALL',
+  searchQuery: '',
+  bookmarks: JSON.parse(localStorage.getItem('lang_app_bookmarks') || '[]'),
+  customWords: JSON.parse(localStorage.getItem('lang_app_custom_words') || '[]'),
+  activeTab: 'vocab',
+
+  // YouTube Player State
+  currentVideoIndex: 0,
+  activeSubIndex: -1,
+  abLoopEnabled: false,
+  blindSubEnabled: false,
+
+  // Practice Quiz / Battle State
+  kidsHp: 100,
+  monsterHp: 100,
+  monsterMaxHp: 100,
+  combo: 0,
+  score: 0,
+  currentQuizWord: null,
+
+  // Adult Flashcard / SRS State
+  flashcardIndex: 0,
+  flashcardFlipped: false,
+  adultSubTab: 'flashcard',
+
+  // Dialogue State
+  dialogueLang: 'en',
+  currentDialogueScenario: null,
+  currentDialogueLineIndex: 0,
+  isRecognizing: false,
+
+  saveBookmarks() {
+    localStorage.setItem('lang_app_bookmarks', JSON.stringify(this.bookmarks));
+  },
+  saveCustomWords() {
+    localStorage.setItem('lang_app_custom_words', JSON.stringify(this.customWords));
+  },
+  saveMode() {
+    localStorage.setItem('lang_app_mode', this.mode);
+  }
+};
+
+/* =========================================================================
+   6. UI 控制與渲染模組 (UI Controller)
+   ========================================================================= */
+const UI = {
+  init() {
+    this.applyMode(AppState.mode);
+    this.bindEvents();
+    this.renderLevelPills();
+    this.renderWordsGrid();
+    this.renderPresetVideos();
+    this.initYouTubePlayer();
+    this.initQuiz();
+    this.initAdultPractice();
+    DialogueSys.init();
+  },
+
+  applyMode(newMode) {
+    AppState.mode = newMode;
+    AppState.saveMode();
+
+    const body = document.body;
+    const modeIcon = document.getElementById('modeIcon');
+    const modeLabel = document.getElementById('modeLabel');
+    const appTitle = document.getElementById('appTitleText');
+    const appSub = document.getElementById('appSubText');
+    const tabPracticeIcon = document.getElementById('tabPracticeIcon');
+    const tabPracticeText = document.getElementById('tabPracticeText');
+    const tabDialogueText = document.getElementById('tabDialogueText');
+
+    const kidsPracticeView = document.getElementById('kidsPracticeView');
+    const adultPracticeView = document.getElementById('adultPracticeView');
+
+    if (newMode === 'kids') {
+      body.className = 'mode-kids';
+      modeIcon.textContent = '🧒';
+      modeLabel.textContent = '小朋友冒險模式';
+      appTitle.textContent = '雙語探險學院 🌟';
+      appSub.textContent = '英語 & 日語 ‧ 影音精聽 ‧ 趣味打怪闖關';
+      tabPracticeIcon.textContent = '🎮';
+      tabPracticeText.textContent = '打怪闖關';
+      if (tabDialogueText) tabDialogueText.textContent = '情境對話';
+
+      kidsPracticeView.classList.remove('hidden');
+      adultPracticeView.classList.add('hidden');
+    } else {
+      body.className = 'mode-adult';
+      modeIcon.textContent = '🧑';
+      modeLabel.textContent = '大人高效模式';
+      appTitle.textContent = '語言研習實驗室 🔬';
+      appSub.textContent = '雙語影音精聽 ‧ 智能閃卡 (FSRS) ‧ 聽力默寫';
+      tabPracticeIcon.textContent = '🗂️';
+      tabPracticeText.textContent = '記憶閃卡';
+      if (tabDialogueText) tabDialogueText.textContent = '實境對話';
+
+      kidsPracticeView.classList.add('hidden');
+      adultPracticeView.classList.remove('hidden');
+    }
+
+    this.renderWordsGrid();
+    if (typeof DialogueSys !== 'undefined') {
+      DialogueSys.onModeChange();
+    }
+    if (typeof ShadowingStudio !== 'undefined') {
+      ShadowingStudio.onModeChange();
+    }
+  },
+
+  bindEvents() {
+    document.getElementById('modeToggleBtn').addEventListener('click', () => {
+      const nextMode = AppState.mode === 'kids' ? 'adult' : 'kids';
+      this.applyMode(nextMode);
+    });
+
+    const soundBtn = document.getElementById('soundToggleBtn');
+    soundBtn.addEventListener('click', () => {
+      const on = AudioSys.toggle();
+      soundBtn.textContent = on ? '🔊' : '🔇';
+      if (on) AudioSys.correct();
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+        this.switchTab(tabId);
+      });
+    });
+
+    document.querySelectorAll('.lang-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        AppState.lang = btn.getAttribute('data-lang');
+        AppState.currentLevel = 'ALL';
+        this.renderLevelPills();
+        this.renderWordsGrid();
+        if (AppState.mode === 'adult') {
+          this.initAdultPractice();
+        }
+      });
+    });
+
+    document.getElementById('vocabSearchInput').addEventListener('input', (e) => {
+      AppState.searchQuery = e.target.value.trim().toLowerCase();
+      this.renderWordsGrid();
+    });
+
+    document.getElementById('openAddWordModalBtn').addEventListener('click', () => {
+      document.getElementById('modalWordLang').value = AppState.lang;
+      document.getElementById('addWordModal').classList.remove('hidden');
+    });
+    document.getElementById('cancelAddWordBtn').addEventListener('click', () => {
+      document.getElementById('addWordModal').classList.add('hidden');
+    });
+    document.getElementById('saveCustomWordBtn').addEventListener('click', () => {
+      this.saveCustomWord();
+    });
+
+    document.getElementById('ytLoadBtn').addEventListener('click', () => {
+      const url = document.getElementById('ytUrlInput').value.trim();
+      if (url) YTPlayerSys.loadFromUrlOrId(url);
+    });
+
+    document.getElementById('abLoopToggle').addEventListener('change', (e) => {
+      AppState.abLoopEnabled = e.target.checked;
+    });
+    document.getElementById('blindSubToggle').addEventListener('change', (e) => {
+      AppState.blindSubEnabled = e.target.checked;
+      document.querySelectorAll('.sub-text-zh').forEach(el => {
+        if (AppState.blindSubEnabled) el.classList.add('blind');
+        else el.classList.remove('blind');
+      });
+    });
+
+    document.getElementById('quizSpeakBtn').addEventListener('click', () => {
+      if (AppState.currentQuizWord) {
+        SpeechSys.speak(AppState.currentQuizWord.word, AppState.currentQuizWord.lang);
+      }
+    });
+
+    document.querySelectorAll('.practice-sub-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.practice-sub-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const sub = btn.getAttribute('data-sub');
+        AppState.adultSubTab = sub;
+        if (sub === 'flashcard') {
+          document.getElementById('flashcardSection').classList.remove('hidden');
+          document.getElementById('spellingSection').classList.add('hidden');
+        } else {
+          document.getElementById('flashcardSection').classList.add('hidden');
+          document.getElementById('spellingSection').classList.remove('hidden');
+          this.initSpellingTask();
+        }
+      });
+    });
+
+    const fcWrapper = document.getElementById('flashcardWrapper');
+    fcWrapper.addEventListener('click', () => {
+      AppState.flashcardFlipped = !AppState.flashcardFlipped;
+      fcWrapper.classList.toggle('flipped', AppState.flashcardFlipped);
+      AudioSys.cardFlip();
+    });
+    document.getElementById('fcSpeakBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const list = this.getFilteredWords();
+      if (list.length) SpeechSys.speak(list[AppState.flashcardIndex].word, list[AppState.flashcardIndex].lang);
+    });
+
+    document.querySelectorAll('.rate-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const rate = btn.getAttribute('data-rate');
+        this.rateFlashcard(rate);
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (AppState.mode !== 'adult' || AppState.activeTab !== 'practice') return;
+      if (AppState.adultSubTab === 'flashcard') {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          fcWrapper.click();
+        } else if (e.key === '1') {
+          this.rateFlashcard('again');
+        } else if (e.key === '2') {
+          this.rateFlashcard('hard');
+        } else if (e.key === '3') {
+          this.rateFlashcard('good');
+        } else if (e.key === '4') {
+          this.rateFlashcard('easy');
+        } else if (e.key === 'r' || e.key === 'R') {
+          document.getElementById('fcSpeakBtn').click();
+        }
+      } else if (AppState.adultSubTab === 'spelling') {
+        if (e.key === 'Enter') {
+          this.checkSpelling();
+        }
+      }
+    });
+
+    document.getElementById('checkSpellingBtn').addEventListener('click', () => this.checkSpelling());
+    document.getElementById('spellAudioBtn').addEventListener('click', () => {
+      const list = this.getFilteredWords();
+      if (list.length) SpeechSys.speak(list[AppState.flashcardIndex].word, list[AppState.flashcardIndex].lang);
+    });
+  },
+
+  switchTab(tabId) {
+    AppState.activeTab = tabId;
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-tab') === tabId);
+    });
+    document.querySelectorAll('.tab-content').forEach(c => {
+      c.classList.toggle('active', c.id === `tab-${tabId}`);
+    });
+
+    if (tabId === 'practice') {
+      if (AppState.mode === 'kids') {
+        this.nextMonsterBattleQuestion();
+      } else {
+        this.renderFlashcard();
+      }
+    } else if (tabId === 'dialogue') {
+      DialogueSys.onOpen();
+    } else if (tabId === 'shadowing') {
+      if (typeof ShadowingStudio !== 'undefined') {
+        ShadowingStudio.stopAllAudio();
+      }
+    }
+  },
+
+  renderLevelPills() {
+    const pillsContainer = document.getElementById('levelPills');
+    pillsContainer.innerHTML = '';
+
+    const levels = AppState.lang === 'en'
+      ? ['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', '⭐ 收藏', '✏️ 自訂']
+      : ['ALL', '50音', 'N5', 'N4', 'N3', 'N2', 'N1', '⭐ 收藏', '✏️ 自訂'];
+
+    levels.forEach(lvl => {
+      const btn = document.createElement('button');
+      btn.className = 'pill' + (AppState.currentLevel === lvl ? ' active' : '');
+      btn.textContent = lvl === 'ALL' ? '全部級別 (All)' : lvl;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.level-pills .pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        AppState.currentLevel = lvl;
+        this.renderWordsGrid();
+      });
+      pillsContainer.appendChild(btn);
+    });
+  },
+
+  getFilteredWords() {
+    const all = [...DEFAULT_WORDS, ...AppState.customWords];
+    return all.filter(w => {
+      if (w.lang !== AppState.lang) return false;
+
+      if (AppState.currentLevel === '⭐ 收藏') {
+        if (!AppState.bookmarks.includes(w.id)) return false;
+      } else if (AppState.currentLevel === '✏️ 自訂') {
+        if (!w.id.startsWith('custom-')) return false;
+      } else if (AppState.currentLevel !== 'ALL') {
+        if (w.level !== AppState.currentLevel) return false;
+      }
+
+      if (AppState.searchQuery) {
+        const q = AppState.searchQuery;
+        const matchWord = w.word.toLowerCase().includes(q);
+        const matchMeaning = w.meaning.toLowerCase().includes(q);
+        const matchPhonetic = (w.phonetic || '').toLowerCase().includes(q);
+        if (!matchWord && !matchMeaning && !matchPhonetic) return false;
+      }
+
+      return true;
+    });
+  },
+
+  renderWordsGrid() {
+    const grid = document.getElementById('wordsGrid');
+    grid.innerHTML = '';
+    const words = this.getFilteredWords();
+
+    if (words.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; opacity: 0.6;">
+          <div style="font-size: 48px; margin-bottom: 8px;">🔍</div>
+          <div style="font-size: 16px; font-weight: 800;">沒有符合條件的單字</div>
+          <div style="font-size: 12px; margin-top: 4px;">可以嘗試切換級別標籤，或點擊上方「➕ 自訂生字」添加！</div>
+        </div>
+      `;
+      return;
+    }
+
+    words.forEach(w => {
+      const isBookmarked = AppState.bookmarks.includes(w.id);
+      const card = document.createElement('div');
+      card.className = 'glass-card word-card';
+
+      card.innerHTML = `
+        <div>
+          <div class="word-card-top">
+            <div class="word-title-group">
+              <div class="word-text">${w.word}</div>
+              <div class="word-phonetic">${w.phonetic || ''}</div>
+            </div>
+            <div class="word-actions">
+              <button class="action-btn speak-btn" title="發音">🔊</button>
+              <button class="action-btn bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" title="加入收藏">
+                ${isBookmarked ? '⭐' : '☆'}
+              </button>
+            </div>
+          </div>
+
+          <div class="word-meta">
+            <span class="level-badge">${w.level}</span>
+            <span class="pos-badge">${w.pos || ''}</span>
+          </div>
+
+          <div class="word-meaning">${w.meaning}</div>
+        </div>
+
+        ${w.example ? `
+          <div class="word-example">
+            <div>${w.example}</div>
+            ${w.exampleZh ? `<div class="word-example-zh">${w.exampleZh}</div>` : ''}
+          </div>
+        ` : ''}
+      `;
+
+      card.querySelector('.speak-btn').addEventListener('click', () => {
+        SpeechSys.speak(w.word, w.lang);
+        AudioSys.cardFlip();
+      });
+
+      const bmBtn = card.querySelector('.bookmark-btn');
+      bmBtn.addEventListener('click', () => {
+        const idx = AppState.bookmarks.indexOf(w.id);
+        if (idx >= 0) {
+          AppState.bookmarks.splice(idx, 1);
+          bmBtn.classList.remove('bookmarked');
+          bmBtn.textContent = '☆';
+        } else {
+          AppState.bookmarks.push(w.id);
+          bmBtn.classList.add('bookmarked');
+          bmBtn.textContent = '⭐';
+          AudioSys.correct();
+        }
+        AppState.saveBookmarks();
+      });
+
+      grid.appendChild(card);
+    });
+  },
+
+  saveCustomWord() {
+    const lang = document.getElementById('modalWordLang').value;
+    const word = document.getElementById('modalWordText').value.trim();
+    const phonetic = document.getElementById('modalWordPhonetic').value.trim();
+    const meaning = document.getElementById('modalWordMeaning').value.trim();
+    const example = document.getElementById('modalWordExample').value.trim();
+    const exampleZh = document.getElementById('modalWordExampleZh').value.trim();
+
+    if (!word || !meaning) {
+      alert('請填寫單字與中文釋義！');
+      return;
+    }
+
+    const newWord = {
+      id: 'custom-' + Date.now(),
+      lang,
+      level: lang === 'en' ? 'A1' : 'N5',
+      word,
+      phonetic,
+      meaning,
+      pos: '自訂',
+      example,
+      exampleZh
+    };
+
+    AppState.customWords.unshift(newWord);
+    AppState.saveCustomWords();
+
+    document.getElementById('modalWordText').value = '';
+    document.getElementById('modalWordPhonetic').value = '';
+    document.getElementById('modalWordMeaning').value = '';
+    document.getElementById('modalWordExample').value = '';
+    document.getElementById('modalWordExampleZh').value = '';
+    document.getElementById('addWordModal').classList.add('hidden');
+
+    AudioSys.correct();
+    this.renderWordsGrid();
+  },
+
+  renderPresetVideos() {
+    const row = document.getElementById('presetVideosRow');
+    row.innerHTML = '';
+    PRESET_VIDEOS.forEach((v, idx) => {
+      const chip = document.createElement('button');
+      chip.className = 'preset-chip' + (idx === AppState.currentVideoIndex ? ' active' : '');
+      chip.innerHTML = `<span>${v.title}</span>`;
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        AppState.currentVideoIndex = idx;
+        YTPlayerSys.loadPreset(idx);
+      });
+      row.appendChild(chip);
+    });
+  },
+
+  initYouTubePlayer() {
+    YTPlayerSys.init();
+  },
+
+  /* =========================================================================
+     7. 小朋友打怪闖關 (Monster Battle Engine)
+     ========================================================================= */
+  initQuiz() {
+    const monsters = [
+      { name: '貪吃字魔', avatar: '👾', hp: 100 },
+      { name: '噴火小火龍', avatar: '🦖', hp: 120 },
+      { name: '暗影蝙蝠王', avatar: '🦇', hp: 150 },
+      { name: '頑皮幽靈魔', avatar: '👻', hp: 180 }
+    ];
+    this.monsters = monsters;
+    this.currentMonsterIdx = 0;
+    this.loadMonster(0);
+    this.nextMonsterBattleQuestion();
+  },
+
+  loadMonster(idx) {
+    const m = this.monsters[idx % this.monsters.length];
+    AppState.monsterHp = m.hp;
+    AppState.monsterMaxHp = m.hp;
+    document.getElementById('monsterAvatar').textContent = m.avatar;
+    document.getElementById('monsterName').textContent = m.name;
+    this.updateMonsterHpBar();
+  },
+
+  updateMonsterHpBar() {
+    const pct = Math.max(0, (AppState.monsterHp / AppState.monsterMaxHp) * 100);
+    document.getElementById('monsterHpFill').style.width = pct + '%';
+    document.getElementById('monsterHpText').textContent = `HP ${Math.max(0, AppState.monsterHp)} / ${AppState.monsterMaxHp}`;
+  },
+
+  nextMonsterBattleQuestion() {
+    const words = [...DEFAULT_WORDS, ...AppState.customWords];
+    if (words.length < 4) return;
+
+    const target = words[Math.floor(Math.random() * words.length)];
+    AppState.currentQuizWord = target;
+
+    document.getElementById('quizWord').textContent = target.word;
+    document.getElementById('quizHint').textContent = `請聽發音選出 [${target.word}] 的正確意思：`;
+
+    setTimeout(() => {
+      SpeechSys.speak(target.word, target.lang);
+    }, 200);
+
+    const distractors = [];
+    const pool = words.filter(w => w.meaning !== target.meaning);
+    while (distractors.length < 3 && pool.length) {
+      const pick = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+      distractors.push(pick.meaning);
+    }
+
+    const options = [target.meaning, ...distractors].sort(() => Math.random() - 0.5);
+    const container = document.getElementById('quizChoicesGrid');
+    container.innerHTML = '';
+
+    options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `choice-btn btn-c${idx % 4}`;
+      btn.textContent = opt;
+
+      btn.addEventListener('click', () => {
+        if (opt === target.meaning) {
+          this.handleCorrectAnswer(btn);
+        } else {
+          this.handleWrongAnswer(btn, target.meaning);
+        }
+      });
+
+      container.appendChild(btn);
+    });
+  },
+
+  handleCorrectAnswer(button) {
+    AudioSys.hit();
+    AppState.combo++;
+    AppState.score += 10 * AppState.combo;
+    document.getElementById('kidsScore').textContent = AppState.score;
+    document.getElementById('kidsComboText').textContent = `連擊 x${AppState.combo}`;
+
+    const monsterAvatar = document.getElementById('monsterAvatar');
+    monsterAvatar.classList.remove('hit');
+    void monsterAvatar.offsetWidth;
+    monsterAvatar.classList.add('hit');
+
+    const damage = 25;
+    AppState.monsterHp -= damage;
+    this.showFloatingDamage(`💥 -${damage} HP!`);
+    this.updateMonsterHpBar();
+
+    if (AppState.monsterHp <= 0) {
+      AudioSys.bossDefeated();
+      if (window.KidsApp && typeof KidsApp.reportWin === 'function') {
+        KidsApp.reportWin('learn', '🌍');
+      }
+      setTimeout(() => {
+        alert('🎉 太棒了！魔王被擊退了！獲得獵魔圖鑑與星星！迎戰下一位魔王！');
+        this.currentMonsterIdx++;
+        this.loadMonster(this.currentMonsterIdx);
+        this.nextMonsterBattleQuestion();
+      }, 500);
+      return;
+    }
+
+    setTimeout(() => {
+      this.nextMonsterBattleQuestion();
+    }, 600);
+  },
+
+  handleWrongAnswer(button, correctMeaning) {
+    AudioSys.wrong();
+    AppState.combo = 0;
+    document.getElementById('kidsComboText').textContent = `連擊 x0`;
+
+    const hearts = document.getElementById('kidsHearts');
+    const curHearts = hearts.textContent;
+    if (curHearts.length > 2) {
+      hearts.textContent = curHearts.slice(0, -2);
+    } else {
+      hearts.textContent = '❤️❤️❤️';
+    }
+
+    button.style.filter = 'grayscale(0.8) opacity(0.5)';
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      if (b.textContent === correctMeaning) {
+        b.style.border = '4px solid #10b981';
+        b.style.transform = 'scale(1.05)';
+      }
+    });
+
+    setTimeout(() => {
+      this.nextMonsterBattleQuestion();
+    }, 1200);
+  },
+
+  showFloatingDamage(text) {
+    const stage = document.getElementById('monsterStage');
+    const fl = document.createElement('div');
+    fl.className = 'floating-damage';
+    fl.textContent = text;
+    fl.style.top = '30%';
+    fl.style.left = '45%';
+    stage.appendChild(fl);
+    setTimeout(() => fl.remove(), 800);
+  },
+
+  /* =========================================================================
+     8. 大人高效閃卡與拼寫 (Adult SRS Flashcard & Spelling)
+     ========================================================================= */
+  initAdultPractice() {
+    this.renderFlashcard();
+  },
+
+  renderFlashcard() {
+    const list = this.getFilteredWords();
+    if (!list.length) return;
+    if (AppState.flashcardIndex >= list.length) AppState.flashcardIndex = 0;
+
+    const w = list[AppState.flashcardIndex];
+    document.getElementById('fcLevelBadge').textContent = w.level;
+    document.getElementById('fcWord').textContent = w.word;
+    document.getElementById('fcPhonetic').textContent = w.phonetic || '';
+    document.getElementById('fcMeaning').textContent = w.meaning;
+    document.getElementById('fcExample').textContent = w.example ? `"${w.example}"` : '';
+    document.getElementById('fcExampleZh').textContent = w.exampleZh || '';
+
+    AppState.flashcardFlipped = false;
+    document.getElementById('flashcardWrapper').classList.remove('flipped');
+  },
+
+  rateFlashcard(rating) {
+    const list = this.getFilteredWords();
+    if (!list.length) return;
+
+    if (rating === 'again') {
+      AudioSys.wrong();
+    } else {
+      AudioSys.correct();
+    }
+
+    AppState.flashcardIndex = (AppState.flashcardIndex + 1) % list.length;
+    this.renderFlashcard();
+  },
+
+  initSpellingTask() {
+    const list = this.getFilteredWords();
+    if (!list.length) return;
+    const w = list[AppState.flashcardIndex];
+
+    document.getElementById('spellingInput').value = '';
+    document.getElementById('spellingResult').textContent = '';
+    document.getElementById('spellMeaningHint').textContent = `中文提示：${w.meaning}`;
+
+    setTimeout(() => {
+      SpeechSys.speak(w.word, w.lang);
+    }, 150);
+  },
+
+  checkSpelling() {
+    const list = this.getFilteredWords();
+    if (!list.length) return;
+    const w = list[AppState.flashcardIndex];
+    const input = document.getElementById('spellingInput').value.trim();
+    const res = document.getElementById('spellingResult');
+
+    if (input.toLowerCase() === w.word.toLowerCase()) {
+      AudioSys.correct();
+      res.style.color = '#10b981';
+      res.textContent = `🎉 完全正確！(${w.word})`;
+      setTimeout(() => {
+        AppState.flashcardIndex = (AppState.flashcardIndex + 1) % list.length;
+        this.initSpellingTask();
+      }, 1000);
+    } else {
+      AudioSys.wrong();
+      res.style.color = '#ef4444';
+      res.textContent = `❌ 拼寫有誤。正確答案為：${w.word}`;
+    }
+  }
+};
+
+/* =========================================================================
+   9. YOUTUBE IFRAME API & 字幕同步系統 (YT Player & Shadowing)
+   ========================================================================= */
+const YTPlayerSys = (() => {
+  let player = null;
+  let pollTimer = null;
+  let currentSubtitles = [];
+
+  function init() {
+    if (window.YT && window.YT.Player) {
+      createPlayer(PRESET_VIDEOS[AppState.currentVideoIndex].videoId);
+      return;
+    }
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = () => {
+      createPlayer(PRESET_VIDEOS[AppState.currentVideoIndex].videoId);
+    };
+  }
+
+  function createPlayer(videoId) {
+    if (player && typeof player.destroy === 'function') {
+      try { player.destroy(); } catch(e){}
+    }
+    currentSubtitles = PRESET_VIDEOS[AppState.currentVideoIndex].subtitles;
+    renderSubtitles();
+
+    if (window.YT && window.YT.Player) {
+      player = new YT.Player('player', {
+        videoId: videoId,
+        playerVars: {
+          playsinline: 1,
+          rel: 0,
+          modestbranding: 1
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+  }
+
+  function onPlayerReady(event) {
+    startSubtitlePolling();
+  }
+
+  function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+      startSubtitlePolling();
+    } else {
+      stopSubtitlePolling();
+    }
+  }
+
+  function startSubtitlePolling() {
+    stopSubtitlePolling();
+    pollTimer = setInterval(() => {
+      if (!player || typeof player.getCurrentTime !== 'function') return;
+      const t = player.getCurrentTime();
+      syncSubtitleTime(t);
+    }, 250);
+  }
+
+  function stopSubtitlePolling() {
+    if (pollTimer) clearInterval(pollTimer);
+  }
+
+  function syncSubtitleTime(time) {
+    if (!currentSubtitles || !currentSubtitles.length) return;
+
+    let activeIdx = -1;
+    for (let i = 0; i < currentSubtitles.length; i++) {
+      const sub = currentSubtitles[i];
+      if (time >= sub.start && time < sub.end) {
+        activeIdx = i;
+        break;
+      }
+    }
+
+    if (AppState.abLoopEnabled && AppState.activeSubIndex >= 0) {
+      const activeSub = currentSubtitles[AppState.activeSubIndex];
+      if (activeSub && time >= activeSub.end) {
+        player.seekTo(activeSub.start, true);
+        return;
+      }
+    }
+
+    if (activeIdx !== AppState.activeSubIndex && activeIdx !== -1) {
+      AppState.activeSubIndex = activeIdx;
+      highlightSubtitleRow(activeIdx);
+    }
+  }
+
+  function renderSubtitles() {
+    const list = document.getElementById('subList');
+    list.innerHTML = '';
+
+    currentSubtitles.forEach((s, idx) => {
+      const item = document.createElement('div');
+      item.className = 'sub-item' + (idx === AppState.activeSubIndex ? ' active' : '');
+      item.id = `sub-item-${idx}`;
+
+      const formatTime = (sec) => {
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+      };
+
+      item.innerHTML = `
+        <div class="sub-actions">
+          <button class="add-vocab-btn" title="加為生詞">➕</button>
+          <button class="speak-sub-btn" title="朗讀示範">🔊</button>
+        </div>
+        <div class="sub-time">${formatTime(s.start)} - ${formatTime(s.end)}</div>
+        <div class="sub-text-orig">${s.orig}</div>
+        <div class="sub-text-zh ${AppState.blindSubEnabled ? 'blind' : ''}">${s.zh}</div>
+      `;
+
+      item.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') return;
+        AppState.activeSubIndex = idx;
+        highlightSubtitleRow(idx);
+        if (player && typeof player.seekTo === 'function') {
+          player.seekTo(s.start, true);
+          player.playVideo();
+        }
+      });
+
+      item.querySelector('.speak-sub-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        SpeechSys.speak(s.orig, AppState.lang);
+      });
+
+      item.querySelector('.add-vocab-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const custom = {
+          id: 'custom-' + Date.now(),
+          lang: AppState.lang,
+          level: AppState.lang === 'en' ? 'B1' : 'N4',
+          word: s.orig,
+          phonetic: '',
+          meaning: s.zh,
+          pos: '影音短句',
+          example: s.orig,
+          exampleZh: s.zh
+        };
+        AppState.customWords.unshift(custom);
+        AppState.saveCustomWords();
+        AudioSys.correct();
+        alert(`已成功將此字幕短句加入單字庫！\n「${s.orig}」`);
+        UI.renderWordsGrid();
+      });
+
+      list.appendChild(item);
+    });
+  }
+
+  function highlightSubtitleRow(idx) {
+    document.querySelectorAll('.sub-item').forEach((row, i) => {
+      row.classList.toggle('active', i === idx);
+    });
+    const target = document.getElementById(`sub-item-${idx}`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function loadPreset(index) {
+    AppState.activeSubIndex = -1;
+    const preset = PRESET_VIDEOS[index];
+    currentSubtitles = preset.subtitles;
+    renderSubtitles();
+    if (player && typeof player.loadVideoById === 'function') {
+      player.loadVideoById(preset.videoId);
+    } else {
+      createPlayer(preset.videoId);
+    }
+  }
+
+  function loadFromUrlOrId(input) {
+    let vid = input;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = input.match(regExp);
+    if (match && match[2].length === 11) {
+      vid = match[2];
+    }
+
+    currentSubtitles = [
+      { start: 0, end: 15, orig: "Now playing custom video clip.", zh: "正在播放自訂載入影片。" },
+      { start: 15, end: 60, orig: "Listen carefully and shadow aloud!", zh: "請仔細聆聽並開口大聲跟讀！" }
+    ];
+    renderSubtitles();
+
+    if (player && typeof player.loadVideoById === 'function') {
+      player.loadVideoById(vid);
+    } else {
+      createPlayer(vid);
+    }
+  }
+
+  return {
+    init,
+    loadPreset,
+    loadFromUrlOrId
+  };
+})();
+
+/* =========================================================================
+   10. 情境實境對話系統 (Roleplay Dialogue System - DialogueSys)
+   ========================================================================= */
+const DIALOGUE_SCENARIOS = {
+  kids: {
+    en: [
+      {
+        id: 'kids-en-pet',
+        title: '🐾 魔法寵物店買狗狗',
+        subtitle: 'Magic Pet Shop',
+        desc: '在神奇寵物店認識會發光的小狗，練習打招呼與表達喜愛！',
+        npc: { name: '魔法店長 莉莉', avatar: '🧙‍♀️', title: '莉莉店長' },
+        lines: [
+          {
+            npc: {
+              text: "Welcome to the Magic Pet Shop! What kind of puppy are you looking for?",
+              phonetic: "Welcome to the Magic Pet Shop! What kind of puppy are you looking for?",
+              zh: "歡迎來到魔法寵物店！你在找什麼樣的狗狗呢？"
+            },
+            user: {
+              target: "I want a cute and fluffy golden puppy!",
+              phonetic: "I want a cute and fluffy golden puppy!",
+              zh: "我想要一隻可愛又毛茸茸的黃金小狗！"
+            }
+          },
+          {
+            npc: {
+              text: "Here is little Sparky! He can make glowing bubbles when he is happy!",
+              phonetic: "Here is little Sparky! He can make glowing bubbles when he is happy!",
+              zh: "這是小火花！他開心的時候還會吐出發光泡泡喔！"
+            },
+            user: {
+              target: "He is so adorable! Can I give him a hug?",
+              phonetic: "He is so adorable! Can I give him a hug?",
+              zh: "他太可愛了！我可以抱抱他嗎？"
+            }
+          },
+          {
+            npc: {
+              text: "Of course! He loves you already. Take good care of your new best friend!",
+              phonetic: "Of course! He loves you already. Take good care of your new best friend!",
+              zh: "當然可以！他已經很喜歡你了。要好好照顧你的新好朋友喔！"
+            },
+            user: {
+              target: "Thank you, Lily! I promise to love him forever!",
+              phonetic: "Thank you, Lily! I promise to love him forever!",
+              zh: "謝謝莉莉店長！我保證會永遠愛他的！"
+            }
+          }
+        ],
+        praise: "莉莉店長：「太厲害了！你的發音真棒，小火花最喜歡你了，成為你的魔法小夥伴囉！」"
+      },
+      {
+        id: 'kids-en-icecream',
+        title: '🍦 冰淇淋車點口味',
+        subtitle: 'Ice Cream Truck',
+        desc: '夏日炎炎到冰淇淋車點餐，挑選最愛的草莓冰淇淋甜筒！',
+        npc: { name: '冰淇淋叔叔 班', avatar: '🍦', title: '班叔叔' },
+        lines: [
+          {
+            npc: {
+              text: "Hello there, sunshine! What sweet treat can I scoop for you today?",
+              phonetic: "Hello there, sunshine! What sweet treat can I scoop for you today?",
+              zh: "哈囉小陽光！今天想吃什麼甜甜的冰淇淋呀？"
+            },
+            user: {
+              target: "Hello! What flavors do you have today?",
+              phonetic: "Hello! What flavors do you have today?",
+              zh: "你好！請問今天有什麼口味呢？"
+            }
+          },
+          {
+            npc: {
+              text: "We have fresh strawberry, creamy vanilla, and chocolate crunch!",
+              phonetic: "We have fresh strawberry, creamy vanilla, and chocolate crunch!",
+              zh: "我們有新鮮草莓、香濃香草和巧克力脆片！"
+            },
+            user: {
+              target: "I would like two scoops of strawberry, please!",
+              phonetic: "I would like two scoops of strawberry, please!",
+              zh: "我想要兩球草莓冰淇淋，謝謝！"
+            }
+          },
+          {
+            npc: {
+              text: "Cone or cup? And would you like rainbow sprinkles on top?",
+              phonetic: "Cone or cup? And would you like rainbow sprinkles on top?",
+              zh: "要甜筒還是紙杯裝？上面要加彩虹糖粒嗎？"
+            },
+            user: {
+              target: "In a crispy cone with extra rainbow sprinkles, please!",
+              phonetic: "In a crispy cone with extra rainbow sprinkles, please!",
+              zh: "請裝在脆皮甜筒裡，並多加彩虹糖粒，謝謝！"
+            }
+          }
+        ],
+        praise: "班叔叔：「給！超級好吃的雙球草莓彩虹冰淇淋！你點餐說得真清楚又流利！」"
+      },
+      {
+        id: 'kids-en-friends',
+        title: '🎈 公園交新朋友',
+        subtitle: 'Making Friends',
+        desc: '在陽光公園主動跟小朋友打招呼，一起踢足球蕩鞦韆！',
+        npc: { name: '活潑的小男孩 湯姆', avatar: '👦', title: '湯姆' },
+        lines: [
+          {
+            npc: {
+              text: "Hi! My name is Tom. I am playing with my soccer ball.",
+              phonetic: "Hi! My name is Tom. I am playing with my soccer ball.",
+              zh: "嗨！我叫湯姆，我正在玩足球。"
+            },
+            user: {
+              target: "Hi Tom! Nice to meet you. Do you want to play together?",
+              phonetic: "Hi Tom! Nice to meet you. Do you want to play together?",
+              zh: "嗨湯姆！很高興認識你。你想一起玩嗎？"
+            }
+          },
+          {
+            npc: {
+              text: "Yes, awesome! Pass the ball to me! Can you kick it high?",
+              phonetic: "Yes, awesome! Pass the ball to me! Can you kick it high?",
+              zh: "好啊，太棒了！把球傳給我！你能踢得很高嗎？"
+            },
+            user: {
+              target: "Look at this high kick! Goal!",
+              phonetic: "Look at this high kick! Goal!",
+              zh: "看我的高空射門！進球了！"
+            }
+          },
+          {
+            npc: {
+              text: "Wow, you are a great player! Let's play on the swings next!",
+              phonetic: "Wow, you are a great player! Let's play on the swings next!",
+              zh: "哇，你踢得真好！我們接著去盪鞦韆吧！"
+            },
+            user: {
+              target: "Yeah, let's go! Swings are my favorite!",
+              phonetic: "Yeah, let's go! Swings are my favorite!",
+              zh: "好耶，走吧！鞦韆是我最喜歡的！"
+            }
+          }
+        ],
+        praise: "湯姆：「耶！今天在公園交到你這個好朋友真是太開心了，下次我們再一起踢球！」"
+      }
+    ],
+    ja: [
+      {
+        id: 'kids-ja-convenience',
+        title: '🍙 超商買便當與加熱',
+        subtitle: 'コンビニでお買い物',
+        desc: '在日本便利商店選購好吃的鮭魚飯糰，並請店員加熱便當！',
+        npc: { name: '超商店員 田中小姐', avatar: '👩‍💼', title: '田中さん' },
+        lines: [
+          {
+            npc: {
+              text: "いらっしゃいませ！お弁当をお預かりします。",
+              phonetic: "いらっしゃいませ！おべんとうを おあずかり します。",
+              zh: "歡迎光臨！為您結帳便當。"
+            },
+            user: {
+              target: "これと、しゃけのおにぎりをください。",
+              phonetic: "これと、しゃけの おにぎりを ください。",
+              zh: "我要這個，還有一個鮭魚飯糰。"
+            }
+          },
+          {
+            npc: {
+              text: "お弁当、温めますか？",
+              phonetic: "おべんとう、あたためますか？",
+              zh: "便當需要幫您加熱微波嗎？"
+            },
+            user: {
+              target: "はい、あたためてください！",
+              phonetic: "はい、あたためて ください！",
+              zh: "好的，請幫我加熱！"
+            }
+          },
+          {
+            npc: {
+              text: "お待たせしました。アツアツですのでお気をつけください！",
+              phonetic: "おまたせ しました。あつあつ ですので おきを つけて ください！",
+              zh: "讓您久等了。便當很燙請小心拿喔！"
+            },
+            user: {
+              target: "ありがとうございます！いただきます！",
+              phonetic: "ありがとう ございます！いただきます！",
+              zh: "非常謝謝！我要開動囉！"
+            }
+          }
+        ],
+        praise: "田中小姐：「日語說得真有禮貌！熱騰騰的便當好了，祝你有美好的一天！」"
+      },
+      {
+        id: 'kids-ja-shiba',
+        title: '🐕 可愛柴犬打招呼',
+        subtitle: '可愛い柴犬と挨拶',
+        desc: '在櫻花散步道巧遇溫馴柴犬可樂，禮貌打招呼與溫柔互動！',
+        npc: { name: '柴犬主人 健太', avatar: '🐕', title: '健太くん' },
+        lines: [
+          {
+            npc: {
+              text: "こんにちは！うちの柴犬のコロだよ。ワンワン！",
+              phonetic: "こんにちは！うちの しばいぬの コロ だよ。ワンワン！",
+              zh: "你好！這是我家的柴犬可樂喔。汪汪！"
+            },
+            user: {
+              target: "こんにちは！すごくかわいいワンちゃんですね！",
+              phonetic: "こんにちは！すごく かわいい ワンちゃん ですね！",
+              zh: "你好！這隻狗狗超級可愛呢！"
+            }
+          },
+          {
+            npc: {
+              text: "コロは人が大好きだよ。優しくなでてみる？",
+              phonetic: "コロは ひとが だいすき だよ。やさしく なでて みる？",
+              zh: "可樂很喜歡跟人玩喔。要輕輕摸摸看他嗎？"
+            },
+            user: {
+              target: "なでてもいいですか？いいこ、いいこ！",
+              phonetic: "なでても いいですか？いいこ、いいこ！",
+              zh: "可以摸摸看嗎？乖狗狗、乖狗狗！"
+            }
+          },
+          {
+            npc: {
+              text: "しっぽを振って喜んでるよ！コロもお友達ができて嬉しいみたい！",
+              phonetic: "しっぽを ふって よろこんでるよ！コロも おともだちが できて うれしい みたい！",
+              zh: "他搖尾巴好開心喔！看來可樂也交到新朋友了！"
+            },
+            user: {
+              target: "また会おうね、コロちゃん、バイバイ！",
+              phonetic: "また あおうね、コロちゃん、バイバイ！",
+              zh: "下次還要再一起玩喔，可樂拜拜！"
+            }
+          }
+        ],
+        praise: "健太：「コロもすっごく嬉しそうだったよ！またお散歩で会ったら遊ぼうね！」"
+      },
+      {
+        id: 'kids-ja-cake',
+        title: '🍰 甜點店選草莓蛋糕',
+        subtitle: 'ケーキ屋さんで注文',
+        desc: '在日系甜點店挑選新鮮草莓蛋糕，並要求所需叉子數量！',
+        npc: { name: '蛋糕師傅 繪美里', avatar: '👩‍🍳', title: 'エミリさん' },
+        lines: [
+          {
+            npc: {
+              text: "いらっしゃいませ！おいしいケーキがたくさんありますよ。",
+              phonetic: "いらっしゃいませ！おいしい ケーキが たくさん ありますよ。",
+              zh: "歡迎光臨！今天有好多好吃的蛋糕喔。"
+            },
+            user: {
+              target: "いちごのショートケーキはありますか？",
+              phonetic: "いちごの ショートケーキは ありますか？",
+              zh: "請問有草莓鮮奶油蛋糕嗎？"
+            }
+          },
+          {
+            npc: {
+              text: "はい、できたてがありますよ！大きなイチゴが三つのっています！",
+              phonetic: "はい、できたてが ありますよ！おおきな イチゴが みっつ のって います！",
+              zh: "有的，剛出爐最新鮮的喔！上面放了三顆大草莓！"
+            },
+            user: {
+              target: "それをひとつください！",
+              phonetic: "それを ひとつ ください！",
+              zh: "請給我一個！"
+            }
+          },
+          {
+            npc: {
+              text: "かしこまりました！かわいい箱にお入れしますね。フォークは何本付けますか？",
+              phonetic: "かしこまりました！かわいい はこに おいれ しますね。フォークは なんぼん つけますか？",
+              zh: "好的！幫您裝在可愛的盒子裡。請問需要幾支叉子呢？"
+            },
+            user: {
+              target: "フォークをにほんおねがいします！",
+              phonetic: "フォークを にほん おねがい します！",
+              zh: "請給我兩支叉子，謝謝！"
+            }
+          }
+        ],
+        praise: "繪美里師傅：「ケーキの注文バッチリでした！あまーいイチゴをゆっくり楽しんでね！」"
+      }
+    ]
+  },
+  adult: {
+    en: [
+      {
+        id: 'adult-en-coffee',
+        title: '☕ 星巴克點特調咖啡',
+        subtitle: 'Ordering Specialty Coffee',
+        desc: '星巴克客製化燕麥奶拿鐵、少冰半糖，並使用 Apple Pay 結帳！',
+        npc: { name: '咖啡師 Sarah', avatar: '☕', title: 'Barista Sarah' },
+        lines: [
+          {
+            npc: {
+              text: "Good morning! Welcome to Starbucks. What can I get started for you today?",
+              phonetic: "Good morning! Welcome to Starbucks. What can I get started for you today?",
+              zh: "早安！歡迎光臨星巴克。今天想喝點什麼呢？"
+            },
+            user: {
+              target: "Hi! Can I get an iced oat milk latte, please?",
+              phonetic: "Hi! Can I get an iced oat milk latte, please?",
+              zh: "嗨！請問可以給我一杯冰燕麥奶拿鐵嗎？"
+            }
+          },
+          {
+            npc: {
+              text: "Sure thing! What size would you prefer, and any sweetness adjustment?",
+              phonetic: "Sure thing! What size would you prefer, and any sweetness adjustment?",
+              zh: "沒問題！請問您想要什麼杯型，甜度需要調整嗎？"
+            },
+            user: {
+              target: "Grande size, less ice and half sweet, please.",
+              phonetic: "Grande size, less ice and half sweet, please.",
+              zh: "大杯（Grande），少冰、半糖，謝謝。"
+            }
+          },
+          {
+            npc: {
+              text: "You got it! Would you like any pastry or breakfast sandwich with that?",
+              phonetic: "You got it! Would you like any pastry or breakfast sandwich with that?",
+              zh: "收到！請問需要搭配可頌或早餐三明治嗎？"
+            },
+            user: {
+              target: "No thanks, that will be all. Can I pay with Apple Pay?",
+              phonetic: "No thanks, that will be all. Can I pay with Apple Pay?",
+              zh: "不用了，這樣就好。可以用 Apple Pay 結帳嗎？"
+            }
+          }
+        ],
+        praise: "Sarah: \"Your iced oat milk latte is ready! Your ordering English was spot-on and super natural!\""
+      },
+      {
+        id: 'adult-en-airport',
+        title: '✈️ 機場辦理登機與選位',
+        subtitle: 'Airport Check-in',
+        desc: '國際機場地勤櫃台辦理登機手續、托運行李並確認靠窗座位！',
+        npc: { name: '地勤專員 David', avatar: '✈️', title: 'Agent David' },
+        lines: [
+          {
+            npc: {
+              text: "Good afternoon. May I have your passport and flight confirmation, please?",
+              phonetic: "Good afternoon. May I have your passport and flight confirmation, please?",
+              zh: "午安。請出示您的護照與航班確認資訊，謝謝。"
+            },
+            user: {
+              target: "Good afternoon. Here is my passport and booking reference.",
+              phonetic: "Good afternoon. Here is my passport and booking reference.",
+              zh: "午安。這是我的護照與預訂代碼。"
+            }
+          },
+          {
+            npc: {
+              text: "Thank you. Do you have any bags to check in today?",
+              phonetic: "Thank you. Do you have any bags to check in today?",
+              zh: "謝謝。請問您今天有需要托運的行李嗎？"
+            },
+            user: {
+              target: "Yes, just this one suitcase. Is it within the weight limit?",
+              phonetic: "Yes, just this one suitcase. Is it within the weight limit?",
+              zh: "是的，只有這件行李箱。請問在限重之內嗎？"
+            }
+          },
+          {
+            npc: {
+              text: "It's 18 kilograms, perfectly fine. Do you prefer a window or an aisle seat?",
+              phonetic: "It's 18 kilograms, perfectly fine. Do you prefer a window or an aisle seat?",
+              zh: "剛好 18 公斤，完全合格。您偏好靠窗還是靠走道的座位呢？"
+            },
+            user: {
+              target: "A window seat towards the front if available, please.",
+              phonetic: "A window seat towards the front if available, please.",
+              zh: "如果有的話，請幫我安排靠前排的窗邊座位，謝謝。"
+            }
+          }
+        ],
+        praise: "Agent David: \"Here are your boarding pass and luggage tags. Seat 12A confirmed. Have a wonderful flight!\""
+      },
+      {
+        id: 'adult-en-bill',
+        title: '🍽️ 餐廳結帳分開付款',
+        subtitle: 'Splitting the Bill',
+        desc: '在西餐廳享用完大餐後禮貌索取帳單，並提出分開刷卡支付！',
+        npc: { name: '餐廳領班 Marco', avatar: '🍽️', title: 'Server Marco' },
+        lines: [
+          {
+            npc: {
+              text: "How was everything this evening? Can I get you any dessert or coffee?",
+              phonetic: "How was everything this evening? Can I get you any dessert or coffee?",
+              zh: "今晚用餐還滿意嗎？需要為您送上甜點或咖啡嗎？"
+            },
+            user: {
+              target: "Everything was delicious, thank you! Could we get the bill, please?",
+              phonetic: "Everything was delicious, thank you! Could we get the bill, please?",
+              zh: "每道菜都非常美味，謝謝！請問能幫我們結帳送上帳單嗎？"
+            }
+          },
+          {
+            npc: {
+              text: "Certainly, here is the bill. Take your time.",
+              phonetic: "Certainly, here is the bill. Take your time.",
+              zh: "當然，這是您的帳單，請慢慢看。"
+            },
+            user: {
+              target: "Excuse me, is it possible to split the bill between two cards?",
+              phonetic: "Excuse me, is it possible to split the bill between two cards?",
+              zh: "不好意思，請問可以幫我們將帳單分開刷兩張卡嗎？"
+            }
+          },
+          {
+            npc: {
+              text: "No problem at all! We can split it evenly in half.",
+              phonetic: "No problem at all! We can split it evenly in half.",
+              zh: "完全沒問題！我們可以平分為兩筆各刷一半。"
+            },
+            user: {
+              target: "That would be perfect. Here are our cards, thank you!",
+              phonetic: "That would be perfect. Here are our cards, thank you!",
+              zh: "太完美了。這是我們的卡片，謝謝你！"
+            }
+          }
+        ],
+        praise: "Marco: \"Thank you very much for dining with us! Both cards processed smoothly. Have a lovely evening!\""
+      }
+    ],
+    ja: [
+      {
+        id: 'adult-ja-hotel',
+        title: '🏨 飯店辦理入住手續',
+        subtitle: 'ホテルチェックイン',
+        desc: '抵達日本飯店確認住宿預約、登記資料並詢問隔日早餐時間！',
+        npc: { name: '飯店櫃台 高橋先生', avatar: '🏨', title: 'フロント 高橋' },
+        lines: [
+          {
+            npc: {
+              text: "いらっしゃいませ。本日ご宿泊のご予約でしょうか？",
+              phonetic: "いらっしゃいませ。ほんじつ ごしゅくはくの ごよやく でしょうか？",
+              zh: "歡迎光臨。請問是今天辦理住宿預約的貴賓嗎？"
+            },
+            user: {
+              target: "はい、チェックインをお願いします。予約の名前は王（ワン）です。",
+              phonetic: "はい、チェックインを おねがいします。よやくの なまえは ワン です。",
+              zh: "是的，我要辦理入住。預約的名字是王（Wang）。"
+            }
+          },
+          {
+            npc: {
+              text: "王様ですね、確認いたしました。こちらに氏名と連絡先をご記入いただけますか？",
+              phonetic: "ワンさますね、かくにん いたしました。こちらに しめいと れんらくさきを ごきにゅう いただけますか？",
+              zh: "王先生/小姐對吧，已經為您確認到了。能請您在這邊填寫姓名與聯絡電話嗎？"
+            },
+            user: {
+              target: "はい、記入しました。朝食は何時からですか？",
+              phonetic: "はい、きにゅう しました。ちょうしょくは なんじから ですか？",
+              zh: "好的，填寫好了。請問早餐是幾點開始呢？"
+            }
+          },
+          {
+            npc: {
+              text: "朝食は二階のレストランで朝七時から十時までとなっております。こちらがルームキーです。",
+              phonetic: "ちょうしょくは にかいの レストランで あさしちじから じゅうじまで となって おります。こちらが ルームキー です。",
+              zh: "早餐在二樓餐廳，供應時間為早上七點至十點。這是您的房卡。"
+            },
+            user: {
+              target: "わかりました。丁寧にご案内いただきありがとうございます。",
+              phonetic: "わかりました。ていねいに ごあんない いただき ありがとう ございます。",
+              zh: "明白了。謝謝您親切詳盡的指引。"
+            }
+          }
+        ],
+        praise: "高橋先生：「チェックインのお手続き、誠にありがとうございました。ごゆっくりお寛ぎくださいませ。」"
+      },
+      {
+        id: 'adult-ja-ramen',
+        title: '🍜 拉麵店買食券客製硬度',
+        subtitle: 'ラーメン屋で注文',
+        desc: '體驗道地拉麵店食券機點餐、客製麵條硬度、湯頭濃度與大份配料！',
+        npc: { name: '拉麵師傅 山本師傅', avatar: '🍜', title: '大将 山本' },
+        lines: [
+          {
+            npc: {
+              text: "いらっしゃい！食券をお預かりします！",
+              phonetic: "いらっしゃい！しょっけんを おあずかり します！",
+              zh: "歡迎光臨！替您收食券！"
+            },
+            user: {
+              target: "特製豚骨ラーメンの食券をお願いします。",
+              phonetic: "とくせい とんこつ ラーメンの しょっけんを おねがい します。",
+              zh: "這是特製豚骨拉麵的食券，麻煩您了。"
+            }
+          },
+          {
+            npc: {
+              text: "へい！麺のかたさと、スープの濃さはお好みに合わせられますよ。",
+              phonetic: "へい！めんの かたさと、スープの こさは おこのみに あわせられますよ。",
+              zh: "好嘞！麵條軟硬度和湯頭濃度都可以依您的喜好客製喔。"
+            },
+            user: {
+              target: "麺はかため、スープは普通でお願いします。",
+              phonetic: "めんは かため、スープは ふつうで おねがい します。",
+              zh: "麵條請幫我做偏硬，湯頭濃度普通，謝謝。"
+            }
+          },
+          {
+            npc: {
+              text: "あいよ！ネギとニンニクは入れても大丈夫ですか？",
+              phonetic: "あいよ！ネギと ニンニクは いれても だいじょうぶ ですか？",
+              zh: "沒問題！蔥花和蒜泥都可以加嗎？"
+            },
+            user: {
+              target: "はい、全部入れてください。楽しみにしています！",
+              phonetic: "はい、ぜんぶ いれて ください。たのしみに して います！",
+              zh: "好的，請全部都加。非常期待！"
+            }
+          }
+        ],
+        praise: "山本師傅：「お待たせ！特製豚骨カタメいっちょあがり！ツウな頼み方でカッコよかったぜ！」"
+      },
+      {
+        id: 'adult-ja-subway',
+        title: '🚇 地鐵迷路問路搭乘',
+        subtitle: '地下鉄の道案内',
+        desc: '東京繁雜地下鐵站向站務員詢問前往新宿的月台與乘車時間！',
+        npc: { name: '地鐵站務員 佐藤先生', avatar: '🚇', title: '駅員 佐藤' },
+        lines: [
+          {
+            npc: {
+              text: "はい、どうされましたか？ご案内いたします。",
+              phonetic: "はい、どう されましたか？ごあんない いたします。",
+              zh: "您好，請問有什麼我可以協助指引的嗎？"
+            },
+            user: {
+              target: "すみません、新宿駅に行きたいのですが、何番線に乗ればいいですか？",
+              phonetic: "すみません、しんじゅくえきに いきたいの ですが、なんばんせんに のれば いいですか？",
+              zh: "不好意思，我想去新宿站，請問應該搭乘幾號月台呢？"
+            }
+          },
+          {
+            npc: {
+              text: "新宿でしたら、あちらの二番線、山手線内回りにご乗車ください。",
+              phonetic: "しんじゅく でしたら、あちらの にばんせん、やまのてせん うちまわりに ごじょうしゃ ください。",
+              zh: "去新宿的話，請到那邊的二號月台搭乘山手線內環線。"
+            },
+            user: {
+              target: "ここから新宿まで、何分くらいかかりますか？",
+              phonetic: "ここから しんじゅくまで、なんぷん くらい かかりますか？",
+              zh: "請問從這裡到新宿大約需要幾分鐘呢？"
+            }
+          },
+          {
+            npc: {
+              text: "電車で約十五分です。四つ目の駅が新宿ですよ。",
+              phonetic: "でんしゃで やく じゅうごふんです。よっつめの えきが しんじゅく ですよ。",
+              zh: "電車大約需要 15 分鐘。第四站就是新宿囉。"
+            },
+            user: {
+              target: "よくわかりました。助かりました、ありがとうございます！",
+              phonetic: "よく わかりました。たすかりました、ありがとう ございます！",
+              zh: "我完全明白了。太感謝您的幫忙，謝謝！"
+            }
+          }
+        ],
+        praise: "佐藤先生：「道案内がお役に立てて何よりです。気をつけて行ってらっしゃいませ！」"
+      }
+    ]
+  }
+};
+
+const DialogueSys = (() => {
+  let activeScenario = null;
+  let lineIndex = 0;
+  let recognition = null;
+  let isRecording = false;
+
+  function calculateSimilarity(recognized, target) {
+    if (!recognized || !target) return 0;
+    const clean = (s) => s.toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'，。！？、：；「」『』～]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const s1 = clean(recognized);
+    const s2 = clean(target);
+    if (s1 === s2) return 1.0;
+    if (!s1 || !s2) return 0;
+
+    // Substring match ratio
+    if (s2.includes(s1) || s1.includes(s2)) {
+      const ratio = Math.min(s1.length, s2.length) / Math.max(s1.length, s2.length);
+      if (ratio >= 0.7) return Math.max(0.85, ratio);
+    }
+
+    // Levenshtein distance
+    const m = s1.length, n = s2.length;
+    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (s1[i - 1] === s2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1];
+        } else {
+          dp[i][j] = Math.min(
+            dp[i - 1][j] + 1,
+            dp[i][j - 1] + 1,
+            dp[i - 1][j - 1] + 1
+          );
+        }
+      }
+    }
+    const levScore = 1 - (dp[m][n] / Math.max(m, n));
+
+    // Word token overlap for English/spaced words
+    const words1 = s1.split(" ").filter(Boolean);
+    const words2 = s2.split(" ").filter(Boolean);
+    if (words1.length > 1 && words2.length > 1) {
+      let overlap = 0;
+      words1.forEach(w => {
+        if (words2.includes(w)) overlap++;
+      });
+      const tokenScore = (2 * overlap) / (words1.length + words2.length);
+      return Math.max(levScore, tokenScore);
+    }
+
+    return levScore;
+  }
+
+  function triggerCelebrationConfetti() {
+    const em = ['🌟', '✨', '🎉', '🎊', '⭐', '💖', '🎈'];
+    for (let i = 0; i < 36; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.textContent = em[Math.floor(Math.random() * em.length)];
+        c.style.cssText = 'position:fixed;font-size:' + (16 + Math.random() * 16) + 'px;left:' + (Math.random() * 100) + 'vw;top:-30px;z-index:9999;pointer-events:none;animation:confettiFall ' + (2 + Math.random() * 2) + 's linear forwards;';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4200);
+      }, Math.random() * 800);
+    }
+  }
+
+  function init() {
+    // Language Switcher Buttons in Dialogue Tab
+    document.querySelectorAll('.dialogue-lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.dialogue-lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        AppState.dialogueLang = btn.getAttribute('data-dlang');
+        renderScenarioList();
+      });
+    });
+
+    // Back to scenarios button
+    const backBtn = document.getElementById('dialogueBackBtn');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        stopSpeechRecognition();
+        document.getElementById('dialogueChatView').classList.add('hidden');
+        document.getElementById('dialogueSelectionView').classList.remove('hidden');
+        activeScenario = null;
+        renderScenarioList();
+      });
+    }
+
+    // Microphone button
+    const micBtn = document.getElementById('dialogueMicBtn');
+    if (micBtn) {
+      micBtn.addEventListener('click', () => {
+        toggleMicrophone();
+      });
+    }
+
+    // Listen guide button
+    const guideBtn = document.getElementById('dialogueListenGuideBtn');
+    if (guideBtn) {
+      guideBtn.addEventListener('click', () => {
+        playUserGuideAudio();
+      });
+    }
+
+    // Direct submit button (for quiet environments / fallback)
+    const directBtn = document.getElementById('dialogueDirectSubmitBtn');
+    if (directBtn) {
+      directBtn.addEventListener('click', () => {
+        submitDirectly();
+      });
+    }
+
+    // Completion modal actions
+    const retryBtn = document.getElementById('dialogueRetryBtn');
+    if (retryBtn) {
+      retryBtn.addEventListener('click', () => {
+        document.getElementById('dialogueCompleteModal').classList.add('hidden');
+        if (activeScenario) {
+          startScenario(activeScenario);
+        }
+      });
+    }
+
+    const chooseOtherBtn = document.getElementById('dialogueChooseOtherBtn');
+    if (chooseOtherBtn) {
+      chooseOtherBtn.addEventListener('click', () => {
+        document.getElementById('dialogueCompleteModal').classList.add('hidden');
+        document.getElementById('dialogueChatView').classList.add('hidden');
+        document.getElementById('dialogueSelectionView').classList.remove('hidden');
+        activeScenario = null;
+        renderScenarioList();
+      });
+    }
+
+    renderScenarioList();
+  }
+
+  function onOpen() {
+    if (!activeScenario) {
+      document.getElementById('dialogueChatView').classList.add('hidden');
+      document.getElementById('dialogueSelectionView').classList.remove('hidden');
+      renderScenarioList();
+    }
+  }
+
+  function onModeChange() {
+    const hint = document.getElementById('dialogueModeHint');
+    if (hint) {
+      hint.textContent = (AppState.mode === 'kids')
+        ? '🌟 點選冒險情境卡片，立即與NPC開啟全語音互動！'
+        : '⚡ 點選日常實務情境卡片，進行高擬真口語對話研習！';
+    }
+    if (!activeScenario) {
+      renderScenarioList();
+    }
+  }
+
+  function getScenarios() {
+    const modeKey = (AppState.mode === 'adult') ? 'adult' : 'kids';
+    const langKey = (AppState.dialogueLang === 'ja') ? 'ja' : 'en';
+    const list = DIALOGUE_SCENARIOS[modeKey] && DIALOGUE_SCENARIOS[modeKey][langKey];
+    return list || [];
+  }
+
+  function renderScenarioList() {
+    const grid = document.getElementById('dialogueScenarioGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const scenarios = getScenarios();
+    scenarios.forEach((s, idx) => {
+      const card = document.createElement('div');
+      card.className = 'glass-card scenario-card';
+      const badgeText = (AppState.mode === 'kids') ? `冒險情境 ${idx + 1}` : `實戰情境 ${idx + 1}`;
+
+      card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <span class="scenario-icon">${s.npc.avatar}</span>
+          <span class="scenario-npc-badge">${badgeText}</span>
+        </div>
+        <div>
+          <div class="scenario-title">${s.title}</div>
+          <div class="scenario-subtitle">${s.subtitle}</div>
+        </div>
+        <div class="scenario-desc">${s.desc}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+          <span style="font-size: 12px; opacity: 0.8; font-weight: 700;">👤 對象：${s.npc.name}</span>
+          <button class="add-custom-btn" style="padding: 6px 14px; font-size: 12px;">開始對話 ▶</button>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        startScenario(s);
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  function startScenario(scenario) {
+    activeScenario = scenario;
+    lineIndex = 0;
+
+    document.getElementById('dialogueSelectionView').classList.add('hidden');
+    document.getElementById('dialogueChatView').classList.remove('hidden');
+
+    const npcAvatar = document.getElementById('chatNpcAvatar');
+    const npcName = document.getElementById('chatNpcName');
+    if (npcAvatar) npcAvatar.textContent = scenario.npc.avatar;
+    if (npcName) npcName.textContent = scenario.npc.name;
+
+    const chatList = document.getElementById('dialogueChatList');
+    if (chatList) chatList.innerHTML = '';
+
+    playNpcTurn(0);
+  }
+
+  function playNpcTurn(idx) {
+    if (!activeScenario || idx >= activeScenario.lines.length) return;
+    const turnData = activeScenario.lines[idx];
+
+    // Update Progress Pill
+    const progressPill = document.getElementById('chatProgressPill');
+    if (progressPill) {
+      progressPill.textContent = `回合 ${idx + 1} / ${activeScenario.lines.length}`;
+    }
+
+    // Add NPC Bubble to Chat
+    const chatList = document.getElementById('dialogueChatList');
+    const row = document.createElement('div');
+    row.className = 'chat-row npc-row';
+    row.innerHTML = `
+      <div class="bubble-avatar">${activeScenario.npc.avatar}</div>
+      <div class="bubble-body">
+        <div class="bubble-sender">${activeScenario.npc.name}</div>
+        <div class="bubble-orig">${turnData.npc.text}</div>
+        ${turnData.npc.phonetic && turnData.npc.phonetic !== turnData.npc.text ? `<div class="bubble-phonetic">${turnData.npc.phonetic}</div>` : ''}
+        <div class="bubble-zh">${turnData.npc.zh}</div>
+        <div class="bubble-footer">
+          <button class="bubble-btn replay-npc-btn" title="再聽一次 NPC 發音">🔊 朗讀</button>
+        </div>
+      </div>
+    `;
+
+    row.querySelector('.replay-npc-btn').addEventListener('click', () => {
+      SpeechSys.speak(turnData.npc.text, AppState.dialogueLang);
+    });
+
+    chatList.appendChild(row);
+    chatList.scrollTop = chatList.scrollHeight;
+
+    // Automatically Speak NPC voice
+    setTimeout(() => {
+      SpeechSys.speak(turnData.npc.text, AppState.dialogueLang);
+    }, 200);
+
+    // Update User Prompt Area
+    document.getElementById('dialogueTargetText').textContent = turnData.user.target;
+    document.getElementById('dialogueTargetPhonetic').textContent = turnData.user.phonetic || '';
+    document.getElementById('dialogueTargetMeaning').textContent = turnData.user.zh;
+    setStatusHint('點擊下方 🎙️ 開口練習，或點 🎧 聽示範', '');
+
+    const guideBtn = document.getElementById('dialogueListenGuideBtn');
+    if (guideBtn) guideBtn.classList.remove('highlight-pulse');
+  }
+
+  function appendUserBubble(spokenText, accuracyPct, isDirect = false) {
+    if (!activeScenario) return;
+    const turnData = activeScenario.lines[lineIndex];
+    const chatList = document.getElementById('dialogueChatList');
+    const userAvatar = (AppState.mode === 'kids') ? '🧒' : '🧑';
+
+    const row = document.createElement('div');
+    row.className = 'chat-row user-row';
+
+    let scoreBadge = '';
+    if (isDirect) {
+      scoreBadge = '<span class="accuracy-pill">⌨️ 代替朗讀送出</span>';
+    } else if (accuracyPct >= 90) {
+      scoreBadge = `<span class="accuracy-pill" style="background:rgba(16,185,129,0.3);">⭐⭐⭐ 完美 (${accuracyPct}%)</span>`;
+    } else {
+      scoreBadge = `<span class="accuracy-pill" style="background:rgba(59,130,246,0.3);">⭐⭐ 很好 (${accuracyPct}%)</span>`;
+    }
+
+    row.innerHTML = `
+      <div class="bubble-avatar">${userAvatar}</div>
+      <div class="bubble-body">
+        <div class="bubble-sender">你 (You)</div>
+        <div class="bubble-orig">${spokenText}</div>
+        <div class="bubble-zh">${turnData.user.zh}</div>
+        <div class="bubble-footer">
+          ${scoreBadge}
+          <button class="bubble-btn replay-user-btn" title="聽發音">🔊</button>
+        </div>
+      </div>
+    `;
+
+    row.querySelector('.replay-user-btn').addEventListener('click', () => {
+      SpeechSys.speak(spokenText, AppState.dialogueLang);
+    });
+
+    chatList.appendChild(row);
+    chatList.scrollTop = chatList.scrollHeight;
+  }
+
+  function setStatusHint(msg, color) {
+    const el = document.getElementById('dialogueStatusMsg');
+    if (el) {
+      el.textContent = msg;
+      el.style.color = color || '';
+    }
+  }
+
+  function updateRecordingUI(recording) {
+    isRecording = recording;
+    const mic = document.getElementById('dialogueMicBtn');
+    const wave = document.getElementById('dialogueSoundWave');
+    if (mic) mic.classList.toggle('recording', recording);
+    if (wave) wave.classList.toggle('active', recording);
+  }
+
+  function playUserGuideAudio() {
+    if (!activeScenario || lineIndex >= activeScenario.lines.length) return;
+    const turnData = activeScenario.lines[lineIndex];
+    SpeechSys.speak(turnData.user.target, AppState.dialogueLang, 0.9);
+    AudioSys.cardFlip();
+  }
+
+  function stopSpeechRecognition() {
+    if (recognition && isRecording) {
+      try { recognition.stop(); } catch(e){}
+    }
+    updateRecordingUI(false);
+  }
+
+  function toggleMicrophone() {
+    if (isRecording) {
+      stopSpeechRecognition();
+      setStatusHint('已停止聆聽。點擊 🎙️ 即可重新開始說話', '');
+      return;
+    }
+
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      setStatusHint('💡 瀏覽器暫不支援即時語音識別，請點擊「直接送出」或「聽示範」！', '#f59e0b');
+      return;
+    }
+
+    try {
+      const rec = new SpeechRec();
+      rec.lang = (AppState.dialogueLang === 'ja') ? 'ja-JP' : 'en-US';
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => {
+        updateRecordingUI(true);
+        setStatusHint('🎙️ 正在聆聽，請對著麥克風朗讀目標句子...', '#ef4444');
+      };
+
+      rec.onresult = (e) => {
+        updateRecordingUI(false);
+        const transcript = e.results[0][0].transcript;
+        evaluateSpeech(transcript);
+      };
+
+      rec.onerror = (e) => {
+        updateRecordingUI(false);
+        if (e.error === 'no-speech') {
+          setStatusHint('⚠️ 未能偵測到聲音，請靠近麥克風再試一次～', '#f59e0b');
+        } else if (e.error === 'not-allowed') {
+          setStatusHint('⚠️ 麥克風未授權，可允許權限或點「直接送出」繼續！', '#ef4444');
+        } else {
+          setStatusHint(`⚠️ 語音識別提示 (${e.error})，可點「直接送出」繼續`, '#f59e0b');
+        }
+      };
+
+      rec.onend = () => {
+        updateRecordingUI(false);
+      };
+
+      recognition = rec;
+      rec.start();
+    } catch (err) {
+      console.warn(err);
+      updateRecordingUI(false);
+      setStatusHint('⚠️ 無法啟動語音識別，可點「直接送出」繼續練習', '#ef4444');
+    }
+  }
+
+  function evaluateSpeech(transcript) {
+    if (!activeScenario || lineIndex >= activeScenario.lines.length) return;
+    const turnData = activeScenario.lines[lineIndex];
+    const score = calculateSimilarity(transcript, turnData.user.target);
+
+    if (score >= 0.7) {
+      AudioSys.correct();
+      const pct = Math.min(100, Math.round(score * 100));
+      appendUserBubble(turnData.user.target, pct, false);
+      setStatusHint(`🎉 太棒了！發音非常標準 (${pct}%)！準備下一句...`, '#10b981');
+
+      advanceTurn();
+    } else {
+      AudioSys.wrong();
+      const recognizedDisplay = transcript.length > 25 ? transcript.slice(0, 25) + '...' : transcript;
+      setStatusHint(`差一點點喔！(識別為: "${recognizedDisplay}") 試著再慢一點唸唸看，或點「聽示範」～`, '#ef4444');
+
+      const guideBtn = document.getElementById('dialogueListenGuideBtn');
+      if (guideBtn) guideBtn.classList.add('highlight-pulse');
+    }
+  }
+
+  function submitDirectly() {
+    if (!activeScenario || lineIndex >= activeScenario.lines.length) return;
+    const turnData = activeScenario.lines[lineIndex];
+    AudioSys.correct();
+    appendUserBubble(turnData.user.target, 100, true);
+    setStatusHint('✅ 成功送出！準備下一回合...', '#10b981');
+
+    advanceTurn();
+  }
+
+  function advanceTurn() {
+    if (lineIndex + 1 < activeScenario.lines.length) {
+      lineIndex++;
+      setTimeout(() => {
+        playNpcTurn(lineIndex);
+      }, 1100);
+    } else {
+      setTimeout(() => {
+        finishScenario();
+      }, 1200);
+    }
+  }
+
+  function finishScenario() {
+    if (!activeScenario) return;
+    AudioSys.bossDefeated();
+    triggerCelebrationConfetti();
+
+    // Reward handling
+    const rewardEl = document.getElementById('dialogueCompleteReward');
+    if (AppState.mode === 'kids') {
+      if (window.KidsApp && typeof KidsApp.addStars === 'function') {
+        KidsApp.addStars(1);
+        if (typeof KidsApp.getStars === 'function') {
+          AppState.score = KidsApp.getStars();
+        } else {
+          AppState.score = (AppState.score || 0) + 1;
+        }
+      } else {
+        AppState.score = (AppState.score || 0) + 1;
+      }
+      const scoreDisplay = document.getElementById('kidsScore');
+      if (scoreDisplay) scoreDisplay.textContent = AppState.score;
+      if (rewardEl) rewardEl.innerHTML = '⭐ 恭喜獲得 1 顆冒險星星！已存入圖鑑冊！';
+    } else {
+      if (rewardEl) rewardEl.innerHTML = '🎯 成功完成實境情境會話！口說流暢度 +100！';
+    }
+
+    // NPC Quote
+    const quoteEl = document.getElementById('dialogueCompleteQuote');
+    if (quoteEl) {
+      quoteEl.textContent = activeScenario.praise || `${activeScenario.npc.name}：「你說得太棒了！非常自然流暢，期待下次再見！」`;
+    }
+
+    // Title
+    const titleEl = document.getElementById('dialogueCompleteTitle');
+    if (titleEl) {
+      titleEl.textContent = `🎉【${activeScenario.title}】挑戰成功！`;
+    }
+
+    // Show modal
+    const modal = document.getElementById('dialogueCompleteModal');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  return {
+    init,
+    onOpen,
+    onModeChange,
+    renderScenarioList,
+    startScenario,
+    toggleMicrophone,
+    playUserGuideAudio,
+    submitDirectly,
+    stopSpeechRecognition
+  };
+})();
+
+/* =========================================================================
+   11. 影子跟讀訓練室 - 內建故事與語音片段資料庫 (Shadowing Data)
+   ========================================================================= */
+const SHADOWING_DATA = {
+  kids: {
+    en: [
+      {
+        id: 'kids-en-redhen',
+        title: '🐔 The Little Red Hen',
+        titleZh: '勤勞的小紅母雞',
+        sentences: [
+          { text: "Once upon a time, there was a little red hen.", phonetic: "", zh: "從前從前，有一隻小紅母雞。", pauseHint: "" },
+          { text: "Who will help me plant the wheat?", phonetic: "", zh: "誰要幫我種小麥呢？", pauseHint: "↗ 升調問句" },
+          { text: "\"Not I!\" said the duck.", phonetic: "", zh: "「不要！」鴨子說。", pauseHint: "短促拒絕語氣" },
+          { text: "\"Not I!\" said the cat.", phonetic: "", zh: "「不要！」貓咪說。", pauseHint: "短促拒絕語氣" },
+          { text: "\"Not I!\" said the pig.", phonetic: "", zh: "「不要！」小豬說。", pauseHint: "短促拒絕語氣" },
+          { text: "So the little red hen planted the wheat all by herself.", phonetic: "", zh: "於是小紅母雞只好自己一個人種小麥。", pauseHint: "強調 all by herself" },
+          { text: "She watered it and pulled the weeds.", phonetic: "", zh: "她澆水、拔草。", pauseHint: "列舉動作停頓" },
+          { text: "The wheat grew tall and golden.", phonetic: "", zh: "小麥長得又高又金黃。", pauseHint: "溫柔敘述" },
+          { text: "Who will help me harvest the wheat?", phonetic: "", zh: "誰要幫我收成小麥呢？", pauseHint: "↗ 升調問句" },
+          { text: "\"Not I!\" they all said.", phonetic: "", zh: "「不要！」他們都說。", pauseHint: "齊聲拒絕" },
+          { text: "So the little red hen harvested the wheat herself.", phonetic: "", zh: "小紅母雞只好自己收成小麥。", pauseHint: "" },
+          { text: "Who will help me bake the bread?", phonetic: "", zh: "誰要幫我烤麵包呢？", pauseHint: "↗ 升調問句" },
+          { text: "\"Not I!\" they said again.", phonetic: "", zh: "「不要！」他們又說。", pauseHint: "重複句型節奏" },
+          { text: "So she baked the bread all by herself.", phonetic: "", zh: "她自己一個人烤了麵包。", pauseHint: "" },
+          { text: "Who will help me eat the bread?", phonetic: "", zh: "誰要幫我吃麵包呢？", pauseHint: "↗ 語調上揚" },
+          { text: "\"I will!\" said the duck, the cat, and the pig.", phonetic: "", zh: "「我要！」鴨子、貓咪和小豬一起說。", pauseHint: "加速、興奮語氣" },
+          { text: "\"No! I will eat it myself!\"", phonetic: "", zh: "「不行！我自己吃！」", pauseHint: "堅定、有力收尾" },
+          { text: "And the little red hen ate it all up.", phonetic: "", zh: "小紅母雞把麵包全部吃光了。", pauseHint: "滿足語氣" }
+        ]
+      },
+      {
+        id: 'kids-en-tortoise',
+        title: '🐢 The Tortoise and the Hare',
+        titleZh: '龜兔賽跑',
+        sentences: [
+          { text: "Once there was a fast hare and a slow tortoise.", phonetic: "", zh: "從前有一隻跑得很快的兔子和一隻很慢的烏龜。", pauseHint: "對比 slow vs fast" },
+          { text: "The hare laughed at the tortoise.", phonetic: "", zh: "兔子嘲笑烏龜。", pauseHint: "傲慢語氣" },
+          { text: "\"You are so slow! I can run circles around you!\"", phonetic: "", zh: "「你太慢了！我可以繞著你跑好幾圈！」", pauseHint: "輕蔑、快速" },
+          { text: "The tortoise said calmly, \"Let us have a race!\"", phonetic: "", zh: "烏龜平靜地說：「我們來比賽吧！」", pauseHint: "沉穩、堅定" },
+          { text: "They started the race. The hare ran very fast.", phonetic: "", zh: "比賽開始了。兔子跑得非常快。", pauseHint: "語速加快" },
+          { text: "The tortoise walked slowly but did not stop.", phonetic: "", zh: "烏龜慢慢地走，但從不停下來。", pauseHint: "穩定、勻速" },
+          { text: "The hare was so far ahead, he decided to take a nap.", phonetic: "", zh: "兔子遙遙領先，決定小睡一下。", pauseHint: "輕鬆語氣" },
+          { text: "\"I have plenty of time!\" he yawned.", phonetic: "", zh: "「我時間多的是！」他打了個呵欠。", pauseHint: "打呵欠、放鬆" },
+          { text: "Meanwhile, the tortoise kept walking, step by step.", phonetic: "", zh: "同時，烏龜一步一步持續走著。", pauseHint: "堅定、一字一字強調" },
+          { text: "When the hare woke up, the tortoise was almost at the finish line!", phonetic: "", zh: "兔子醒來時，烏龜已經快到終點了！", pauseHint: "驚慌、語速加快" },
+          { text: "\"Oh no! I must run!\"", phonetic: "", zh: "「糟了！我得趕快跑！」", pauseHint: "緊張語氣" },
+          { text: "But it was too late. The tortoise won the race!", phonetic: "", zh: "但太遲了。烏龜贏了比賽！", pauseHint: "歡慶、🎉" },
+          { text: "\"Slow and steady wins the race!\"", phonetic: "", zh: "「穩紮穩打就能贏！」", pauseHint: "格言、堅定收尾" }
+        ]
+      },
+      {
+        id: 'kids-en-3pigs',
+        title: '🐷 The Three Little Pigs',
+        titleZh: '三隻小豬',
+        sentences: [
+          { text: "There were three little pigs who wanted to build their own houses.", phonetic: "", zh: "有三隻小豬想蓋自己的房子。", pauseHint: "" },
+          { text: "The first pig built his house of straw.", phonetic: "", zh: "第一隻小豬用稻草蓋了房子。", pauseHint: "輕快語氣" },
+          { text: "The second pig built his house of sticks.", phonetic: "", zh: "第二隻小豬用木枝蓋了房子。", pauseHint: "" },
+          { text: "The third pig built his house of bricks.", phonetic: "", zh: "第三隻小豬用磚頭蓋了房子。", pauseHint: "堅定語氣" },
+          { text: "Along came the big bad wolf.", phonetic: "", zh: "大野狼來了。", pauseHint: "低沉、威脅語氣" },
+          { text: "\"Little pigs, little pigs, let me come in!\"", phonetic: "", zh: "「小豬們，小豬們，讓我進去！」", pauseHint: "低沉威脅" },
+          { text: "\"Not by the hair of my chinny chin chin!\"", phonetic: "", zh: "「休想！我才不讓你進來！」", pauseHint: "頑強拒絕" },
+          { text: "\"Then I will huff, and I will puff, and I will blow your house down!\"", phonetic: "", zh: "「那我就呼呼吹，把你的房子吹倒！」", pauseHint: "爆破音 huff/puff 加強" },
+          { text: "The wolf blew down the straw house!", phonetic: "", zh: "野狼把稻草屋吹倒了！", pauseHint: "快速、衝擊力" },
+          { text: "The wolf blew down the stick house!", phonetic: "", zh: "野狼把木枝屋也吹倒了！", pauseHint: "重複節奏" },
+          { text: "But he could NOT blow down the brick house!", phonetic: "", zh: "但他吹不倒磚頭屋！", pauseHint: "強調 NOT" },
+          { text: "\"I will huff and puff all night!\"", phonetic: "", zh: "「我要吹一整夜！」", pauseHint: "不甘心語氣" },
+          { text: "The wolf huffed and puffed until he was tired.", phonetic: "", zh: "野狼吹到精疲力竭。", pauseHint: "漸弱" },
+          { text: "The three little pigs lived happily ever after.", phonetic: "", zh: "三隻小豬從此過著幸福快樂的日子。", pauseHint: "溫馨收尾" }
+        ]
+      },
+      {
+        id: 'kids-en-northwind',
+        title: '🌬️ The North Wind and the Sun',
+        titleZh: '北風與太陽',
+        sentences: [
+          { text: "The North Wind and the Sun were arguing about who was stronger.", phonetic: "", zh: "北風和太陽為了誰比較強而爭論不休。", pauseHint: "競爭語氣" },
+          { text: "\"I am the strongest!\" said the North Wind.", phonetic: "", zh: "「我最強！」北風說。", pauseHint: "強勢語氣" },
+          { text: "\"Just watch me! I can blow away everything!\"", phonetic: "", zh: "「看著吧！我能把一切都吹走！」", pauseHint: "自信、用力" },
+          { text: "The Sun smiled warmly and said nothing.", phonetic: "", zh: "太陽只是溫暖地微笑，沒有說話。", pauseHint: "平靜語氣" },
+          { text: "A traveler came walking down the road.", phonetic: "", zh: "一位旅人沿著道路走來。", pauseHint: "穩定敘述" },
+          { text: "\"Let us see who can make the traveler take off his coat,\" said the Sun.", phonetic: "", zh: "「看誰能讓旅人脫下外套吧。」太陽說。", pauseHint: "提議語氣" },
+          { text: "The North Wind blew with all his might.", phonetic: "", zh: "北風使出全力吹。", pauseHint: "劇烈、強勁" },
+          { text: "But the harder the wind blew, the tighter the traveler wrapped his coat.", phonetic: "", zh: "但風吹得越猛，旅人就把外套裹得越緊。", pauseHint: "對比、強調" },
+          { text: "Then the Sun shone gently and warmly.", phonetic: "", zh: "接著太陽溫柔地照耀著。", pauseHint: "柔和語調" },
+          { text: "The traveler felt warm and happily took off his coat.", phonetic: "", zh: "旅人感到溫暖，開心地脫下了外套。", pauseHint: "輕快收尾" },
+          { text: "\"Kindness and warmth are stronger than force,\" said the Sun.", phonetic: "", zh: "「溫暖和善良，比暴力更有力量。」太陽說。", pauseHint: "格言收尾" }
+        ]
+      }
+    ],
+    ja: [
+      {
+        id: 'kids-ja-musubi',
+        title: '🍙 おむすびころりん',
+        titleZh: '飯糰滾滾',
+        sentences: [
+          { text: "おむすび ころりん", phonetic: "omusubi kororin", zh: "飯糰滾啊滾", pauseHint: "童謠節奏" },
+          { text: "すっとんとん♪", phonetic: "suttonton", zh: "骨碌碌♪", pauseHint: "擬聲詞、輕快" },
+          { text: "おじいさんが つめたい もに さわって", phonetic: "ojiisan ga tsumetai mo ni sawatte", zh: "爺爺碰到冰冰的東西", pauseHint: "故事敘述語氣" },
+          { text: "「きゃっ！」と おどった", phonetic: "kyatto odotta", zh: "「哇！」嚇了一跳", pauseHint: "驚嚇語氣" },
+          { text: "おばあさんが やわらかい もに さわって", phonetic: "obaasan ga yawarakai mo ni sawatte", zh: "奶奶碰到軟軟的東西", pauseHint: "溫柔語氣" },
+          { text: "「あらあら」と ほころんだ", phonetic: "araara hokoronda", zh: "「哎呀呀」笑開了", pauseHint: "慈祥笑容" },
+          { text: "おむすび ころりん", phonetic: "omusubi kororin", zh: "飯糰滾啊滾", pauseHint: "重複、節奏感" },
+          { text: "すっとんとん♪", phonetic: "suttonton", zh: "骨碌碌♪", pauseHint: "尾聲、漸弱" }
+        ]
+      },
+      {
+        id: 'kids-ja-momotaro',
+        title: '🍑 ももたろう',
+        titleZh: '桃太郎',
+        sentences: [
+          { text: "むかし むかし、あるところに", phonetic: "mukashi mukashi, aru tokoro ni", zh: "很久很久以前，在一個地方", pauseHint: "開頭、古語節奏" },
+          { text: "おじいさんと おばあさんが すんでいました。", phonetic: "ojiisan to obaasan ga sundeimashita.", zh: "住著爺爺和奶奶。", pauseHint: "" },
+          { text: "あるひ、おばあさんが かわで せんたくを していました。", phonetic: "aru hi, obaasan ga kawa de sentaku wo shiteimashita.", zh: "有一天，奶奶在河邊洗衣服。", pauseHint: "のんびり" },
+          { text: "すると、おおきな ももが ながれてきました。", phonetic: "suruto, oomina momo ga nagaretekimashita.", zh: "這時，一顆大桃子漂了過來。", pauseHint: "驚訝語氣" },
+          { text: "「いい ももだ！」と ももを ひろいました。", phonetic: "ii momo da! to momo wo hiroimashita.", zh: "「好大的桃子！」撿起了桃子。", pauseHint: "開心語氣" },
+          { text: "ももを きると、おおきな 男の子が いました。", phonetic: "momo wo kiru to, ookina otokonoko ga imashita.", zh: "一切開桃子，裡面有一個小男孩。", pauseHint: "驚喜語氣" },
+          { text: "「ぼくは ももたろう！ ももから うまれた！」", phonetic: "boku wa Momotaro! momo kara umareta!", zh: "「我是桃太郎！從桃子裡出生的！」", pauseHint: "元氣、自介" },
+          { text: "ももたろうは ゆうかんな こに なりました。", phonetic: "Momotaro wa yuukana ko ni narimashita.", zh: "桃太郎長成了一個勇敢的孩子。", pauseHint: "堅定語氣" },
+          { text: "いぬ・さる・きじと ともに おにと たたかいました。", phonetic: "inu・saru・kiji to tomo ni oni to tatakaimashita.", zh: "和狗、猴子、雉雞一起打敗了鬼。", pauseHint: "冒險、激昂" },
+          { text: "みんな よろこびました。", phonetic: "minna yorokobimashita.", zh: "大家都好開心。", pauseHint: "溫馨結尾" }
+        ]
+      },
+      {
+        id: 'kids-ja-usagi',
+        title: '🐇 うさぎとかめ',
+        titleZh: '兔子與烏龜',
+        sentences: [
+          { text: "むかし むかし、うさぎと かめが まちました。", phonetic: "mukashi mukashi, usagi to kame ga machimashita.", zh: "很久很久以前，兔子和烏龜相遇了。", pauseHint: "古語開頭" },
+          { text: "うさぎは すばしっこくて、いつも はやく はしった。", phonetic: "usagi wa subashikokute, itsumo hayaku hashitta.", zh: "兔子很敏捷，總是跑得很快。", pauseHint: "輕快語速" },
+          { text: "「かめさん、ゆっくり すぎだよ！」と うさぎは いました。", phonetic: "kame-san, yukkuri sugi da yo! to usagi wa iimashita.", zh: "「烏龜先生，你太慢了！」兔子說。", pauseHint: "調侃語氣" },
+          { text: "「負けないよ！ けっこん しませんか？」と かめは いました。", phonetic: "makenai yo! kekkon shimasen ka? to kame wa iimashita.", zh: "「我才不會輸！要比賽嗎？」烏龜說。", pauseHint: "沈穩、不服輸" },
+          { text: "レースが はじまりました。", phonetic: "rēsu ga hajimarimashita.", zh: "比賽開始了。", pauseHint: "" },
+          { text: "うさぎは とびぶきの ように はしった。", phonetic: "usagi wa tobinuki no you ni hashitta.", zh: "兔子像離弦的箭一樣飛奔。", pauseHint: "快速" },
+          { text: "かめは ゆっくり、でも やめずに あるいた。", phonetic: "kame wa yukkuri, demo yamezu ni aruita.", zh: "烏龜慢慢地走，但從不停步。", pauseHint: "穩定節奏" },
+          { text: "うさぎは 「もう ひま たくさん！」と ねむってしまった。", phonetic: "usagi wa mou hima takusan! to nemutte shimatta.", zh: "兔子覺得「時間多得很！」就睡著了。", pauseHint: "慵懶語氣" },
+          { text: "かめは すすみつづけ、ゴールに とどいた！", phonetic: "kame wa susumitsuzuke, gōru ni todoita!", zh: "烏龜持續前進，到達了終點！", pauseHint: "歡慶語氣" },
+          { text: "「ゆっくり じゃんけん つよく ぬける！」という ことばが できました。", phonetic: "yukkuri janken tsuyoku nukeru! to iu kotoba ga dekimashita.", zh: "「慢而穩，終能勝」這句話就這樣來了。", pauseHint: "格言收尾" }
+        ]
+      }
+    ]
+  },
+  adult: {
+    en: [
+      {
+        id: 'adult-en-1pct',
+        title: '📈 The 1% Compound Effect',
+        titleZh: '原子習慣：每天進步1%的複利力量',
+        sentences: [
+          { text: "Imagine improving just one percent every single day.", phonetic: "", zh: "想像一下，你每一天只要進步百分之一。", pauseHint: "沉思、TED 開場" },
+          { text: "It sounds tiny, almost insignificant.", phonetic: "", zh: "聽起來很微小，幾乎不值一提。", pauseHint: "低沉、漸強" },
+          { text: "But here is the math: one point zero one to the power of three hundred and sixty-five.", phonetic: "", zh: "但算式是這樣的：1.01 的 365 次方。", pauseHint: "強調數字" },
+          { text: "That equals thirty-seven point seven eight.", phonetic: "", zh: "答案是 37.78。", pauseHint: "停頓、震撼" },
+          { text: "You become thirty-seven times better than where you started.", phonetic: "", zh: "你會比起始時強大三十七倍。", pauseHint: "強調 thirty-seven" },
+          { text: "Now contrast that with zero point nine nine, losing just one percent.", phonetic: "", zh: "反過來看，每天退步百分之一，0.99。", pauseHint: "語調轉折" },
+          { text: "Zero point nine nine to the power of three hundred and sixty-five is zero point zero three.", phonetic: "", zh: "0.99 的 365 次方只剩下 0.03。", pauseHint: "低沉、警示" },
+          { text: "You are practically at zero.", phonetic: "", zh: "你幾乎回到了原點。", pauseHint: "停頓" },
+          { text: "The difference between plus one percent and minus one percent is massive over time.", phonetic: "", zh: "正一與負一的差異，時間一長就是天壤之別。", pauseHint: "有力結論" },
+          { text: "This is the power of compound interest, applied not to money, but to your habits.", phonetic: "", zh: "這就是複利的力量，不只用在錢上，更適用在你的習慣。", pauseHint: "深思、收尾" },
+          { text: "Small habits do not add up. They compound.", phonetic: "", zh: "小習慣不是簡單累加，而是複利增長。", pauseHint: "格言式強調" },
+          { text: "Start small. Stay consistent. Let time do the heavy lifting.", phonetic: "", zh: "從小事開始，持之以恆，讓時間幫你做功。", pauseHint: "溫暖收尾" }
+        ]
+      },
+      {
+        id: 'adult-en-listening',
+        title: '👂 The Art of Active Listening',
+        titleZh: '職場溝通：傾聽的藝術',
+        sentences: [
+          { text: "Most people do not listen with the intent to understand.", phonetic: "", zh: "大多數人傾聽並不是為了理解。", pauseHint: "反思開場" },
+          { text: "They listen with the intent to reply.", phonetic: "", zh: "他們傾聽是為了回覆。", pauseHint: "停頓強調" },
+          { text: "True listening requires you to suspend your ego.", phonetic: "", zh: "真正的傾聽要求你暫時放下自我。", pauseHint: "沉穩語速" },
+          { text: "It means giving your full, undivided attention to the speaker.", phonetic: "", zh: "這代表把全部注意力毫無保留地給予說話者。", pauseHint: "強調 undivided" },
+          { text: "When you truly listen, you hear not just the words, but the emotions behind them.", phonetic: "", zh: "當你真正傾聽，你不只聽到話語，還能聽見背後的情感。", pauseHint: "漸慢、溫柔" },
+          { text: "Active listening builds trust faster than any clever argument.", phonetic: "", zh: "積極傾聽建立信任的速度，遠勝任何巧妙的論點。", pauseHint: "強調 trust" },
+          { text: "Ask open-ended questions. Reflect back what you heard.", phonetic: "", zh: "提出開放式問題，複述你聽到的內容。", pauseHint: "實用建議語氣" },
+          { text: "Do not interrupt. Do not judge. Just be present.", phonetic: "", zh: "不要打斷，不要評判，只需要專注當下。", pauseHint: "三個短句節奏" },
+          { text: "The best communicators are the best listeners.", phonetic: "", zh: "最優秀的溝通者，往往是最優秀的傾聽者。", pauseHint: "結論、堅定" },
+          { text: "Listening is not passive. It is the most active form of respect.", phonetic: "", zh: "傾聽並非被動，它是尊重最積極的表現形式。", pauseHint: "收尾格言" }
+        ]
+      },
+      {
+        id: 'adult-en-diner',
+        title: '🌙 A Midnight Diner in Tokyo',
+        titleZh: '城市漫遊：深夜食堂的片刻溫暖',
+        sentences: [
+          { text: "The neon signs flickered as I turned down a narrow alley.", phonetic: "", zh: "霓虹燈閃爍著，我轉進一條狹窄的巷弄。", pauseHint: "電影感敘事" },
+          { text: "A small shop glowed warmly at the end of the street.", phonetic: "", zh: "街尾有一間小店透出溫暖的光芒。", pauseHint: "溫柔語調" },
+          { text: "The chef nodded as I stepped inside, no words needed.", phonetic: "", zh: "我踏進店裡，老闆點了點頭，什麼也沒說。", pauseHint: "平靜、極簡" },
+          { text: "He slid a bowl of steaming ramen across the counter.", phonetic: "", zh: "他從櫃檯滑過一碗冒著熱氣的拉麵。", pauseHint: "動作敘述" },
+          { text: "The broth was rich, the noodles perfectly chewy.", phonetic: "", zh: "湯頭濃郁，麵條Q彈恰到好處。", pauseHint: "感性描述" },
+          { text: "For a moment, the whole city felt far away.", phonetic: "", zh: "在那一刻，整座城市彷彿都遠去了。", pauseHint: "沉思、放慢" },
+          { text: "No deadlines. No expectations. Just this bowl of ramen.", phonetic: "", zh: "沒有截止日，沒有期待，只有眼前這碗拉麵。", pauseHint: "三個短句" },
+          { text: "Sometimes warmth comes in the simplest forms.", phonetic: "", zh: "有時候溫暖就藏在最簡單的事物裡。", pauseHint: "哲思、收尾" },
+          { text: "I finished the last drop, placed my coins on the counter, and stepped back into the night.", phonetic: "", zh: "我喝乾最後一滴湯，把零錢放在櫃檯上，重新走入夜色。", pauseHint: "緩慢、畫面感" }
+        ]
+      }
+    ],
+    ja: [
+      {
+        id: 'adult-ja-ichigo',
+        title: '🍵 一期一会の心',
+        titleZh: '一期一會的待人哲學',
+        sentences: [
+          { text: "一期一会。この四文字には、深い日本の哲学が宿っています。", phonetic: "ichigo ichie. kono yonmoji ni wa, fukai nihon no tetsugaku ga yadotte imasu.", zh: "一期一會。這四個字裡，蘊藏著日本深邃的哲學。", pauseHint: "典雅開場" },
+          { text: "たとえ同じ人と何度会っても、その出会いは二度とありません。", phonetic: "tatoe onaji hito to nando aitemo, sono deai wa nidoto arimasen.", zh: "即使與同一人再次相見，那份相遇也不會再有第二次。", pauseHint: "沉穩語速" },
+          { text: "だから、一つひとつの出会いを大切にしなければなりません。", phonetic: "dakara, hitotsu hitotsu no deai wo taisetsu ni shinakereba narimasen.", zh: "因此，每一次的相遇都必須珍而重之。", pauseHint: "敬語節奏" },
+          { text: "お茶を点てるとき、茶道家は「今この瞬間を」と心に留めます。", phonetic: "ocha wo tateru toki, sadōka wa ima kono shunkan wo to kokoro ni todomemasu.", zh: "點茶之時，茶道家心中默念「把握當下這個瞬間」。", pauseHint: "靜謐、專注" },
+          { text: "毎日の生活でも、同じことが言えます。", phonetic: "mainichi no seikatsu demo, onaji koto ga iemasu.", zh: "在日常生活中，這番道理同樣適用。", pauseHint: "" },
+          { text: "朝のコーヒーの香り、友人の笑顔、帰り道の風。", phonetic: "asa no kōhī no kaori, yūjin no egao, kaerimichi no kaze.", zh: "清晨咖啡的香氣、朋友的笑顏、歸途的微風。", pauseHint: "三連列舉" },
+          { text: "どれも、戻らない貴重な時間です。", phonetic: "dore mo, modoranai kichō na jikan desu.", zh: "全都是無法重來的珍貴時光。", pauseHint: "感性語氣" },
+          { text: "一期一会の心で、ひとつひとつの瞬間を、光に変えていきましょう。", phonetic: "ichigo ichie no kokoro de, hitotsu hitotsu no shunkan wo, hikari ni kaete ikimashō.", zh: "懷著一期一會的心，把每一個瞬間，都化為生命中的光吧。", pauseHint: "收尾、溫暖" }
+        ]
+      },
+      {
+        id: 'adult-ja-morning',
+        title: '🌅 日本の朝ごはんと四季',
+        titleZh: '四季風物詩：傳統朝食的滋味',
+        sentences: [
+          { text: "日本の朝ごはんは、ただの食事ではありません。", phonetic: "nihon no asagohan wa, tada no shokuji dewa arimasen.", zh: "日本的早餐，不只是單純的一餐。", pauseHint: "紀錄片旁白風格" },
+          { text: "それは、その日の始まりを丁寧に迎える儀式です。", phonetic: "sore wa, sono hi no hajimari wo teinei ni mukaeru gishiki desu.", zh: "那是以細膩之心迎接一天開始的儀式。", pauseHint: "平穩、精準" },
+          { text: "春は桜の花びらが舞う朝、温かいお粥を。", phonetic: "haru wa sakura no hanabira ga mau asa, atatakaiokayu wo.", zh: "春天的清晨，櫻花瓣飛舞，一碗溫暖的粥。", pauseHint: "溫柔、春意" },
+          { text: "夏は涼しげな冷やし中華と冷や麦茶。", phonetic: "natsu wa suzushige na hiyashi chūka to hiyamugicha.", zh: "夏天是清爽的涼麵和麥茶。", pauseHint: "清爽語調" },
+          { text: "秋はきのこの味噌汁と烤り魚の香り。", phonetic: "aki wa kinoko no misoshiru to kaburi sakana no kaori.", zh: "秋天是蘑菇味噌湯和烤魚的香氣。", pauseHint: "溫暖、秋色" },
+          { text: "冬は鍋から立ち上る湯気が、朝の kitchen を包みます。", phonetic: "fuyu wa nabe kara tachiairu jōga ga, asa no kitchen wo tsutsumimasu.", zh: "冬天，鍋中升起的蒸汽，包覆了整個廚房。", pauseHint: "溫馨冬日" },
+          { text: "季節が変わっても、変わらないのは「いただきます」の一言。", phonetic: "kisetsu ga kawattemo, kawaranai no wa itadakimasu no hitokoto.", zh: "季節更迭，唯一不變的是那句「我開動了」。", pauseHint: "感恩語氣" },
+          { text: "この一言に込められた感謝を、私たちは常常忘れがちです。", phonetic: "kono hitokoto ni komerareta kansha wo, watashitachi wa tokidoki wasuregachi desu.", zh: "這句話裡蘊含的感謝之心，我們常常容易遺忘。", pauseHint: "反思語調" },
+          { text: "今日も、一食を大切に。", phonetic: "kyō mo, isshoku wo taisetsu ni.", zh: "今天，也請好好珍惜每一餐。", pauseHint: "收尾、NHK 紀錄片感" }
+        ]
+      },
+      {
+        id: 'adult-ja-station',
+        title: '🚃 駅のアナウンスと日常',
+        titleZh: '電車廣播與都會節奏',
+        sentences: [
+          { text: "お待たせいたしました。", phonetic: "omatase itashimashita.", zh: "讓您久等了。", pauseHint: "標準廣播語" },
+          { text: "二番線に、各駅停車、渋谷行きが参ります。", phonetic: "niban sen ni, kakueki teisha, Shibuya-yuki ga mairimasu.", zh: "二號月台，各站停車，開往澀谷方向即將進站。", pauseHint: "清晰、官方" },
+          { text: "危ないですから、黄色い線の内側までお下がりください。", phonetic: "abunai desu kara, kiiroi sen no uchigawa made osagari kudasai.", zh: "為了您的安全，請退到黃色線內側。", pauseHint: "嚴正提醒" },
+          { text: "ドアが閉まります。ご注意ください。", phonetic: "doa ga shimarimasu. gochūi kudasai.", zh: "車門即將關閉，請注意。", pauseHint: "快速警示" },
+          { text: "次は、原宿、原宿です。", phonetic: "tsugi wa, Harajuku, Harajuku desu.", zh: "下一站，原宿，原宿。", pauseHint: "重複地名" },
+          { text: "お出口は、右側です。", phonetic: "odeguchi wa, migigawa desu.", zh: "出口在右側。", pauseHint: "" },
+          { text: "東京、東京です。", phonetic: "Tōkyō, Tōkyō desu.", zh: "東京站，東京站到了。", pauseHint: "重要站" },
+          { text: "お乗り換えの方は、お早めにご準備ください。", phonetic: "onorikae no kata wa, o-hayame ni gojunbi kudasai.", zh: "需要轉車的乘客，請提早準備。", pauseHint: "親切提醒" },
+          { text: "本日もJR東日本をご利用くださいまして、ありがとうございます。", phonetic: "honjitsu mo JR Higashi Nihon wo goriyō kudasaimashite, arigatō gozaimasu.", zh: "今天也感謝您搭乘 JR 東日本。", pauseHint: "官方感謝語" },
+          { text: "さようなら。またのお越しをお待ちしております。", phonetic: "sayōnara. mata no okoshi wo omachi shite orimasu.", zh: "再見，期待您再次蒞臨。", pauseHint: "優雅道別" }
+        ]
+      },
+      {
+        id: 'adult-ja-taketori',
+        title: '🎋 竹取物語',
+        titleZh: '竹取物語（輝夜姬）',
+        sentences: [
+          { text: "今は昔、竹取の翁というおじいさんがいました。", phonetic: "", zh: "從前從前，有位人稱「竹取翁」的老爺爺。", pauseHint: "古典開場", ruby: "<ruby>今<rt>いま</rt></ruby>は<ruby>昔<rt>むかし</rt></ruby>、<ruby>竹取<rt>たけとり</rt></ruby>の<ruby>翁<rt>おきな</rt></ruby>というおじいさんがいました。" },
+          { text: "ある日、竹林の中で光る竹を見つけました。", phonetic: "", zh: "有一天，他在竹林裡發現了會發光的竹子。", pauseHint: "驚喜語氣", ruby: "<ruby>竹林<rt>たけやぶ</rt></ruby>の<ruby>中<rt>なか</rt></ruby>で<ruby>光<rt>ひか</rt></ruby>る<ruby>竹<rt>たけ</rt></ruby>を<ruby>見<rt>み</rt></ruby>つけました。" },
+          { text: "竹の中には、小さくて美しい女の子がいました。", phonetic: "", zh: "竹子裡有一個小巧美麗的小女孩。", pauseHint: "神奇語氣", ruby: "<ruby>竹<rt>たけ</rt></ruby>の<ruby>中<rt>なか</rt></ruby>には、<ruby>小<rt>ちい</rt></ruby>さくて<ruby>美<rt>うつく</rt></ruby>しい<ruby>女<rt>おんな</rt></ruby>の<ruby>子<rt>こ</rt></ruby>がいました。" },
+          { text: "翁と嫗はその子を「かぐや姫」と名づけました。", phonetic: "", zh: "翁和嫗把這個孩子取名為「輝夜姬」。", pauseHint: "溫暖語氣", ruby: "<ruby>翁<rt>おきな</rt></ruby>と<ruby>嫗<rt>おうな</rt></ruby>はその<ruby>子<rt>こ</rt></ruby>を「かぐや<ruby>姫<rt>ひめ</rt></ruby>」と<ruby>名<rt>な</rt></ruby>づけました。" },
+          { text: "かぐや姫はみるみる美しく成長しました。", phonetic: "", zh: "輝夜姬轉眼間出落得亭亭玉立。", pauseHint: "敘述語氣", ruby: "かぐや<ruby>姫<rt>ひめ</rt></ruby>はみるみる<ruby>美<rt>うつく</rt></ruby>しく<ruby>成長<rt>せいちょう</rt></ruby>しました。" },
+          { text: "海を渡って、膨大な宝物の話も伝えられました。", phonetic: "", zh: "她的美貌遠播，甚至傳到了海的那一頭。", pauseHint: "宏大語氣", ruby: "<ruby>海<rt>うみ</rt></ruby>を<ruby>渡<rt>わた</rt></ruby>って、<ruby>膨大<rt>ぼうだい</rt></ruby>な<ruby>宝物<rt>たからもの</rt></ruby>の<ruby>話<rt>はなし</rt></ruby>も<ruby>伝<rt>つた</rt></ruby>えられました。" },
+          { text: "帝はかぐや姫に求婚しましたが、かなうことはありませんでした。", phonetic: "", zh: "天皇也向輝夜姬求婚，卻始終未能如願。", pauseHint: "惋惜語氣", ruby: "<ruby>帝<rt>みかど</rt></ruby>はかぐや<ruby>姫<rt>ひめ</rt></ruby>に<ruby>求婚<rt>きゅうこん</rt></ruby>しましたが、かなうことはありませんでした。" },
+          { text: "やがてかぐや姫は月の都へ帰らなければなりません。", phonetic: "", zh: "後來，輝夜姬終究得返回月之都。", pauseHint: "傷感語氣", ruby: "やがてかぐや<ruby>姫<rt>ひめ</rt></ruby>は<ruby>月<rt>つき</rt></ruby>の<ruby>都<rt>みやこ</rt></ruby>へ<ruby>帰<rt>かえ</rt></ruby>らなければなりません。" },
+          { text: "名残を惜しみながら、かぐや姫は空へ昇っていきました。", phonetic: "", zh: "她依依不捨地，往天空飛昇而去。", pauseHint: "悲傷優雅", ruby: "<ruby>名残<rt>なごり</rt></ruby>を<ruby>惜<rt>お</rt></ruby>しみながら、かぐや<ruby>姫<rt>ひめ</rt></ruby>は<ruby>空<rt>そら</rt></ruby>へ<ruby>昇<rt>のぼ</rt></ruby>っていきました。" }
+        ]
+      }
+    ]
+  }
+};
+
+/* =========================================================================
+   12. 影子跟讀訓練室模組 (ShadowingStudio Module)
+   ========================================================================= */
+const ShadowingStudio = (() => {
+  let currentLang = 'en';
+  let currentStoryId = '';
+  let currentStep = 1;
+  let currentSpeed = 1.0;
+  let currentSentenceIdx = 0;
+  let isPlaying = false;
+  let isRecording = false;
+  let audioBlob = null;
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let userAudioUrl = null;
+  let playMode = 'native';
+  let zhHidden = false;
+  let ttsUtterance = null;
+  let karaokeTimer = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  function getModeKey() {
+    return AppState.mode === 'adult' ? 'adult' : 'kids';
+  }
+
+  function getCurrentStory() {
+    const mode = getModeKey();
+    const stories = SHADOWING_DATA[mode] && SHADOWING_DATA[mode][currentLang];
+    if (!stories) return null;
+    return stories.find(s => s.id === currentStoryId) || null;
+  }
+
+  function populateStorySelect() {
+    const sel = $('shadowStorySelect');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— 請選擇故事 —</option>';
+    const mode = getModeKey();
+    const stories = SHADOWING_DATA[mode] && SHADOWING_DATA[mode][currentLang];
+    if (!stories) return;
+    stories.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = `${s.title}（${s.titleZh}）`;
+      sel.appendChild(opt);
+    });
+  }
+
+  function renderSentences() {
+    const area = $('shadowScriptArea');
+    if (!area) return;
+    area.innerHTML = '';
+    const story = getCurrentStory();
+    if (!story) return;
+
+    story.sentences.forEach((s, idx) => {
+      const div = document.createElement('div');
+      div.className = 'shadow-sentence';
+      div.dataset.idx = idx;
+      if (idx === currentSentenceIdx && isPlaying) div.classList.add('karaoke-highlight');
+
+      let phoneticHtml = '';
+      // 日語模式：<ruby> 標音直接內嵌於主文字（spec Task 2.1），不需要重複 phonetic 列
+      if (s.ruby) {
+        phoneticHtml = '';
+      } else if (s.phonetic) {
+        phoneticHtml = `<div class="shadow-sentence-phonetic">${s.phonetic}</div>`;
+      }
+
+      const showZh = (currentStep === 1 || currentStep === 4) && zhHidden;
+      div.innerHTML = `
+        ${s.ruby ? `<div class="shadow-sentence-text">${s.ruby}</div>` : s.text}
+        ${phoneticHtml}
+        <div class="shadow-sentence-zh ${showZh ? 'hidden-text' : ''}">${s.zh}</div>
+        ${s.pauseHint ? `<div class="shadow-pause-hint">💡 ${s.pauseHint}</div>` : ''}
+      `;
+
+      div.addEventListener('click', () => {
+        speakSentence(s.text);
+        highlightSentence(idx);
+      });
+
+      area.appendChild(div);
+    });
+  }
+
+  function highlightSentence(idx) {
+    currentSentenceIdx = idx;
+    document.querySelectorAll('.shadow-sentence').forEach((el, i) => {
+      el.classList.toggle('karaoke-highlight', i === idx);
+    });
+    const target = document.querySelector(`.shadow-sentence[data-idx="${idx}"]`);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    const story = getCurrentStory();
+    if (story) {
+      const pct = ((idx + 1) / story.sentences.length) * 100;
+      $('shadowKaraokeFill').style.width = pct + '%';
+    }
+  }
+
+  function speakSentence(text, onEnd) {
+    if (!('speechSynthesis' in window) || !text) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = (currentLang === 'ja') ? 'ja-JP' : 'en-US';
+    u.rate = currentSpeed;
+    ttsUtterance = u;
+
+    u.onstart = () => {
+      isPlaying = true;
+      $('shadowWaveBox').classList.add('playing');
+    };
+
+    u.onend = () => {
+      isPlaying = false;
+      $('shadowWaveBox').classList.remove('playing');
+      if (onEnd) onEnd();
+    };
+
+    u.onerror = () => {
+      isPlaying = false;
+      $('shadowWaveBox').classList.remove('playing');
+    };
+
+    window.speechSynthesis.speak(u);
+  }
+
+  function playStory() {
+    const story = getCurrentStory();
+    if (!story || !story.sentences.length) return;
+    $('shadowFeedback').classList.add('hidden');
+    $('shadowAbDock').classList.add('hidden');
+    audioBlob = null;
+    userAudioUrl = null;
+
+    if (currentStep === 1) {
+      playAllSentences(0, story.sentences.length);
+    } else {
+      playAllSentences(0, story.sentences.length);
+    }
+  }
+
+  function playAllSentences(idx, total) {
+    const story = getCurrentStory();
+    if (!story || idx >= total) {
+      isPlaying = false;
+      $('shadowWaveBox').classList.remove('playing');
+      $('shadowKaraokeFill').style.width = '100%';
+      if (currentStep <= 2) {
+        $('shadowRecordBtn').disabled = false;
+      }
+      return;
+    }
+
+    currentSentenceIdx = idx;
+    highlightSentence(idx);
+    isPlaying = true;
+    $('shadowWaveBox').classList.add('playing');
+
+    speakSentence(story.sentences[idx].text, () => {
+      setTimeout(() => playAllSentences(idx + 1, total), 200);
+    });
+  }
+
+  function startRecordingWithCountdown() {
+    $('shadowFeedback').classList.add('hidden');
+    $('shadowAbDock').classList.add('hidden');
+    audioBlob = null;
+    userAudioUrl = null;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'shadow-countdown';
+    overlay.innerHTML = '<div class="shadow-countdown-num" id="shadowCountNum">3</div>';
+    document.body.appendChild(overlay);
+
+    let count = 3;
+    const numEl = overlay.querySelector('#shadowCountNum');
+    const interval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        numEl.textContent = count;
+        numEl.style.animation = 'none';
+        void numEl.offsetWidth;
+        numEl.style.animation = 'countdownPop 0.4s ease';
+      } else {
+        clearInterval(interval);
+        overlay.remove();
+        startRecordingAndPlay();
+      }
+    }, 1000);
+  }
+
+  function startRecordingAndPlay() {
+    const story = getCurrentStory();
+    if (!story) return;
+
+    audioChunks = [];
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunks.push(e.data);
+      };
+      mediaRecorder.onstop = () => {
+        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        userAudioUrl = URL.createObjectURL(audioBlob);
+        stream.getTracks().forEach(t => t.stop());
+        $('shadowRecordBtn').classList.remove('recording');
+        $('shadowRecordBtn').querySelector('span:last-child').textContent = '開始跟讀錄音';
+        $('shadowAbDock').classList.remove('hidden');
+        $('shadowPlayBtn').disabled = false;
+
+        if (SpeechRecognition) {
+          recognizeAndScore(story);
+        } else {
+          showFeedback(70, '瀏覽器暫不支援語音辨識，已為您錄音完成！可使用 AB 對照播放。');
+        }
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      $('shadowRecordBtn').classList.add('recording');
+      $('shadowRecordBtn').querySelector('span:last-child').textContent = '錄音中...';
+      $('shadowPlayBtn').disabled = true;
+
+      let delay = 300;
+      if (currentStep === 4) delay = 300;
+
+      setTimeout(() => {
+        playAllSentencesForRecording(0, story.sentences.length, () => {
+          if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            isRecording = false;
+          }
+        });
+      }, delay);
+
+    }).catch(() => {
+      showFeedback(50, '麥克風未授權，無法錄音。請允許麥克風權限後再試。');
+      $('shadowRecordBtn').classList.remove('recording');
+    });
+  }
+
+  function playAllSentencesForRecording(idx, total, onComplete) {
+    const story = getCurrentStory();
+    if (!story || idx >= total) {
+      isPlaying = false;
+      $('shadowWaveBox').classList.remove('playing');
+      $('shadowKaraokeFill').style.width = '100%';
+      if (onComplete) setTimeout(onComplete, 500);
+      return;
+    }
+
+    currentSentenceIdx = idx;
+    highlightSentence(idx);
+    isPlaying = true;
+    $('shadowWaveBox').classList.add('playing');
+
+    speakSentence(story.sentences[idx].text, () => {
+      setTimeout(() => playAllSentencesForRecording(idx + 1, total, onComplete), 250);
+    });
+  }
+
+  function recognizeAndScore(story) {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) return;
+
+    const rec = new SpeechRec();
+    rec.lang = (currentLang === 'ja') ? 'ja-JP' : 'en-US';
+    rec.continuous = false;
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+
+    rec.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      const fullText = story.sentences.map(s => s.text).join(' ');
+      const score = calculateShadowingAccuracy(transcript, fullText);
+      const pct = Math.min(100, Math.round(score * 100));
+      showFeedback(pct, `辨識到：「${transcript.length > 30 ? transcript.slice(0, 30) + '...' : transcript}」`);
+    };
+
+    rec.onerror = () => {
+      showFeedback(60, '語音辨識發生問題，但您的錄音已保存，可使用 AB 對照播放。');
+    };
+
+    rec.onend = () => {};
+
+    try { rec.start(); } catch(e) {}
+  }
+
+  function calculateShadowingAccuracy(recognized, target) {
+    if (!recognized || !target) return 0;
+    const isJa = currentLang === 'ja';
+    const clean = (s) => {
+      const norm = s
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'，。！？、：；「」『』～・]/g, "")
+        .replace(/\s+/g, isJa ? "" : " ")
+        .trim();
+      // 日語：全形/半形、平假名/片假名、長音符號正規化
+      if (isJa) {
+        return norm
+          .normalize('NFKC')
+          .replace(/[\u30a1-\u30f6]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60))
+          .replace(/[ぁ-ん]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60));
+      }
+      return norm.toLowerCase();
+    };
+    const s1 = clean(recognized);
+    const s2 = clean(target);
+    if (s1 === s2) return 1.0;
+    if (!s1 || !s2) return 0;
+
+    if (s2.includes(s1) || s1.includes(s2)) {
+      const ratio = Math.min(s1.length, s2.length) / Math.max(s1.length, s2.length);
+      if (ratio >= 0.6) return Math.max(0.8, ratio);
+    }
+
+    const m = s1.length, n = s2.length;
+    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (s1[i - 1] === s2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1];
+        } else {
+          dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
+        }
+      }
+    }
+    const levScore = 1 - (dp[m][n] / Math.max(m, n));
+
+    // 英文才做詞 token 重疊
+    if (!isJa) {
+      const words1 = s1.split(" ").filter(Boolean);
+      const words2 = s2.split(" ").filter(Boolean);
+      if (words1.length > 1 && words2.length > 1) {
+        let overlap = 0;
+        words1.forEach(w => { if (words2.includes(w)) overlap++; });
+        const tokenScore = (2 * overlap) / (words1.length + words2.length);
+        return Math.max(levScore, tokenScore);
+      }
+    }
+    return levScore;
+  }
+
+  function showFeedback(pct, extraMsg) {
+    $('shadowFeedback').classList.remove('hidden');
+    $('shadowFeedbackScore').textContent = pct + '%';
+
+    let stars = '';
+    let msg = '';
+    if (pct >= 90) {
+      stars = '⭐⭐⭐';
+      msg = '流暢度極佳，咬字清晰！完美影子跟讀！';
+    } else if (pct >= 75) {
+      stars = '⭐⭐';
+      msg = '表現很好！注意連音和語調起伏就更完美了！';
+    } else if (pct >= 55) {
+      stars = '⭐';
+      msg = '不錯的開始！多聽幾次原音，試著跟上節奏～';
+    } else {
+      stars = '💪';
+      msg = '別灰心！先從「純聽」和「精讀」階段開始熟讀吧！';
+    }
+    $('shadowFeedbackStars').textContent = stars;
+    $('shadowFeedbackMsg').textContent = extraMsg ? `${msg}\n${extraMsg}` : msg;
+
+    if (AppState.mode === 'kids' && pct >= 75) {
+      if (window.KidsApp && typeof KidsApp.addStars === 'function') {
+        KidsApp.addStars(1);
+      }
+    }
+  }
+
+  function stopAllAudio() {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    isPlaying = false;
+    $('shadowWaveBox').classList.remove('playing');
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      isRecording = false;
+      $('shadowRecordBtn').classList.remove('recording');
+      $('shadowRecordBtn').querySelector('span:last-child').textContent = '開始跟讀錄音';
+    }
+  }
+
+  function playAbAudio(mode) {
+    playMode = mode;
+    document.querySelectorAll('.shadow-ab-btn').forEach(b => b.classList.remove('active'));
+    if (mode === 'native') {
+      $('shadowAbNative').classList.add('active');
+      playStory();
+    } else if (mode === 'user' && userAudioUrl) {
+      $('shadowAbUser').classList.add('active');
+      const audio = new Audio(userAudioUrl);
+      audio.play();
+    }
+  }
+
+  function resetForRetry() {
+    stopAllAudio();
+    audioBlob = null;
+    userAudioUrl = null;
+    currentSentenceIdx = 0;
+    $('shadowFeedback').classList.add('hidden');
+    $('shadowAbDock').classList.add('hidden');
+    $('shadowKaraokeFill').style.width = '0%';
+    renderSentences();
+  }
+
+  function onModeChange() {
+    currentStoryId = '';
+    $('shadowStorySelect').value = '';
+    $('shadowActiveArea').classList.add('hidden');
+    $('shadowEmptyState').classList.remove('hidden');
+    $('shadowFeedback').classList.add('hidden');
+    $('shadowAbDock').classList.add('hidden');
+    $('shadowRecordBtn').disabled = true;
+    populateStorySelect();
+  }
+
+  function init() {
+    populateStorySelect();
+
+    const tabShadowingText = $('tabShadowingText');
+    if (tabShadowingText) {
+      AppState._origShadowingTextUpdate = () => {
+        tabShadowingText.textContent = (AppState.mode === 'kids') ? '影子跟讀' : '影子跟讀';
+      };
+    }
+
+    $('shadowStorySelect').addEventListener('change', (e) => {
+      currentStoryId = e.target.value;
+      if (!currentStoryId) {
+        $('shadowActiveArea').classList.add('hidden');
+        $('shadowEmptyState').classList.remove('hidden');
+        $('shadowFeedback').classList.add('hidden');
+        $('shadowAbDock').classList.add('hidden');
+        $('shadowRecordBtn').disabled = true;
+        return;
+      }
+      stopAllAudio();
+      currentSentenceIdx = 0;
+      $('shadowActiveArea').classList.remove('hidden');
+      $('shadowEmptyState').classList.add('hidden');
+      $('shadowFeedback').classList.add('hidden');
+      $('shadowAbDock').classList.add('hidden');
+      $('shadowKaraokeFill').style.width = '0%';
+      renderSentences();
+      AudioSys.correct();
+    });
+
+    document.querySelectorAll('.speed-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentSpeed = parseFloat(btn.dataset.speed);
+      });
+    });
+
+    document.querySelectorAll('.step-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.step-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentStep = parseInt(btn.dataset.step);
+        stopAllAudio();
+        currentSentenceIdx = 0;
+        $('shadowKaraokeFill').style.width = '0%';
+
+        if (currentStep === 1 || currentStep === 4) {
+          zhHidden = true;
+          $('shadowToggleEye').classList.add('active');
+          $('shadowEyeIcon').textContent = '🙈';
+          $('shadowEyeLabel').textContent = '顯示翻譯';
+        } else {
+          zhHidden = false;
+          $('shadowToggleEye').classList.remove('active');
+          $('shadowEyeIcon').textContent = '👁️';
+          $('shadowEyeLabel').textContent = '偷看翻譯';
+        }
+
+        renderSentences();
+
+        if (currentStep === 4) {
+          $('shadowRecordBtn').disabled = false;
+        } else {
+          $('shadowRecordBtn').disabled = !currentStoryId;
+        }
+      });
+    });
+
+    $('shadowToggleEye').addEventListener('click', () => {
+      zhHidden = !zhHidden;
+      const eye = $('shadowToggleEye');
+      const icon = $('shadowEyeIcon');
+      const label = $('shadowEyeLabel');
+      if (zhHidden) {
+        eye.classList.add('active');
+        icon.textContent = '🙈';
+        label.textContent = '顯示翻譯';
+      } else {
+        eye.classList.remove('active');
+        icon.textContent = '👁️';
+        label.textContent = '偷看翻譯';
+      }
+      document.querySelectorAll('.shadow-sentence-zh').forEach(el => {
+        el.classList.toggle('hidden-text', zhHidden);
+      });
+    });
+
+    $('shadowPlayBtn').addEventListener('click', () => {
+      if (isPlaying) {
+        stopAllAudio();
+        $('shadowPlayBtn').querySelector('span:last-child').textContent = '播放原音';
+      } else {
+        playStory();
+        $('shadowPlayBtn').querySelector('span:last-child').textContent = '暫停播放';
+      }
+    });
+
+    $('shadowRecordBtn').addEventListener('click', () => {
+      if (isRecording) {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+          isRecording = false;
+        }
+        return;
+      }
+      startRecordingWithCountdown();
+    });
+
+    $('shadowAbNative').addEventListener('click', () => playAbAudio('native'));
+    $('shadowAbUser').addEventListener('click', () => playAbAudio('user'));
+    $('shadowAbRetry').addEventListener('click', resetForRetry);
+    $('shadowFeedbackRetry').addEventListener('click', resetForRetry);
+  }
+
+  return {
+    init,
+    onModeChange,
+    stopAllAudio
+  };
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+  UI.init();
+  ShadowingStudio.init();
+});
+</script>
+</body>
+</html>

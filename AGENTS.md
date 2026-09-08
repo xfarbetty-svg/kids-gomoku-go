@@ -14,18 +14,27 @@
   - 📐 7x7 / 9x9 / 13x13 / 19x19 四規格與精準星位配置、雙向動態縮放 fitScale
   - 📱 手機版面極致緊湊化、Sticky 吸底控制列與 Pass 放棄下一手雙入口常駐可見
   - 萌系眨眼與 1 氣瀕死顫抖表情、禁自殺反彈、彩色地盤高亮、提子粒子大爆破與 Web Audio 果凍音效庫
+- [x] 雙語探險學院（learn.html）：
+  - 🧒 小朋友冒險模式 vs 🧑 大人高效模式一鍵切換，本地持久保存
+  - 📚 英日分級單字庫（英文 A1-C2、日文 五十音/N5-N1，支援 Web Speech 真人口音與自訂生字本）
+  - 📺 YouTube 雙語影音精聽室（自訂/精選短片、時間軸精準同步、單句 A-B Loop 循環、遮蔽盲聽、生字劃詞收藏）
+  - 🎮 趣味互動打怪與 SRS 記憶閃卡（小朋友打擊魔王 HP、大人 FSRS 間隔翻卡與聽力默寫）
+  - 💬 情境實境對話（12 組日常情境劇本、Web Speech 麥克風即時語音辨識判定、星級評分、聽示範與安靜送出模式）
+  - 🎙️ 影子跟讀訓練室（Shadowing Studio）：4 階段階梯跟讀訓練法（純聽磨耳朵、理解精讀、視讀跟讀、脫稿影子+錄音AB對照）、大人/小孩英日語精選故事庫、動態聲波、Levenshtein 語音評分與星星連動
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
 
 ## 📁 資料夾結構
 
 **魔王系統（commit ad87661）：**
-- `common.js`：魔王系統核心（STAGES、defeated／unlocked、isUnlocked()／isBossDefeated()、通關自動解鎖、舊存檔自動補解鎖）
-- `index.html`：首頁卡片顯示魔王資訊（👿 魔王＋HP／✅ 已討伐）、未解鎖關卡顯示 🔒 鎖定
+- `common.js`：魔王系統核心（STAGES、defeated／unlocked、isUnlocked()／isBossDefeated()、KidsApp.addStars()、通關自動解鎖）
+- `index.html`：首頁卡片顯示魔王資訊、新增「雙語探險學院」卡片
 - `rhythm.html`／`memory.html`／`puzzle.html`／`gomoku.html`：各關魔王血量與討伐邏輯
-- `sw.js`：版本更新（v17）
+- `sw.js`：版本更新（v21，快取 learn.html 與全套影子跟讀教材庫）
+- `openspec/`：OpenSpec 規格驅動開發（SDD）提案 `enrich-language-learning`（proposal／design／tasks／specs）
 
-**黏黏圍棋升級：**
+**雙語學院與圍棋：**
+- `learn.html`：大人/小孩雙模式語言學習 APP（字庫、YT影音精聽、打怪/閃卡、情境實境對話、影子跟讀訓練室）
 - `sticky-gomoku-new.html`：Gooey 果凍融合、4 段 AI 棋力（🐣 初級／🌸 中級／👑 大師／🔥 宗師）、AI 教練解說、7x7/9x9/13x13/19x19 規格、圍地彩色高亮、Pass 雙入口與 Sticky 吸底控制列
 
 ## ⚠️ 待完成事項
@@ -35,7 +44,7 @@
 
 ## 🕐 最後更新
 
-- **日期**：2026-08-29
+- **日期**：2026-09-08
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：升級黏黏圍棋 AI 棋力為 4 段難度（新增【🔥 宗師】兩步前瞻、死活眼形、角邊定式與官子算目引擎）、sw.js v17
-- **Git push 狀態**：已提交並推送到 origin/main
+- **內容**：完成 OpenSpec 提案 `enrich-language-learning`（8/8 任務）。新增進階日語篇章「🎋 竹取物語」（9 句漢字＋`<ruby><rt>` 假名標音）、英語篇章「🌬️ 北風與太陽」；實作 `<ruby>` 標音排版與 CSS；升級 ja-JP 語音辨識評分（日文正規化 NFKC／片假名→平假名／字元 Levenshtein）；擴充英日高頻字庫 16 詞；sw.js 更新至 v21。
+- **Git 狀態**：準備 commit + push，代碼語法（node --check）100% 通過驗收。

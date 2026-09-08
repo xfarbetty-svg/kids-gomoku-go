@@ -7,6 +7,7 @@
 
   /* 圖鑑收集物與魔王定義：每款遊戲一種主題收藏物與對應魔王 */
   var FIGURES = {
+    learn:  { e:'🌍', n:'雙語學者', t:'探索', boss:'貪吃字魔 👾', hp:100 },
     rhythm: { e:'🎵', n:'節奏主唱', t:'舞台', boss:'噪音魔王 👾', hp:300 },
     memory: { e:'🃏', n:'封印守護', t:'封印', boss:'幻影魔王 🃏', hp:200 },
     puzzle: { e:'🧩', n:'拼圖獵人', t:'拼圖', boss:'混沌魔王 🧩', hp:150 },
@@ -83,6 +84,12 @@
       save(s);
       if(isNew && sticker){ showCollect(sticker); confetti(); }
       return s;
+    },
+    addStars: function(n){
+      var s = load();
+      s.stars = (s.stars || 0) + (n !== undefined ? n : 1);
+      save(s);
+      return s.stars;
     },
     state: function(){ return load(); },
     album: album,
