@@ -50,23 +50,28 @@
 
 ## ⚠️ 待完成事項
 
-- [ ] 實測魔王系統（手機測試）
-- [ ] 魔王討伐動畫／音效
-- [ ] 影子跟讀**真人音檔載入**（日文老師《稻草富翁》已下載 m4a，待逐句切分整合取代 TTS 音源）
-  - 音檔暫存：`C:\Users\PXP\AppData\Local\Temp\opencode\jp_teacher_ja.m4a`（10.28MB，日文原音）
-  - 工具：yt-dlp 2026.08.19 + deno 2.9.6 + ffmpeg 9.0.1 已就緒；影片含日文字幕(SRT)可供逐句對齊
-- [ ] 語音資源補充：詳見 `handoff.md`「進行中」區塊
-- [ ] **單字星球（toeic.html）優化備忘**：
-  - [ ] 兒童美語題庫擴充：整合資料夾內 3 份 PDF（`國小英文單字.pdf`、`國小英文單字 （2）.pdf`、`GEPTKid_wordlist01.pdf`），參考 https://teachers.dale.nthu.edu.tw/?page_id=921
+- [ ] **影音精聽室 ➔ 影子跟讀 橋接實作**（依 `PLAN-YT-SHADOW-BRIDGE.md` 四階段任務開發）
+  - Task 1：統一句子資料格式
+  - Task 2：精聽室持久化 + 「送到影子跟讀」按鈕
+  - Task 3：影子跟讀載入用戶 YouTube 影片 + 逐句播放
+  - Task 4：進度追蹤
+- [ ] **日文老師《稻草富翁》真人音檔切分整合**（日文老師 `jp_teacher_ja.m4a` 10.28MB 已下載暫存，待抓取日文 SRT 字幕後以 ffmpeg 自動切分成句檔並掛入影子跟讀）
+- [ ] **單字星球（toeic.html）體驗優化備忘**：
+  - [ ] 兒童美語題庫擴充：解析整合資料夾內 3 份 PDF（`國小英文單字.pdf`、`國小英文單字 （2）.pdf`、`GEPTKid_wordlist01.pdf`），參考 https://teachers.dale.nthu.edu.tw/?page_id=921
   - [ ] 閃卡翻面動效修正：需改為「左右翻轉（3D rotateY）」，修復目前無法左右翻問題
   - [ ] 單字庫主題 Pills 顯示修復：修復主題篩選列被截斷、無法橫向滾動選取完整主題（兒童美語與多益）
+- [ ] **TASK-008 內容包實作**：預載 VOA Learning English + BBC 6 Minute English 逐字稿素材包
+- [ ] **實測魔王系統**：手機端實測各關卡解鎖與討伐流程
+- [ ] **魔王討伐動畫／音效**
 
 ## 🕐 最後更新
 
 - **日期**：2026-09-09
-- **更新者**：opencode @ DESKTOP-6ELKIRH
-- **內容**：新增 **星光單字星球 `toeic.html`**（雙庫 SM-2 閃卡 + 測驗 + 進度追蹤）
-  - `data/toeic.json`：Hugging Face kknono668/toeic-vocab-tw 11238 字（去掉 exam_tips 瘦身至 9MB）
-  - `data/kids.json`：GEPT Kids 33 主題分類 684 字（第三方鏡像爬蟲）
-  - `sw.js` v29 快取 + `index.html` 入口卡片
-- **Git 狀態**：待本次 commit + push
+- **更新者**：antigravity @ DESKTOP-6ELKIRH
+- **內容**：
+  - 修復多益字典雙重編碼亂碼（11,238 字 UTF-8 無損還原，繁體中文與例句正常）。
+  - 修復啟動腳本 Port 8088 衝突（切換至 Port 8090），成功在 Windows 桌面建立「星光單字星球.lnk」捷徑。
+  - 雙語學院影子跟讀麥克風串流長效重用，修復每次跟讀重複彈出瀏覽器權限警示。
+  - 打通影子跟讀點詞即時收藏：自動綁定當前上下文影音例句、中文翻譯、影片標題與時間戳存入生字庫。
+  - 雙語學院單字庫與大人記憶閃卡重心轉向「🎙️ 跟讀收藏」，並常駐直達星光單字星球入口。
+- **Git 狀態**：已 commit + push 至 origin/main

@@ -3,54 +3,53 @@
 > 任何 Agent、任何電腦接手前**必讀**；換對話框／收工時**必更新**。本檔只放交接必需的精簡資訊。
 
 ## ⏯️ 目前做到哪
-完成 **影音精聽室 → 影子跟讀 橋接規劃**（`PLAN-YT-SHADOW-BRIDGE.md`），規劃文件已寫好，待交給 ANTIGRAVITY 實作。
+1. **多益字典雙重編碼修復**：`data/toeic.json` 11,238 字中文釋義與例句已由 Latin-1 亂碼全數無損還原為乾淨繁體中文。
+2. **本地啟動腳本修正**：`星光單字星球.bat` 由衝突的 Port 8088 切換至 8090，並已於桌面成功生成快捷方式 `星光單字星球.lnk`。
+3. **影子跟讀錄音體驗改善**：引入 `sharedMicStream`，單句跟讀結束後保持音軌運行，避免瀏覽器每句重複跳出麥克風授權警示。
+4. **影子跟讀點詞即時收藏**：點擊生字彈出卡片點擊「⭐ 收藏入生字本」，自動打包當前上下文影音例句、中文翻譯、來源影片標題與時間戳存入個人生字本。
+5. **雙語學院單字庫與閃卡重心轉移**：單字庫與大人記憶閃卡優先展示「🎙️ 跟讀收藏」，並常駐直達星光單字星球入口。
+6. 快取升級：`sw.js` 推進至 `kids-games-v31`。
 
 ## 🚦 目前狀態
 - 專案：星光獵魔團（K-pop 少女獵人主題），純前端 HTML/CSS/JS，無框架、無 build 步驟
 - 主要應用：
-  - `index.html`：四關魔王討伐卡片 + 雙語探險學院入口
-  - `learn.html`：雙語探險學院（單字庫、YouTube 精聽室、打怪/閃卡、情境對話、影子跟讀訓練室 V2）
+  - `index.html`：四關魔王討伐卡片 + 雙語探險學院入口 + 星光單字星球入口
+  - `learn.html`：雙語探險學院（沉浸式影子跟讀 V2、影音精聽室、情境對話、跟讀生字庫、語境記憶閃卡）
+  - `toeic.html`：星光單字星球（兒童美語 684 字 + 多益 11,238 字，SM-2 閃卡、三向測驗）
   - `sticky-gomoku-new.html`：黏黏圍棋（Gooey 果凍融合、4 段 AI 棋力）
-  - `toeic.html`：星光單字星球（兒童美語 684 字 + 多益 11238 字）
-- 快取與離線：`sw.js` 為 `kids-games-v25`
-- 接力狀態機：`TASK-007` 處於 `CODE_DONE`；規劃檔 `PLAN-YT-SHADOW-BRIDGE.md` 待實作
+- 快取版本：`sw.js` 為 `kids-games-v31`
 
-## ➡️ 下一步
-1. **ANTIGRAVITY 實作橋接功能**：依 `PLAN-YT-SHADOW-BRIDGE.md` 四個 Task 開發
-   - Task 1：統一句子資料格式
-   - Task 2：精聽室持久化 + 「送到影子跟讀」按鈕
-   - Task 3：影子跟讀載入用戶 YouTube 影片 + 逐句播放
-   - Task 4：進度追蹤
-2. **OpenCode 覆核**：實作完成後審核 UI 美學與互動流暢度
-3. **TASK-008 內容包實作**：預載 VOA Learning English + BBC 6 Minute English 逐字稿素材包
-4. **📝 單字星球（toeic.html）待辦備忘**：
-   - 兒童美語題庫擴充：整合資料夾內 3 份 PDF（`國小英文單字.pdf`、`國小英文單字 （2）.pdf`、`GEPTKid_wordlist01.pdf`），參考 https://teachers.dale.nthu.edu.tw/?page_id=921
-   - 閃卡翻面動效修正：需改為「左右翻轉（3D rotateY）」，修復目前無法左右翻問題
-   - 單字庫主題 Pills 顯示問題：修復主題篩選列被截斷、無法橫向滑動或查看完整主題（兒童美語與多益）
-5. **實測魔王系統**：手機端實測各關卡解鎖與討伐流程
+## ➡️ 尚未做的工作清單（待辦路線圖）
+
+### 1. 影音精聽室 ➔ 影子跟讀 橋接實作（規格書：`PLAN-YT-SHADOW-BRIDGE.md`）
+- **Task 1**：統一句子資料格式（相容 YouTube 時間戳與跟讀評分）
+- **Task 2**：精聽室持久化（`user_shadow_videos`）+ 「📤 送到影子跟讀」按鈕
+- **Task 3**：影子跟讀載入用戶 YouTube 影片 + 逐句播放與錄音對照
+- **Task 4**：進度追蹤與狀態同步
+
+### 2. 日文老師《稻草富翁》真人音檔切分整合
+- 音檔暫存：`C:\Users\PXP\AppData\Local\Temp\opencode\jp_teacher_ja.m4a`（10.28MB，已下載就緒）
+- 工具鏈：yt-dlp + deno + ffmpeg 已安裝就緒
+- 待執行：抓取日文 SRT 字幕 ➔ ffmpeg 切分成 51 段獨立句檔 ➔ 對齊 `SHADOWING_DATA` 整合進 ShadowingStudio 取代 TTS
+
+### 3. 單字星球（`toeic.html`）體驗優化備忘
+- **閃卡左右翻面動效修復**：改為流暢的 3D 左右翻轉（Y 軸），解決翻轉卡頓/手感問題
+- **主題標籤列（Pills）滾動修復**：支援電腦端橫向滾動或換行，避免後方主題被截斷無法點選
+- **兒童美語題庫擴充**：解析並整合根目錄 3 份 PDF 資源（`國小英文單字.pdf`、`國小英文單字 （2）.pdf`、`GEPTKid_wordlist01.pdf`，參考清大英語教學資源網）
+
+### 4. TASK-008 內容包實作
+- 預載 VOA Learning English 與 BBC 6 Minute English 逐字稿素材包
+
+### 5. 魔王討伐系統實測與動效音效
+- 手機端全流程測試四關魔王血量扣除、自動解鎖下一關流程
+- 魔王討伐勝利專屬動畫與音效反饋
 
 ## ⚠️ 注意事項
-- 純前端，修改完直接重新整理即可測試，無需 build
-- YouTube iframe API 限制：頁面只能有一個 player，橋接需處理精聽室/影子跟讀切換時的 player destroy/recreate
-- 真人音檔（日文老師 m4a）整合是獨立任務，不影響本次橋接
-- 修改 `learn.html` 時務必注意保留 ShadowingStudio 暴露之 4 大生命週期 API（`onModeChange`, `setShadowingLang`, `onTabOpen`, `stopAllAudio`）
-
-## 🔧 進行中：真人語音切換與真人音檔載入
-
-### 已完成並 commit
-- `d01c1d8`：**語音切換選擇器**（🗣️ 下拉）+ warashibe 51 段 mp3 真人音檔
-- `cc6dd15`：**星光單字星球** `toeic.html`（兒童美語 684 字 + 多益 11238 字）
-
-### 真人音檔下載進度（尚未 commit）
-- 目標：日文老師 `https://www.youtube.com/watch?v=rLwowh9SBa4`（《稻草富翁》）
-- ✅ 已下載日文原音：`C:\Users\PXP\AppData\Local\Temp\opencode\jp_teacher_ja.m4a`（10.28MB）
-- ⚠️ `jp_teacher.webm` 是誤抓的英文配音，可刪除
-- ✅ 影片有日文自動字幕（ja CC，SRT 可用）
-- ✅ 工具鏈已就緒：yt-dlp + deno + ffmpeg
-- **下一步**：下載 SRT → ffmpeg 切分 → 對齊 SHADOWING_DATA → 整合進 ShadowingStudio
+- 純前端應用，直接以瀏覽器開啟或透過 `星光單字星球.bat`（Port 8090）伺服器啟動。
+- 修改 `learn.html` 時注意保留 ShadowingStudio 生命週期 API（`onModeChange`, `setShadowingLang`, `onTabOpen`, `stopAllAudio`）。
 
 ## 🕐 最後更新
-- 時間：2026-09-09
-- 更新者：opencode @ DESKTOP-6ELKIRH
-- 內容：完成影音精聽室→影子跟讀橋接規劃文件，待 ANTIGRAVITY 實作
+- 時間：2026-09-09 06:45
+- 更新者：antigravity @ DESKTOP-6ELKIRH
+- 內容：完成單字星球雙重編碼修復、桌面捷徑、影子跟讀麥克風串流優化與例句收藏閉環，整理完整待辦清單
 - Git push：✅ 已推送到 origin/main
