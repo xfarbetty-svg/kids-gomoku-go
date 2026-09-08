@@ -2285,6 +2285,16 @@
       </button>
     </div>
 
+    <!-- Planet Link Banner -->
+    <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.16), rgba(244, 63, 94, 0.16)); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+      <div style="font-size: 13px; color: #e2e8f0;">
+        💡 <b>跟讀生字庫</b>：在【🎙️ 影子跟讀】或【📺 影音精聽室】點擊生字按「⭐ 收藏」，自動帶著影音例句出現在此！
+      </div>
+      <a href="toeic.html" style="background: linear-gradient(135deg, #7c3aed, #db2777); color: #fff; text-decoration: none; font-weight: 800; font-size: 12px; padding: 6px 14px; border-radius: 20px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); display: inline-flex; align-items: center; gap: 4px;">
+        🪐 前往星光單字星球（11,000+ 多益與兒童美語大庫）➔
+      </a>
+    </div>
+
     <!-- Level Filter Pills -->
     <div class="level-pills" id="levelPills">
       <!-- Injected by JavaScript -->
@@ -2400,6 +2410,15 @@
 
       <!-- Flashcard Section -->
       <div id="flashcardSection">
+        <!-- Planet Link Banner -->
+        <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.16), rgba(244, 63, 94, 0.16)); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+          <div style="font-size: 13px; color: #e2e8f0;">
+            🎙️ <b>語境記憶閃卡</b>：優先復習在影子跟讀中收藏的生字，翻面可重溫影音上下文例句！
+          </div>
+          <a href="toeic.html?tab=flashcard" style="background: linear-gradient(135deg, #7c3aed, #db2777); color: #fff; text-decoration: none; font-weight: 800; font-size: 12px; padding: 6px 14px; border-radius: 20px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); display: inline-flex; align-items: center; gap: 4px;">
+            🪐 前往星光單字星球（SM-2 萬字閃卡）➔
+          </a>
+        </div>
         <div id="flashcardLevelPills" class="level-pills" style="margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;"></div>
         <div class="flashcard-wrapper" id="flashcardWrapper">
           <div class="flashcard-inner">
@@ -3443,13 +3462,13 @@ const UI = {
     pillsContainer.innerHTML = '';
 
     const levels = AppState.lang === 'en'
-      ? ['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', '⭐ 收藏', '✏️ 自訂']
-      : ['ALL', '50音', 'N5', 'N4', 'N3', 'N2', 'N1', '⭐ 收藏', '✏️ 自訂'];
+      ? ['🎙️ 跟讀收藏', 'ALL', 'A1', 'A2', 'B1', 'B2', 'C1', '⭐ 收藏']
+      : ['🎙️ 跟讀收藏', 'ALL', '50音', 'N5', 'N4', 'N3', 'N2', 'N1', '⭐ 收藏'];
 
     levels.forEach(lvl => {
       const btn = document.createElement('button');
       btn.className = 'pill' + (AppState.currentLevel === lvl ? ' active' : '');
-      btn.textContent = lvl === 'ALL' ? '全部級別 (All)' : lvl;
+      btn.textContent = lvl === 'ALL' ? '全部單字 (All)' : lvl;
       btn.addEventListener('click', () => {
         document.querySelectorAll('.level-pills .pill').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
@@ -3465,10 +3484,10 @@ const UI = {
     return all.filter(w => {
       if (w.lang !== AppState.lang) return false;
 
-      if (AppState.currentLevel === '⭐ 收藏') {
+      if (AppState.currentLevel === '🎙️ 跟讀收藏') {
+        if (!String(w.id).startsWith('shadow-') && !String(w.id).startsWith('custom-') && w.level !== '跟讀收藏') return false;
+      } else if (AppState.currentLevel === '⭐ 收藏') {
         if (!AppState.bookmarks.includes(w.id)) return false;
-      } else if (AppState.currentLevel === '✏️ 自訂') {
-        if (!w.id.startsWith('custom-')) return false;
       } else if (AppState.currentLevel !== 'ALL') {
         if (w.level !== AppState.currentLevel) return false;
       }
@@ -3492,10 +3511,12 @@ const UI = {
 
     if (words.length === 0) {
       grid.innerHTML = `
-        <div style="grid-column: 1/-1; text-align: center; padding: 40px; opacity: 0.6;">
-          <div style="font-size: 48px; margin-bottom: 8px;">🔍</div>
-          <div style="font-size: 16px; font-weight: 800;">沒有符合條件的單字</div>
-          <div style="font-size: 12px; margin-top: 4px;">可以嘗試切換級別標籤，或點擊上方「➕ 自訂生字」添加！</div>
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; opacity: 0.7;">
+          <div style="font-size: 48px; margin-bottom: 8px;">🎙️</div>
+          <div style="font-size: 16px; font-weight: 800;">${AppState.currentLevel === '🎙️ 跟讀收藏' ? '目前尚無從影子跟讀收藏的單字' : '沒有符合條件的單字'}</div>
+          <div style="font-size: 13px; margin-top: 6px; color: #94a3b8; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+            前往【🎙️ 影子跟讀】或【📺 影音精聽室】，點擊任何遇到的生字按「⭐ 收藏入生字本」，就會帶著<b>完整影音例句與來源</b>出現在這裡！
+          </div>
         </div>
       `;
       return;
@@ -3524,6 +3545,7 @@ const UI = {
           <div class="word-meta">
             <span class="level-badge">${w.level}</span>
             <span class="pos-badge">${w.pos || ''}</span>
+            ${w.sourceTitle ? `<span style="font-size:11px;color:#38bdf8;font-weight:700;">🎬 ${w.sourceTitle}</span>` : ''}
           </div>
 
           <div class="word-meaning">${w.meaning}</div>
@@ -3782,10 +3804,10 @@ const UI = {
     pillsContainer.innerHTML = '';
 
     const levels = AppState.lang === 'en'
-      ? ['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', '⭐ 收藏', '✏️ 自訂']
-      : ['ALL', '50音', 'N5', 'N4', 'N3', 'N2', 'N1', '⭐ 收藏', '✏️ 自訂'];
+      ? ['🎙️ 跟讀收藏', 'ALL', 'A1', 'A2', 'B1', 'B2', 'C1', '⭐ 收藏']
+      : ['🎙️ 跟讀收藏', 'ALL', '50音', 'N5', 'N4', 'N3', 'N2', 'N1', '⭐ 收藏'];
 
-    const current = AppState.flashcardLevel || 'ALL';
+    const current = AppState.flashcardLevel || '🎙️ 跟讀收藏';
     levels.forEach(lvl => {
       const btn = document.createElement('button');
       btn.className = 'pill' + (current === lvl ? ' active' : '');
@@ -3803,13 +3825,13 @@ const UI = {
 
   getFlashcardWords() {
     const all = [...DEFAULT_WORDS, ...AppState.customWords];
-    const targetLevel = AppState.flashcardLevel || 'ALL';
+    const targetLevel = AppState.flashcardLevel || '🎙️ 跟讀收藏';
     return all.filter(w => {
       if (w.lang !== AppState.lang) return false;
-      if (targetLevel === '⭐ 收藏') {
+      if (targetLevel === '🎙️ 跟讀收藏') {
+        if (!String(w.id).startsWith('shadow-') && !String(w.id).startsWith('custom-') && w.level !== '跟讀收藏') return false;
+      } else if (targetLevel === '⭐ 收藏') {
         if (!AppState.bookmarks.includes(w.id)) return false;
-      } else if (targetLevel === '✏️ 自訂') {
-        if (!w.id.startsWith('custom-')) return false;
       } else if (targetLevel !== 'ALL') {
         if (w.level !== targetLevel) return false;
       }
@@ -3838,7 +3860,7 @@ const UI = {
     document.getElementById('fcPhonetic').textContent = w.phonetic || '';
     document.getElementById('fcMeaning').textContent = w.meaning;
     document.getElementById('fcExample').textContent = w.example ? `"${w.example}"` : '';
-    document.getElementById('fcExampleZh').textContent = w.exampleZh || '';
+    document.getElementById('fcExampleZh').textContent = (w.exampleZh || '') + (w.sourceTitle ? ` (🎬 來源：${w.sourceTitle})` : '');
 
     AppState.flashcardFlipped = false;
     document.getElementById('flashcardWrapper').classList.remove('flipped');
@@ -5724,6 +5746,7 @@ const ShadowingStudio = (() => {
   let peekText = false;
   let ttsUtterance = null;
   let realAudioEl = null;
+  let sharedMicStream = null;
 
   const $ = (id) => document.getElementById(id);
 
@@ -5884,17 +5907,25 @@ const ShadowingStudio = (() => {
     const cleanWord = (word || '').replace(/[.,!?"'「」『』、。♪]/g, '').trim();
     if (!cleanWord) return;
 
+    const story = getCurrentStory();
+    const curSentence = story && story.sentences ? story.sentences[currentSentenceIdx] : null;
+    const exText = curSentence ? curSentence.text : '';
+    const exZh = curSentence ? curSentence.zh : '';
+    const storyTitle = story ? (story.title || '') : '';
+
     const popup = document.createElement('div');
     popup.id = 'shadowWordPopup';
     popup.className = 'shadow-word-popup';
     popup.innerHTML = `
-      <div style="font-weight:bold;margin-bottom:6px;font-size:1.05rem;color:#60a5fa;">${cleanWord}</div>
-      <div style="display:flex;gap:6px;align-items:center;">
-        <button id="shadowWordPopupSpeak" style="background:rgba(59,130,246,0.4);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;">🔊 發音</button>
-        <button id="shadowWordPopupSave" style="background:rgba(34,197,94,0.4);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;">📝 加入生字本</button>
+      <div style="font-weight:900;margin-bottom:4px;font-size:1.15rem;color:#60a5fa;">${cleanWord}</div>
+      ${exText ? `<div style="font-size:0.8rem;color:#e2e8f0;margin-bottom:3px;max-width:280px;line-height:1.35;word-break:break-word;">📖 <b>例句：</b>${exText}</div>` : ''}
+      ${exZh ? `<div style="font-size:0.75rem;color:#94a3b8;margin-bottom:8px;max-width:280px;line-height:1.35;">💬 ${exZh}</div>` : ''}
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="shadowWordPopupSpeak" style="background:rgba(59,130,246,0.35);border:1px solid rgba(96,165,250,0.5);color:#fff;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:700;">🔊 發音</button>
+        <button id="shadowWordPopupSave" style="background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;border-radius:8px;padding:5px 14px;cursor:pointer;font-weight:800;box-shadow:0 2px 8px rgba(16,185,129,0.3);">⭐ 收藏入生字本</button>
       </div>
     `;
-    popup.style.cssText = `position:fixed;top:${Math.max(10, rect.top - 70)}px;left:${Math.max(10, rect.left - 40)}px;background:#1e293b;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:10px 14px;z-index:9999;font-size:0.85rem;box-shadow:0 4px 20px rgba(0,0,0,0.4);`;
+    popup.style.cssText = `position:fixed;top:${Math.max(10, rect.top - 100)}px;left:${Math.max(10, rect.left - 40)}px;background:#0f172a;color:#fff;border:1px solid rgba(255,255,255,0.22);border-radius:14px;padding:12px 16px;z-index:9999;font-size:0.85rem;box-shadow:0 10px 30px rgba(0,0,0,0.5);backdrop-filter:blur(8px);`;
     document.body.appendChild(popup);
 
     document.getElementById('shadowWordPopupSpeak')?.addEventListener('click', (e) => {
@@ -5904,13 +5935,41 @@ const ShadowingStudio = (() => {
 
     document.getElementById('shadowWordPopupSave')?.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (typeof WordBank !== 'undefined' && WordBank.addWord) {
-        WordBank.addWord(cleanWord, currentLang);
+      const newWord = {
+        id: 'shadow-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+        lang: currentLang,
+        level: '跟讀收藏',
+        word: cleanWord,
+        phonetic: '',
+        meaning: exZh ? `（例句：${exZh}）` : '影子跟讀生字',
+        pos: '跟讀生字',
+        example: exText,
+        exampleZh: exZh,
+        sourceTitle: storyTitle,
+        createdAt: Date.now()
+      };
+
+      if (typeof AppState !== 'undefined' && AppState.customWords) {
+        const exists = AppState.customWords.some(w => w.word.toLowerCase() === cleanWord.toLowerCase() && w.lang === currentLang);
+        if (!exists) {
+          AppState.customWords.unshift(newWord);
+          AppState.saveCustomWords();
+        }
       }
+
       if (typeof KidsApp !== 'undefined' && KidsApp.addStars) {
         KidsApp.addStars(1);
       }
+      if (typeof AudioSys !== 'undefined' && AudioSys.correct) {
+        AudioSys.correct();
+      }
+
+      setBanner(`⭐ 已將「${cleanWord}」加入生字庫！已自動綁定影音例句`, 'rgba(16,185,129,0.2)', '#10b981');
       popup.remove();
+
+      if (typeof UI !== 'undefined' && UI.renderWordsGrid) {
+        UI.renderWordsGrid();
+      }
     });
 
     setTimeout(() => {
@@ -6225,13 +6284,25 @@ const ShadowingStudio = (() => {
     }
   }
 
-  function startRecordingCurrentSentence() {
+  async function getSharedMicStream() {
+    if (sharedMicStream && sharedMicStream.active) {
+      const tracks = sharedMicStream.getAudioTracks();
+      if (tracks.length > 0 && tracks[0].readyState === 'live') {
+        return sharedMicStream;
+      }
+    }
+    sharedMicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    return sharedMicStream;
+  }
+
+  async function startRecordingCurrentSentence() {
     const story = getCurrentStory();
     if (!story) return;
     stopAllAudio();
 
     audioChunks = [];
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    try {
+      const stream = await getSharedMicStream();
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) audioChunks.push(e.data);
@@ -6239,7 +6310,7 @@ const ShadowingStudio = (() => {
       mediaRecorder.onstop = () => {
         audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
         userAudioUrl = URL.createObjectURL(audioBlob);
-        stream.getTracks().forEach(t => t.stop());
+        // 保持 sharedMicStream 音軌運行，避免連續跟讀時瀏覽器每句重複彈出麥克風授權警示
         $('shadowRecordBtn').classList.remove('recording');
         $('shadowRecordBtnText').textContent = 'B 輪到我跟讀';
         $('shadowAbDock').classList.remove('hidden');
@@ -6252,9 +6323,9 @@ const ShadowingStudio = (() => {
       $('shadowRecordBtnText').textContent = '⏹️ 完成跟讀 (點擊結算)';
       setBanner('🔴 正在錄下你的聲音... 請朗讀眼前這句話，念完點擊「完成跟讀」！', 'rgba(239,68,68,0.2)', '#dc2626');
       $('shadowWaveBox').classList.add('playing');
-    }).catch(() => {
-      setBanner('⚠️ 麥克風未授權，無法錄音。請允許瀏覽器麥克風權限後再試。', 'rgba(239,68,68,0.15)', '#dc2626');
-    });
+    } catch (err) {
+      setBanner('⚠️ 麥克風未授權，無法錄音。請在網址列左側允許麥克風權限後再試。', 'rgba(239,68,68,0.15)', '#dc2626');
+    }
   }
 
   function stopRecordingAndScore() {
