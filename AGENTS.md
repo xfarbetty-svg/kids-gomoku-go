@@ -38,6 +38,16 @@
 - `learn.html`：大人/小孩雙模式語言學習 APP（字庫、YT影音精聽、打怪/閃卡、情境實境對話、影子跟讀訓練室 V2）
 - `sticky-gomoku-new.html`：Gooey 果凍融合、4 段 AI 棋力（🐣 初級／🌸 中級／👑 大師／🔥 宗師）、AI 教練解說、7x7/9x9/13x13/19x19 規格、圍地彩色高亮、Pass 雙入口與 Sticky 吸底控制列
 
+**星光單字星球（本次新增）：**
+- `toeic.html`：獨立萬字單字卡 APP（兒童美語 GEPT Kids 684 字 + 多益 TOEIC 11238 字）
+  - 📚 雙庫切換：🧸 兒童美語 33 主題分類 ／ 💼 多益 15 分類・5 星級
+  - 🎴 SM-2 間隔重複閃卡（真正 SRS 演算法、4 級評分、動態復習排程）
+  - 📝 測驗模式（英→中 / 中→英 / 拼寫，10/20/30 題）
+  - 🗣️ Web Speech 真人發音＋語音選擇器
+  - 📊 進度追蹤（localStorage 持久化）
+  - 📂 資料檔：`data/toeic.json`（9MB，11238 字）、`data/kids.json`（62KB，684 字）
+  - ℹ️ `sw.js` v29 快取，`index.html` 已含入口卡片
+
 ## ⚠️ 待完成事項
 
 - [ ] 實測魔王系統（手機測試）
@@ -51,8 +61,8 @@
 
 - **日期**：2026-09-09
 - **更新者**：opencode @ DESKTOP-6ELKIRH
-- **內容**：完成**語音切換選擇器**（🗣️）並 commit（`ca0cc1e`）；下載日文老師真人音檔待切分。
-  - `SpeechSys` 新增 `getVoicesByLang`/`setPreferredVoice`/`resolveVoice`
-  - ShadowingStudio 新增 `populateVoiceSelect()`/`applyVoiceSelect()`，依語言列語音、localStorage 持久化，`speakSentence()` 優先套用選定語音
-  - 下載日文《稻草富翁》真人音檔（m4a 日文原音），待逐句切分整合
+- **內容**：新增 **星光單字星球 `toeic.html`**（雙庫 SM-2 閃卡 + 測驗 + 進度追蹤）
+  - `data/toeic.json`：Hugging Face kknono668/toeic-vocab-tw 11238 字（去掉 exam_tips 瘦身至 9MB）
+  - `data/kids.json`：GEPT Kids 33 主題分類 684 字（第三方鏡像爬蟲）
+  - `sw.js` v29 快取 + `index.html` 入口卡片
 - **Git 狀態**：待本次 commit + push

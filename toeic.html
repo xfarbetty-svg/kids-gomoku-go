@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>星光單字星球｜兒童美語 + 多益 11000 字</title>
+<style>
+  :root {
+    --bg0: #0a0e27;
+    --bg1: #131a3a;
+    --card: rgba(30, 41, 59, 0.92);
+    --card2: rgba(15, 23, 42, 0.92);
+    --border: rgba(255, 255, 255, 0.12);
+    --accent: #8b5cf6;
+    --accent2: #f43f5e;
+    --gold: #fbbf24;
+    --good: #34d399;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --pink: #f472b6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    color: var(--text);
+    background: radial-gradient(1200px 800px at 20% -10%, #2e1f5e 0%, transparent 60%),
+                radial-gradient(1000px 700px at 110% 20%, #41245e 0%, transparent 55%),
+                linear-gradient(160deg, var(--bg0), var(--bg1));
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding-bottom: 84px;
+  }
+  /* 小星星點綴 */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgba(255,255,255,.7) 48%, transparent 50%),
+      radial-gradient(1px 1px at 78% 12%, rgba(255,255,255,.6) 48%, transparent 50%),
+      radial-gradient(1.5px 1.5px at 62% 68%, rgba(255,255,255,.5) 48%, transparent 50%),
+      radial-gradient(1px 1px at 30% 84%, rgba(255,255,255,.45) 48%, transparent 50%),
+      radial-gradient(2px 2px at 88% 55%, rgba(255,255,255,.35) 48%, transparent 50%),
+      radial-gradient(1px 1px at 45% 40%, rgba(255,255,255,.4) 48%, transparent 50%);
+  }
+  #app { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 14px 14px 20px; }
+
+  /* ============ Header ============ */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 12px 6px 8px; flex-wrap: wrap;
+  }
+  .brand { font-size: 20px; font-weight: 900; letter-spacing: 1px; }
+  .brand .spark { color: var(--gold); }
+  .brand small { display: block; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 2px; }
+  .voice-box { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .voice-box select {
+    background: rgba(255,255,255,.08); color: var(--text); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 10px; font-size: 12px; max-width: 220px; outline: none;
+  }
+
+  /* ============ Library switcher ============ */
+  .lib-switch {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 16px; padding: 6px; margin-top: 6px;
+  }
+  .lib-btn {
+    border: none; border-radius: 12px; padding: 12px 8px; font-size: 14px; font-weight: 800; cursor: pointer;
+    background: transparent; color: var(--muted); transition: all .2s; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .lib-btn.active { background: linear-gradient(135deg, #7c3aed, #db2777); color: #fff; box-shadow: 0 6px 18px rgba(124,58,237,.4); }
+  .lib-btn small { font-size: 10px; opacity: .8; font-weight: 600; }
+
+  /* ============ Tabs ============ */
+  .tabs {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px);
+    background: rgba(10,14,39,.82); border: 1px solid var(--border); border-radius: 14px; padding: 5px; margin: 14px 0 12px;
+  }
+  .tab {
+    border: none; border-radius: 10px; padding: 10px 4px; font-size: 13px; font-weight: 800; cursor: pointer;
+    background: transparent; color: var(--muted); transition: all .2s;
+  }
+  .tab.active { background: rgba(139,92,246,.28); color: #fff; }
+
+  /* ============ Filter pills ============ */
+  .filters { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .search-row { display: flex; gap: 6px; }
+  .search-row input {
+    flex: 1; background: rgba(255,255,255,.08); color: var(--text); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px; font-size: 14px; outline: none;
+  }
+  .pills { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .pills::-webkit-scrollbar { display: none; }
+  .pill {
+    flex: 0 0 auto; border: 1px solid var(--border); background: rgba(255,255,255,.06);
+    color: var(--muted); border-radius: 20px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all .15s;
+  }
+  .pill.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-color: transparent; }
+  .pill .cnt { opacity: .7; font-weight: 600; }
+  .star-pills .pill.active { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+  /* ============ Word grid ============ */
+  .result-meta { font-size: 12px; color: var(--muted); margin: 4px 2px 8px; }
+  .word-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .wcard {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px;
+    cursor: pointer; transition: transform .15s, border-color .15s; position: relative;
+  }
+  .wcard:active { transform: scale(.97); }
+  .wcard.due-dot::after {
+    content: ''; position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gold); box-shadow: 0 0 8px var(--gold);
+  }
+  .wcard-top { display: flex; align-items: center; gap: 6px; }
+  .wcard .word { font-size: 17px; font-weight: 800; word-break: break-word; }
+  .wcard .pos { font-size: 10px; background: rgba(139,92,246,.25); color: #c4b5fd; border-radius: 6px; padding: 2px 6px; }
+  .wcard .stars { color: var(--gold); font-size: 11px; margin-left: auto; }
+  .wcard .meaning { font-size: 13px; color: var(--muted); margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .wcard .cat { font-size: 10px; color: #a5b4fc; margin-top: 6px; }
+  .wcard-actions { display: flex; gap: 6px; margin-top: 8px; }
+  .mini-btn {
+    border: 1px solid var(--border); background: rgba(255,255,255,.07); color: var(--text);
+    border-radius: 8px; padding: 5px 9px; font-size: 12px; cursor: pointer; transition: all .15s;
+  }
+  .mini-btn:active { transform: scale(.94); }
+  .mini-btn.bookmarked { background: rgba(251,191,36,.18); border-color: rgba(251,191,36,.5); color: var(--gold); }
+  .load-more { width: 100%; margin-top: 12px; padding: 12px; border-radius: 12px; border: 1px dashed var(--border); background: rgba(255,255,255,.05); color: var(--muted); font-size: 13px; font-weight: 700; cursor: pointer; }
+  .load-more:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+  /* ============ Flashcard ============ */
+  .fc-panel { max-width: 520px; margin: 0 auto; }
+  .fc-status { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .fc-progress { height: 5px; background: rgba(255,255,255,.08); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+  .fc-progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--pink)); width: 0; transition: width .3s; }
+  .flashcard-wrapper { perspective: 1000px; width: 100%; height: min(58vw, 400px); min-height: 300px; cursor: pointer; }
+  .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform .5s cubic-bezier(.4,0,.2,1); transform-style: preserve-3d; }
+  .flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 22px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 22px;
+    box-shadow: 0 18px 44px rgba(0,0,0,.35);
+  }
+  .fc-front { background: linear-gradient(160deg, #1e293b, #312e81); border: 1px solid rgba(255,255,255,.15); }
+  .fc-back { background: linear-gradient(160deg, #0f172a, #3b0764); border: 1px solid #a78bfa; transform: rotateY(180deg); overflow-y: auto; }
+  .fc-badge { font-size: 11px; color: #a5b4fc; letter-spacing: 1px; margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .fc-badge span { background: rgba(255,255,255,.08); padding: 3px 8px; border-radius: 10px; }
+  .fc-word { font-size: clamp(28px, 7vw, 44px); font-weight: 900; word-break: break-word; line-height: 1.15; }
+  .fc-sound { margin-top: 14px; font-size: 30px; background: rgba(139,92,246,.25); border: 1px solid rgba(167,139,250,.4); color: #fff; border-radius: 50%; width: 58px; height: 58px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform .15s; }
+  .fc-sound:active { transform: scale(.9); }
+  .fc-hint { position: absolute; bottom: 14px; font-size: 11px; color: var(--muted); }
+  .fc-meaning { font-size: clamp(20px, 5vw, 30px); font-weight: 800; color: #fcd34d; }
+  .fc-pos { font-size: 12px; color: #c4b5fd; margin-top: 6px; }
+  .fc-example { margin-top: 14px; text-align: left; width: 100%; font-size: 13px; line-height: 1.5; }
+  .fc-example .en { color: #e2e8f0; }
+  .fc-example .zh { color: var(--muted); font-size: 12px; }
+  .fc-more-rev { margin-top: 6px; padding: 4px 10px; border-radius: 10px; background: rgba(139,92,246,.16); color: #c4b5fd; font-size: 11px; border: 1px solid rgba(167,139,250,.3); cursor: pointer; }
+  .srs-ratings { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  .rate-btn {
+    padding: 12px 4px; border-radius: 12px; border: 1px solid var(--border); font-size: 12px; font-weight: 800;
+    cursor: pointer; background: rgba(255,255,255,.07); color: var(--text); transition: transform .12s, background .15s;
+  }
+  .rate-btn:active { transform: scale(.93); }
+  .rate-btn.r-again { color: #fda4af; } .rate-btn.r-again:hover { background: rgba(244,63,94,.25); }
+  .rate-btn.r-hard { color: #fcd34d; } .rate-btn.r-hard:hover { background: rgba(251,191,36,.25); }
+  .rate-btn.r-good { color: #6ee7b7; } .rate-btn.r-good:hover { background: rgba(52,211,153,.25); }
+  .rate-btn.r-easy { color: #a5b4fc; } .rate-btn.r-easy:hover { background: rgba(99,102,241,.25); }
+  .fc-empty { text-align: center; color: var(--muted); padding: 60px 20px; }
+  .fc-empty .big { font-size: 48px; margin-bottom: 10px; }
+
+  /* ============ Quiz ============ */
+  .quiz-setup { max-width: 520px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
+  .quiz-setup h3 { font-size: 15px; margin-bottom: 12px; }
+  .q-opt { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .q-num { display: block; }
+  .quiz-q { max-width: 520px; margin: 0 auto; text-align: center; }
+  .quiz-word { font-size: clamp(26px, 6vw, 40px); font-weight: 900; margin: 18px 0 4px; }
+  .q-sound { margin: 10px auto 16px; font-size: 24px; background: rgba(139,92,246,.25); border: 1px solid rgba(167,139,250,.4); color: #fff; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .q-dir { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .q-choices { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .q-choice {
+    text-align: left; padding: 13px 16px; border-radius: 12px; border: 1px solid var(--border);
+    background: rgba(255,255,255,.06); color: var(--text); font-size: 14px; cursor: pointer; transition: all .15s;
+  }
+  .q-choice:active { transform: scale(.98); }
+  .q-choice.correct { background: rgba(52,211,153,.22); border-color: var(--good); }
+  .q-choice.wrong { background: rgba(244,63,94,.22); border-color: var(--accent2); }
+  .q-choice:disabled { cursor: default; }
+  .q-spell { display: flex; gap: 8px; justify-content: center; margin: 10px 0; flex-wrap: wrap; }
+  .q-spell input {
+    flex: 1; min-width: 180px; background: rgba(255,255,255,.08); color: #fff; border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px; font-size: 20px; text-align: center; letter-spacing: 2px; outline: none;
+  }
+  .q-spell input.correct { border-color: var(--good); background: rgba(52,211,153,.15); }
+  .q-spell input.wrong { border-color: var(--accent2); background: rgba(244,63,94,.15); }
+  .q-result { margin: 18px auto 0; max-width: 520px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; }
+  .q-result .score { font-size: 42px; font-weight: 900; color: var(--gold); }
+  .q-btns { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+  .big-btn { border: none; padding: 12px 22px; border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer; transition: transform .15s; }
+  .big-btn:active { transform: scale(.95); }
+  .big-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+  .big-btn.ghost { background: rgba(255,255,255,.1); color: var(--text); border: 1px solid var(--border); }
+
+  /* ============ Progress ============ */
+  .prog-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .prog-card h3 { font-size: 14px; color: var(--muted); margin-bottom: 12px; letter-spacing: 1px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .stat-box { flex: 1; min-width: 100px; background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+  .stat-box .num { font-size: 24px; font-weight: 900; color: #fff; }
+  .stat-box .lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .stat-box.gold .num { color: var(--gold); }
+  .stat-box.green .num { color: var(--good); }
+  .stat-box.pink .num { color: var(--pink); }
+  .bar { height: 8px; background: rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; margin-top: 8px; }
+  .bar i { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--accent), var(--pink)); transition: width .4s; }
+  .toeic-note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+
+  /* ============ Modal ============ */
+  .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); z-index: 90; display: none; align-items: center; justify-content: center; padding: 16px; }
+  .modal-mask.show { display: flex; }
+  .modal { width: 100%; max-width: 520px; background: var(--bg1); border: 1px solid var(--border); border-radius: 18px; padding: 20px; max-height: 90vh; overflow-y: auto; }
+  .modal h3 { margin-bottom: 12px; font-size: 16px; }
+  .modal label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+  .modal input { width: 100%; background: rgba(255,255,255,.08); color: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 14px; outline: none; }
+  .modal .big-btn { margin-top: 14px; width: 100%; }
+
+  /* ============ Toast / loading ============ */
+  .toast {
+    position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px); z-index: 100;
+    background: rgba(15,23,42,.95); border: 1px solid var(--border); color: #fff; padding: 10px 18px; border-radius: 12px;
+    font-size: 13px; opacity: 0; pointer-events: none; transition: all .3s; box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .loader { text-align: center; padding: 80px 20px; color: var(--muted); }
+  .loader .spinner { width: 44px; height: 44px; border: 4px solid rgba(255,255,255,.12); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 16px; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #bottomBar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: none; }
+  #bottomBar.show { display: block; }
+  .bottom-inner {
+    max-width: 860px; margin: 0 auto; padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(10,14,39,.9); backdrop-filter: blur(12px); border-top: 1px solid var(--border);
+  }
+  .kbd { font-size: 11px; color: var(--muted); }
+
+  @media (max-width: 500px) {
+    .tabs { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); top: auto; }
+    #app { padding-bottom: 140px; }
+    .word-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .rate-btn { font-size: 11px; padding: 11px 2px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="brand">🌠 星光單字星球 <span class="spark">✦</span>
+      <small>STAR WORD PLANET ・ 兒童美語 + TOEIC 11000 字</small>
+    </div>
+    <div class="voice-box">
+      🗣️ <select id="voiceSelect" title="選擇發音語音"><option value="">自動語音</option></select>
+    </div>
+  </header>
+
+  <!-- Library switch -->
+  <div class="lib-switch">
+    <button class="lib-btn active" data-lib="kids">🧸 兒童美語<small>GEPT Kids 684 字・33 主題</small></button>
+    <button class="lib-btn" data-lib="toeic">💼 多益單字庫<small>TOEIC 11238 字・15 分類</small></button>
+  </div>
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="browse">📖 單字庫</button>
+    <button class="tab" data-tab="flashcard">🎴 閃卡</button>
+    <button class="tab" data-tab="quiz">📝 測驗</button>
+    <button class="tab" data-tab="progress">📊 進度</button>
+  </nav>
+
+  <!-- BROWSE -->
+  <section id="view-browse">
+    <div class="filters">
+      <div class="search-row">
+        <input id="searchInput" type="search" placeholder="🔍 搜尋單字或中文…">
+      </div>
+      <div class="pills" id="scopePills"></div>
+      <div class="pills" id="catPills"></div>
+      <div class="pills star-pills" id="starPills" style="display:none"></div>
+    </div>
+    <div class="result-meta" id="resultMeta"></div>
+    <div class="word-grid" id="wordsGrid"></div>
+    <button class="load-more" id="loadMoreBtn" style="display:none">載入更多 ⋯</button>
+  </section>
+
+  <!-- FLASHCARD -->
+  <section id="view-flashcard" style="display:none">
+    <div class="fc-panel">
+      <div class="fc-status">
+        <span id="fcName">閃卡</span>
+        <span id="fcDueInfo"></span>
+      </div>
+      <div class="fc-progress"><i id="fcBar"></i></div>
+      <div id="fcStage">
+        <div class="flashcard-wrapper" id="flashcardWrapper">
+          <div class="flashcard-inner">
+            <div class="fc-front">
+              <div class="fc-badge" id="fcBadgeFront"></div>
+              <div class="fc-word" id="fcWord"></div>
+              <button class="fc-sound" id="fcSound">🔊</button>
+              <div class="fc-hint">點卡片翻面・空白鍵翻面 / R 發音</div>
+            </div>
+            <div class="fc-back">
+              <div class="fc-meaning" id="fcMeaning"></div>
+              <div class="fc-pos" id="fcPos"></div>
+              <div class="fc-example" id="fcExample"></div>
+            </div>
+          </div>
+        </div>
+        <div class="srs-ratings" id="srsRatings">
+          <button class="rate-btn r-again" data-r="again">❌ 忘記了<small class="kbd">[1]</small></button>
+          <button class="rate-btn r-hard" data-r="hard">⚠️ 困難<small class="kbd">[2]</small></button>
+          <button class="rate-btn r-good" data-r="good">✅ 良好<small class="kbd">[3]</small></button>
+          <button class="rate-btn r-easy" data-r="easy">⚡ 簡單<small class="kbd">[4]</small></button>
+        </div>
+      </div>
+    </div>
+    <div id="bottomBar" class="show"><div class="bottom-inner">
+      <div style="display:flex; gap:8px; align-items:center">
+        <button class="big-btn ghost" id="fcShuffleBtn" style="flex:1">🔀 打亂順序</button>
+        <button class="big-btn ghost" id="fcRestartBtn" style="flex:1">🔄 重新開始</button>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="view-quiz" style="display:none">
+    <div id="quizArea"></div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="view-progress" style="display:none">
+    <div id="progArea"></div>
+  </section>
+
+</div>
+
+<div class="modal-mask" id="modalMask">
+  <div class="modal">
+    <h3 id="modalTitle">加入自訂單字</h3>
+    <label>英文單字 *</label><input id="mwWord" placeholder="apple">
+    <label>中文釋義 *</label><input id="mwMeaning" placeholder="蘋果">
+    <label>詞性（可留空）</label><input id="mwPos" placeholder="n.">
+    <label>例句（可留空）</label><input id="mwExample" placeholder="I eat an apple.">
+    <label>例句中文（可留空）</label><input id="mwExampleZh" placeholder="我吃一顆蘋果。">
+    <button class="big-btn primary" id="mwSave">儲存</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   0. Helpers
+   ========================================================================= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const uid = () => 'c-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function daysFromNow(d) { return Date.now() + d * 86400000; }
+let toastTimer = null;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+/* =========================================================================
+   1. SpeechSys（真人發音，參照 learn.html 語音選擇機制）
+   ========================================================================= */
+const SpeechSys = (() => {
+  let voices = [];
+  let preferred = '';
+  function loadVoices() { if ('speechSynthesis' in window) voices = window.speechSynthesis.getVoices(); }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
+  }
+  function getEnglishVoices() {
+    if (!voices.length && 'speechSynthesis' in window) voices = window.speechSynthesis.getVoices();
+    return voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+  }
+  function pickVoice() {
+    const en = getEnglishVoices();
+    if (!en.length) return null;
+    if (preferred) { const f = en.find(v => v.name === preferred); if (f) return f; }
+    const prefs = ['Jenny', 'Zira', 'Aria', 'Guy', 'Google US English', 'Samantha', 'Daniel', 'Google UK English Female'];
+    for (const n of prefs) { const f = en.find(v => v.name.includes(n)); if (f) return f; }
+    return en[0];
+  }
+  return {
+    speak(text, rate = 0.92) {
+      if (!('speechSynthesis' in window) || !text) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = rate;
+      const v = pickVoice(); if (v) u.voice = v;
+      window.speechSynthesis.speak(u);
+    },
+    stop() { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); },
+    getEnglishVoices,
+    setPreferred(name) { preferred = name; localStorage.setItem('starw_voice', name); },
+    getPreferred() { return preferred || localStorage.getItem('starw_voice') || ''; }
+  };
+})();
+
+/* =========================================================================
+   2. 資料：兒童美語（GEPT Kids 684 字，嵌入）＋ 多益（外部載入）
+   ========================================================================= */
+const KIDS_WORDS = [{"id":"k-01動物及昆蟲-0","word":"animal","meaning":"動物","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-1","word":"bear","meaning":"熊","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-2","word":"bee","meaning":"蜜蜂","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-3","word":"bird","meaning":"鳥","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-4","word":"butterfly","meaning":"蝴蝶","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-5","word":"cat","meaning":"貓","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-6","word":"chicken","meaning":"雞","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-7","word":"cow","meaning":"乳牛","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-8","word":"dog","meaning":"狗","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-9","word":"duck","meaning":"鴨子","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-10","word":"elephant","meaning":"大象","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-11","word":"fish","meaning":"魚","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-12","word":"frog","meaning":"青蛙","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-13","word":"hippo","meaning":"河馬","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-14","word":"horse","meaning":"馬","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-15","word":"koala","meaning":"無尾熊","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-16","word":"lion","meaning":"獅子","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-17","word":"mice","meaning":"老鼠 (複數)","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-18","word":"monkey","meaning":"猴子","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-19","word":"mouse","meaning":"老鼠","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-20","word":"panda","meaning":"大貓熊","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-21","word":"pet","meaning":"寵物","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-22","word":"pig","meaning":"豬","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-23","word":"rabbit","meaning":"兔子","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-24","word":"sheep","meaning":"綿羊","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-25","word":"snake","meaning":"蛇","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-26","word":"spider","meaning":"蜘蛛","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-27","word":"tiger","meaning":"老虎","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-28","word":"turtle","meaning":"烏龜","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-29","word":"whale","meaning":"鯨魚","category":"動物及昆蟲"},{"id":"k-01動物及昆蟲-30","word":"zebra","meaning":"斑馬","category":"動物及昆蟲"},{"id":"k-02衣服及配件-0","word":"bag","meaning":"袋子","category":"衣服及配件"},{"id":"k-02衣服及配件-1","word":"cap","meaning":"棒球帽","category":"衣服及配件"},{"id":"k-02衣服及配件-2","word":"clothes","meaning":"衣服","category":"衣服及配件"},{"id":"k-02衣服及配件-3","word":"coat","meaning":"外套","category":"衣服及配件"},{"id":"k-02衣服及配件-4","word":"dress","meaning":"洋裝","category":"衣服及配件"},{"id":"k-02衣服及配件-5","word":"glasses","meaning":"眼鏡","category":"衣服及配件"},{"id":"k-02衣服及配件-6","word":"hat","meaning":"帽子","category":"衣服及配件"},{"id":"k-02衣服及配件-7","word":"jacket","meaning":"夾克、外套","category":"衣服及配件"},{"id":"k-02衣服及配件-8","word":"pants","meaning":"長褲","category":"衣服及配件"},{"id":"k-02衣服及配件-9","word":"pocket","meaning":"口袋","category":"衣服及配件"},{"id":"k-02衣服及配件-10","word":"shirt","meaning":"襯衫","category":"衣服及配件"},{"id":"k-02衣服及配件-11","word":"shoes","meaning":"鞋子","category":"衣服及配件"},{"id":"k-02衣服及配件-12","word":"shorts","meaning":"短褲","category":"衣服及配件"},{"id":"k-02衣服及配件-13","word":"skirt","meaning":"裙子","category":"衣服及配件"},{"id":"k-02衣服及配件-14","word":"socks","meaning":"襪子","category":"衣服及配件"},{"id":"k-02衣服及配件-15","word":"sweater","meaning":"毛衣","category":"衣服及配件"},{"id":"k-02衣服及配件-16","word":"T-shirt","meaning":"T 恤","category":"衣服及配件"},{"id":"k-02衣服及配件-17","word":"umbrella","meaning":"傘","category":"衣服及配件"},{"id":"k-02衣服及配件-18","word":"wear","meaning":"穿、戴","category":"衣服及配件"},{"id":"k-03顏色-0","word":"black","meaning":"黑色的","category":"顏色"},{"id":"k-03顏色-1","word":"blue","meaning":"藍色的","category":"顏色"},{"id":"k-03顏色-2","word":"brown","meaning":"咖啡色的","category":"顏色"},{"id":"k-03顏色-3","word":"color","meaning":"顏色","category":"顏色"},{"id":"k-03顏色-4","word":"gray","meaning":"灰色的","category":"顏色"},{"id":"k-03顏色-5","word":"green","meaning":"綠色的","category":"顏色"},{"id":"k-03顏色-6","word":"orange","meaning":"橘色的","category":"顏色"},{"id":"k-03顏色-7","word":"pink","meaning":"粉紅色的","category":"顏色"},{"id":"k-03顏色-8","word":"purple","meaning":"紫色的","category":"顏色"},{"id":"k-03顏色-9","word":"red","meaning":"紅色的","category":"顏色"},{"id":"k-03顏色-10","word":"white","meaning":"白色的","category":"顏色"},{"id":"k-03顏色-11","word":"yellow","meaning":"黃色的","category":"顏色"},{"id":"k-04家庭-0","word":"aunt","meaning":"阿姨、姑姑、伯母、舅媽","category":"家庭"},{"id":"k-04家庭-1","word":"brother","meaning":"哥哥、弟弟","category":"家庭"},{"id":"k-04家庭-2","word":"cousin","meaning":"堂兄（弟、姊、妹）","category":"家庭"},{"id":"k-04家庭-3","word":"dad","meaning":"爸爸","category":"家庭"},{"id":"k-04家庭-4","word":"daddy","meaning":"爸爸","category":"家庭"},{"id":"k-04家庭-5","word":"daughter","meaning":"女兒","category":"家庭"},{"id":"k-04家庭-6","word":"family","meaning":"家庭、家人","category":"家庭"},{"id":"k-04家庭-7","word":"father","meaning":"爸爸","category":"家庭"},{"id":"k-04家庭-8","word":"grandfather","meaning":"外公、爺爺","category":"家庭"},{"id":"k-04家庭-9","word":"grandma","meaning":"外婆、奶奶","category":"家庭"},{"id":"k-04家庭-10","word":"grandmother","meaning":"外婆、奶奶","category":"家庭"},{"id":"k-04家庭-11","word":"grandpa","meaning":"外公、爺爺","category":"家庭"},{"id":"k-04家庭-12","word":"grow","meaning":"成長、長大","category":"家庭"},{"id":"k-04家庭-13","word":"live","meaning":"住","category":"家庭"},{"id":"k-04家庭-14","word":"mom","meaning":"媽媽","category":"家庭"},{"id":"k-04家庭-15","word":"mommy","meaning":"媽媽","category":"家庭"},{"id":"k-04家庭-16","word":"mother","meaning":"媽媽","category":"家庭"},{"id":"k-04家庭-17","word":"parent","meaning":"父母親","category":"家庭"},{"id":"k-04家庭-18","word":"sister","meaning":"姐姐、妹妹","category":"家庭"},{"id":"k-04家庭-19","word":"son","meaning":"兒子","category":"家庭"},{"id":"k-04家庭-20","word":"uncle","meaning":"叔叔、舅舅、姑丈、姨丈","category":"家庭"},{"id":"k-05食物及飲料a-0","word":"apple","meaning":"蘋果","category":"食物及飲料a"},{"id":"k-05食物及飲料a-1","word":"banana","meaning":"香蕉","category":"食物及飲料a"},{"id":"k-05食物及飲料a-2","word":"beef","meaning":"牛肉","category":"食物及飲料a"},{"id":"k-05食物及飲料a-3","word":"bread","meaning":"麵包","category":"食物及飲料a"},{"id":"k-05食物及飲料a-4","word":"breakfast","meaning":"早餐","category":"食物及飲料a"},{"id":"k-05食物及飲料a-5","word":"cake","meaning":"蛋糕","category":"食物及飲料a"},{"id":"k-05食物及飲料a-6","word":"candy","meaning":"糖果","category":"食物及飲料a"},{"id":"k-05食物及飲料a-7","word":"chicken","meaning":"雞肉","category":"食物及飲料a"},{"id":"k-05食物及飲料a-8","word":"chocolate","meaning":"巧克力","category":"食物及飲料a"},{"id":"k-05食物及飲料a-9","word":"coffee","meaning":"咖啡","category":"食物及飲料a"},{"id":"k-05食物及飲料a-10","word":"coke","meaning":"可樂","category":"食物及飲料a"},{"id":"k-05食物及飲料a-11","word":"cook","meaning":"做飯","category":"食物及飲料a"},{"id":"k-05食物及飲料a-12","word":"cookies","meaning":"餅乾","category":"食物及飲料a"},{"id":"k-05食物及飲料a-13","word":"dinner","meaning":"晚餐","category":"食物及飲料a"},{"id":"k-05食物及飲料a-14","word":"drink","meaning":"喝","category":"食物及飲料a"},{"id":"k-05食物及飲料a-15","word":"duck","meaning":"鴨肉","category":"食物及飲料a"},{"id":"k-05食物及飲料a-16","word":"dumpling","meaning":"水餃","category":"食物及飲料a"},{"id":"k-05食物及飲料a-17","word":"eat","meaning":"吃","category":"食物及飲料a"},{"id":"k-05食物及飲料a-18","word":"egg","meaning":"蛋","category":"食物及飲料a"},{"id":"k-05食物及飲料a-19","word":"fish","meaning":"魚肉","category":"食物及飲料a"},{"id":"k-05食物及飲料a-20","word":"food","meaning":"食物","category":"食物及飲料a"},{"id":"k-05食物及飲料a-21","word":"French fries","meaning":"薯條","category":"食物及飲料a"},{"id":"k-05食物及飲料a-22","word":"fruit","meaning":"水果","category":"食物及飲料a"},{"id":"k-05食物及飲料a-23","word":"full","meaning":"飽的","category":"食物及飲料a"},{"id":"k-05食物及飲料a-24","word":"grape","meaning":"葡萄","category":"食物及飲料a"},{"id":"k-05食物及飲料a-25","word":"hamburger","meaning":"漢堡","category":"食物及飲料a"},{"id":"k-06食物及飲料b-0","word":"hungry","meaning":"餓的","category":"食物及飲料b"},{"id":"k-06食物及飲料b-1","word":"ice cream","meaning":"冰淇淋","category":"食物及飲料b"},{"id":"k-06食物及飲料b-2","word":"juice","meaning":"果汁","category":"食物及飲料b"},{"id":"k-06食物及飲料b-3","word":"lemon","meaning":"檸檬","category":"食物及飲料b"},{"id":"k-06食物及飲料b-4","word":"lunch","meaning":"午餐","category":"食物及飲料b"},{"id":"k-06食物及飲料b-5","word":"meal","meaning":"餐","category":"食物及飲料b"},{"id":"k-06食物及飲料b-6","word":"milk","meaning":"牛奶","category":"食物及飲料b"},{"id":"k-06食物及飲料b-7","word":"noodles","meaning":"麵","category":"食物及飲料b"},{"id":"k-06食物及飲料b-8","word":"orange","meaning":"橘子","category":"食物及飲料b"},{"id":"k-06食物及飲料b-9","word":"peach","meaning":"桃子","category":"食物及飲料b"},{"id":"k-06食物及飲料b-10","word":"pie","meaning":"派","category":"食物及飲料b"},{"id":"k-06食物及飲料b-11","word":"pizza","meaning":"披薩","category":"食物及飲料b"},{"id":"k-06食物及飲料b-12","word":"pork","meaning":"豬肉","category":"食物及飲料b"},{"id":"k-06食物及飲料b-13","word":"pumpkin","meaning":"南瓜","category":"食物及飲料b"},{"id":"k-06食物及飲料b-14","word":"rice","meaning":"米飯","category":"食物及飲料b"},{"id":"k-06食物及飲料b-15","word":"salad","meaning":"沙拉","category":"食物及飲料b"},{"id":"k-06食物及飲料b-16","word":"sandwich","meaning":"三明治","category":"食物及飲料b"},{"id":"k-06食物及飲料b-17","word":"soup","meaning":"湯","category":"食物及飲料b"},{"id":"k-06食物及飲料b-18","word":"strawberry","meaning":"草莓","category":"食物及飲料b"},{"id":"k-06食物及飲料b-19","word":"sweet","meaning":"甜的","category":"食物及飲料b"},{"id":"k-06食物及飲料b-20","word":"taste","meaning":"嚐起來","category":"食物及飲料b"},{"id":"k-06食物及飲料b-21","word":"tea","meaning":"茶","category":"食物及飲料b"},{"id":"k-06食物及飲料b-22","word":"thirsty","meaning":"口渴的","category":"食物及飲料b"},{"id":"k-06食物及飲料b-23","word":"water","meaning":"水","category":"食物及飲料b"},{"id":"k-06食物及飲料b-24","word":"watermelon","meaning":"西瓜","category":"食物及飲料b"},{"id":"k-06食物及飲料b-25","word":"yummy","meaning":"好吃的、美味的","category":"食物及飲料b"},{"id":"k-07稱謂、地理名詞及節日-0","word":"Miss","meaning":"小姐","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-1","word":"Mr.","meaning":"先生","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-2","word":"Mrs.","meaning":"太太","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-3","word":"name","meaning":"名字","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-4","word":"beach","meaning":"海灘","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-5","word":"lake","meaning":"湖","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-6","word":"mountain","meaning":"山","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-7","word":"river","meaning":"河流","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-8","word":"sea","meaning":"大海","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-9","word":"Christmas","meaning":"聖誕節","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-10","word":"Dragon Boat Festival","meaning":"端午節","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-11","word":"Easter","meaning":"復活節","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-12","word":"Halloween","meaning":"萬聖節","category":"稱謂、地理名詞及節日"},{"id":"k-07稱謂、地理名詞及節日-13","word":"Moon Festival","meaning":"中秋節","category":"稱謂、地理名詞及節日"},{"id":"k-08健康-0","word":"cold","meaning":"感冒","category":"健康"},{"id":"k-08健康-1","word":"headache","meaning":"頭痛","category":"健康"},{"id":"k-08健康-2","word":"sick","meaning":"生病的","category":"健康"},{"id":"k-08健康-3","word":"strong","meaning":"強壯的","category":"健康"},{"id":"k-08健康-4","word":"tired","meaning":"疲累的","category":"健康"},{"id":"k-08健康-5","word":"toothache","meaning":"牙痛","category":"健康"},{"id":"k-08健康-6","word":"well","meaning":"好的, 健康地","category":"健康"},{"id":"k-09房子及公寓a-0","word":"bathroom","meaning":"浴室","category":"房子及公寓a"},{"id":"k-09房子及公寓a-1","word":"bed","meaning":"床","category":"房子及公寓a"},{"id":"k-09房子及公寓a-2","word":"bedroom","meaning":"臥房","category":"房子及公寓a"},{"id":"k-09房子及公寓a-3","word":"chair","meaning":"椅子","category":"房子及公寓a"},{"id":"k-09房子及公寓a-4","word":"clean","meaning":"乾淨的 / 清理","category":"房子及公寓a"},{"id":"k-09房子及公寓a-5","word":"computer","meaning":"電腦","category":"房子及公寓a"},{"id":"k-09房子及公寓a-6","word":"desk","meaning":"桌子","category":"房子及公寓a"},{"id":"k-09房子及公寓a-7","word":"dining room","meaning":"(家裡的) 餐廳","category":"房子及公寓a"},{"id":"k-09房子及公寓a-8","word":"door","meaning":"門","category":"房子及公寓a"},{"id":"k-09房子及公寓a-9","word":"fan","meaning":"電扇","category":"房子及公寓a"},{"id":"k-09房子及公寓a-10","word":"floor","meaning":"地板","category":"房子及公寓a"},{"id":"k-09房子及公寓a-11","word":"fridge","meaning":"電冰箱","category":"房子及公寓a"},{"id":"k-09房子及公寓a-12","word":"garden","meaning":"院子、花園","category":"房子及公寓a"},{"id":"k-09房子及公寓a-13","word":"home","meaning":"家庭","category":"房子及公寓a"},{"id":"k-10房子及公寓b-0","word":"house","meaning":"房子","category":"房子及公寓b"},{"id":"k-10房子及公寓b-1","word":"key","meaning":"鑰匙","category":"房子及公寓b"},{"id":"k-10房子及公寓b-2","word":"kitchen","meaning":"廚房","category":"房子及公寓b"},{"id":"k-10房子及公寓b-3","word":"lamp","meaning":"燈","category":"房子及公寓b"},{"id":"k-10房子及公寓b-4","word":"living room","meaning":"客廳","category":"房子及公寓b"},{"id":"k-10房子及公寓b-5","word":"mop","meaning":"用拖把拖地","category":"房子及公寓b"},{"id":"k-10房子及公寓b-6","word":"refrigerator","meaning":"電冰箱","category":"房子及公寓b"},{"id":"k-10房子及公寓b-7","word":"shelf","meaning":"架子","category":"房子及公寓b"},{"id":"k-10房子及公寓b-8","word":"shower","meaning":"淋浴","category":"房子及公寓b"},{"id":"k-10房子及公寓b-9","word":"sofa","meaning":"沙發","category":"房子及公寓b"},{"id":"k-10房子及公寓b-10","word":"street","meaning":"街道","category":"房子及公寓b"},{"id":"k-10房子及公寓b-11","word":"sweep","meaning":"掃","category":"房子及公寓b"},{"id":"k-10房子及公寓b-12","word":"table","meaning":"桌子","category":"房子及公寓b"},{"id":"k-10房子及公寓b-13","word":"telephone","meaning":"電話","category":"房子及公寓b"},{"id":"k-10房子及公寓b-14","word":"television","meaning":"電視","category":"房子及公寓b"},{"id":"k-10房子及公寓b-15","word":"towel","meaning":"毛巾","category":"房子及公寓b"},{"id":"k-10房子及公寓b-16","word":"TV","meaning":"電視","category":"房子及公寓b"},{"id":"k-10房子及公寓b-17","word":"wall","meaning":"牆壁","category":"房子及公寓b"},{"id":"k-10房子及公寓b-18","word":"wash","meaning":"洗","category":"房子及公寓b"},{"id":"k-10房子及公寓b-19","word":"window","meaning":"窗戶","category":"房子及公寓b"},{"id":"k-10房子及公寓b-20","word":"buy","meaning":"買","category":"房子及公寓b"},{"id":"k-10房子及公寓b-21","word":"dollar","meaning":"元","category":"房子及公寓b"},{"id":"k-10房子及公寓b-22","word":"free","meaning":"免費的","category":"房子及公寓b"},{"id":"k-10房子及公寓b-23","word":"money","meaning":"錢","category":"房子及公寓b"},{"id":"k-11數字a-0","word":"all","meaning":"全部的","category":"數字a"},{"id":"k-11數字a-1","word":"both","meaning":"兩個都","category":"數字a"},{"id":"k-11數字a-2","word":"eight","meaning":"八","category":"數字a"},{"id":"k-11數字a-3","word":"eighteen","meaning":"十八","category":"數字a"},{"id":"k-11數字a-4","word":"eighty","meaning":"八十","category":"數字a"},{"id":"k-11數字a-5","word":"eleven","meaning":"十一","category":"數字a"},{"id":"k-11數字a-6","word":"fifteen","meaning":"十五","category":"數字a"},{"id":"k-11數字a-7","word":"fifty","meaning":"五十","category":"數字a"},{"id":"k-11數字a-8","word":"first","meaning":"第一","category":"數字a"},{"id":"k-11數字a-9","word":"five","meaning":"五","category":"數字a"},{"id":"k-11數字a-10","word":"forty","meaning":"四十","category":"數字a"},{"id":"k-11數字a-11","word":"four","meaning":"四","category":"數字a"},{"id":"k-11數字a-12","word":"fourteen","meaning":"十四","category":"數字a"},{"id":"k-11數字a-13","word":"hundred","meaning":"一百","category":"數字a"},{"id":"k-11數字a-14","word":"last","meaning":"最後的","category":"數字a"},{"id":"k-11數字a-15","word":"many","meaning":"許多","category":"數字a"},{"id":"k-11數字a-16","word":"more","meaning":"更多、較多","category":"數字a"},{"id":"k-11數字a-17","word":"much","meaning":"許多","category":"數字a"},{"id":"k-11數字a-18","word":"nine","meaning":"九","category":"數字a"},{"id":"k-11數字a-19","word":"nineteen","meaning":"十九","category":"數字a"},{"id":"k-11數字a-20","word":"ninety","meaning":"九十","category":"數字a"},{"id":"k-12數字b-0","word":"number","meaning":"數字","category":"數字b"},{"id":"k-12數字b-1","word":"one","meaning":"一","category":"數字b"},{"id":"k-12數字b-2","word":"second","meaning":"第二","category":"數字b"},{"id":"k-12數字b-3","word":"seven","meaning":"七","category":"數字b"},{"id":"k-12數字b-4","word":"seventeen","meaning":"十七","category":"數字b"},{"id":"k-12數字b-5","word":"seventy","meaning":"七十","category":"數字b"},{"id":"k-12數字b-6","word":"six","meaning":"六","category":"數字b"},{"id":"k-12數字b-7","word":"sixteen","meaning":"十六","category":"數字b"},{"id":"k-12數字b-8","word":"sixty","meaning":"六十","category":"數字b"},{"id":"k-12數字b-9","word":"some","meaning":"一些","category":"數字b"},{"id":"k-12數字b-10","word":"ten","meaning":"十","category":"數字b"},{"id":"k-12數字b-11","word":"third","meaning":"第三","category":"數字b"},{"id":"k-12數字b-12","word":"thirteen","meaning":"十三","category":"數字b"},{"id":"k-12數字b-13","word":"thirty","meaning":"三十","category":"數字b"},{"id":"k-12數字b-14","word":"three","meaning":"三","category":"數字b"},{"id":"k-12數字b-15","word":"twelve","meaning":"十二","category":"數字b"},{"id":"k-12數字b-16","word":"twenty","meaning":"二十","category":"數字b"},{"id":"k-12數字b-17","word":"two","meaning":"二","category":"數字b"},{"id":"k-12數字b-18","word":"zero","meaning":"零","category":"數字b"},{"id":"k-13工作-0","word":"actor","meaning":"男演員","category":"工作"},{"id":"k-13工作-1","word":"actress","meaning":"女演員","category":"工作"},{"id":"k-13工作-2","word":"cook","meaning":"廚師","category":"工作"},{"id":"k-13工作-3","word":"doctor","meaning":"醫生","category":"工作"},{"id":"k-13工作-4","word":"driver","meaning":"司機、駕駛員","category":"工作"},{"id":"k-13工作-5","word":"farmer","meaning":"農夫","category":"工作"},{"id":"k-13工作-6","word":"job","meaning":"工作、職業","category":"工作"},{"id":"k-13工作-7","word":"mailman","meaning":"郵差","category":"工作"},{"id":"k-13工作-8","word":"nurse","meaning":"護士","category":"工作"},{"id":"k-13工作-9","word":"police officer","meaning":"警察","category":"工作"},{"id":"k-13工作-10","word":"singer","meaning":"歌手","category":"工作"},{"id":"k-13工作-11","word":"soldier","meaning":"軍人","category":"工作"},{"id":"k-13工作-12","word":"waiter","meaning":"男服務生","category":"工作"},{"id":"k-13工作-13","word":"waitress","meaning":"女服務生","category":"工作"},{"id":"k-13工作-14","word":"work","meaning":"工作","category":"工作"},{"id":"k-13工作-15","word":"worker","meaning":"工作者","category":"工作"},{"id":"k-14身體部位-0","word":"arm","meaning":"手臂","category":"身體部位"},{"id":"k-14身體部位-1","word":"back","meaning":"背","category":"身體部位"},{"id":"k-14身體部位-2","word":"ear","meaning":"耳朵","category":"身體部位"},{"id":"k-14身體部位-3","word":"eye","meaning":"眼睛","category":"身體部位"},{"id":"k-14身體部位-4","word":"face","meaning":"臉","category":"身體部位"},{"id":"k-14身體部位-5","word":"feet","meaning":"腳 (複數)","category":"身體部位"},{"id":"k-14身體部位-6","word":"foot","meaning":"腳","category":"身體部位"},{"id":"k-14身體部位-7","word":"hair","meaning":"頭髮","category":"身體部位"},{"id":"k-14身體部位-8","word":"hand","meaning":"手","category":"身體部位"},{"id":"k-14身體部位-9","word":"head","meaning":"頭","category":"身體部位"},{"id":"k-14身體部位-10","word":"leg","meaning":"腿","category":"身體部位"},{"id":"k-14身體部位-11","word":"mouth","meaning":"嘴巴","category":"身體部位"},{"id":"k-14身體部位-12","word":"nose","meaning":"鼻子","category":"身體部位"},{"id":"k-14身體部位-13","word":"teeth","meaning":"牙齒 (複數)","category":"身體部位"},{"id":"k-14身體部位-14","word":"tooth","meaning":"牙齒","category":"身體部位"},{"id":"k-15人-0","word":"baby","meaning":"嬰兒","category":"人"},{"id":"k-15人-1","word":"boy","meaning":"男孩","category":"人"},{"id":"k-15人-2","word":"girl","meaning":"女孩","category":"人"},{"id":"k-15人-3","word":"kid","meaning":"小孩","category":"人"},{"id":"k-15人-4","word":"man","meaning":"男人","category":"人"},{"id":"k-15人-5","word":"men","meaning":"男人 (複數)","category":"人"},{"id":"k-15人-6","word":"people","meaning":"人 (複數)","category":"人"},{"id":"k-15人-7","word":"person","meaning":"人","category":"人"},{"id":"k-15人-8","word":"woman","meaning":"女人","category":"人"},{"id":"k-15人-9","word":"women","meaning":"女人 (複數)","category":"人"},{"id":"k-16個性及特點-0","word":"angry","meaning":"生氣的","category":"個性及特點"},{"id":"k-16個性及特點-1","word":"bad","meaning":"不好的、壞的","category":"個性及特點"},{"id":"k-16個性及特點-2","word":"beautiful","meaning":"美麗的、漂亮的","category":"個性及特點"},{"id":"k-16個性及特點-3","word":"bored","meaning":"覺得無聊的","category":"個性及特點"},{"id":"k-16個性及特點-4","word":"boring","meaning":"令人無聊的","category":"個性及特點"},{"id":"k-16個性及特點-5","word":"busy","meaning":"忙碌的","category":"個性及特點"},{"id":"k-16個性及特點-6","word":"cute","meaning":"可愛的","category":"個性及特點"},{"id":"k-16個性及特點-7","word":"excited","meaning":"覺得興奮的","category":"個性及特點"},{"id":"k-16個性及特點-8","word":"exciting","meaning":"令人興奮的","category":"個性及特點"},{"id":"k-16個性及特點-9","word":"good","meaning":"好的","category":"個性及特點"},{"id":"k-16個性及特點-10","word":"happy","meaning":"開心的、高興的","category":"個性及特點"},{"id":"k-16個性及特點-11","word":"heavy","meaning":"重的 (人)","category":"個性及特點"},{"id":"k-16個性及特點-12","word":"lazy","meaning":"懶惰的","category":"個性及特點"},{"id":"k-16個性及特點-13","word":"mad","meaning":"生氣的、氣憤的","category":"個性及特點"},{"id":"k-16個性及特點-14","word":"nice","meaning":"令人愉快的、宜人的","category":"個性及特點"},{"id":"k-16個性及特點-15","word":"old","meaning":"年紀大的、老的","category":"個性及特點"},{"id":"k-16個性及特點-16","word":"pretty","meaning":"漂亮的","category":"個性及特點"},{"id":"k-16個性及特點-17","word":"sad","meaning":"傷心的、難過的","category":"個性及特點"},{"id":"k-16個性及特點-18","word":"short","meaning":"矮的","category":"個性及特點"},{"id":"k-16個性及特點-19","word":"smart","meaning":"聰明的","category":"個性及特點"},{"id":"k-16個性及特點-20","word":"tall","meaning":"高的","category":"個性及特點"},{"id":"k-16個性及特點-21","word":"thin","meaning":"瘦的","category":"個性及特點"},{"id":"k-16個性及特點-22","word":"young","meaning":"年輕的","category":"個性及特點"},{"id":"k-17地點方位-0","word":"back","meaning":"向後、回原處","category":"地點方位"},{"id":"k-17地點方位-1","word":"bank","meaning":"銀行","category":"地點方位"},{"id":"k-17地點方位-2","word":"bookstore","meaning":"書店","category":"地點方位"},{"id":"k-17地點方位-3","word":"department store","meaning":"百貨公司","category":"地點方位"},{"id":"k-17地點方位-4","word":"fire station","meaning":"消防站","category":"地點方位"},{"id":"k-17地點方位-5","word":"here","meaning":"這裡","category":"地點方位"},{"id":"k-17地點方位-6","word":"hospital","meaning":"醫院","category":"地點方位"},{"id":"k-17地點方位-7","word":"Japan","meaning":"日本","category":"地點方位"},{"id":"k-17地點方位-8","word":"left","meaning":"左邊(的)","category":"地點方位"},{"id":"k-17地點方位-9","word":"market","meaning":"市場","category":"地點方位"},{"id":"k-17地點方位-10","word":"movie theater","meaning":"電影院","category":"地點方位"},{"id":"k-17地點方位-11","word":"museum","meaning":"博物館","category":"地點方位"},{"id":"k-17地點方位-12","word":"office","meaning":"辦公室","category":"地點方位"},{"id":"k-17地點方位-13","word":"park","meaning":"公園","category":"地點方位"},{"id":"k-17地點方位-14","word":"police station","meaning":"警察局","category":"地點方位"},{"id":"k-17地點方位-15","word":"post office","meaning":"郵局","category":"地點方位"},{"id":"k-17地點方位-16","word":"restaurant","meaning":"餐廳","category":"地點方位"},{"id":"k-17地點方位-17","word":"restroom","meaning":"洗手間、廁所","category":"地點方位"},{"id":"k-17地點方位-18","word":"right","meaning":"右邊","category":"地點方位"},{"id":"k-17地點方位-19","word":"shop","meaning":"商店 (UK; 英式英語)","category":"地點方位"},{"id":"k-17地點方位-20","word":"store","meaning":"商店 (US; 美式英語)","category":"地點方位"},{"id":"k-17地點方位-21","word":"supermarket","meaning":"超級市場","category":"地點方位"},{"id":"k-17地點方位-22","word":"Taiwan","meaning":"臺灣","category":"地點方位"},{"id":"k-17地點方位-23","word":"there","meaning":"那裡","category":"地點方位"},{"id":"k-17地點方位-24","word":"UK","meaning":"英國","category":"地點方位"},{"id":"k-17地點方位-25","word":"USA","meaning":"美國","category":"地點方位"},{"id":"k-18學校-0","word":"answer","meaning":"回答","category":"學校"},{"id":"k-18學校-1","word":"art","meaning":"美術、藝術","category":"學校"},{"id":"k-18學校-2","word":"ask","meaning":"問","category":"學校"},{"id":"k-18學校-3","word":"blackboard","meaning":"黑板","category":"學校"},{"id":"k-18學校-4","word":"book","meaning":"書、書本","category":"學校"},{"id":"k-18學校-5","word":"Chinese","meaning":"中文","category":"學校"},{"id":"k-18學校-6","word":"class","meaning":"課；班級","category":"學校"},{"id":"k-18學校-7","word":"classroom","meaning":"教室","category":"學校"},{"id":"k-18學校-8","word":"draw","meaning":"畫、描畫","category":"學校"},{"id":"k-18學校-9","word":"English","meaning":"英文","category":"學校"},{"id":"k-18學校-10","word":"eraser","meaning":"橡皮擦","category":"學校"},{"id":"k-18學校-11","word":"friend","meaning":"朋友","category":"學校"},{"id":"k-18學校-12","word":"glue","meaning":"膠水","category":"學校"},{"id":"k-18學校-13","word":"homework","meaning":"回家作業","category":"學校"},{"id":"k-18學校-14","word":"library","meaning":"圖書館","category":"學校"},{"id":"k-18學校-15","word":"listen","meaning":"聽","category":"學校"},{"id":"k-18學校-16","word":"marker","meaning":"麥克筆","category":"學校"},{"id":"k-18學校-17","word":"math","meaning":"數學","category":"學校"},{"id":"k-18學校-18","word":"music","meaning":"音樂","category":"學校"},{"id":"k-18學校-19","word":"paper","meaning":"紙張","category":"學校"},{"id":"k-18學校-20","word":"PE","meaning":"體育（課）","category":"學校"},{"id":"k-18學校-21","word":"pen","meaning":"筆、鋼筆","category":"學校"},{"id":"k-18學校-22","word":"pencil","meaning":"鉛筆","category":"學校"},{"id":"k-18學校-23","word":"picture","meaning":"圖片、照片","category":"學校"},{"id":"k-18學校-24","word":"question","meaning":"問題","category":"學校"},{"id":"k-18學校-25","word":"read","meaning":"閱讀","category":"學校"},{"id":"k-18學校-26","word":"ruler","meaning":"尺","category":"學校"},{"id":"k-18學校-27","word":"say","meaning":"說","category":"學校"},{"id":"k-18學校-28","word":"school","meaning":"學校","category":"學校"},{"id":"k-18學校-29","word":"science","meaning":"科學","category":"學校"},{"id":"k-18學校-30","word":"speak","meaning":"說","category":"學校"},{"id":"k-18學校-31","word":"spell","meaning":"拼寫、用字母拼","category":"學校"},{"id":"k-18學校-32","word":"story","meaning":"故事","category":"學校"},{"id":"k-18學校-33","word":"student","meaning":"學生","category":"學校"},{"id":"k-18學校-34","word":"study","meaning":"學習","category":"學校"},{"id":"k-18學校-35","word":"talk","meaning":"說話、談話","category":"學校"},{"id":"k-18學校-36","word":"teacher","meaning":"老師","category":"學校"},{"id":"k-18學校-37","word":"test","meaning":"考試","category":"學校"},{"id":"k-18學校-38","word":"vacation","meaning":"假期","category":"學校"},{"id":"k-18學校-39","word":"write","meaning":"寫","category":"學校"},{"id":"k-19尺寸及計量-0","word":"big","meaning":"大的","category":"尺寸及計量"},{"id":"k-19尺寸及計量-1","word":"heavy","meaning":"重的 (物品)","category":"尺寸及計量"},{"id":"k-19尺寸及計量-2","word":"high","meaning":"高的","category":"尺寸及計量"},{"id":"k-19尺寸及計量-3","word":"light","meaning":"輕的","category":"尺寸及計量"},{"id":"k-19尺寸及計量-4","word":"long","meaning":"長的","category":"尺寸及計量"},{"id":"k-19尺寸及計量-5","word":"pair","meaning":"一雙、一對","category":"尺寸及計量"},{"id":"k-19尺寸及計量-6","word":"short","meaning":"短的","category":"尺寸及計量"},{"id":"k-19尺寸及計量-7","word":"small","meaning":"小的","category":"尺寸及計量"},{"id":"k-20運動、興趣及嗜好-0","word":"ball","meaning":"球","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-1","word":"baseball","meaning":"棒球","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-2","word":"basketball","meaning":"籃球","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-3","word":"card","meaning":"卡片","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-4","word":"climb","meaning":"爬、攀爬","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-5","word":"dance","meaning":"跳舞","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-6","word":"doll","meaning":"玩偶","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-7","word":"drum","meaning":"鼓","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-8","word":"fish","meaning":"釣魚","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-9","word":"football","meaning":"足球 (UK; 英式英語)","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-10","word":"game","meaning":"遊戲、比賽","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-11","word":"hike","meaning":"健行","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-12","word":"kite","meaning":"風箏","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-13","word":"movie","meaning":"電影","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-14","word":"paint","meaning":"用顏料畫、刷油漆","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-15","word":"piano","meaning":"鋼琴","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-16","word":"play","meaning":"玩","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-17","word":"run","meaning":"跑、跑步","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-18","word":"sing","meaning":"唱歌","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-19","word":"soccer","meaning":"足球 (US; 美式英語)","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-20","word":"song","meaning":"歌曲","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-21","word":"sport","meaning":"運動","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-22","word":"swim","meaning":"游泳","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-23","word":"toy","meaning":"玩具","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-24","word":"trip","meaning":"（短程的）旅行","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-25","word":"win","meaning":"贏","category":"運動、興趣及嗜好"},{"id":"k-20運動、興趣及嗜好-26","word":"yo-yo","meaning":"溜溜球","category":"運動、興趣及嗜好"},{"id":"k-21餐具-0","word":"chopsticks","meaning":"筷子","category":"餐具"},{"id":"k-21餐具-1","word":"cup","meaning":"杯子","category":"餐具"},{"id":"k-21餐具-2","word":"dish","meaning":"碟子、盤子","category":"餐具"},{"id":"k-21餐具-3","word":"fork","meaning":"叉子","category":"餐具"},{"id":"k-21餐具-4","word":"glass","meaning":"玻璃杯","category":"餐具"},{"id":"k-21餐具-5","word":"knife","meaning":"刀子","category":"餐具"},{"id":"k-21餐具-6","word":"spoon","meaning":"湯匙","category":"餐具"},{"id":"k-22時間-0","word":"afternoon","meaning":"下午","category":"時間"},{"id":"k-22時間-1","word":"April","meaning":"四月","category":"時間"},{"id":"k-22時間-2","word":"August","meaning":"八月","category":"時間"},{"id":"k-22時間-3","word":"clock","meaning":"時鐘","category":"時間"},{"id":"k-22時間-4","word":"day","meaning":"天","category":"時間"},{"id":"k-22時間-5","word":"December","meaning":"十二月","category":"時間"},{"id":"k-22時間-6","word":"early","meaning":"早到（的）","category":"時間"},{"id":"k-22時間-7","word":"evening","meaning":"傍晚","category":"時間"},{"id":"k-22時間-8","word":"fall","meaning":"秋天","category":"時間"},{"id":"k-22時間-9","word":"February","meaning":"二月","category":"時間"},{"id":"k-22時間-10","word":"Friday","meaning":"星期五","category":"時間"},{"id":"k-22時間-11","word":"January","meaning":"一月","category":"時間"},{"id":"k-22時間-12","word":"July","meaning":"七月","category":"時間"},{"id":"k-22時間-13","word":"June","meaning":"六月","category":"時間"},{"id":"k-22時間-14","word":"late","meaning":"晚到（的）","category":"時間"},{"id":"k-22時間-15","word":"March","meaning":"三月","category":"時間"},{"id":"k-22時間-16","word":"May","meaning":"五月","category":"時間"},{"id":"k-22時間-17","word":"Monday","meaning":"星期一","category":"時間"},{"id":"k-22時間-18","word":"month","meaning":"月","category":"時間"},{"id":"k-22時間-19","word":"morning","meaning":"早上","category":"時間"},{"id":"k-22時間-20","word":"night","meaning":"晚上","category":"時間"},{"id":"k-22時間-21","word":"November","meaning":"十一月","category":"時間"},{"id":"k-22時間-22","word":"now","meaning":"現在","category":"時間"},{"id":"k-22時間-23","word":"o'clock","meaning":"...點鐘","category":"時間"},{"id":"k-22時間-24","word":"October","meaning":"十月","category":"時間"},{"id":"k-22時間-25","word":"Saturday","meaning":"星期六","category":"時間"},{"id":"k-22時間-26","word":"season","meaning":"季節","category":"時間"},{"id":"k-22時間-27","word":"September","meaning":"九月","category":"時間"},{"id":"k-22時間-28","word":"spring","meaning":"春天","category":"時間"},{"id":"k-22時間-29","word":"summer","meaning":"夏天","category":"時間"},{"id":"k-22時間-30","word":"Sunday","meaning":"星期日","category":"時間"},{"id":"k-22時間-31","word":"Thursday","meaning":"星期四","category":"時間"},{"id":"k-22時間-32","word":"time","meaning":"時間","category":"時間"},{"id":"k-22時間-33","word":"today","meaning":"今天","category":"時間"},{"id":"k-22時間-34","word":"tomorrow","meaning":"明天","category":"時間"},{"id":"k-22時間-35","word":"Tuesday","meaning":"星期二","category":"時間"},{"id":"k-22時間-36","word":"watch","meaning":"手錶","category":"時間"},{"id":"k-22時間-37","word":"Wednesday","meaning":"星期三","category":"時間"},{"id":"k-22時間-38","word":"week","meaning":"星期","category":"時間"},{"id":"k-22時間-39","word":"winter","meaning":"冬天","category":"時間"},{"id":"k-22時間-40","word":"year","meaning":"年","category":"時間"},{"id":"k-22時間-41","word":"yesterday","meaning":"昨天","category":"時間"},{"id":"k-23運輸-0","word":"airplane","meaning":"飛機","category":"運輸"},{"id":"k-23運輸-1","word":"airport","meaning":"機場","category":"運輸"},{"id":"k-23運輸-2","word":"bicycle","meaning":"腳踏車","category":"運輸"},{"id":"k-23運輸-3","word":"bike","meaning":"腳踏車","category":"運輸"},{"id":"k-23運輸-4","word":"boat","meaning":"船","category":"運輸"},{"id":"k-23運輸-5","word":"bus","meaning":"公車","category":"運輸"},{"id":"k-23運輸-6","word":"bus stop","meaning":"公車站","category":"運輸"},{"id":"k-23運輸-7","word":"car","meaning":"車子","category":"運輸"},{"id":"k-23運輸-8","word":"drive","meaning":"開車","category":"運輸"},{"id":"k-23運輸-9","word":"fast","meaning":"快速的（地）","category":"運輸"},{"id":"k-23運輸-10","word":"fly","meaning":"飛、飛行","category":"運輸"},{"id":"k-23運輸-11","word":"motorcycle","meaning":"摩托車","category":"運輸"},{"id":"k-23運輸-12","word":"MRT","meaning":"捷運","category":"運輸"},{"id":"k-23運輸-13","word":"plane","meaning":"飛機","category":"運輸"},{"id":"k-23運輸-14","word":"ride","meaning":"騎（機車、腳踏車等）","category":"運輸"},{"id":"k-23運輸-15","word":"scooter","meaning":"輕型機車","category":"運輸"},{"id":"k-23運輸-16","word":"ship","meaning":"（大）船","category":"運輸"},{"id":"k-23運輸-17","word":"slow","meaning":"慢的","category":"運輸"},{"id":"k-23運輸-18","word":"station","meaning":"車站","category":"運輸"},{"id":"k-23運輸-19","word":"taxi","meaning":"計程車","category":"運輸"},{"id":"k-23運輸-20","word":"train","meaning":"火車","category":"運輸"},{"id":"k-23運輸-21","word":"truck","meaning":"卡車","category":"運輸"},{"id":"k-23運輸-22","word":"turn","meaning":"轉彎","category":"運輸"},{"id":"k-23運輸-23","word":"Transportation,運輸","meaning":"","category":"運輸"},{"id":"k-24天氣及自然-0","word":"cloudy","meaning":"多雲的","category":"天氣及自然"},{"id":"k-24天氣及自然-1","word":"cold","meaning":"寒冷的","category":"天氣及自然"},{"id":"k-24天氣及自然-2","word":"cool","meaning":"涼爽的","category":"天氣及自然"},{"id":"k-24天氣及自然-3","word":"hot","meaning":"熱的","category":"天氣及自然"},{"id":"k-24天氣及自然-4","word":"moon","meaning":"月亮","category":"天氣及自然"},{"id":"k-24天氣及自然-5","word":"rain","meaning":"下雨 / 雨水","category":"天氣及自然"},{"id":"k-24天氣及自然-6","word":"rainbow","meaning":"彩虹","category":"天氣及自然"},{"id":"k-24天氣及自然-7","word":"rainy","meaning":"下雨的 / 多雨的","category":"天氣及自然"},{"id":"k-24天氣及自然-8","word":"sky","meaning":"天空","category":"天氣及自然"},{"id":"k-24天氣及自然-9","word":"snow","meaning":"下雪 / 雪","category":"天氣及自然"},{"id":"k-24天氣及自然-10","word":"star","meaning":"星星","category":"天氣及自然"},{"id":"k-24天氣及自然-11","word":"sun","meaning":"太陽","category":"天氣及自然"},{"id":"k-24天氣及自然-12","word":"sunny","meaning":"晴朗的 / 出太陽的","category":"天氣及自然"},{"id":"k-24天氣及自然-13","word":"typhoon","meaning":"颱風","category":"天氣及自然"},{"id":"k-24天氣及自然-14","word":"warm","meaning":"溫暖的","category":"天氣及自然"},{"id":"k-24天氣及自然-15","word":"weather","meaning":"天氣","category":"天氣及自然"},{"id":"k-24天氣及自然-16","word":"wet","meaning":"潮濕的","category":"天氣及自然"},{"id":"k-24天氣及自然-17","word":"wind","meaning":"風","category":"天氣及自然"},{"id":"k-24天氣及自然-18","word":"windy","meaning":"風大的","category":"天氣及自然"},{"id":"k-24天氣及自然-19","word":"Weather,天氣","meaning":"","category":"天氣及自然"},{"id":"k-24天氣及自然-20","word":"Nature,自然","meaning":"","category":"天氣及自然"},{"id":"k-25冠詞及限定詞-0","word":"a","meaning":"一個","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-1","word":"an","meaning":"一個(a;e;i;o;u)","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-2","word":"every","meaning":"每一個","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-3","word":"her","meaning":"她的","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-4","word":"his","meaning":"他的","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-5","word":"its","meaning":"它的、牠的","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-6","word":"my","meaning":"我的","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-7","word":"our","meaning":"我們的","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-8","word":"that","meaning":"那個","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-9","word":"the","meaning":"這","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-10","word":"their","meaning":"他們的","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-11","word":"these","meaning":"這些","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-12","word":"this","meaning":"這個","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-13","word":"those","meaning":"那些","category":"冠詞及限定詞"},{"id":"k-25冠詞及限定詞-14","word":"your","meaning":"你的、你們的","category":"冠詞及限定詞"},{"id":"k-26代名詞-0","word":"he","meaning":"他","category":"代名詞"},{"id":"k-26代名詞-1","word":"her","meaning":"她","category":"代名詞"},{"id":"k-26代名詞-2","word":"him","meaning":"他 (受詞)","category":"代名詞"},{"id":"k-26代名詞-3","word":"I","meaning":"我","category":"代名詞"},{"id":"k-26代名詞-4","word":"it","meaning":"它、牠","category":"代名詞"},{"id":"k-26代名詞-5","word":"me","meaning":"我 (受詞)","category":"代名詞"},{"id":"k-26代名詞-6","word":"nothing","meaning":"什麼都沒有","category":"代名詞"},{"id":"k-26代名詞-7","word":"she","meaning":"她","category":"代名詞"},{"id":"k-26代名詞-8","word":"them","meaning":"他們 (受詞)","category":"代名詞"},{"id":"k-26代名詞-9","word":"they","meaning":"他們","category":"代名詞"},{"id":"k-26代名詞-10","word":"us","meaning":"我們 (受詞)","category":"代名詞"},{"id":"k-26代名詞-11","word":"we","meaning":"我們","category":"代名詞"},{"id":"k-26代名詞-12","word":"you","meaning":"你；你們","category":"代名詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-0","word":"be","meaning":"是 (is，am，are)","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-1","word":"can","meaning":"可以","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-2","word":"do","meaning":"助動詞","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-3","word":"have","meaning":"助動詞","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-4","word":"will","meaning":"將會","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-5","word":"and","meaning":"和","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-6","word":"because","meaning":"因為","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-7","word":"but","meaning":"但是","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-8","word":"bye","meaning":"再見 (= goodbye)","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-9","word":"excuse me","meaning":"不好意思、對不起","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-10","word":"goodbye","meaning":"再見 (= bye)","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-11","word":"hello","meaning":"哈囉","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-12","word":"hi","meaning":"嗨","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-27-Be動詞、助動詞、連接詞及感嘆詞-13","word":"please","meaning":"請","category":"-Be動詞、助動詞、連接詞及感嘆詞"},{"id":"k-28介系詞-0","word":"about","meaning":"1. 大約；2. 關於...","category":"介系詞"},{"id":"k-28介系詞-1","word":"after","meaning":"在...之後","category":"介系詞"},{"id":"k-28介系詞-2","word":"at","meaning":"在(某處)、在(時刻)","category":"介系詞"},{"id":"k-28介系詞-3","word":"before","meaning":"在...之前","category":"介系詞"},{"id":"k-28介系詞-4","word":"behind","meaning":"在...後面","category":"介系詞"},{"id":"k-28介系詞-5","word":"by","meaning":"在...旁邊","category":"介系詞"},{"id":"k-28介系詞-6","word":"for","meaning":"給、為了(某人、物)","category":"介系詞"},{"id":"k-28介系詞-7","word":"from","meaning":"從(某處)/(某時刻)/(某人)","category":"介系詞"},{"id":"k-28介系詞-8","word":"in","meaning":"在...裡面、在某短時間裡","category":"介系詞"},{"id":"k-28介系詞-9","word":"in front of","meaning":"在...前面","category":"介系詞"},{"id":"k-28介系詞-10","word":"inside","meaning":"在...裡面、向...裡面","category":"介系詞"},{"id":"k-28介系詞-11","word":"near","meaning":"靠近、接近","category":"介系詞"},{"id":"k-28介系詞-12","word":"next to","meaning":"在...旁邊","category":"介系詞"},{"id":"k-28介系詞-13","word":"of","meaning":"...的","category":"介系詞"},{"id":"k-28介系詞-14","word":"off","meaning":"離開、從...去掉","category":"介系詞"},{"id":"k-28介系詞-15","word":"on","meaning":"在...上面；在(某一天)","category":"介系詞"},{"id":"k-28介系詞-16","word":"out","meaning":"向外地","category":"介系詞"},{"id":"k-28介系詞-17","word":"outside","meaning":"在...外面、向...外面","category":"介系詞"},{"id":"k-28介系詞-18","word":"over","meaning":"在...上方","category":"介系詞"},{"id":"k-28介系詞-19","word":"than","meaning":"比","category":"介系詞"},{"id":"k-28介系詞-20","word":"to","meaning":"向、朝、對著","category":"介系詞"},{"id":"k-28介系詞-21","word":"under","meaning":"在...下方","category":"介系詞"},{"id":"k-28介系詞-22","word":"up","meaning":"向上","category":"介系詞"},{"id":"k-28介系詞-23","word":"with","meaning":"和...一起","category":"介系詞"},{"id":"k-29其他名詞-0","word":"birthday","meaning":"生日","category":"其他名詞"},{"id":"k-29其他名詞-1","word":"bottle","meaning":"瓶子","category":"其他名詞"},{"id":"k-29其他名詞-2","word":"box","meaning":"箱子","category":"其他名詞"},{"id":"k-29其他名詞-3","word":"can","meaning":"罐子","category":"其他名詞"},{"id":"k-29其他名詞-4","word":"cellphone","meaning":"手機","category":"其他名詞"},{"id":"k-29其他名詞-5","word":"dream","meaning":"夢","category":"其他名詞"},{"id":"k-29其他名詞-6","word":"email","meaning":"電子郵件","category":"其他名詞"},{"id":"k-29其他名詞-7","word":"flower","meaning":"花","category":"其他名詞"},{"id":"k-29其他名詞-8","word":"fun","meaning":"樂趣","category":"其他名詞"},{"id":"k-29其他名詞-9","word":"gift","meaning":"禮物","category":"其他名詞"},{"id":"k-29其他名詞-10","word":"mail","meaning":"信","category":"其他名詞"},{"id":"k-29其他名詞-11","word":"party","meaning":"派對","category":"其他名詞"},{"id":"k-29其他名詞-12","word":"photo","meaning":"照片","category":"其他名詞"},{"id":"k-29其他名詞-13","word":"robot","meaning":"機器人","category":"其他名詞"},{"id":"k-29其他名詞-14","word":"sale","meaning":"拍賣、特價","category":"其他名詞"},{"id":"k-29其他名詞-15","word":"thing","meaning":"東西、物","category":"其他名詞"},{"id":"k-29其他名詞-16","word":"ticket","meaning":"票","category":"其他名詞"},{"id":"k-29其他名詞-17","word":"trash","meaning":"垃圾","category":"其他名詞"},{"id":"k-29其他名詞-18","word":"tree","meaning":"樹","category":"其他名詞"},{"id":"k-29其他名詞-19","word":"way","meaning":"路、方向","category":"其他名詞"},{"id":"k-29其他名詞-20","word":"word","meaning":"字","category":"其他名詞"},{"id":"k-30其他動詞a-0","word":"bite","meaning":"咬","category":"其他動詞a"},{"id":"k-30其他動詞a-1","word":"brush","meaning":"用刷子刷","category":"其他動詞a"},{"id":"k-30其他動詞a-2","word":"call","meaning":"打電話給...","category":"其他動詞a"},{"id":"k-30其他動詞a-3","word":"close","meaning":"關","category":"其他動詞a"},{"id":"k-30其他動詞a-4","word":"come","meaning":"來","category":"其他動詞a"},{"id":"k-30其他動詞a-5","word":"cry","meaning":"哭、哭泣","category":"其他動詞a"},{"id":"k-30其他動詞a-6","word":"do","meaning":"做","category":"其他動詞a"},{"id":"k-30其他動詞a-7","word":"enjoy","meaning":"享受、喜歡","category":"其他動詞a"},{"id":"k-30其他動詞a-8","word":"fall","meaning":"掉落","category":"其他動詞a"},{"id":"k-30其他動詞a-9","word":"feel","meaning":"感受、感覺","category":"其他動詞a"},{"id":"k-30其他動詞a-10","word":"find","meaning":"找","category":"其他動詞a"},{"id":"k-30其他動詞a-11","word":"get","meaning":"得到、收到","category":"其他動詞a"},{"id":"k-30其他動詞a-12","word":"give","meaning":"給","category":"其他動詞a"},{"id":"k-30其他動詞a-13","word":"go","meaning":"去、走","category":"其他動詞a"},{"id":"k-30其他動詞a-14","word":"have","meaning":"有","category":"其他動詞a"},{"id":"k-30其他動詞a-15","word":"help","meaning":"幫助","category":"其他動詞a"},{"id":"k-30其他動詞a-16","word":"hit","meaning":"打、碰撞","category":"其他動詞a"},{"id":"k-30其他動詞a-17","word":"hope","meaning":"希望","category":"其他動詞a"},{"id":"k-30其他動詞a-18","word":"hurry","meaning":"趕快、急忙","category":"其他動詞a"},{"id":"k-30其他動詞a-19","word":"hurt","meaning":"受傷","category":"其他動詞a"},{"id":"k-30其他動詞a-20","word":"jump","meaning":"跳","category":"其他動詞a"},{"id":"k-30其他動詞a-21","word":"know","meaning":"知道、認識","category":"其他動詞a"},{"id":"k-30其他動詞a-22","word":"laugh","meaning":"笑","category":"其他動詞a"},{"id":"k-30其他動詞a-23","word":"let's","meaning":"讓我們...","category":"其他動詞a"},{"id":"k-30其他動詞a-24","word":"like","meaning":"喜歡","category":"其他動詞a"},{"id":"k-31其他動詞b-0","word":"look","meaning":"看、看起來","category":"其他動詞b"},{"id":"k-31其他動詞b-1","word":"love","meaning":"愛、喜愛","category":"其他動詞b"},{"id":"k-31其他動詞b-2","word":"make","meaning":"做、製造","category":"其他動詞b"},{"id":"k-31其他動詞b-3","word":"meet","meaning":"遇見、會面","category":"其他動詞b"},{"id":"k-31其他動詞b-4","word":"miss","meaning":"想念","category":"其他動詞b"},{"id":"k-31其他動詞b-5","word":"need","meaning":"需要","category":"其他動詞b"},{"id":"k-31其他動詞b-6","word":"open","meaning":"開","category":"其他動詞b"},{"id":"k-31其他動詞b-7","word":"pick up","meaning":"撿起、接（人）、接（電話）","category":"其他動詞b"},{"id":"k-31其他動詞b-8","word":"put","meaning":"放","category":"其他動詞b"},{"id":"k-31其他動詞b-9","word":"see","meaning":"看見","category":"其他動詞b"},{"id":"k-31其他動詞b-10","word":"show","meaning":"給...看、展示","category":"其他動詞b"},{"id":"k-31其他動詞b-11","word":"sit","meaning":"坐下","category":"其他動詞b"},{"id":"k-31其他動詞b-12","word":"sleep","meaning":"睡覺","category":"其他動詞b"},{"id":"k-31其他動詞b-13","word":"smell","meaning":"聞起來","category":"其他動詞b"},{"id":"k-31其他動詞b-14","word":"stand","meaning":"站、站立","category":"其他動詞b"},{"id":"k-31其他動詞b-15","word":"start","meaning":"開始","category":"其他動詞b"},{"id":"k-31其他動詞b-16","word":"stop","meaning":"停下來","category":"其他動詞b"},{"id":"k-31其他動詞b-17","word":"take","meaning":"攜帶、拿取","category":"其他動詞b"},{"id":"k-31其他動詞b-18","word":"tell","meaning":"告訴、告知","category":"其他動詞b"},{"id":"k-31其他動詞b-19","word":"thank","meaning":"感謝（某人）","category":"其他動詞b"},{"id":"k-31其他動詞b-20","word":"touch","meaning":"觸碰","category":"其他動詞b"},{"id":"k-31其他動詞b-21","word":"try","meaning":"嘗試","category":"其他動詞b"},{"id":"k-31其他動詞b-22","word":"wait","meaning":"等、等待","category":"其他動詞b"},{"id":"k-31其他動詞b-23","word":"wake","meaning":"醒來、喚醒","category":"其他動詞b"},{"id":"k-31其他動詞b-24","word":"walk","meaning":"走路","category":"其他動詞b"},{"id":"k-31其他動詞b-25","word":"want","meaning":"想要","category":"其他動詞b"},{"id":"k-31其他動詞b-26","word":"watch","meaning":"看","category":"其他動詞b"},{"id":"k-31其他動詞b-27","word":"welcome","meaning":"歡迎","category":"其他動詞b"},{"id":"k-31其他動詞b-28","word":"worry","meaning":"擔心","category":"其他動詞b"},{"id":"k-32其他形容詞-0","word":"cool","meaning":"清涼的","category":"其他形容詞"},{"id":"k-32其他形容詞-1","word":"different","meaning":"不一樣的","category":"其他形容詞"},{"id":"k-32其他形容詞-2","word":"dirty","meaning":"髒的","category":"其他形容詞"},{"id":"k-32其他形容詞-3","word":"easy","meaning":"簡單的","category":"其他形容詞"},{"id":"k-32其他形容詞-4","word":"favorite","meaning":"最喜歡的","category":"其他形容詞"},{"id":"k-32其他形容詞-5","word":"fine","meaning":"很好的、很不錯的","category":"其他形容詞"},{"id":"k-32其他形容詞-6","word":"fun","meaning":"有趣的","category":"其他形容詞"},{"id":"k-32其他形容詞-7","word":"great","meaning":"很棒的","category":"其他形容詞"},{"id":"k-32其他形容詞-8","word":"hard","meaning":"困難的","category":"其他形容詞"},{"id":"k-32其他形容詞-9","word":"hot","meaning":"燙的","category":"其他形容詞"},{"id":"k-32其他形容詞-10","word":"interesting","meaning":"有趣的","category":"其他形容詞"},{"id":"k-32其他形容詞-11","word":"new","meaning":"新的","category":"其他形容詞"},{"id":"k-32其他形容詞-12","word":"OK","meaning":"好的","category":"其他形容詞"},{"id":"k-32其他形容詞-13","word":"only","meaning":"僅有的","category":"其他形容詞"},{"id":"k-32其他形容詞-14","word":"other","meaning":"其他的","category":"其他形容詞"},{"id":"k-32其他形容詞-15","word":"quiet","meaning":"安靜的","category":"其他形容詞"},{"id":"k-32其他形容詞-16","word":"ready","meaning":"準備好的","category":"其他形容詞"},{"id":"k-32其他形容詞-17","word":"right","meaning":"對的","category":"其他形容詞"},{"id":"k-32其他形容詞-18","word":"sorry","meaning":"感到抱歉的、對不起","category":"其他形容詞"},{"id":"k-32其他形容詞-19","word":"sure","meaning":"確定的","category":"其他形容詞"},{"id":"k-32其他形容詞-20","word":"wet","meaning":"濕的","category":"其他形容詞"},{"id":"k-32其他形容詞-21","word":"wonderful","meaning":"很棒的、精彩的","category":"其他形容詞"},{"id":"k-33其他副詞及疑問詞-0","word":"again","meaning":"再一次、又一次","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-1","word":"always","meaning":"總是、永遠","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-2","word":"away","meaning":"離開","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-3","word":"maybe","meaning":"也許","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-4","word":"never","meaning":"不曾","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-5","word":"no","meaning":"不","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-6","word":"not","meaning":"不、沒有","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-7","word":"OK","meaning":"沒事","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-8","word":"only","meaning":"唯一地","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-9","word":"really","meaning":"真正地","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-10","word":"so","meaning":"所以","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-11","word":"sometimes","meaning":"有時候","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-12","word":"still","meaning":"仍然","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-13","word":"sure","meaning":"當然","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-14","word":"then","meaning":"然後、接著","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-15","word":"together","meaning":"一起","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-16","word":"too","meaning":"1. 也；2. 太...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-17","word":"usually","meaning":"通常","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-18","word":"very","meaning":"非常","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-19","word":"yes","meaning":"是","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-20","word":"how","meaning":"如何...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-21","word":"what","meaning":"什麼...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-22","word":"when","meaning":"何時...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-23","word":"where","meaning":"在哪裡...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-24","word":"which","meaning":"哪一個...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-25","word":"who","meaning":"誰...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-26","word":"whose","meaning":"誰的...","category":"其他副詞及疑問詞"},{"id":"k-33其他副詞及疑問詞-27","word":"why","meaning":"為什麼...","category":"其他副詞及疑問詞"}];
+let TOEIC_WORDS = [];
+let toeicLoaded = false;
+
+function currentLibrary() { return state.library; }
+
+/* 統一詞條存取：多益資料欄位 → 共用結構 */
+function normalize(w) {
+  if (w.__norm) return w.__norm;
+  if (w.english_word !== undefined) {
+    const n = {
+      __norm: 1,
+      word: w.english_word,
+      meaning: w.chinese_definition,
+      pos: Array.isArray(w.parts_of_speech) ? w.parts_of_speech.join('、') : (w.parts_of_speech || ''),
+      category: w.category,
+      star: w.star_rating,
+      scoreRange: w.toeic_score_range,
+      examples: Array.isArray(w.examples) ? w.examples.slice(0, 2) : [],
+      wordForms: Array.isArray(w.word_forms) ? w.word_forms : [],
+      raw: w
+    };
+    w.__norm = n;
+    return n;
+  }
+  return w;   // kids / 自訂字已是共用格式
+}
+
+function getAllWords() {
+  const w0 = state.library === 'kids' ? KIDS_WORDS : TOEIC_WORDS;
+  const base = (w0 || []).map(normalize);
+  return base.concat(state.customWords.filter(c => c.lib === state.library).map(normalize));
+}
+function getCategories() {
+  const w0 = state.library === 'kids' ? (KIDS_WORDS || []) : TOEIC_WORDS;
+  if (!w0) return [];
+  const map = {};
+  for (const x of w0) map[x.category || '其他'] = (map[x.category || '其他'] || 0) + 1;
+  return Object.entries(map).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ name: k, count: v }));
+}
+
+function wordKey(w) { return state.library + '::' + String(w.word || '').toLowerCase().trim(); }
+function wordEquiv(w) { return String(w.word || '').toLowerCase().trim(); }
+
+/* =========================================================================
+   3. 狀態與 SRS（SM-2 變體・真正間隔重複）
+   ========================================================================= */
+const LS_KEY = 'starw_vocab_state_v1';
+function defaultState() {
+  return {
+    library: 'kids', tab: 'browse',
+    scope: 'ALL', category: 'ALL', star: 'ALL', search: '',
+    shown: 60,
+    srs: {},                // key -> {due, ivl, ease, reps, lapses}
+    bookmarks: {},          // key -> true
+    customWords: [],        // {lib,word,meaning,pos,example,exampleZh}
+    stats: { kids: { seen: 0, correct: 0, wrong: 0 }, toeic: { seen: 0, correct: 0, wrong: 0 } },
+    quizPref: { count: 10, mode: 'en2zh' }
+  };
+}
+let state = defaultState();
+try {
+  const saved = JSON.parse(localStorage.getItem(LS_KEY));
+  if (saved) state = Object.assign(defaultState(), saved);
+} catch (e) {}
+function saveState() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function getCard(w) { return state.srs[wordKey(w)] || null; }
+function addStats(type, correct) {
+  const lib = state.library;
+  state.stats[lib].seen++;
+  if (correct) state.stats[lib].correct++; else state.stats[lib].wrong++;
+  saveState();
+}
+
+/* SM-2 間隔排程 */
+function rateWord(w, rating) {
+  const key = wordKey(w);
+  const c = getCard(w) || { due: Date.now(), ivl: 0, ease: 2.5, reps: 0, lapses: 0 };
+  const isNew = !c.reps;
+  if (rating === 'again') {
+    c.ivl = 1; c.ease = Math.max(1.3, c.ease - 0.2); c.reps = 0; c.lapses = (c.lapses || 0) + 1;
+    c.due = Date.now() + 600 * 1000; // 10 分鐘後同場再現
+  } else if (rating === 'hard') {
+    c.ivl = isNew ? 1 : Math.max(1, Math.round(c.ivl * 1.2));
+    c.ease = Math.max(1.3, c.ease - 0.15); c.reps++; c.due = daysFromNow(c.ivl);
+  } else if (rating === 'good') {
+    c.ivl = isNew ? 1 : Math.max(c.ivl + 1, Math.round(c.ivl * c.ease));
+    c.reps++; c.due = daysFromNow(c.ivl);
+  } else { // easy
+    c.ivl = isNew ? 3 : Math.max(c.ivl + 1, Math.round(c.ivl * c.ease * 1.3));
+    c.ease = Math.min(3.0, c.ease + 0.15); c.reps++; c.due = daysFromNow(c.ivl);
+  }
+  state.srs[key] = c;
+  addStats('seen', rating !== 'again');
+  saveState();
+}
+function intervalLabel(c) {
+  if (!c) return '新單字';
+  const hrs = (c.due - Date.now()) / 3600000;
+  if (hrs <= 0) return '待複習';
+  if (hrs < 24) return Math.round(hrs) + ' 小時後';
+  return Math.round(hrs / 24) + ' 天後';
+}
+
+/* =========================================================================
+   4. 篩選
+   ========================================================================= */
+function filterWords() {
+  const all = getAllWords();
+  const scope = state.scope, cat = state.category, star = state.star, q = state.search.trim().toLowerCase();
+  return all.filter(w => {
+    if (scope === 'bookmark' && !state.bookmarks[wordKey(w)]) return false;
+    if (scope === 'custom' && !w.__custom) return false;
+    if (cat !== 'ALL' && (w.category || '其他') !== cat) return false;
+    if (state.library === 'toeic' && star !== 'ALL' && w.star != star) return false;
+    if (q) {
+      const ww = String(w.word).toLowerCase(), mm = String(w.meaning).toLowerCase();
+      if (!ww.includes(q) && !mm.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+/* =========================================================================
+   5. 語音選擇器
+   ========================================================================= */
+function populateVoiceSelect() {
+  const sel = $('#voiceSelect');
+  sel.innerHTML = '<option value="">自動語音</option>';
+  const en = SpeechSys.getEnglishVoices();
+  for (const v of en) {
+    const o = document.createElement('option');
+    o.value = v.name; o.textContent = v.name + ' (' + v.lang + ')';
+    if (v.name === SpeechSys.getPreferred()) o.selected = true;
+    sel.appendChild(o);
+  }
+  sel.onchange = () => SpeechSys.setPreferred(sel.value === '' ? '' : sel.value);
+}
+
+/* =========================================================================
+   6. 頁籤與資料載入
+   ========================================================================= */
+function setTab(tab) {
+  state.tab = tab; saveState();
+  $$('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  ['browse', 'flashcard', 'quiz', 'progress'].forEach(v => {
+    $('#view-' + v).style.display = v === tab ? '' : 'none';
+  });
+  if (tab === 'browse') renderBrowse();
+  if (tab === 'flashcard') initFlashcard();
+  if (tab === 'quiz') renderQuizSetup();
+  if (tab === 'progress') renderProgress();
+  window.scrollTo({ top: 0 });
+}
+function setLibrary(lib) {
+  state.library = lib; state.category = 'ALL'; state.star = 'ALL'; state.shown = 60;
+  saveState();
+  $$('.lib-btn').forEach(b => b.classList.toggle('active', b.dataset.lib === lib));
+  if (lib === 'toeic' && !toeicLoaded) {
+    if (TOEIC_WORDS.length) { toeicLoaded = true; }
+    else { loadToeic(); return; }
+  }
+  if (state.tab === 'browse') renderBrowse();
+  if (state.tab === 'flashcard') initFlashcard();
+  if (state.tab === 'quiz') renderQuizSetup();
+  if (state.tab === 'progress') renderProgress();
+}
+function loadToeic() {
+  const grid = $('#wordsGrid'), meta = $('#resultMeta');
+  grid.innerHTML = '<div class="loader"><div class="spinner"></div>載入多益 11238 字資料庫（約 9MB）…</div>';
+  meta.textContent = '載入中…';
+  fetch('data/toeic.json')
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(data => {
+      TOEIC_WORDS = data; toeicLoaded = true;
+      setTab(state.tab);
+    })
+    .catch(err => {
+      grid.innerHTML = '<div class="loader"><div class="big" style="font-size:40px">😵</div>多益資料載入失敗：' + esc(err.message) +
+        '<br><br><button class="big-btn primary" onclick="loadToeic()">重試</button></div>';
+      meta.textContent = '載入失敗，請點重試';
+    });
+}
+
+/* =========================================================================
+   7. 單字庫瀏覽
+   ========================================================================= */
+function setFilter(kind, val) {
+  if (kind === 'scope') state.scope = val;
+  if (kind === 'category') state.category = val;
+  if (kind === 'star') state.star = val;
+  if (kind === 'search') state.search = val;
+  state.shown = 60;
+  saveState();
+  if (state.tab === 'browse') renderBrowse();
+}
+function renderBrowse() {
+  const scopePills = $('#scopePills'), catPills = $('#catPills'), starPills = $('#starPills');
+  /* scope pills */
+  const scopes = [['ALL', '全部'], ['bookmark', '⭐ 收藏'], ['custom', '✏️ 自訂']];
+  scopePills.innerHTML = scopes.map(([v, l]) =>
+    `<button class="pill ${state.scope === v ? 'active' : ''}" data-k="scope" data-v="${v}">${l}</button>`).join('');
+  /* category pills */
+  const cats = getCategories();
+  const catHtml = '<button class="pill ' + (state.category === 'ALL' ? 'active' : '') + '" data-k="category" data-v="ALL">全部主題 <span class="cnt">(' + (state.library === 'kids' ? (KIDS_WORDS || []).length : TOEIC_WORDS.length) + ')</span></button>' +
+    cats.map(c => `<button class="pill ${state.category === c.name ? 'active' : ''}" data-k="category" data-v="${esc(c.name)}">${esc(c.name)} <span class="cnt">(${c.count})</span></button>`).join('');
+  catPills.innerHTML = catHtml;
+  /* star pills (多益限定) */
+  if (state.library === 'toeic') {
+    starPills.style.display = '';
+    starPills.innerHTML = '<button class="pill ' + (state.star === 'ALL' ? 'active' : '') + '" data-k="star" data-v="ALL">★ 全部星等</button>' +
+      [5, 4, 3, 2, 1].map(s => `<button class="pill ${state.star == s ? 'active' : ''}" data-k="star" data-v="${s}">${'★'.repeat(s)} <span class="cnt">${TOEIC_WORDS.filter(w => w.star_rating == s).length}</span></button>`).join('');
+  } else { starPills.style.display = 'none'; state.star = 'ALL'; }
+
+  const words = filterWords();
+  const shown = words.slice(0, state.shown);
+  $('#resultMeta').textContent = `共 ${words.length} 個單字`;
+  $('#loadMoreBtn').style.display = words.length > state.shown ? '' : 'none';
+  $('#wordsGrid').innerHTML = shown.map(wordCardHtml).join('');
+  bindPills();
+}
+function wordCardHtml(w) {
+  const key = wordKey(w);
+  const marked = state.bookmarks[key];
+  const due = getCard(w);
+  const stars = w.star ? '<span class="stars">' + '★'.repeat(stdStar(w.star)) + '</span>' : '';
+  const pos = w.pos ? `<span class="pos">${esc(w.pos.split('、')[0])}</span>` : '';
+  const cat = w.category ? `<div class="cat">${esc(w.category)}</div>` : '';
+  return `<div class="wcard${due && due.due <= Date.now() ? ' due-dot' : ''}" data-key="${esc(key)}">
+    <div class="wcard-top">${pos}<span class="word">${esc(w.word)}</span>${stars}</div>
+    <div class="meaning">${esc(w.meaning)}</div>
+    ${cat}
+    <div class="wcard-actions">
+      <button class="mini-btn" data-act="speak">🔊</button>
+      <button class="mini-btn ${marked ? 'bookmarked' : ''}" data-act="bm">${marked ? '★ 已收藏' : '☆ 收藏'}</button>
+      <button class="mini-btn" data-act="flip">🎴 閃卡</button>
+    </div>
+  </div>`;
+}
+function stdStar(s) {
+  s = Number(s) || 0;
+  return Math.min(5, Math.max(1, Math.round(s)));
+}
+function bindPills() {
+  $$('.pill').forEach(p => {
+    p.onclick = () => setFilter(p.dataset.k, p.dataset.v);
+  });
+  $('#searchInput').value = state.search;
+  $('#searchInput').oninput = e => setFilter('search', e.target.value);
+  $('#wordsGrid').onclick = e => {
+    const btn = e.target.closest('[data-act]'); if (!btn) return;
+    const card = e.target.closest('.wcard'); const key = card.dataset.key;
+    const act = btn.dataset.act;
+    if (act === 'speak') {
+      const w = findByKey(key); if (w) SpeechSys.speak(w.word);
+    } else if (act === 'bm') {
+      if (state.bookmarks[key]) delete state.bookmarks[key]; else state.bookmarks[key] = true;
+      saveState(); renderBrowse();
+    } else if (act === 'flip') {
+      // 跳到閃卡並鎖定此單字
+      flashcardPinKey = key; setTab('flashcard');
+    }
+  };
+  $('#loadMoreBtn').onclick = () => { state.shown += 120; saveState(); renderBrowse(); };
+}
+function findByKey(key) {
+  const lib = key.split('::')[0];
+  if (lib !== state.library) return null;
+  const all = getAllWords();
+  return all.find(w => wordKey(w) === key) || null;
+}
+
+/* =========================================================================
+   8. 閃卡＋SRS
+   ========================================================================= */
+let fcQueue = [], fcPos = 0, fcFlipped = false, flashcardPinKey = null, fcFilterNote = '';
+function initFlashcard() {
+  buildFlashcardQueue();
+}
+function buildFlashcardQueue() {
+  const words = filterWords();
+  const due = [], fresh = [];
+  for (const w of words) {
+    const c = getCard(w);
+    if (!c) fresh.push(w);
+    else if (c.due <= Date.now()) due.push(w);
+  }
+  shuffle(due); shuffle(fresh);
+  fcQueue = due.concat(fresh.slice(0, 20));   // 每場至多 20 張新卡
+  fcPos = 0; fcFlipped = false;
+  fcFilterNote = `（${due.length} 到期 + ${Math.min(20, fresh.length)} 新卡）`;
+  if (flashcardPinKey) {
+    const p = fcQueue.findIndex(w => wordKey(w) === flashcardPinKey);
+    if (p >= 0) { const [w] = fcQueue.splice(p, 1); fcQueue.unshift(w); }
+  }
+  flashcardPinKey = null;
+  if (!fcQueue.length) {
+    $('#fcStage').innerHTML = `<div class="fc-empty"><div class="big">🎉</div><h3>太棒了！沒有待背的單字</h3><p>${fcFilterNote}<br>到「單字庫」換個主題，或點「重新開始」再來一輪</p><br><button class="big-btn primary" onclick="initFlashcard()">🔄 再來一輪</button></div>`;
+    return;
+  }
+  renderFlashcardStart();
+}
+function renderFlashcardStart() {
+  $('#fcStage').innerHTML = `
+    <div class="flashcard-wrapper" id="flashcardWrapper">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="fc-badge" id="fcBadgeFront"></div>
+          <div class="fc-word" id="fcWord"></div>
+          <button class="fc-sound" id="fcSound">🔊</button>
+          <div class="fc-hint">點卡片翻面・空白鍵翻面 / R 發音</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-meaning" id="fcMeaning"></div>
+          <div class="fc-pos" id="fcPos"></div>
+          <div class="fc-example" id="fcExample"></div>
+        </div>
+      </div>
+    </div>
+    <div class="srs-ratings">
+      <button class="rate-btn r-again" data-r="again">❌ 忘記了<small class="kbd">[1]</small></button>
+      <button class="rate-btn r-hard" data-r="hard">⚠️ 困難<small class="kbd">[2]</small></button>
+      <button class="rate-btn r-good" data-r="good">✅ 良好<small class="kbd">[3]</small></button>
+      <button class="rate-btn r-easy" data-r="easy">⚡ 簡單<small class="kbd">[4]</small></button>
+    </div>`;
+  bindFlashcard();
+  showFlashcard();
+}
+function showFlashcard() {
+  const w = fcQueue[fcPos];
+  fcFlipped = false;
+  const wrap = $('#flashcardWrapper');
+  wrap.classList.remove('flipped');
+  $('#fcBadgeFront').innerHTML = [
+    w.category ? `<span>${esc(w.category)}</span>` : '',
+    getCard(w) ? `<span>${intervalLabel(getCard(w))}</span>` : '<span>✨ 新單字</span>',
+    w.star ? `<span>${'★'.repeat(stdStar(w.star))}</span>` : '',
+    w.scoreRange ? `<span>TOEIC ${esc(w.scoreRange)}</span>` : ''
+  ].join('');
+  $('#fcWord').textContent = w.word;
+  SpeechSys.speak(w.word);
+  $('#fcMeaning').textContent = w.meaning;
+  $('#fcPos').textContent = w.pos || '';
+  $('#fcExample').innerHTML = '';
+  if (w.examples && w.examples.length) {
+    const ex = w.examples[0];
+    $('#fcExample').innerHTML = `<div class="en">📖 ${esc(ex.english || '')}</div><div class="zh">${esc(ex.chinese || '')}</div>`;
+  }
+  const n = fcQueue.length;
+  $('#fcDueInfo').textContent = `第 ${fcPos + 1} / ${n} 張 ${fcFilterNote}`;
+  $('#fcBar').style.width = ((fcPos / n) * 100) + '%';
+}
+function bindFlashcard() {
+  const wrap = $('#flashcardWrapper');
+  wrap.onclick = (e) => {
+    if (e.target.closest('.fc-sound')) return;
+    fcFlipped = !fcFlipped; wrap.classList.toggle('flipped', fcFlipped);
+  };
+  $('#fcSound').onclick = () => { const w = fcQueue[fcPos]; if (w) SpeechSys.speak(w.word); };
+  $$('#srsRatings .rate-btn').forEach(b => b.onclick = () => rateCurrent(b.dataset.r));
+  $('#fcShuffleBtn').onclick = () => { shuffle(fcQueue); fcPos = 0; showFlashcard(); };
+  $('#fcRestartBtn').onclick = () => initFlashcard();
+}
+function rateCurrent(r) {
+  const w = fcQueue[fcPos];
+  if (!w) return;
+  const isNew = !getCard(w);
+  rateWord(w, r);
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  if (isNew && r === 'again') {
+    const again = fcQueue.splice(fcPos, 1)[0];
+    fcQueue.splice(Math.min(fcPos + 4, fcQueue.length), 0, again);
+  } else {
+    fcQueue.splice(fcPos, 1);
+  }
+  if (!fcQueue.length) {
+    $('#fcStage').innerHTML = `<div class="fc-empty"><div class="big">🎉</div><h3>本輪完成！</h3><p>回到「單字庫」換主題，或點「重新開始」再來一輪</p><br><button class="big-btn primary" onclick="initFlashcard()">🔄 再來一輪</button></div>`;
+    return;
+  }
+  if (fcPos >= fcQueue.length) fcPos = fcQueue.length - 1;
+  showFlashcard();
+}
+/* 鍵盤操作 */
+document.addEventListener('keydown', e => {
+  if (state.tab !== 'flashcard') return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if (e.code === 'Space') { e.preventDefault(); fcFlipped = !fcFlipped; const w = $('#flashcardWrapper'); if (w) w.classList.toggle('flipped', fcFlipped); }
+  if (e.key === 'r' || e.key === 'R') { const w = fcQueue[fcPos]; if (w) SpeechSys.speak(w.word); }
+  if (['1', '2', '3', '4'].includes(e.key)) { const rs = ['again', 'hard', 'good', 'easy']; rateCurrent(rs[+e.key - 1]); }
+});
+
+/* =========================================================================
+   9. 測驗
+   ========================================================================= */
+function renderQuizSetup() {
+  const pool = filterWords();
+  $('#quizArea').innerHTML = `
+    <div class="quiz-setup">
+      <h3>📝 測驗設定 <span style="font-weight:600;color:var(--muted);font-size:12px">（題庫：${pool.length} 字）</span></h3>
+      <div class="q-opt">
+        <button class="big-btn ghost" data-opt="10" style="flex:1">10 題</button>
+        <button class="big-btn ghost" data-opt="20" style="flex:1">20 題</button>
+        <button class="big-btn ghost" data-opt="30" style="flex:1">30 題</button>
+      </div>
+      <div class="q-opt">
+        <button class="big-btn ghost" data-mode="en2zh" style="flex:1">🇬🇧 英→中</button>
+        <button class="big-btn ghost" data-mode="zh2en" style="flex:1">🇹🇼 中→英</button>
+        <button class="big-btn ghost" data-mode="spell" style="flex:1">✍️ 拼寫</button>
+      </div>
+      <button class="big-btn primary" id="quizStart" style="width:100%">🚀 開始測驗</button>
+    </div>`;
+  const mark = () => {
+    $$('.q-opt [data-opt]').forEach(b => b.classList.toggle('primary', b.dataset.opt == state.quizPref.count));
+    $$('.q-opt [data-mode]').forEach(b => b.classList.toggle('primary', b.dataset.mode == state.quizPref.mode));
+  };
+  $$('[data-opt]').forEach(b => b.onclick = () => { state.quizPref.count = +b.dataset.opt; saveState(); mark(); });
+  $$('[data-mode]').forEach(b => b.onclick = () => { state.quizPref.mode = b.dataset.mode; saveState(); mark(); });
+  mark();
+  $('#quizStart').onclick = () => startQuiz();
+}
+function startQuiz() {
+  const pool = shuffle(filterWords());
+  const count = Math.min(state.quizPref.count, pool.length);
+  if (!count) { toast('目前題庫為空，請調整篩選'); return; }
+  quizQuestions = pool.slice(0, count);
+  quizIdx = 0; quizRight = 0; quizWrong = 0;
+  renderQuestion();
+}
+let quizQuestions = [], quizIdx = 0, quizRight = 0, quizWrong = 0, quizMode = '';
+function quizAnswerPool(w) {
+  const cat = w.category;
+  const all = filterWords();
+  let cand = all.filter(x => wordEquiv(x) !== wordEquiv(w) && (x.category === cat || !cat));
+  if (cand.length < 3) cand = all.filter(x => wordEquiv(x) !== wordEquiv(w));
+  return shuffle(cand);
+}
+function renderQuestion() {
+  const w = quizQuestions[quizIdx];
+  quizMode = state.quizPref.mode;
+  const total = quizQuestions.length;
+  $('#quizArea').innerHTML = `
+    <div class="quiz-q">
+      <div class="fc-status"><span>第 ${quizIdx + 1} / ${total} 題</span><span>✅ ${quizRight} / ❌ ${quizWrong}</span></div>
+      <div class="fc-progress"><i style="width:${(quizIdx / total) * 100}%"></i></div>
+      <div id="qqBody"></div>
+    </div>`;
+  const body = $('#qqBody');
+  if (quizMode === 'en2zh') {
+    body.innerHTML = `<div class="quiz-word">${esc(w.word)}</div>
+      <button class="q-sound" id="qqSound">🔊</button>
+      <div class="q-dir">選出正確的中文意思</div>
+      <div class="q-choices"></div>`;
+    const choices = pickChoices(w.meaning, quizAnswerPool(w).slice(0, 3).map(x => x.meaning));
+    const box = body.querySelector('.q-choices');
+    box.innerHTML = shuffle(choices.concat([w.meaning])).map(c =>
+      `<button class="q-choice" data-v="${esc(c)}">${esc(c)}</button>`).join('');
+    bindQuizChoices(box, w, w.meaning);
+  } else if (quizMode === 'zh2en') {
+    body.innerHTML = `<div class="quiz-word" style="font-size:clamp(20px,5vw,26px)">${esc(w.meaning)}</div>
+      <div class="q-dir">選出正確的英文單字</div>
+      <div class="q-choices"></div>`;
+    const choices = pickChoices(w.word, quizAnswerPool(w).slice(0, 3).map(x => x.word));
+    const box = body.querySelector('.q-choices');
+    box.innerHTML = shuffle(choices.concat([w.word])).map(c =>
+      `<button class="q-choice" data-v="${esc(c)}"><b>${esc(c)}</b></button>`).join('');
+    bindQuizChoices(box, w, w.word);
+  } else {
+    body.innerHTML = `<button class="q-sound" id="qqSound">🔊 聽發音</button>
+      <div class="q-dir">聽發音，拼出單字（按 Enter 送出）</div>
+      <div class="q-spell"><input id="qqInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type here…"></div>
+      <button class="big-btn primary" id="qqSubmit" style="margin-top:8px">送出</button>
+      <div id="qqFeedback" style="margin-top:10px;font-size:13px;color:var(--muted)"></div>`;
+    SpeechSys.speak(w.word);
+    const input = $('#qqInput');
+    input.focus();
+    const submit = () => {
+      if (input.classList.contains('correct') || input.classList.contains('wrong')) return;
+      const val = input.value.trim().toLowerCase().replace(/[^a-z' -]/g, '');
+      const target = w.word.toLowerCase().replace(/[^a-z' -]/g, '');
+      const pass = val === target || (target.includes(' ') ? false : val === target);
+      if (pass) {
+        quizRight++; input.classList.add('correct');
+        $('#qqFeedback').innerHTML = '🎉 正確！<span style="color:var(--muted)">' + esc(w.word) + '</span>';
+      } else {
+        quizWrong++; input.classList.add('wrong');
+        $('#qqFeedback').innerHTML = '❌ 正確答案是 <b>' + esc(w.word) + '</b>' + (w.meaning ? '（' + esc(w.meaning) + '）' : '');
+      }
+      addStats('quiz', pass);
+      setTimeout(nextQuestion, 1300);
+    };
+    $('#qqSubmit').onclick = submit;
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  }
+  const sound = $('#qqSound');
+  if (sound) sound.onclick = e => { e.stopPropagation(); SpeechSys.speak(w.word); };
+}
+function pickChoices(correct, pool) {
+  const fillers = ['that', 'this', 'those', 'very', 'day', 'more', 'with', 'work', 'make', 'time'];
+  const out = [], seen = new Set();
+  for (const c of pool) if (c && String(c).trim() && !seen.has(c)) { out.push(c); seen.add(c); if (out.length >= 3) break; }
+  let i = 0;
+  while (out.length < 3) {
+    const f = fillers[i++ % fillers.length];
+    if (!seen.has(f)) { out.push(f); seen.add(f); }
+  }
+  return out;
+}
+function bindQuizChoices(box, w, correct) {
+  box.querySelectorAll('.q-choice').forEach(b => {
+    b.onclick = () => {
+      if (b.dataset.v === String(correct)) {
+        b.classList.add('correct'); quizRight++;
+      } else {
+        b.classList.add('wrong'); quizWrong++;
+        box.querySelectorAll('.q-choice').forEach(x => { if (x.dataset.v === String(correct)) x.classList.add('correct'); });
+      }
+      addStats('quiz', b.dataset.v === String(correct));
+      box.querySelectorAll('.q-choice').forEach(x => x.disabled = true);
+      setTimeout(nextQuestion, 1300);
+    };
+  });
+}
+function nextQuestion() {
+  quizIdx++;
+  if (quizIdx >= quizQuestions.length) renderQuizResult();
+  else renderQuestion();
+}
+function renderQuizResult() {
+  const total = quizQuestions.length;
+  const pct = total ? Math.round(quizRight / total * 100) : 0;
+  const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🌟' : pct >= 60 ? '💪' : '📚';
+  $('#quizArea').innerHTML = `
+    <div class="q-result">
+      <div style="font-size:52px">${emoji}</div>
+      <div class="score">${quizRight} / ${total}</div>
+      <div style="margin-top:6px;color:var(--muted)">正確率 ${pct}%</div>
+      <div class="q-btns">
+        <button class="big-btn primary" id="qqAgain">🔁 再測一次</button>
+        <button class="big-btn ghost" id="qqSetup">⚙️ 回設定</button>
+      </div>
+    </div>`;
+  $('#qqAgain').onclick = () => startQuiz();
+  $('#qqSetup').onclick = () => renderQuizSetup();
+}
+
+/* =========================================================================
+   10. 進度
+   ========================================================================= */
+function acceptedForQuiz(w) {
+  return state.srs[wordKey(w)] && state.srs[wordKey(w)].reps > 0;
+}
+function renderProgress() {
+  const all = getAllWords();
+  const st = state.stats[state.library];
+  const prefix = state.library + '::';
+  const reviewed = Object.keys(state.srs).filter(k => k.startsWith(prefix) && state.srs[k].reps > 0).length;
+  const learned = Object.keys(state.srs).filter(k => k.startsWith(prefix) && state.srs[k].reps > 0 && state.srs[k].ivl >= 3).length;
+  const due = Object.keys(state.srs).filter(k => k.startsWith(prefix) && state.srs[k].due <= Date.now()).length;
+  const bookCnt = Object.keys(state.bookmarks).filter(k => k.startsWith(state.library)).length;
+  const pct = all.length ? Math.round(learned / all.length * 100) : 0;
+  const acc = st.seen ? Math.round(st.correct / st.seen * 100) : 0;
+  $('#progArea').innerHTML = `
+    <div class="prog-card">
+      <h3>🌟 ${state.library === 'kids' ? '兒童美語' : '多益'} 學習概況</h3>
+      <div class="stat-row">
+        <div class="stat-box gold"><div class="num">${learned}</div><div class="lbl">已記憶</div></div>
+        <div class="stat-box"><div class="num">${reviewed}</div><div class="lbl">學過</div></div>
+        <div class="stat-box green"><div class="num">${due}</div><div class="lbl">待複習</div></div>
+        <div class="stat-box pink"><div class="num">${bookCnt}</div><div class="lbl">收藏</div></div>
+      </div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">已記憶 ${learned} / ${all.length} 字（${pct}%）</div>
+    </div>
+    <div class="prog-card">
+      <h3>📈 答題統計</h3>
+      <div class="stat-row">
+        <div class="stat-box"><div class="num">${st.seen}</div><div class="lbl">作答次數</div></div>
+        <div class="stat-box green"><div class="num">${st.correct}</div><div class="lbl">答對</div></div>
+        <div class="stat-box pink"><div class="num">${st.wrong}</div><div class="lbl">答錯</div></div>
+        <div class="stat-box gold"><div class="num">${acc}%</div><div class="lbl">正確率</div></div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <h3>🔍 SRS 排程說明</h3>
+      <div style="font-size:13px;line-height:1.7;color:var(--muted)">
+        • 每張卡依 <b style="color:#fff">SM-2 間隔重複演算法</b>排定下次複習日期<br>
+        • ❌ 忘記了 → 10 分鐘後同場重現、難度 -0.2<br>
+        • ⚠️ 困難 → 間隔 ×1.2、難度 -0.15<br>
+        • ✅ 良好 → 間隔 ×難度倍率<br>
+        • ⚡ 簡單 → 間隔 ×1.3、難度 +0.15<br>
+        • 記憶越穩固，複習間隔越長，效率越高
+      </div>
+      <button class="big-btn ghost" id="resetSrs" style="margin-top:12px;width:100%">🗑️ 清除本庫學習紀錄</button>
+    </div>`;
+  $('#resetSrs').onclick = () => {
+    if (!confirm('確定清除「' + (state.library === 'kids' ? '兒童美語' : '多益') + '」的所有學習紀錄？')) return;
+    const keys = Object.keys(state.srs).filter(k => k.startsWith(state.library + '::'));
+    keys.forEach(k => delete state.srs[k]);
+    state.stats[state.library] = { seen: 0, correct: 0, wrong: 0 };
+    saveState(); renderProgress(); toast('已清除');
+  };
+}
+
+/* =========================================================================
+   11. 自訂單字＋初始化
+   ========================================================================= */
+let customLib = 'kids';
+function openAddWord() {
+  customLib = state.library;
+  $('#modalTitle').textContent = (customLib === 'kids' ? '🧸 兒童' : '💼 多益') + ' 自訂單字';
+  ['mwWord', 'mwMeaning', 'mwPos', 'mwExample', 'mwExampleZh'].forEach(id => $('#' + id).value = '');
+  $('#modalMask').classList.add('show');
+}
+function saveCustomWord() {
+  const w = $('#mwWord').value.trim(), m = $('#mwMeaning').value.trim();
+  if (!w || !m) { toast('英文單字與中文釋義必填'); return; }
+  state.customWords.push({
+    id: uid(), lib: customLib, __custom: 1, word: w, meaning: m,
+    pos: $('#mwPos').value.trim(), example: $('#mwExample').value.trim(), exampleZh: $('#mwExampleZh').value.trim()
+  });
+  saveState();
+  $('#modalMask').classList.remove('show');
+  toast('已加入自訂單字 ✏️');
+  if (state.tab === 'browse') renderBrowse();
+}
+$('#modalMask').addEventListener('click', e => { if (e.target === $('#modalMask')) $('#modalMask').classList.remove('show'); });
+$('#mwSave').onclick = saveCustomWord;
+
+/* 首頁加入自訂單字入口（搜尋列旁） */
+(function () {
+  const row = $('.search-row');
+  const b = document.createElement('button');
+  b.className = 'mini-btn'; b.id = 'addWordBtn'; b.textContent = '✏️ 加單字';
+  b.onclick = openAddWord;
+  row.appendChild(b);
+})();
+
+function boot() {
+  populateVoiceSelect();
+  if ('speechSynthesis' in window) window.speechSynthesis.onvoiceschanged = populateVoiceSelect;
+  /* tab 與 lib 綁定 */
+  $$('.tab').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  $$('.lib-btn').forEach(b => b.onclick = () => setLibrary(b.dataset.lib));
+  /* 恢復上次狀態（可被網址參數覆寫：?lib=kids|toeic&tab=browse|flashcard|quiz|progress） */
+  const qp = new URLSearchParams(location.search);
+  if (qp.get('lib') === 'kids' || qp.get('lib') === 'toeic') state.library = qp.get('lib');
+  if (['browse', 'flashcard', 'quiz', 'progress'].includes(qp.get('tab'))) state.tab = qp.get('tab');
+  state.tab = state.tab || 'browse';
+  $$('.lib-btn').forEach(b => b.classList.toggle('active', b.dataset.lib === state.library));
+  if (state.library === 'toeic') { loadToeic(); return; }
+  setTab(state.tab);
+}
+boot();
+</script>
+</body>
+</html>
