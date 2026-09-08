@@ -1781,8 +1781,50 @@
     min-height: 120px;
   }
   body.mode-adult .shadow-script-area {
-    background: rgba(255,255,255,0.03);
+    background: rgba(15, 23, 42, 0.4);
   }
+
+  /* Focus Sentence Card Styles */
+  .shadow-focus-card {
+    padding: 22px 20px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  body.mode-kids .shadow-focus-card {
+    background: #ffffff;
+    border: 2px solid #ffd2e2;
+    box-shadow: 0 10px 28px rgba(255, 95, 162, 0.12);
+    color: #1e293b;
+  }
+  body.mode-adult .shadow-focus-card {
+    background: rgba(30, 41, 59, 0.92);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(79, 70, 229, 0.15);
+    color: #f8fafc;
+  }
+
+  /* Story overview details container */
+  .shadow-story-details {
+    margin-top: 14px;
+    border-radius: 14px;
+    padding: 10px 14px;
+    transition: all 0.25s ease;
+  }
+  body.mode-kids .shadow-story-details {
+    background: #ffffff;
+    border: 1.5px solid #ffd2e2;
+    box-shadow: 0 4px 14px rgba(255, 95, 162, 0.08);
+  }
+  body.mode-adult .shadow-story-details {
+    background: rgba(30, 41, 59, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+
   .shadow-sentence {
     font-size: 22px;
     font-weight: 900;
@@ -1793,28 +1835,75 @@
     cursor: pointer;
   }
   .shadow-sentence:hover {
-    background: rgba(99,102,241,0.08);
+    background: rgba(99,102,241,0.12);
   }
   .shadow-sentence.karaoke-highlight {
-    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(79,70,229,0.2));
-    border-left: 4px solid #4f46e5;
+    background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(79,70,229,0.3));
+    border-left: 4px solid #6366f1;
     transform: scale(1.01);
   }
   body.mode-kids .shadow-sentence.karaoke-highlight {
     background: linear-gradient(135deg, rgba(255,126,179,0.15), rgba(255,95,162,0.2));
     border-left-color: #ff5fa2;
   }
+
+  /* Romaji / Phonetic Line (Main Focus Card) */
   .shadow-sentence-phonetic {
-    font-size: 13px;
-    opacity: 0.85;
-    margin: 2px 0 4px;
-    font-weight: 600;
-    font-family: monospace;
-    color: #4f46e5;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    line-height: 1.45;
+    margin: 2px 0 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    text-align: center;
+    transition: color 0.2s;
+  }
+  body.mode-kids .shadow-sentence-phonetic {
+    color: #2563eb !important;
   }
   body.mode-adult .shadow-sentence-phonetic {
-    color: #a5b4fc !important;
+    color: #38bdf8 !important; /* 明亮天藍（Sky-400），對比度高、清晰醒目，解決暗沉粉紫問題 */
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
   }
+
+  /* Mini sentence list romaji & text */
+  .shadow-mini-text {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+  body.mode-adult .shadow-mini-text {
+    color: #f8fafc;
+  }
+  body.mode-kids .shadow-mini-text {
+    color: #1e293b;
+  }
+  .shadow-mini-romaji {
+    font-size: 13px;
+    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    letter-spacing: 0.3px;
+    line-height: 1.35;
+    margin: 3px 0 2px;
+  }
+  body.mode-adult .shadow-mini-romaji {
+    color: #38bdf8; /* 亮天藍 */
+  }
+  body.mode-kids .shadow-mini-romaji {
+    color: #2563eb;
+  }
+  .shadow-mini-zh {
+    font-size: 12px;
+    opacity: 0.8;
+    line-height: 1.4;
+  }
+  body.mode-adult .shadow-mini-zh {
+    color: #94a3b8;
+  }
+  body.mode-kids .shadow-mini-zh {
+    color: #64748b;
+  }
+
   .shadow-sentence-ruby {
     font-size: 13px;
     opacity: 0.7;
@@ -1828,10 +1917,18 @@
     font-weight: 500;
   }
   .shadow-sentence-text {
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 24px;
+    font-weight: 900;
     line-height: 1.85;
     word-break: break-word;
+    text-align: center;
+  }
+  body.mode-adult .shadow-sentence-text {
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+  body.mode-kids .shadow-sentence-text {
+    color: #1e293b;
   }
   .shadow-sentence-text ruby {
     ruby-position: over;
@@ -1844,10 +1941,16 @@
     line-height: 1.1;
   }
   .shadow-sentence-zh {
-    font-size: 14px;
-    opacity: 0.8;
-    margin-top: 3px;
+    font-size: 15px;
+    opacity: 0.85;
+    margin-top: 4px;
     transition: filter 0.2s;
+  }
+  body.mode-adult .shadow-sentence-zh {
+    color: #cbd5e1;
+  }
+  body.mode-kids .shadow-sentence-zh {
+    color: #475569;
   }
   .shadow-sentence-zh.hidden-text {
     filter: blur(5px);
@@ -2532,7 +2635,7 @@
           </div>
 
           <!-- Focus Sentence Card -->
-          <div class="shadow-focus-card" id="shadowFocusCard" style="background:rgba(255,255,255,0.75);padding:20px;border-radius:18px;border:2px solid rgba(79,70,229,0.25);box-shadow:0 8px 24px rgba(0,0,0,0.06);display:flex;flex-direction:column;gap:10px;">
+          <div class="shadow-focus-card" id="shadowFocusCard">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <span class="pill" id="shadowSentenceRoleBadge" style="font-size:11px;padding:3px 10px;background:#4f46e5;color:#fff;">🎯 當前跟讀句</span>
               <button class="shadow-toggle-eye" id="shadowToggleEye" title="顯示/隱藏中文翻譯" style="background:none;border:none;cursor:pointer;font-size:13px;">
@@ -2541,22 +2644,22 @@
             </div>
 
             <!-- Primary Sentence Text (Ruby / Kanji / English) -->
-            <div id="shadowFocusRuby" class="shadow-sentence-text" style="font-size:24px;font-weight:900;line-height:1.85;text-align:center;min-height:50px;">
+            <div id="shadowFocusRuby" class="shadow-sentence-text" style="min-height:50px;">
               <!-- Sentence text -->
             </div>
 
             <!-- Romaji / Phonetic Line -->
-            <div id="shadowFocusRomaji" class="shadow-sentence-phonetic" style="font-family:monospace;font-size:14px;color:#4f46e5;text-align:center;min-height:22px;">
+            <div id="shadowFocusRomaji" class="shadow-sentence-phonetic" style="min-height:26px;">
               <!-- Romaji text -->
             </div>
 
             <!-- Chinese Meaning -->
-            <div id="shadowFocusZh" class="shadow-sentence-zh" style="font-size:15px;text-align:center;opacity:0.85;border-top:1px dashed rgba(0,0,0,0.12);padding-top:8px;">
+            <div id="shadowFocusZh" class="shadow-sentence-zh" style="text-align:center;border-top:1px dashed rgba(255,255,255,0.15);padding-top:8px;">
               <!-- Translation -->
             </div>
 
             <!-- Pause Hint -->
-            <div id="shadowFocusHint" class="shadow-pause-hint" style="font-size:12px;opacity:0.75;text-align:center;">
+            <div id="shadowFocusHint" class="shadow-pause-hint" style="text-align:center;">
               <!-- Hint -->
             </div>
           </div>
@@ -2596,9 +2699,9 @@
       </div>
 
       <!-- 5. Mini Sentence Strip (Collapsible overview) -->
-      <details style="margin-top:12px;background:rgba(255,255,255,0.4);border-radius:12px;padding:8px 12px;">
-        <summary style="font-size:13px;font-weight:700;cursor:pointer;opacity:0.7;">📑 展開整篇故事句子清單（點擊跳句）</summary>
-        <div class="shadow-script-area" id="shadowScriptArea" style="margin-top:8px;max-height:220px;overflow-y:auto;">
+      <details class="shadow-story-details">
+        <summary style="font-size:13px;font-weight:700;cursor:pointer;opacity:0.85;">📑 展開整篇故事句子清單（點擊跳句）</summary>
+        <div class="shadow-script-area" id="shadowScriptArea" style="margin-top:8px;max-height:260px;overflow-y:auto;">
           <!-- Mini Sentences list -->
         </div>
       </details>
@@ -5534,6 +5637,66 @@ const SHADOWING_DATA = {
             pauseHint: "寓意深遠、圓滿結尾"
           }
         ]
+      },
+      {
+        id: 'adult-ja-warashibe-full',
+        title: '🎤 わらしべ長者（真人音檔・全篇）',
+        titleZh: '稻草富翁（真人老師朗讀・完整版）',
+        level: 'N5',
+        realAudio: true,
+        sentences: [
+          { text: "『わらしべ長者』", ruby: "『わらしべ<ruby>長者<rt>ちょうじゃ</rt></ruby>』", phonetic: "warashibe chōja", zh: "《稻草富翁》", pauseHint: "篇名、清晰", audio: "audio/warashibe/s01.mp3" },
+          { text: "むかしむかし、ある国に、一人の貧しい男がいました。", ruby: "むかしむかし、ある<ruby>国<rt>くに</rt></ruby>に、<ruby>一人<rt>ひとり</rt></ruby>の<ruby>貧<rt>まず</rt></ruby>しい<ruby>男<rt>おとこ</rt></ruby>がいました。", phonetic: "mukashi mukashi, aru kuni ni, hitori no mazushii otoko ga imashita.", zh: "從前從前，在某個國度，有一位貧窮的男子。", pauseHint: "經典開場、語調平緩", audio: "audio/warashibe/s02.mp3" },
+          { text: "ある日、男は思いました。", ruby: "ある<ruby>日<rt>ひ</rt></ruby>、<ruby>男<rt>おとこ</rt></ruby>は<ruby>思<rt>おも</rt></ruby>いました。", phonetic: "aru hi, otoko wa omoimashita.", zh: "有一天，他心想。", pauseHint: "鋪陳語氣", audio: "audio/warashibe/s03.mp3" },
+          { text: "「どうしたら、幸せになれるのだろう……」", ruby: "「どうしたら、<ruby>幸<rt>しあわ</rt></ruby>せになれるのだろう……」", phonetic: "dō shitara, shiawase ni nareru no darō…", zh: "「到底要怎麼做，才能獲得幸福呢……」", pauseHint: "自言自語、感嘆", audio: "audio/warashibe/s04.mp3" },
+          { text: "男は、お寺に行って、観音さまにお参りしました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は、お<ruby>寺<rt>てら</rt></ruby>に<ruby>行<rt>い</rt></ruby>って、<ruby>観音<rt>かんのん</rt></ruby>さまにお<ruby>参<rt>まい</rt></ruby>りしました。", phonetic: "otoko wa, otera ni itte, kannon-sama ni omairi shimashita.", zh: "男子前往寺廟，虔誠參拜觀音菩薩。", pauseHint: "安詳、虔誠", audio: "audio/warashibe/s05.mp3" },
+          { text: "七日間、何も食べずに、ずっと願いました。", ruby: "<ruby>七日間<rt>なのかかん</rt></ruby>、<ruby>何<rt>なに</rt></ruby>も<ruby>食<rt>た</rt></ruby>べずに、ずっと<ruby>願<rt>ねが</rt></ruby>いました。", phonetic: "nanokakan, nani mo tabezu ni, zutto negaemashita.", zh: "他整整七天不吃不喝，持續許願祈禱。", pauseHint: "堅定、專注", audio: "audio/warashibe/s06.mp3" },
+          { text: "「どうか、幸せになる方法を教えてください」と。", ruby: "「どうか、<ruby>幸<rt>しあわ</rt></ruby>せになる<ruby>方法<rt>ほうほう</rt></ruby>を<ruby>教<rt>おし</rt></ruby>えてください」と。", phonetic: "dōka, shiawase ni naru hōhō o oshiete kudasai to.", zh: "「請您告訴我獲得幸福的方法吧。」", pauseHint: "懇切請願", audio: "audio/warashibe/s07.mp3" },
+          { text: "七日目の夜、男は不思議な夢を見ました。", ruby: "<ruby>七日目<rt>なのかめ</rt></ruby>の<ruby>夜<rt>よる</rt></ruby>、<ruby>男<rt>おとこ</rt></ruby>は<ruby>不思議<rt>ふしぎ</rt></ruby>な<ruby>夢<rt>ゆめ</rt></ruby>を<ruby>見<rt>み</rt></ruby>ました。", phonetic: "nanokame no yoru, otoko wa fushigi na yume o mimashita.", zh: "第七天的夜晚，男子做了一個神奇的夢。", pauseHint: "神秘語氣", audio: "audio/warashibe/s08.mp3" },
+          { text: "夢の中で、観音さまが言いました。", ruby: "<ruby>夢<rt>ゆめ</rt></ruby>の<ruby>中<rt>なか</rt></ruby>で、<ruby>観音<rt>かんのん</rt></ruby>さまが<ruby>言<rt>い</rt></ruby>いました。", phonetic: "yume no naka de, kannon-sama ga iimashita.", zh: "夢中，觀音菩薩如是說。", pauseHint: "神聖開示", audio: "audio/warashibe/s09.mp3" },
+          { text: "「朝、家を出て、最初に手にしたものを大事にしなさい。」", ruby: "「<ruby>朝<rt>あさ</rt></ruby>、<ruby>家<rt>いえ</rt></ruby>を<ruby>出<rt>で</rt></ruby>て、<ruby>最初<rt>さいしょ</rt></ruby>に<ruby>手<rt>て</rt></ruby>にしたものを<ruby>大事<rt>だいじ</rt></ruby>にしなさい。」", phonetic: "asa, ie o dete, saisho ni te ni shita mono o daiji ni shinasai.", zh: "「明早出門後，最初拿到手上的東西，要好好珍惜。」", pauseHint: "訓示、堅定", audio: "audio/warashibe/s10.mp3" },
+          { text: "「それが、あなたの幸せとなるでしょう」", ruby: "「それが、あなたの<ruby>幸<rt>しあわ</rt></ruby>せとなるでしょう」", phonetic: "sore ga, anata no shiawase to naru deshō.", zh: "「那將成為你的幸福。」", pauseHint: "溫柔堅定", audio: "audio/warashibe/s11.mp3" },
+          { text: "次の朝、男が外に出ると、石につまずいて転びました。", ruby: "<ruby>次<rt>つぎ</rt></ruby>の<ruby>朝<rt>あさ</rt></ruby>、<ruby>男<rt>おとこ</rt></ruby>が<ruby>外<rt>そと</rt></ruby>に<ruby>出<rt>で</rt></ruby>ると、<ruby>石<rt>いし</rt></ruby>につまずいて<ruby>転<rt>ころ</rt></ruby>びました。", phonetic: "tsugi no asa, otoko ga soto ni deru to, ishi ni tsumazuite korobimashita.", zh: "隔天早晨，男子一踏出家門，就被石頭絆了一跤。", pauseHint: "意外情節", audio: "audio/warashibe/s12.mp3" },
+          { text: "手には、一つの藁がくっついていました。", ruby: "<ruby>手<rt>て</rt></ruby>には、<ruby>一<rt>ひと</rt></ruby>つの<ruby>藁<rt>わら</rt></ruby>がくっついていました。", phonetic: "te ni wa, hitotsu no wara ga kutsuite imashita.", zh: "他手裡，恰好黏著一根稻草。", pauseHint: "命運轉折", audio: "audio/warashibe/s13.mp3" },
+          { text: "男は、その藁を持って、歩きはじめました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は、その<ruby>藁<rt>わら</rt></ruby>を<ruby>持<rt>も</rt></ruby>って、<ruby>歩<rt>ある</rt></ruby>きはじめました。", phonetic: "otoko wa, sono wara o motte, arukihajimemashita.", zh: "男子手裡握著那根稻草，邁步前行。", pauseHint: "平穩敘事", audio: "audio/warashibe/s14.mp3" },
+          { text: "すると、きれいな蝶が飛んできて、男の手にとまりました。", ruby: "すると、きれいな<ruby>蝶<rt>ちょう</rt></ruby>が<ruby>飛<rt>と</rt></ruby>んできて、<ruby>男<rt>おとこ</rt></ruby>の<ruby>手<rt>て</rt></ruby>にとまりました。", phonetic: "suru to, kirei na chō ga tondekite, otoko no te ni tomarimashita.", zh: "這時，一隻美麗的蝴蝶飛來，停在他的手上。", pauseHint: "輕快活潑", audio: "audio/warashibe/s15.mp3" },
+          { text: "男は、その蝶を藁の上にのせました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は、その<ruby>蝶<rt>ちょう</rt></ruby>を<ruby>藁<rt>わら</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>にのせました。", phonetic: "otoko wa, sono chō o wara no ue ni nosemashita.", zh: "男子把蝴蝶輕輕放到稻草上。", pauseHint: "輕柔動作", audio: "audio/warashibe/s16.mp3" },
+          { text: "そのとき、貴族の子どもと家来たちが歩いてきました。", ruby: "そのとき、<ruby>貴族<rt>きぞく</rt></ruby>の子どもと<ruby>家来<rt>けらい</rt></ruby>たちが<ruby>歩<rt>ある</rt></ruby>いてきました。", phonetic: "sono toki, kizoku no kodomo to kerai-tachi ga aruite kimashita.", zh: "就在此時，貴族的孩子與隨從們走了過來。", pauseHint: "登場氛圍", audio: "audio/warashibe/s17.mp3" },
+          { text: "子どもは言いました。", ruby: "子どもは<ruby>言<rt>い</rt></ruby>いました。", phonetic: "kodomo wa iimashita.", zh: "孩子開口說。", pauseHint: "童稚語氣", audio: "audio/warashibe/s18.mp3" },
+          { text: "「その蝶が、ほしいなあ！」", ruby: "「その<ruby>蝶<rt>ちょう</rt></ruby>が、ほしいなあ！」", phonetic: "sono chō ga, hoshii nā!", zh: "「那隻蝴蝶，我好想要呀！」", pauseHint: "撒嬌語氣", audio: "audio/warashibe/s19.mp3" },
+          { text: "家来が言いました。", ruby: "<ruby>家来<rt>けらい</rt></ruby>が<ruby>言<rt>い</rt></ruby>いました。", phonetic: "kerai ga iimashita.", zh: "隨從開口說。", pauseHint: "恭敬語氣", audio: "audio/warashibe/s20.mp3" },
+          { text: "「その蝶をください。かわりに、みかんを差し上げます」", ruby: "「その<ruby>蝶<rt>ちょう</rt></ruby>をください。かわりに、みかんを<ruby>差<rt>さ</rt></ruby>し<ruby>上<rt>あ</rt></ruby>げます」", phonetic: "sono chō o kudasai. kawari ni, mikan o sashiagemasu.", zh: "「請把那隻蝴蝶給我們吧，作為交換，我們獻上橘子。」", pauseHint: "禮貌商談", audio: "audio/warashibe/s21.mp3" },
+          { text: "男は、蝶を渡して、みかんをもらいました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は、<ruby>蝶<rt>ちょう</rt></ruby>を<ruby>渡<rt>わた</rt></ruby>して、みかんをもらいました。", phonetic: "otoko wa, chō o watashite, mikan o moraimashita.", zh: "男子交出蝴蝶，換到了橘子。", pauseHint: "交換、平順敘述", audio: "audio/warashibe/s22.mp3" },
+          { text: "先に進むと今度は、道ばたに、疲れている旅人が座っていました。", ruby: "<ruby>先<rt>さき</rt></ruby>に<ruby>進<rt>すす</rt></ruby>むと<ruby>今度<rt>こんど</rt></ruby>は、<ruby>道端<rt>みちばた</rt></ruby>に、<ruby>疲<rt>つか</rt></ruby>れている<ruby>旅人<rt>たびびと</rt></ruby>が<ruby>座<rt>すわ</rt></ruby>っていました。", phonetic: "saki ni susumu to kondo wa, michibata ni, tsukarete iru tabibito ga suwatte imashita.", zh: "再往前走，這次是路旁，坐著一位疲憊不堪的旅人。", pauseHint: "轉場、敘述", audio: "audio/warashibe/s23.mp3" },
+          { text: "旅人は言いました。", ruby: "<ruby>旅人<rt>たびびと</rt></ruby>は<ruby>言<rt>い</rt></ruby>いました。", phonetic: "tabibito wa iimashita.", zh: "旅人開口說。", pauseHint: "無力語氣", audio: "audio/warashibe/s24.mp3" },
+          { text: "「のどがかわいて、倒れそうです……」", ruby: "「のどがかわいて、<ruby>倒<rt>たお</rt></ruby>れそうです……」", phonetic: "nodo ga kawaite, taoresō desu…", zh: "「我渴得都快昏倒了……」", pauseHint: "虛弱呻吟", audio: "audio/warashibe/s25.mp3" },
+          { text: "男は、みかんを渡しました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は、みかんを<ruby>渡<rt>わた</rt></ruby>しました。", phonetic: "otoko wa, mikan o watashimashita.", zh: "男子把橘子遞給了旅人。", pauseHint: "善心助人", audio: "audio/warashibe/s26.mp3" },
+          { text: "旅人は、うれしそうに言いました。", ruby: "<ruby>旅人<rt>たびびと</rt></ruby>は、うれしそうに<ruby>言<rt>い</rt></ruby>いました。", phonetic: "tabibito wa, ureshisō ni iimashita.", zh: "旅人滿臉欣喜地開口。", pauseHint: "雀躍語氣", audio: "audio/warashibe/s27.mp3" },
+          { text: "「ありがとう。これはお礼です。」", ruby: "「ありがとう。これはお<ruby>礼<rt>れい</rt></ruby>です。」", phonetic: "arigatō. kore wa orei desu.", zh: "「謝謝你。這是我的心意。」", pauseHint: "感恩語氣", audio: "audio/warashibe/s28.mp3" },
+          { text: "旅人は、袋から絹の布を、男に渡しました。", ruby: "<ruby>旅人<rt>たびびと</rt></ruby>は、<ruby>袋<rt>ふくろ</rt></ruby>から<ruby>絹<rt>きぬ</rt></ruby>の<ruby>布<rt>ぬの</rt></ruby>を、<ruby>男<rt>おとこ</rt></ruby>に<ruby>渡<rt>わた</rt></ruby>しました。", phonetic: "tabibito wa, fukuro kara kinu no nuno o, otoko ni watashimashita.", zh: "旅人從袋子裡取出一塊絲綢布，遞給男子。", pauseHint: "驚喜回饋", audio: "audio/warashibe/s29.mp3" },
+          { text: "男は礼を言って、また歩きつづけました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は<ruby>礼<rt>れい</rt></ruby>を<ruby>言<rt>い</rt></ruby>って、また<ruby>歩<rt>ある</rt></ruby>きつづけました。", phonetic: "otoko wa rei o itte, mata arukitsuzukemashita.", zh: "男子道了謝，又繼續往前走。", pauseHint: "延續節奏", audio: "audio/warashibe/s30.mp3" },
+          { text: "すると、道の先で馬と商人が困っていました。", ruby: "すると、<ruby>道<rt>みち</rt></ruby>の<ruby>先<rt>さき</rt></ruby>で<ruby>馬<rt>うま</rt></ruby>と<ruby>商人<rt>しょうにん</rt></ruby>が<ruby>困<rt>こま</rt></ruby>っていました。", phonetic: "suru to, michi no saki de uma to shōnin ga komatte imashita.", zh: "這時，前方的路上，馬匹與商人正愁眉苦臉。", pauseHint: "轉折語氣", audio: "audio/warashibe/s31.mp3" },
+          { text: "商人は言いました。", ruby: "<ruby>商人<rt>しょうにん</rt></ruby>は<ruby>言<rt>い</rt></ruby>いました。", phonetic: "shōnin wa iimashita.", zh: "商人開口說。", pauseHint: "焦急語氣", audio: "audio/warashibe/s32.mp3" },
+          { text: "「馬が疲れて、動けないのです。」", ruby: "「<ruby>馬<rt>うま</rt></ruby>が<ruby>疲<rt>つか</rt></ruby>れて、<ruby>動<rt>うご</rt></ruby>けないのです。」", phonetic: "uma ga tsukarete, ugokenai no desu.", zh: "「馬兒累壞了，動也動不了。」", pauseHint: "無奈著急", audio: "audio/warashibe/s33.mp3" },
+          { text: "男は、絹の布を水でぬらして、馬の体をやさしく冷やしてあげました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は、<ruby>絹<rt>きぬ</rt></ruby>の<ruby>布<rt>ぬの</rt></ruby>を<ruby>水<rt>みず</rt></ruby>でぬらして、<ruby>馬<rt>うま</rt></ruby>の<ruby>体<rt>からだ</rt></ruby>をやさしく<ruby>冷<rt>ひ</rt></ruby>やしてあげました。", phonetic: "otoko wa, kinu no nuno o mizu de nurashite, uma no karada o yasashiku hiyashite agemashita.", zh: "男子把絲綢浸溼，溫柔地替馬兒降溫散熱。", pauseHint: "細心體貼", audio: "audio/warashibe/s34.mp3" },
+          { text: "それを見た商人が言いました。", ruby: "それを<ruby>見<rt>み</rt></ruby>た<ruby>商人<rt>しょうにん</rt></ruby>が<ruby>言<rt>い</rt></ruby>いました。", phonetic: "sore o mita shōnin ga iimashita.", zh: "目睹這一切的商人開口。", pauseHint: "感動語氣", audio: "audio/warashibe/s35.mp3" },
+          { text: "「あなたは、やさしい人ですね。この馬を、どうぞお受け取りください」", ruby: "「あなたは、やさしい<ruby>人<rt>ひと</rt></ruby>ですね。この<ruby>馬<rt>うま</rt></ruby>を、どうぞお<ruby>受<rt>う</rt></ruby>け<ruby>取<rt>と</rt></ruby>りください」", phonetic: "anata wa, yasashii hito desu ne. kono uma o, dōzo ouketori kudasai.", zh: "「您真是心地善良的人，這匹馬，就請您收下吧。」", pauseHint: "由衷感謝", audio: "audio/warashibe/s36.mp3" },
+          { text: "男は馬をもらって歩きましたが、馬をうまくあつかえず、困ってしまいました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は<ruby>馬<rt>うま</rt></ruby>をもらって<ruby>歩<rt>ある</rt></ruby>きましたが、<ruby>馬<rt>うま</rt></ruby>をうまくあつかえず、<ruby>困<rt>こま</rt></ruby>ってしまいました。", phonetic: "otoko wa uma o moratte arukimashita ga, uma o umaku atsukaezu, komatte shimaimashita.", zh: "男子牽著馬前行，卻無法好好駕馭，於是傷透了腦筋。", pauseHint: "苦惱語氣", audio: "audio/warashibe/s37.mp3" },
+          { text: "そのとき、大きな屋敷の前で、声をかけられました。", ruby: "そのとき、<ruby>大<rt>おお</rt></ruby>きな<ruby>屋敷<rt>やしき</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>で、<ruby>声<rt>こえ</rt></ruby>をかけられました。", phonetic: "sono toki, ōkina yashiki no mae de, koe o kakeraremashita.", zh: "就在這時，在一座大宅邸前，有人叫住了他。", pauseHint: "轉折登場", audio: "audio/warashibe/s38.mp3" },
+          { text: "「その馬をください。お金もお渡しします。」", ruby: "「その<ruby>馬<rt>うま</rt></ruby>をください。お<ruby>金<rt>かね</rt></ruby>もお<ruby>渡<rt>わた</rt></ruby>しします。」", phonetic: "sono uma o kudasai. o-kane mo owatashi shimasu.", zh: "「請把那匹馬賣給我，我會付您酬勞。」", pauseHint: "正式商談", audio: "audio/warashibe/s39.mp3" },
+          { text: "「そして、ここで働いてくれませんか？」", ruby: "「そして、ここで<ruby>働<rt>はたら</rt></ruby>いてくれませんか？」", phonetic: "soshite, koko de hataraite kuremasen ka?", zh: "「還有，願意在這裡工作嗎？」", pauseHint: "誠摯邀請、上揚", audio: "audio/warashibe/s40.mp3" },
+          { text: "男はうなずき、まじめに働きはじめました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>はうなずき、まじめに<ruby>働<rt>はたら</rt></ruby>きはじめました。", phonetic: "otoko wa unazuki, majime ni hatarakihajimemashita.", zh: "男子點了點頭，開始認真地工作。", pauseHint: "踏實語氣", audio: "audio/warashibe/s41.mp3" },
+          { text: "誠実に、こつこつと働きました。", ruby: "<ruby>誠実<rt>せいじつ</rt></ruby>に、こつこつと<ruby>働<rt>はたら</rt></ruby>きました。", phonetic: "seijitsu ni, kotsukotsu to hatarakimashita.", zh: "他一板一眼、孜孜不倦地勤奮工作。", pauseHint: "持續穩定", audio: "audio/warashibe/s42.mp3" },
+          { text: "それを見た主人は、とても良い人だと思いました。", ruby: "それを<ruby>見<rt>み</rt></ruby>た<ruby>主人<rt>しゅじん</rt></ruby>は、とても<ruby>良<rt>よ</rt></ruby>い<ruby>人<rt>ひと</rt></ruby>だと<ruby>思<rt>おも</rt></ruby>いました。", phonetic: "sore o mita shujin wa, totemo yoi hito da to omoimashita.", zh: "看在眼裡的主人，認定他是個難得的好人。", pauseHint: "讚許語氣", audio: "audio/warashibe/s43.mp3" },
+          { text: "ある日、主人はこう言いました。", ruby: "ある<ruby>日<rt>ひ</rt></ruby>、<ruby>主人<rt>しゅじん</rt></ruby>はこう<ruby>言<rt>い</rt></ruby>いました。", phonetic: "aru hi, shujin wa kō iimashita.", zh: "有一天，主人這樣對他說。", pauseHint: "鄭重其詞", audio: "audio/warashibe/s44.mp3" },
+          { text: "「私の娘をお嫁さんとして迎えてもらいたいのです。」", ruby: "「<ruby>私<rt>わたし</rt></ruby>の<ruby>娘<rt>むすめ</rt></ruby>をお<ruby>嫁<rt>よめ</rt></ruby>さんとして<ruby>迎<rt>むか</rt></ruby>えてもらいたいのです。」", phonetic: "watashi no musume o oyome-san toshite mukaete moraitai no desu.", zh: "「我想把女兒許配給你，請你迎娶她。」", pauseHint: "懇切誠摯", audio: "audio/warashibe/s45.mp3" },
+          { text: "「この屋敷も、すべてあなたに差し上げたいのです」", ruby: "「この<ruby>屋敷<rt>やしき</rt></ruby>も、すべてあなたに<ruby>差<rt>さ</rt></ruby>し<ruby>上<rt>あ</rt></ruby>げたいのです」", phonetic: "kono yashiki mo, subete anata ni sashiagetai no desu.", zh: "「這座宅邸，我也想全部託付給你。」", pauseHint: "慷慨大方", audio: "audio/warashibe/s46.mp3" },
+          { text: "男は驚きましたが、笑顔で頷きました。", ruby: "<ruby>男<rt>おとこ</rt></ruby>は<ruby>驚<rt>おどろ</rt></ruby>きましたが、<ruby>笑顔<rt>えがお</rt></ruby>で<ruby>頷<rt>うなず</rt></ruby>きました。", phonetic: "otoko wa odorokimashita ga, egao de unazukimashita.", zh: "男子雖感驚訝，仍滿懷笑容地點著頭。", pauseHint: "又驚又喜", audio: "audio/warashibe/s47.mp3" },
+          { text: "それから、娘と結婚し幸せに暮らしました。", ruby: "それから、<ruby>娘<rt>むすめ</rt></ruby>と<ruby>結婚<rt>けっこん</rt></ruby>し<ruby>幸<rt>しあわ</rt></ruby>せに<ruby>暮<rt>く</rt></ruby>らしました。", phonetic: "sorekara, musume to kekkon shi shiawase ni kurashimashita.", zh: "後來，他娶了主人的女兒，幸福地生活下去。", pauseHint: "圓滿美滿", audio: "audio/warashibe/s48.mp3" },
+          { text: "始まりは、道に落ちていた一つの藁。", ruby: "<ruby>始<rt>はじ</rt></ruby>まりは、<ruby>道<rt>みち</rt></ruby>に<ruby>落<rt>お</rt></ruby>ちていた<ruby>一<rt>ひと</rt></ruby>つの<ruby>藁<rt>わら</rt></ruby>。", phonetic: "hajimari wa, michi ni ochite ita hitotsu no wara.", zh: "一切的起點，是掉在路邊的一根稻草。", pauseHint: "回顧、抒情", audio: "audio/warashibe/s49.mp3" },
+          { text: "でも、まじめな心とやさしさが、幸せを運んできたのかもしれません。", ruby: "でも、まじめな<ruby>心<rt>こころ</rt></ruby>とやさしさが、<ruby>幸<rt>しあわ</rt></ruby>せを<ruby>運<rt>はこ</rt></ruby>んできたのかもしれません。", phonetic: "demo, majime na kokoro to yasashisa ga, shiawase o hakondekita no kamoshiremasen.", zh: "不過，或許正是那顆認真與善良的心，為他帶來了幸福吧。", pauseHint: "寓意收尾", audio: "audio/warashibe/s50.mp3" },
+          { text: "おしまい", ruby: "おしまい", phonetic: "oshimai", zh: "完。", pauseHint: "圓滿結尾", audio: "audio/warashibe/s51.mp3" }
+        ]
       }
     ]
   }
@@ -5558,7 +5721,9 @@ const ShadowingStudio = (() => {
   let userAudioUrl = null;
   let playMode = 'native';
   let zhHidden = false;
+  let peekText = false;
   let ttsUtterance = null;
+  let realAudioEl = null;
 
   const $ = (id) => document.getElementById(id);
 
@@ -5643,7 +5808,8 @@ const ShadowingStudio = (() => {
       const progress = loadProgress(s.id);
       const completedCount = progress && Array.isArray(progress.completed) ? progress.completed.length : 0;
       const total = s.sentences.length;
-      opt.textContent = `${s.title}（${s.titleZh}） (${completedCount}/${total})`;
+      const badge = s.realAudio ? ' 🎤真人' : '';
+      opt.textContent = `${s.title}（${s.titleZh}）${badge} (${completedCount}/${total})`;
       sel.appendChild(opt);
     });
   }
@@ -5777,9 +5943,7 @@ const ShadowingStudio = (() => {
     }
 
     // 渲染中文翻譯
-    const showZh = !zhHidden;
     $('shadowFocusZh').textContent = s.zh;
-    $('shadowFocusZh').classList.toggle('hidden-text', !showZh);
 
     // 渲染提示
     $('shadowFocusHint').textContent = s.pauseHint ? ('💡 ' + s.pauseHint) : '';
@@ -5814,39 +5978,77 @@ const ShadowingStudio = (() => {
     const dictateBtn = $('shadowDictateBtn');
     const abDock = $('shadowAbDock');
     const badge = $('shadowSentenceRoleBadge');
+    const eyeLabel = $('shadowEyeLabel');
+    const eyeIcon = $('shadowEyeIcon');
 
-    // 預設全部顯示
-    [ruby, romaji, zh, hint].forEach(el => { if (el) { el.style.display = ''; el.style.opacity = ''; } });
+    // 預設重置
     if (wave) wave.style.display = '';
     if (recordBtn) recordBtn.style.display = dictateMode ? 'none' : '';
     if (abDock) abDock.style.display = '';
     if (badge) badge.style.display = '';
     if (dictateBtn) dictateBtn.style.display = (currentStep === 3 || currentStep === 4) ? '' : 'none';
 
+    const story = getCurrentStory();
+    const s = (story && story.sentences) ? story.sentences[currentSentenceIdx] : null;
+
     if (currentStep === 1) {
-      // 純聽：隱藏所有文字，只留聲波
-      [ruby, romaji, zh, hint, badge].forEach(el => { if (el) el.style.display = 'none'; });
+      // 純聽：預設盲聽隱藏文字，若開啟 peekText 則偷看顯示
+      if (!peekText) {
+        [ruby, romaji, zh, hint, badge].forEach(el => { if (el) el.style.display = 'none'; });
+        if (eyeLabel) eyeLabel.textContent = '偷看文字與翻譯';
+        if (eyeIcon) eyeIcon.textContent = '👁️';
+      } else {
+        if (ruby) { ruby.style.display = 'block'; ruby.style.opacity = '1'; }
+        if (romaji) { romaji.style.display = (s && s.phonetic) ? 'block' : 'none'; romaji.style.opacity = '1'; }
+        if (zh) { zh.style.display = 'block'; zh.classList.remove('hidden-text'); }
+        if (badge) badge.style.display = '';
+        if (hint && s && s.pauseHint) hint.style.display = 'block';
+        if (eyeLabel) eyeLabel.textContent = '遮蔽文字（盲聽）';
+        if (eyeIcon) eyeIcon.textContent = '🙈';
+      }
       if (recordBtn) recordBtn.style.display = 'none';
       if (abDock) abDock.style.display = 'none';
       setBanner('🎧 專心聽，感受語調與節奏', '#1e3a5f', '#a5d8ff');
     } else if (currentStep === 2) {
-      // 精讀：全顯示，強制開中文
-      zhHidden = false;
-      if (zh) zh.style.display = '';
-      if ($('shadowEyeLabel')) $('shadowEyeLabel').textContent = '隱藏翻譯';
+      // 精讀：全顯示，預設開中文
+      if (ruby) { ruby.style.display = 'block'; ruby.style.opacity = '1'; }
+      if (romaji) { romaji.style.display = (s && s.phonetic) ? 'block' : 'none'; romaji.style.opacity = '1'; }
+      if (zh) {
+        zh.style.display = zhHidden ? 'none' : 'block';
+        zh.classList.toggle('hidden-text', zhHidden);
+      }
+      if (badge) badge.style.display = '';
+      if (hint && s && s.pauseHint) hint.style.display = 'block';
+      if (eyeLabel) eyeLabel.textContent = zhHidden ? '顯示翻譯' : '隱藏翻譯';
+      if (eyeIcon) eyeIcon.textContent = zhHidden ? '👁️' : '🙈';
       if (recordBtn) recordBtn.style.display = 'none';
       if (abDock) abDock.style.display = 'none';
       setBanner('📖 仔細閱讀，理解每句含義', '#2d5016', '#b2f2bb');
     } else if (currentStep === 3) {
-      // 視讀跟讀：隱藏中文，可偷看
-      if (zh) zh.style.display = zhHidden ? 'none' : '';
+      // 視讀跟讀：原文與羅馬字顯示，中文翻譯預設隱藏，可切換偷看
+      if (ruby) { ruby.style.display = 'block'; ruby.style.opacity = '1'; }
+      if (romaji) { romaji.style.display = (s && s.phonetic) ? 'block' : 'none'; romaji.style.opacity = '1'; }
+      if (zh) {
+        zh.style.display = zhHidden ? 'none' : 'block';
+        zh.classList.toggle('hidden-text', zhHidden);
+      }
+      if (badge) badge.style.display = '';
+      if (hint && s && s.pauseHint) hint.style.display = 'block';
+      if (eyeLabel) eyeLabel.textContent = zhHidden ? '顯示翻譯' : '隱藏翻譯';
+      if (eyeIcon) eyeIcon.textContent = zhHidden ? '👁️' : '🙈';
       setBanner('📑 看著文字，跟著節奏朗讀', '#5f3a1e', '#ffd8a8');
     } else if (currentStep === 4) {
-      // 脫稿影子：半透明或隱藏
-      if (ruby) ruby.style.opacity = '0.2';
-      if (romaji) romaji.style.opacity = '0.2';
-      if (zh) zh.style.display = 'none';
-      if (hint) hint.style.display = 'none';
+      // 脫稿影子：原文半透明或顯示，中文依 zhHidden 決定
+      if (ruby) { ruby.style.display = 'block'; ruby.style.opacity = zhHidden ? '0.2' : '1'; }
+      if (romaji) { romaji.style.display = (s && s.phonetic) ? 'block' : 'none'; romaji.style.opacity = zhHidden ? '0.2' : '1'; }
+      if (zh) {
+        zh.style.display = zhHidden ? 'none' : 'block';
+        zh.classList.toggle('hidden-text', zhHidden);
+      }
+      if (badge) badge.style.display = '';
+      if (hint) hint.style.display = zhHidden ? 'none' : 'block';
+      if (eyeLabel) eyeLabel.textContent = zhHidden ? '提示文字' : '隱藏文字';
+      if (eyeIcon) eyeIcon.textContent = zhHidden ? '👁️' : '🙈';
       setBanner('🎙️ 放開文字，像影子一樣跟隨！', '#5f1e3a', '#fcc2d7');
     }
   }
@@ -5872,9 +6074,14 @@ const ShadowingStudio = (() => {
       div.dataset.idx = idx;
       if (idx === currentSentenceIdx) div.classList.add('karaoke-highlight');
 
+      const romajiHtml = s.phonetic
+        ? `<div class="shadow-mini-romaji">${s.phonetic}</div>`
+        : '';
+
       div.innerHTML = `
-        <div style="font-size:14px;font-weight:700;">${idx + 1}. ${s.text}</div>
-        <div style="font-size:12px;opacity:0.75;">${s.zh}</div>
+        <div class="shadow-mini-text">${idx + 1}. ${s.text}</div>
+        ${romajiHtml}
+        <div class="shadow-mini-zh">${s.zh}</div>
       `;
 
       div.addEventListener('click', () => {
@@ -5892,7 +6099,33 @@ const ShadowingStudio = (() => {
     renderMiniSentences();
   }
 
-  function speakSentence(text, onEnd) {
+  function speakSentence(text, onEnd, audioPath) {
+    if (audioPath) {
+      // 真人音檔優先播放（取代 TTS）
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (realAudioEl) { realAudioEl.pause(); realAudioEl.src = ''; }
+      const audio = new Audio(audioPath);
+      realAudioEl = audio;
+      audio.onplay = () => {
+        isPlaying = true;
+        $('shadowWaveBox')?.classList.add('playing');
+      };
+      audio.onended = () => {
+        isPlaying = false;
+        realAudioEl = null;
+        $('shadowWaveBox')?.classList.remove('playing');
+        if (onEnd) onEnd();
+      };
+      audio.onerror = () => {
+        isPlaying = false;
+        realAudioEl = null;
+        $('shadowWaveBox')?.classList.remove('playing');
+      };
+      const tryPlay = () => { const p = audio.play(); if (p && p.catch) p.catch(() => {}); };
+      if (document.readyState === 'complete') tryPlay();
+      else window.addEventListener('load', tryPlay, { once: true });
+      return;
+    }
     if (!('speechSynthesis' in window) || !text) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -5947,7 +6180,7 @@ const ShadowingStudio = (() => {
       } else {
         setBanner('🎙️ 換你開口囉！請點擊【🎙️ B 輪到我跟讀】錄下你的發音！', 'rgba(245,158,11,0.15)', '#d97706');
       }
-    });
+    }, s.audio);
   }
 
   // 自動留白倒數（可調間隔 3/5/7 秒）
@@ -6158,7 +6391,7 @@ const ShadowingStudio = (() => {
           }
         };
       }
-    });
+    }, s.audio);
   }
 
   // Task 4: 寬容評分（Metaphone 模糊匹配 + Levenshtein 取最高）
@@ -6270,7 +6503,8 @@ const ShadowingStudio = (() => {
 
     if (mode === 'native') {
       const story = getCurrentStory();
-      if (story) speakSentence(story.sentences[currentSentenceIdx].text);
+      const s = story && story.sentences[currentSentenceIdx];
+      if (s) speakSentence(s.text, null, s.audio);
     } else if (mode === 'user' && userAudioUrl) {
       const audio = new Audio(userAudioUrl);
       audio.onplay = () => $('shadowWaveBox').classList.add('playing');
@@ -6289,6 +6523,7 @@ const ShadowingStudio = (() => {
     const countdownEl = $('shadowCountdown');
     if (countdownEl) countdownEl.style.display = 'none';
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (realAudioEl) { try { realAudioEl.pause(); } catch(e) {} realAudioEl = null; }
     if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
     $('shadowWaveBox')?.classList.remove('playing');
     $('shadowRecordBtn')?.classList.remove('recording');
@@ -6344,30 +6579,14 @@ const ShadowingStudio = (() => {
       startRecordingCurrentSentence();
     });
 
-    // 顯示隱藏翻譯
+    // 顯示隱藏翻譯 / 偷看文字
     $('shadowToggleEye')?.addEventListener('click', () => {
-      if (currentStep === 4) {
-        const ruby = $('shadowFocusRuby');
-        const romaji = $('shadowFocusRomaji');
-        const currentOp = ruby ? ruby.style.opacity : '0.2';
-        if (currentOp === '0.2') {
-          if (ruby) ruby.style.opacity = '1';
-          if (romaji) romaji.style.opacity = '1';
-          $('shadowEyeLabel').textContent = '隱藏文字';
-        } else if (currentOp === '1') {
-          if (ruby) ruby.style.opacity = '0';
-          if (romaji) romaji.style.opacity = '0';
-          $('shadowEyeLabel').textContent = '半透文字';
-        } else {
-          if (ruby) ruby.style.opacity = '0.2';
-          if (romaji) romaji.style.opacity = '0.2';
-          $('shadowEyeLabel').textContent = '完全顯示';
-        }
-        return;
+      if (currentStep === 1) {
+        peekText = !peekText;
+      } else {
+        zhHidden = !zhHidden;
       }
-      zhHidden = !zhHidden;
-      $('shadowEyeLabel').textContent = zhHidden ? '顯示翻譯' : '隱藏翻譯';
-      $('shadowFocusZh')?.classList.toggle('hidden-text', zhHidden);
+      applyStepUI();
     });
 
     // 速度調整
@@ -6385,9 +6604,9 @@ const ShadowingStudio = (() => {
         document.querySelectorAll('.step-tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentStep = parseInt(btn.getAttribute('data-step')) || 1;
-        zhHidden = (currentStep === 1 || currentStep === 4);
+        peekText = false;
+        zhHidden = (currentStep === 1 || currentStep === 3 || currentStep === 4);
         renderFocusSentence();
-        applyStepUI();
       });
     });
   }
