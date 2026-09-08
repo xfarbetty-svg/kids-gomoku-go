@@ -21,6 +21,7 @@
   - 🎮 趣味互動打怪與 SRS 記憶閃卡（小朋友打擊魔王 HP、大人 FSRS 間隔翻卡與聽力默寫）
   - 💬 情境實境對話（12 組日常情境劇本、Web Speech 麥克風即時語音辨識判定、星級評分、聽示範與安靜送出模式）
   - 🎙️ 影子跟讀訓練室（Shadowing Studio）：4 階段階梯跟讀訓練法（純聽磨耳朵、理解精讀、視讀跟讀、脫稿影子+錄音AB對照）、大人/小孩英日語精選故事庫、動態聲波、Levenshtein 語音評分與星星連動
+  - 🚀 Shadowing V2（TASK-007）：四階段獨立 UI 行為（applyStepUI）、可調靜音間隔（3/5/7 秒）、聽寫模式（Dictation Mode）、寬容評分（Metaphone 模糊匹配 + Levenshtein 取高）、Tap-to-Lookup 單字即時查詢卡片、學習進度持久化（localStorage）
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
 
@@ -30,11 +31,11 @@
 - `common.js`：魔王系統核心（STAGES、defeated／unlocked、isUnlocked()／isBossDefeated()、KidsApp.addStars()、通關自動解鎖）
 - `index.html`：首頁卡片顯示魔王資訊、新增「雙語探險學院」卡片
 - `rhythm.html`／`memory.html`／`puzzle.html`／`gomoku.html`：各關魔王血量與討伐邏輯
-- `sw.js`：版本更新（v21，快取 learn.html 與全套影子跟讀教材庫）
+- `sw.js`：版本更新（v25，快取 learn.html 與全套影子跟讀教材庫）
 - `openspec/`：OpenSpec 規格驅動開發（SDD）提案 `enrich-language-learning`（proposal／design／tasks／specs）
 
 **雙語學院與圍棋：**
-- `learn.html`：大人/小孩雙模式語言學習 APP（字庫、YT影音精聽、打怪/閃卡、情境實境對話、影子跟讀訓練室）
+- `learn.html`：大人/小孩雙模式語言學習 APP（字庫、YT影音精聽、打怪/閃卡、情境實境對話、影子跟讀訓練室 V2）
 - `sticky-gomoku-new.html`：Gooey 果凍融合、4 段 AI 棋力（🐣 初級／🌸 中級／👑 大師／🔥 宗師）、AI 教練解說、7x7/9x9/13x13/19x19 規格、圍地彩色高亮、Pass 雙入口與 Sticky 吸底控制列
 
 ## ⚠️ 待完成事項
@@ -44,10 +45,14 @@
 
 ## 🕐 最後更新
 
-- **日期**：2026-09-08
-- **更新者**：antigravity @ DESKTOP-6ELKIRH（第二棒執行完畢，交付第三棒覆核）
-- **內容**：依據使用者產出之 `RELAY_TASK.md` 精確完成 3 處修復：
-  1. Task 1：`ShadowingStudio` return API 補齊 `onModeChange()` 與 `setShadowingLang(lang)` 暴露。
-  2. Task 2：`switchTab` 的 shadowing 分支補上 `ShadowingStudio.onTabOpen()` 呼叫。
-  3. Task 3：執行 Node.js 語法檢驗與 `VERIFY_RELAY.js`，8 項測試 100% 通過（0 失敗），行數為 6003 行。
-- **Git 狀態**：代碼通過語法檢驗，`RELAY_TASK.md` 狀態更新為 `COMPLETED`，交付第三棒覆核。
+- **日期**：2026-09-09
+- **更新者**：antigravity @ DESKTOP-6ELKIRH
+- **內容**：依據 `OPENCODE_TASK_SHADOWING_V2.md` 與 `RELAY_TASK_007_DIRECTIVE.md` 完整實作 TASK-007 六大功能：
+  1. Task 1：四階段獨立 UI 行為（`applyStepUI()`）
+  2. Task 2：可調靜音間隔（3/5/7 秒 `#shadowSilenceSelect`）
+  3. Task 3：聽寫模式（`#shadowDictateBtn`、`dictateCurrentSentence()`）
+  4. Task 4：寬容評分（`metaphoneMatch()` + `levenshtein()` 取高）
+  5. Task 5：Tap-to-Lookup（`renderClickableWords()` + `#shadowWordPopup`）
+  6. Task 6：學習進度持久化（`saveProgress()` / `loadProgress()`，故事列表動態進度）
+  7. 測試：`VERIFY_RELAY.js` 24/24 全數通過，`verify_learn.js` 19/19 全數通過，行數 6340 行。
+- **Git 狀態**：已 commit (`e3e5da2`) 並 push 至 `origin/main`，`RELAY_STATUS.json` 轉為 `CODE_DONE`，交付 OpenCode 覆核。
