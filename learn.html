@@ -2076,6 +2076,39 @@
     60% { transform: scale(1.2); }
     100% { transform: scale(1); opacity: 1; }
   }
+
+  /* Shadowing V2 styles */
+  .shadow-silence-select {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.08);
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+  .shadow-silence-select option {
+    background: #1e293b;
+    color: #ccc;
+  }
+  body.mode-kids .shadow-silence-select {
+    background: #fff;
+    color: #333;
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+  .shadow-word {
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+    display: inline-block;
+  }
+  .shadow-word:hover {
+    background: rgba(59, 130, 246, 0.3);
+  }
+  .shadow-word-popup {
+    pointer-events: auto;
+  }
 </style>
 </head>
 <body class="mode-kids">
@@ -2457,11 +2490,19 @@
               <span style="font-size:12px;opacity:0.65;font-weight:700;">逐句刻意跟讀練習</span>
               <div style="font-size:16px;font-weight:900;" id="shadowProgressLabel">第 <span id="shadowFocusCurrent">1</span> / <span id="shadowFocusTotal">1</span> 句</div>
             </div>
-            <div style="display:flex;gap:6px;">
+            <div style="display:flex;gap:6px;align-items:center;">
+              <select id="shadowSilenceSelect" class="shadow-silence-select" style="background:rgba(255,255,255,0.08);color:#ccc;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px 8px;font-size:0.8rem;">
+                <option value="3">⏱️ 3秒（進階）</option>
+                <option value="5" selected>⏱️ 5秒（中級）</option>
+                <option value="7">⏱️ 7秒（初學）</option>
+              </select>
               <button class="pill" id="shadowAutoFlowBtn" style="padding:6px 12px;font-size:13px;cursor:pointer;" title="開啟自動留白跟讀模式">🔁 連續跟讀：關</button>
               <button class="pill" id="shadowNextBtn" style="padding:6px 14px;font-size:13px;cursor:pointer;">下一句 ➡️</button>
             </div>
           </div>
+
+          <!-- Fullscreen Countdown Overlay -->
+          <div id="shadowCountdown" class="shadow-countdown" style="display:none;"></div>
 
           <!-- Sound Wave Visualizer & Status Banner -->
           <div class="shadow-wave-box" id="shadowWaveBox">
@@ -2530,6 +2571,7 @@
         <button class="shadow-ctrl-btn shadow-record-btn" id="shadowRecordBtn" style="flex:1.2;" title="換我跟讀並錄音評分">
           <span>🎙️</span> <span id="shadowRecordBtnText">B 輪到我跟讀</span>
         </button>
+        <button id="shadowDictateBtn" class="shadow-ctrl-btn" style="display:none;background:rgba(59,130,246,0.3);" title="切換聽寫模式">📝 聽寫</button>
       </div>
 
       <!-- AB Compare Dock (shown after sentence recording) -->
@@ -5510,6 +5552,45 @@ const ShadowingStudio = (() => {
     return stories.find(s => s.id === currentStoryId) || null;
   }
 
+  function saveProgress() {
+    const story = getCurrentStory();
+    if (!story) return;
+    const key = `shadow_progress_${currentLang}_${currentStoryId}`;
+    let existing = { completed: [], totalStars: 0 };
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored) existing = JSON.parse(stored);
+    } catch (e) {}
+    if (!Array.isArray(existing.completed)) existing.completed = [];
+    if (!existing.completed.includes(currentSentenceIdx)) {
+      existing.completed.push(currentSentenceIdx);
+    }
+    existing.lastStep = currentStep;
+    existing.lastSentence = currentSentenceIdx;
+    try {
+      localStorage.setItem(key, JSON.stringify(existing));
+    } catch (e) {}
+
+    const sel = $('shadowStorySelect');
+    if (sel) {
+      const opt = sel.querySelector(`option[value="${currentStoryId}"]`);
+      if (opt) {
+        opt.textContent = `${story.title}（${story.titleZh}） (${existing.completed.length}/${story.sentences.length})`;
+      }
+    }
+  }
+
+  function loadProgress(storyId) {
+    const sId = storyId || currentStoryId;
+    if (!sId) return null;
+    const key = `shadow_progress_${currentLang}_${sId}`;
+    try {
+      return JSON.parse(localStorage.getItem(key) || 'null');
+    } catch (e) {
+      return null;
+    }
+  }
+
   function populateStorySelect() {
     const sel = $('shadowStorySelect');
     if (!sel) return;
@@ -5520,9 +5601,77 @@ const ShadowingStudio = (() => {
     stories.forEach(s => {
       const opt = document.createElement('option');
       opt.value = s.id;
-      opt.textContent = `${s.title}（${s.titleZh}）`;
+      const progress = loadProgress(s.id);
+      const completedCount = progress && Array.isArray(progress.completed) ? progress.completed.length : 0;
+      const total = s.sentences.length;
+      opt.textContent = `${s.title}（${s.titleZh}） (${completedCount}/${total})`;
       sel.appendChild(opt);
     });
+  }
+
+  function renderClickableWords(text, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    const words = (text || '').split(/(\s+)/);
+    words.forEach(word => {
+      if (word.match(/^\s+$/)) {
+        container.appendChild(document.createTextNode(' '));
+      } else if (word) {
+        const span = document.createElement('span');
+        span.className = 'shadow-word';
+        span.textContent = word;
+        span.addEventListener('click', (e) => {
+          e.stopPropagation();
+          showWordPopup(word, span.getBoundingClientRect());
+        });
+        container.appendChild(span);
+      }
+    });
+  }
+
+  function showWordPopup(word, rect) {
+    const old = document.getElementById('shadowWordPopup');
+    if (old) old.remove();
+
+    const cleanWord = (word || '').replace(/[.,!?"'「」『』、。♪]/g, '').trim();
+    if (!cleanWord) return;
+
+    const popup = document.createElement('div');
+    popup.id = 'shadowWordPopup';
+    popup.className = 'shadow-word-popup';
+    popup.innerHTML = `
+      <div style="font-weight:bold;margin-bottom:6px;font-size:1.05rem;color:#60a5fa;">${cleanWord}</div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button id="shadowWordPopupSpeak" style="background:rgba(59,130,246,0.4);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;">🔊 發音</button>
+        <button id="shadowWordPopupSave" style="background:rgba(34,197,94,0.4);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;">📝 加入生字本</button>
+      </div>
+    `;
+    popup.style.cssText = `position:fixed;top:${Math.max(10, rect.top - 70)}px;left:${Math.max(10, rect.left - 40)}px;background:#1e293b;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:10px 14px;z-index:9999;font-size:0.85rem;box-shadow:0 4px 20px rgba(0,0,0,0.4);`;
+    document.body.appendChild(popup);
+
+    document.getElementById('shadowWordPopupSpeak')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakSentence(cleanWord);
+    });
+
+    document.getElementById('shadowWordPopupSave')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (typeof WordBank !== 'undefined' && WordBank.addWord) {
+        WordBank.addWord(cleanWord, currentLang);
+      }
+      if (typeof KidsApp !== 'undefined' && KidsApp.addStars) {
+        KidsApp.addStars(1);
+      }
+      popup.remove();
+    });
+
+    setTimeout(() => {
+      document.addEventListener('click', function closePopup() {
+        popup.remove();
+        document.removeEventListener('click', closePopup);
+      }, { once: true });
+    }, 100);
   }
 
   function renderFocusSentence() {
@@ -5535,8 +5684,8 @@ const ShadowingStudio = (() => {
     $('shadowFocusCurrent').textContent = currentSentenceIdx + 1;
     $('shadowFocusTotal').textContent = story.sentences.length;
 
-    // 渲染主文字
-    $('shadowFocusRuby').innerHTML = s.ruby || s.text;
+    // 渲染主文字（點擊查單字）
+    renderClickableWords(s.text, 'shadowFocusRuby');
 
     // 渲染羅馬拼音
     if (s.phonetic) {
@@ -5569,8 +5718,56 @@ const ShadowingStudio = (() => {
     audioBlob = null;
     userAudioUrl = null;
 
-    // 狀態橫幅重置
+    // 狀態橫幅重置並套用四階段 UI
     setBanner('🎧 點擊【🔊 A 示範這句】先聽母語發音，接著按【🎙️ B 輪到我跟讀】開口模仿！', 'rgba(79,70,229,0.1)', '#4f46e5');
+    applyStepUI();
+  }
+
+  function applyStepUI() {
+    const ruby = $('shadowFocusRuby');
+    const romaji = $('shadowFocusRomaji');
+    const zh = $('shadowFocusZh');
+    const hint = $('shadowFocusHint');
+    const wave = $('shadowWaveBox');
+    const recordBtn = $('shadowRecordBtn');
+    const dictateBtn = $('shadowDictateBtn');
+    const abDock = $('shadowAbDock');
+    const badge = $('shadowSentenceRoleBadge');
+
+    // 預設全部顯示
+    [ruby, romaji, zh, hint].forEach(el => { if (el) { el.style.display = ''; el.style.opacity = ''; } });
+    if (wave) wave.style.display = '';
+    if (recordBtn) recordBtn.style.display = dictateMode ? 'none' : '';
+    if (abDock) abDock.style.display = '';
+    if (badge) badge.style.display = '';
+    if (dictateBtn) dictateBtn.style.display = (currentStep === 3 || currentStep === 4) ? '' : 'none';
+
+    if (currentStep === 1) {
+      // 純聽：隱藏所有文字，只留聲波
+      [ruby, romaji, zh, hint, badge].forEach(el => { if (el) el.style.display = 'none'; });
+      if (recordBtn) recordBtn.style.display = 'none';
+      if (abDock) abDock.style.display = 'none';
+      setBanner('🎧 專心聽，感受語調與節奏', '#1e3a5f', '#a5d8ff');
+    } else if (currentStep === 2) {
+      // 精讀：全顯示，強制開中文
+      zhHidden = false;
+      if (zh) zh.style.display = '';
+      if ($('shadowEyeLabel')) $('shadowEyeLabel').textContent = '隱藏翻譯';
+      if (recordBtn) recordBtn.style.display = 'none';
+      if (abDock) abDock.style.display = 'none';
+      setBanner('📖 仔細閱讀，理解每句含義', '#2d5016', '#b2f2bb');
+    } else if (currentStep === 3) {
+      // 視讀跟讀：隱藏中文，可偷看
+      if (zh) zh.style.display = zhHidden ? 'none' : '';
+      setBanner('📑 看著文字，跟著節奏朗讀', '#5f3a1e', '#ffd8a8');
+    } else if (currentStep === 4) {
+      // 脫稿影子：半透明或隱藏
+      if (ruby) ruby.style.opacity = '0.2';
+      if (romaji) romaji.style.opacity = '0.2';
+      if (zh) zh.style.display = 'none';
+      if (hint) hint.style.display = 'none';
+      setBanner('🎙️ 放開文字，像影子一樣跟隨！', '#5f1e3a', '#fcc2d7');
+    }
   }
 
   function setBanner(text, bg, color) {
@@ -5652,12 +5849,16 @@ const ShadowingStudio = (() => {
     if (!story || !story.sentences.length) return;
     stopAllAudio();
 
+    if (dictateMode) {
+      dictateCurrentSentence();
+      return;
+    }
+
     const s = story.sentences[currentSentenceIdx];
     setBanner('🔊 母語者 A 正在示範中... 請仔細聽咬字與抑揚頓挫！', 'rgba(16,185,129,0.15)', '#059669');
 
     speakSentence(s.text, () => {
       if (autoFlowEnabled) {
-        // 自動連鎖模式：A 念完後留白 4 秒讓 B 跟讀，接著自動下一句
         startAutoFlowCountdown();
       } else {
         setBanner('🎙️ 換你開口囉！請點擊【🎙️ B 輪到我跟讀】錄下你的發音！', 'rgba(245,158,11,0.15)', '#d97706');
@@ -5665,19 +5866,27 @@ const ShadowingStudio = (() => {
     });
   }
 
-  // 自動留白倒數
+  // 自動留白倒數（可調間隔 3/5/7 秒）
   function startAutoFlowCountdown() {
-    let countdown = 4;
+    const silenceSelect = $('shadowSilenceSelect');
+    let countdown = silenceSelect ? parseInt(silenceSelect.value) || 5 : 5;
     setBanner(`🎙️ 輪到你跟讀！請大聲朗讀這句...（倒數 ${countdown} 秒）`, 'rgba(239,68,68,0.15)', '#dc2626');
+    const countdownEl = $('shadowCountdown');
+    if (countdownEl) {
+      countdownEl.style.display = 'flex';
+      countdownEl.innerHTML = `<span class="shadow-countdown-num">${countdown}</span>`;
+    }
     if (autoFlowTimer) clearInterval(autoFlowTimer);
 
     autoFlowTimer = setInterval(() => {
       countdown--;
+      if (countdownEl) countdownEl.innerHTML = `<span class="shadow-countdown-num">${countdown}</span>`;
       if (countdown > 0) {
         setBanner(`🎙️ 輪到你跟讀！請大聲朗讀這句...（倒數 ${countdown} 秒）`, 'rgba(239,68,68,0.15)', '#dc2626');
       } else {
         clearInterval(autoFlowTimer);
         autoFlowTimer = null;
+        if (countdownEl) countdownEl.style.display = 'none';
         const story = getCurrentStory();
         if (story && currentSentenceIdx < story.sentences.length - 1) {
           nextSentence();
@@ -5747,6 +5956,7 @@ const ShadowingStudio = (() => {
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRec) {
       showFeedback(75, '錄音完成！可點擊下方【🎧 聽我的錄音】與原音對照。');
+      saveProgress();
       return;
     }
 
@@ -5759,52 +5969,156 @@ const ShadowingStudio = (() => {
     rec.onresult = (e) => {
       const transcript = e.results[0][0].transcript;
       const score = calculateShadowingAccuracy(transcript, targetSentence.text);
-      const pct = Math.min(100, Math.round(score * 100));
+      const pct = score <= 1 ? Math.min(100, Math.round(score * 100)) : Math.min(100, Math.round(score));
       showFeedback(pct, `辨識到：「${transcript}」`);
+      saveProgress();
     };
 
     rec.onerror = () => {
       showFeedback(70, '已錄音完成！可點擊【🎧 聽我的錄音】對照母語原音。');
+      saveProgress();
     };
 
     try { rec.start(); } catch(e) {}
   }
 
+  // Task 3: 聽寫模式 (Dictation Mode)
+  let dictateMode = false;
+
+  function toggleDictateMode() {
+    dictateMode = !dictateMode;
+    const dictateBtn = $('shadowDictateBtn');
+    const playBtn = $('shadowPlayBtn');
+    const recordBtn = $('shadowRecordBtn');
+    if (dictateBtn) {
+      dictateBtn.style.background = dictateMode ? 'rgba(59,130,246,0.6)' : 'rgba(59,130,246,0.3)';
+      dictateBtn.textContent = dictateMode ? '📝 聽寫中' : '📝 聽寫';
+    }
+    if (recordBtn) recordBtn.style.display = dictateMode ? 'none' : '';
+    if (playBtn) playBtn.style.display = '';
+
+    if (dictateMode) {
+      dictateCurrentSentence();
+    } else {
+      const inputArea = $('shadowDictateInput');
+      if (inputArea) inputArea.style.display = 'none';
+      const ruby = $('shadowFocusRuby');
+      const romaji = $('shadowFocusRomaji');
+      if (ruby) { ruby.style.display = ''; ruby.style.opacity = ''; }
+      if (romaji) { romaji.style.display = ''; romaji.style.opacity = ''; }
+      applyStepUI();
+    }
+  }
+
+  function dictateCurrentSentence() {
+    const story = getCurrentStory();
+    if (!story) return;
+    const s = story.sentences[currentSentenceIdx];
+    if (!s) return;
+
+    setBanner('🎧 正在播放原音，請仔細聆聽並準備聽寫...', 'rgba(59,130,246,0.15)', '#2563eb');
+
+    speakSentence(s.text, () => {
+      const ruby = $('shadowFocusRuby');
+      const romaji = $('shadowFocusRomaji');
+      const zh = $('shadowFocusZh');
+      const hint = $('shadowFocusHint');
+      if (ruby) ruby.style.display = 'none';
+      if (romaji) romaji.style.display = 'none';
+      if (zh) zh.style.display = 'none';
+      if (hint) hint.style.display = 'none';
+
+      setBanner('✍️ 請在下方輸入框寫下你聽到的完整句子！', 'rgba(59,130,246,0.15)', '#2563eb');
+
+      let inputArea = $('shadowDictateInput');
+      if (!inputArea) {
+        inputArea = document.createElement('div');
+        inputArea.id = 'shadowDictateInput';
+        inputArea.style.cssText = 'margin:12px 0;text-align:center;';
+        inputArea.innerHTML = `
+          <input id="shadowDictateText" type="text" placeholder="輸入你聽到的句子..."
+            style="width:90%;max-width:500px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:inherit;font-size:1rem;text-align:center;" />
+          <div style="margin-top:8px;">
+            <button id="shadowDictateSubmit" class="shadow-ctrl-btn shadow-play-btn" style="padding:8px 24px;">確認送出</button>
+          </div>
+        `;
+        $('shadowFocusCard')?.appendChild(inputArea);
+      }
+      inputArea.style.display = 'block';
+      const textInput = $('shadowDictateText');
+      if (textInput) {
+        textInput.value = '';
+        textInput.focus();
+      }
+
+      const submitBtn = $('shadowDictateSubmit');
+      if (submitBtn) {
+        submitBtn.onclick = () => {
+          const userText = ($('shadowDictateText')?.value || '').trim();
+          if (!userText) return;
+          const pct = calculateShadowingAccuracy(userText, s.text);
+          showFeedback(pct, '📝 聽寫');
+          saveProgress();
+          if (ruby) { ruby.style.display = ''; ruby.style.opacity = ''; }
+          if (romaji) { romaji.style.display = ''; romaji.style.opacity = ''; }
+          inputArea.style.display = 'none';
+          applyStepUI();
+        };
+      }
+
+      if (textInput) {
+        textInput.onkeydown = (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            submitBtn?.click();
+          }
+        };
+      }
+    });
+  }
+
+  // Task 4: 寬容評分（Metaphone 模糊匹配 + Levenshtein 取最高）
   function calculateShadowingAccuracy(recognized, target) {
     if (!recognized || !target) return 0;
-    const isJa = currentLang === 'ja';
-    const clean = (s) => {
-      const norm = s
-        .replace(/[^\p{L}\p{N}]/gu, isJa ? "" : " ")
-        .trim();
-      if (isJa) {
-        return norm
-          .normalize('NFKC')
-          .replace(/[ァ-ヶ]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60));
-      }
-      return norm.toLowerCase();
-    };
-    const s1 = clean(recognized);
-    const s2 = clean(target);
-    if (s1 === s2) return 1.0;
-    if (!s1 || !s2) return 0;
+    // 1. Levenshtein 精確分
+    const lev = levenshtein(recognized.toLowerCase(), target.toLowerCase());
+    const maxLen = Math.max(recognized.length, target.length);
+    const levPct = maxLen > 0 ? Math.round(((maxLen - lev) / maxLen) * 100) : 0;
 
-    if (s2.includes(s1) || s1.includes(s2)) {
-      const ratio = Math.min(s1.length, s2.length) / Math.max(s1.length, s2.length);
-      if (ratio >= 0.6) return Math.max(0.8, ratio);
+    // 2. Metaphone 模糊分（輔助字母匹配）
+    const metaphonePct = metaphoneMatch(recognized, target);
+
+    // 3. 取兩者較高分
+    return Math.max(levPct, metaphonePct);
+  }
+
+  function metaphoneMatch(a, b) {
+    function extractVowels(s) {
+      return (s || '').toLowerCase().replace(/[^aeiou]/g, '');
     }
+    function extractConsonants(s) {
+      return (s || '').toLowerCase().replace(/[aeiou\s]/g, '');
+    }
+    const va = extractVowels(a), vb = extractVowels(b);
+    const ca = extractConsonants(a), cb = extractConsonants(b);
+    const vPct = va && vb ? Math.round(((Math.min(va.length, vb.length) / Math.max(va.length, vb.length)) * 100) * 0.6) : 0;
+    const cPct = ca && cb ? Math.round(((Math.min(ca.length, cb.length) / Math.max(ca.length, cb.length)) * 100) * 0.4) : 0;
+    return vPct + cPct;
+  }
 
-    const m = s1.length, n = s2.length;
-    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  function levenshtein(a, b) {
+    const m = a.length, n = b.length;
+    const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
     for (let i = 0; i <= m; i++) dp[i][0] = i;
     for (let j = 0; j <= n; j++) dp[0][j] = j;
     for (let i = 1; i <= m; i++) {
       for (let j = 1; j <= n; j++) {
-        if (s1[i - 1] === s2[j - 1]) dp[i][j] = dp[i - 1][j - 1];
-        else dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
+        dp[i][j] = a[i - 1] === b[j - 1]
+          ? dp[i - 1][j - 1]
+          : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
       }
     }
-    return 1 - (dp[m][n] / Math.max(m, n));
+    return dp[m][n];
   }
 
   function showFeedback(pct, extraMsg) {
@@ -5888,6 +6202,8 @@ const ShadowingStudio = (() => {
       clearInterval(autoFlowTimer);
       autoFlowTimer = null;
     }
+    const countdownEl = $('shadowCountdown');
+    if (countdownEl) countdownEl.style.display = 'none';
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
     $('shadowWaveBox')?.classList.remove('playing');
@@ -5929,6 +6245,7 @@ const ShadowingStudio = (() => {
     // 核心按鈕
     $('shadowPlayBtn')?.addEventListener('click', () => playCurrentSentence());
     $('shadowRecordBtn')?.addEventListener('click', () => toggleRecordCurrentSentence());
+    $('shadowDictateBtn')?.addEventListener('click', toggleDictateMode);
 
     // AB 對照
     $('shadowAbNative')?.addEventListener('click', () => playAbAudio('native'));
@@ -5942,6 +6259,25 @@ const ShadowingStudio = (() => {
 
     // 顯示隱藏翻譯
     $('shadowToggleEye')?.addEventListener('click', () => {
+      if (currentStep === 4) {
+        const ruby = $('shadowFocusRuby');
+        const romaji = $('shadowFocusRomaji');
+        const currentOp = ruby ? ruby.style.opacity : '0.2';
+        if (currentOp === '0.2') {
+          if (ruby) ruby.style.opacity = '1';
+          if (romaji) romaji.style.opacity = '1';
+          $('shadowEyeLabel').textContent = '隱藏文字';
+        } else if (currentOp === '1') {
+          if (ruby) ruby.style.opacity = '0';
+          if (romaji) romaji.style.opacity = '0';
+          $('shadowEyeLabel').textContent = '半透文字';
+        } else {
+          if (ruby) ruby.style.opacity = '0.2';
+          if (romaji) romaji.style.opacity = '0.2';
+          $('shadowEyeLabel').textContent = '完全顯示';
+        }
+        return;
+      }
       zhHidden = !zhHidden;
       $('shadowEyeLabel').textContent = zhHidden ? '顯示翻譯' : '隱藏翻譯';
       $('shadowFocusZh')?.classList.toggle('hidden-text', zhHidden);
@@ -5964,6 +6300,7 @@ const ShadowingStudio = (() => {
         currentStep = parseInt(btn.getAttribute('data-step')) || 1;
         zhHidden = (currentStep === 1 || currentStep === 4);
         renderFocusSentence();
+        applyStepUI();
       });
     });
   }
