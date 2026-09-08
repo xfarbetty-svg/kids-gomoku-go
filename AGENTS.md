@@ -56,6 +56,10 @@
   - 音檔暫存：`C:\Users\PXP\AppData\Local\Temp\opencode\jp_teacher_ja.m4a`（10.28MB，日文原音）
   - 工具：yt-dlp 2026.08.19 + deno 2.9.6 + ffmpeg 9.0.1 已就緒；影片含日文字幕(SRT)可供逐句對齊
 - [ ] 語音資源補充：詳見 `handoff.md`「進行中」區塊
+- [ ] **單字星球（toeic.html）優化備忘**：
+  - [ ] 兒童美語題庫擴充：整合資料夾內 3 份 PDF（`國小英文單字.pdf`、`國小英文單字 （2）.pdf`、`GEPTKid_wordlist01.pdf`），參考 https://teachers.dale.nthu.edu.tw/?page_id=921
+  - [ ] 閃卡翻面動效修正：需改為「左右翻轉（3D rotateY）」，修復目前無法左右翻問題
+  - [ ] 單字庫主題 Pills 顯示修復：修復主題篩選列被截斷、無法橫向滾動選取完整主題（兒童美語與多益）
 
 ## 🕐 最後更新
 
