@@ -45,6 +45,9 @@
 ## 🕐 最後更新
 
 - **日期**：2026-09-08
-- **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：完成 OpenSpec 提案 `enrich-language-learning`（8/8 任務）。新增進階日語篇章「🎋 竹取物語」（9 句漢字＋`<ruby><rt>` 假名標音）、英語篇章「🌬️ 北風與太陽」；實作 `<ruby>` 標音排版與 CSS；升級 ja-JP 語音辨識評分（日文正規化 NFKC／片假名→平假名／字元 Levenshtein）；擴充英日高頻字庫 16 詞；sw.js 更新至 v21。
-- **Git 狀態**：準備 commit + push，代碼語法（node --check）100% 通過驗收。
+- **更新者**：antigravity @ DESKTOP-6ELKIRH（第二棒執行完畢，交付第三棒覆核）
+- **內容**：依據使用者產出之 `RELAY_TASK.md` 精確完成 3 處修復：
+  1. Task 1：`ShadowingStudio` return API 補齊 `onModeChange()` 與 `setShadowingLang(lang)` 暴露。
+  2. Task 2：`switchTab` 的 shadowing 分支補上 `ShadowingStudio.onTabOpen()` 呼叫。
+  3. Task 3：執行 Node.js 語法檢驗與 `VERIFY_RELAY.js`，8 項測試 100% 通過（0 失敗），行數為 6003 行。
+- **Git 狀態**：代碼通過語法檢驗，`RELAY_TASK.md` 狀態更新為 `COMPLETED`，交付第三棒覆核。

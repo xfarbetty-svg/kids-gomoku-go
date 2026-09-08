@@ -1,0 +1,18 @@
+{
+  "project": "017_小朋友APP - 雙語探險學院",
+  "round": 6,
+  "status": "CODE_DONE",
+  "current_turn": "User",
+  "task_name": "learn.html ShadowingStudio 啟動修復（補暴露 onModeChange, setShadowingLang API 及 onTabOpen 呼叫）",
+  "spec_file": "RELAY_TASK.md",
+  "target_files": [
+    "learn.html"
+  ],
+  "items": [
+    "Task 1: 補暴露缺失的 onModeChange 與 setShadowingLang API 方法 - 完成",
+    "Task 2: switchTab 的 shadowing 分支補上 onTabOpen 呼叫 - 完成",
+    "Task 3: 語法檢驗與 VERIFY_RELAY.js 測試 - 8 項全數通過"
+  ],
+  "last_updated": "2026-09-08T23:02:00+08:00",
+  "review_summary": "ANTIGRAVITY 執行完成，VERIFY_RELAY.js 8/8 全數通過，等待規劃者（使用者）進行第三棒覆核。"
+}

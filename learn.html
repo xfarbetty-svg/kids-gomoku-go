@@ -1806,9 +1806,14 @@
   }
   .shadow-sentence-phonetic {
     font-size: 13px;
-    opacity: 0.65;
-    margin-top: 4px;
+    opacity: 0.85;
+    margin: 2px 0 4px;
     font-weight: 600;
+    font-family: monospace;
+    color: #4f46e5;
+  }
+  body.mode-adult .shadow-sentence-phonetic {
+    color: #a5b4fc !important;
   }
   .shadow-sentence-ruby {
     font-size: 13px;
@@ -1825,12 +1830,18 @@
   .shadow-sentence-text {
     font-size: 22px;
     font-weight: 800;
-    line-height: 1.7;
+    line-height: 1.85;
+    word-break: break-word;
+  }
+  .shadow-sentence-text ruby {
+    ruby-position: over;
   }
   .shadow-sentence-text ruby rt {
-    font-size: 0.62em;
-    opacity: 0.7;
-    font-weight: 500;
+    font-size: 0.68em;
+    opacity: 0.9;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
   }
   .shadow-sentence-zh {
     font-size: 14px;
@@ -2253,6 +2264,7 @@
 
       <!-- Flashcard Section -->
       <div id="flashcardSection">
+        <div id="flashcardLevelPills" class="level-pills" style="margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;"></div>
         <div class="flashcard-wrapper" id="flashcardWrapper">
           <div class="flashcard-inner">
             <!-- Front -->
@@ -2400,6 +2412,12 @@
   <section id="tab-shadowing" class="tab-content">
     <div class="shadowing-container">
 
+      <!-- Language Selector for Shadowing -->
+      <div class="shadow-lang-selector" style="display: flex; gap: 8px; margin-bottom: 12px; justify-content: center;">
+        <button type="button" class="pill active" id="shadowLangEnBtn" data-slang="en" style="cursor: pointer;">🇬🇧 英語 (English)</button>
+        <button type="button" class="pill" id="shadowLangJaBtn" data-slang="ja" style="cursor: pointer;">🇯🇵 日語 (日本語)</button>
+      </div>
+
       <!-- 1. Story Selector Bar -->
       <div class="glass-card shadow-story-bar">
         <span style="font-size: 20px;">📖</span>
@@ -2426,13 +2444,26 @@
         <!-- Empty state -->
         <div class="shadow-empty" id="shadowEmptyState">
           <div class="shadow-empty-icon">🎙️</div>
-          <div class="shadow-empty-text">請先從上方選單選擇一個故事，開始影子跟讀訓練！</div>
+          <div class="shadow-empty-text">請先從上方選單選擇一個故事，開始「A 念一句、B 跟讀一句」的真正影子跟讀訓練！</div>
         </div>
 
         <!-- Active training UI (hidden initially) -->
-        <div id="shadowActiveArea" class="hidden" style="display:flex;flex-direction:column;gap:16px;">
+        <div id="shadowActiveArea" class="hidden" style="display:flex;flex-direction:column;gap:14px;">
 
-          <!-- Sound Wave Visualizer -->
+          <!-- Navigation & Mode Bar -->
+          <div class="shadow-nav-bar" style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+            <button class="pill" id="shadowPrevBtn" style="padding:6px 14px;font-size:13px;cursor:pointer;">⬅️ 上一句</button>
+            <div style="text-align:center;">
+              <span style="font-size:12px;opacity:0.65;font-weight:700;">逐句刻意跟讀練習</span>
+              <div style="font-size:16px;font-weight:900;" id="shadowProgressLabel">第 <span id="shadowFocusCurrent">1</span> / <span id="shadowFocusTotal">1</span> 句</div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="pill" id="shadowAutoFlowBtn" style="padding:6px 12px;font-size:13px;cursor:pointer;" title="開啟自動留白跟讀模式">🔁 連續跟讀：關</button>
+              <button class="pill" id="shadowNextBtn" style="padding:6px 14px;font-size:13px;cursor:pointer;">下一句 ➡️</button>
+            </div>
+          </div>
+
+          <!-- Sound Wave Visualizer & Status Banner -->
           <div class="shadow-wave-box" id="shadowWaveBox">
             <div class="shadow-wave-bar"></div>
             <div class="shadow-wave-bar"></div>
@@ -2448,49 +2479,81 @@
             <div class="shadow-wave-bar"></div>
           </div>
 
-          <!-- Toggle text visibility (for Step 1 & 4) -->
-          <div style="display:flex;justify-content:flex-end;">
-            <button class="shadow-toggle-eye" id="shadowToggleEye" title="顯示/隱藏中文翻譯">
-              <span id="shadowEyeIcon">👁️</span> <span id="shadowEyeLabel">偷看翻譯</span>
-            </button>
+          <!-- Turn Status Banner -->
+          <div id="shadowTurnBanner" style="text-align:center;padding:10px 14px;border-radius:12px;font-weight:800;font-size:14px;background:rgba(79,70,229,0.1);color:#4f46e5;transition:all 0.3s;">
+            🎧 點擊【🔊 A 示範這句】先聽母語發音，接著按【🎙️ B 輪到我跟讀】開口模仿！
           </div>
 
-          <!-- Script Display Area -->
-          <div class="shadow-script-area" id="shadowScriptArea">
-            <!-- Sentences injected here -->
+          <!-- Focus Sentence Card -->
+          <div class="shadow-focus-card" id="shadowFocusCard" style="background:rgba(255,255,255,0.75);padding:20px;border-radius:18px;border:2px solid rgba(79,70,229,0.25);box-shadow:0 8px 24px rgba(0,0,0,0.06);display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="pill" id="shadowSentenceRoleBadge" style="font-size:11px;padding:3px 10px;background:#4f46e5;color:#fff;">🎯 當前跟讀句</span>
+              <button class="shadow-toggle-eye" id="shadowToggleEye" title="顯示/隱藏中文翻譯" style="background:none;border:none;cursor:pointer;font-size:13px;">
+                <span id="shadowEyeIcon">👁️</span> <span id="shadowEyeLabel">偷看翻譯</span>
+              </button>
+            </div>
+
+            <!-- Primary Sentence Text (Ruby / Kanji / English) -->
+            <div id="shadowFocusRuby" class="shadow-sentence-text" style="font-size:24px;font-weight:900;line-height:1.85;text-align:center;min-height:50px;">
+              <!-- Sentence text -->
+            </div>
+
+            <!-- Romaji / Phonetic Line -->
+            <div id="shadowFocusRomaji" class="shadow-sentence-phonetic" style="font-family:monospace;font-size:14px;color:#4f46e5;text-align:center;min-height:22px;">
+              <!-- Romaji text -->
+            </div>
+
+            <!-- Chinese Meaning -->
+            <div id="shadowFocusZh" class="shadow-sentence-zh" style="font-size:15px;text-align:center;opacity:0.85;border-top:1px dashed rgba(0,0,0,0.12);padding-top:8px;">
+              <!-- Translation -->
+            </div>
+
+            <!-- Pause Hint -->
+            <div id="shadowFocusHint" class="shadow-pause-hint" style="font-size:12px;opacity:0.75;text-align:center;">
+              <!-- Hint -->
+            </div>
           </div>
 
           <!-- Karaoke Progress Bar -->
           <div class="shadow-karaoke-bar">
             <div class="shadow-karaoke-fill" id="shadowKaraokeFill"></div>
           </div>
+
         </div>
       </div>
 
-      <!-- 4. Control Dock -->
+      <!-- 4. Control Dock: A 示範 ➔ B 跟讀 -->
       <div class="shadow-control-dock" id="shadowControlDock">
-        <button class="shadow-ctrl-btn shadow-play-btn" id="shadowPlayBtn" title="播放母語者原音">
-          <span>▶️</span> <span>播放原音</span>
+        <button class="shadow-ctrl-btn shadow-play-btn" id="shadowPlayBtn" style="flex:1;" title="播放母語者示範這句">
+          <span>🔊</span> <span id="shadowPlayBtnText">A 示範這句</span>
         </button>
-        <button class="shadow-ctrl-btn shadow-record-btn" id="shadowRecordBtn" title="脫稿跟讀+錄音" disabled>
-          <span>🎙️</span> <span>開始跟讀錄音</span>
+        <button class="shadow-ctrl-btn shadow-record-btn" id="shadowRecordBtn" style="flex:1.2;" title="換我跟讀並錄音評分">
+          <span>🎙️</span> <span id="shadowRecordBtnText">B 輪到我跟讀</span>
         </button>
       </div>
 
-      <!-- AB Compare Dock (hidden initially, shown after recording) -->
+      <!-- AB Compare Dock (shown after sentence recording) -->
       <div class="shadow-ab-dock hidden" id="shadowAbDock">
-        <button class="shadow-ab-btn active" id="shadowAbNative" title="聽母語原音">🔊 聽母語原音</button>
-        <button class="shadow-ab-btn" id="shadowAbUser" title="聽我的錄音">🎧 聽我的錄音</button>
-        <button class="shadow-ab-btn" id="shadowAbRetry" title="重新挑戰">🔄 重新挑戰</button>
+        <button class="shadow-ab-btn active" id="shadowAbNative" title="聽這句母語原音">🔊 聽這句原音</button>
+        <button class="shadow-ab-btn" id="shadowAbUser" title="聽剛剛自己錄的聲音">🎧 聽我的錄音</button>
+        <button class="shadow-ab-btn" id="shadowAbRetry" title="重新挑戰這句">🔄 再練一次</button>
       </div>
 
-      <!-- AI Feedback Pill (hidden initially) -->
+      <!-- AI Feedback Pill -->
       <div class="shadow-feedback-pill hidden" id="shadowFeedback">
         <div class="shadow-feedback-score" id="shadowFeedbackScore">85%</div>
         <div class="shadow-feedback-stars" id="shadowFeedbackStars">⭐⭐⭐</div>
         <div class="shadow-feedback-msg" id="shadowFeedbackMsg">流暢度極佳，咬字清晰！繼續保持～</div>
-        <button class="shadow-feedback-retry" id="shadowFeedbackRetry">🔄 再練一次</button>
+        <button class="shadow-feedback-retry" id="shadowFeedbackRetry">🔄 重新挑戰</button>
       </div>
+
+      <!-- 5. Mini Sentence Strip (Collapsible overview) -->
+      <details style="margin-top:12px;background:rgba(255,255,255,0.4);border-radius:12px;padding:8px 12px;">
+        <summary style="font-size:13px;font-weight:700;cursor:pointer;opacity:0.7;">📑 展開整篇故事句子清單（點擊跳句）</summary>
+        <div class="shadow-script-area" id="shadowScriptArea" style="margin-top:8px;max-height:220px;overflow-y:auto;">
+          <!-- Mini Sentences list -->
+        </div>
+      </details>
 
     </div>
   </section>
@@ -2643,15 +2706,41 @@ const SpeechSys = (() => {
     loadVoices();
   }
 
+  function getBestVoice(lang) {
+    if (!voices.length && 'speechSynthesis' in window) {
+      voices = window.speechSynthesis.getVoices();
+    }
+    if (lang === 'ja' || lang === 'ja-JP') {
+      // 優先挑選微軟高品質日文、Google 日本語或 Apple 原生日文語音
+      const preferred = ['Haruka', 'Ayumi', 'Nanami', 'Ichiro', 'Google 日本語', 'Kyoko', 'Otoya', 'Sayaka'];
+      for (const name of preferred) {
+        const found = voices.find(v => v.lang && v.lang.startsWith('ja') && v.name.includes(name));
+        if (found) return found;
+      }
+      return voices.find(v => v.lang && v.lang.startsWith('ja')) || null;
+    } else {
+      // 英語優選自然語音
+      const preferred = ['Jenny', 'Zira', 'Guy', 'Aria', 'Google US English', 'Samantha', 'Daniel'];
+      for (const name of preferred) {
+        const found = voices.find(v => v.lang && v.lang.startsWith('en') && v.name.includes(name));
+        if (found) return found;
+      }
+      return voices.find(v => v.lang && v.lang.startsWith('en')) || null;
+    }
+  }
+
   return {
     speak(text, lang = 'en', rate = 0.95) {
       if (!('speechSynthesis' in window) || !text) return;
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = (lang === 'ja') ? 'ja-JP' : 'en-US';
+      u.lang = (lang === 'ja' || lang === 'ja-JP') ? 'ja-JP' : 'en-US';
       u.rate = rate;
+      const voice = getBestVoice(lang);
+      if (voice) u.voice = voice;
       window.speechSynthesis.speak(u);
-    }
+    },
+    getBestVoice
   };
 })();
 
@@ -2659,84 +2748,159 @@ const SpeechSys = (() => {
    3. 核心分級單字資料庫 (English A1-C2 & Japanese 50音-N1)
    ========================================================================= */
 const DEFAULT_WORDS = [
-  /* 🇬🇧 English A1 入門 */
+  /* =========================================================================
+     🇬🇧 English A1 入門 (10 詞)
+     ========================================================================= */
   { id: 'en-a1-1', lang: 'en', level: 'A1', word: 'Apple', phonetic: '/ˈæpl/', meaning: '蘋果', pos: 'n.', example: 'I eat a fresh apple every morning.', exampleZh: '我每天早上吃一顆新鮮的蘋果。' },
   { id: 'en-a1-2', lang: 'en', level: 'A1', word: 'Rainbow', phonetic: '/ˈreɪnboʊ/', meaning: '彩虹', pos: 'n.', example: 'Look at the beautiful rainbow in the sky!', exampleZh: '快看天空那道美麗的彩虹！' },
   { id: 'en-a1-3', lang: 'en', level: 'A1', word: 'Happy', phonetic: '/ˈhæpi/', meaning: '快樂的', pos: 'adj.', example: 'The children are so happy in the park.', exampleZh: '孩子們在公園裡玩得好開心。' },
   { id: 'en-a1-4', lang: 'en', level: 'A1', word: 'Friend', phonetic: '/frend/', meaning: '朋友', pos: 'n.', example: 'A true friend is always by your side.', exampleZh: '真正的朋友永遠陪伴在身旁。' },
   { id: 'en-a1-5', lang: 'en', level: 'A1', word: 'Water', phonetic: '/ˈwɔːtər/', meaning: '水', pos: 'n.', example: 'Drink plenty of water every day.', exampleZh: '每天要記得多喝水。' },
+  { id: 'en-a1-6', lang: 'en', level: 'A1', word: 'School', phonetic: '/skuːl/', meaning: '學校', pos: 'n.', example: 'We walk to school together every morning.', exampleZh: '我們每天早上一起走路去學校。' },
+  { id: 'en-a1-7', lang: 'en', level: 'A1', word: 'Book', phonetic: '/bʊk/', meaning: '書本', pos: 'n.', example: 'She loves reading a story book before sleep.', exampleZh: '她喜歡在睡前讀一本故事書。' },
+  { id: 'en-a1-8', lang: 'en', level: 'A1', word: 'Smile', phonetic: '/smaɪl/', meaning: '微笑', pos: 'v./n.', example: 'A warm smile makes everyone feel welcome.', exampleZh: '溫暖的微笑讓每個人都感到賓至如歸。' },
+  { id: 'en-a1-9', lang: 'en', level: 'A1', word: 'Family', phonetic: '/ˈfæməli/', meaning: '家庭、家人', pos: 'n.', example: 'I love spending weekends with my family.', exampleZh: '我喜歡和家人一起度過週末。' },
+  { id: 'en-a1-10', lang: 'en', level: 'A1', word: 'Music', phonetic: '/ˈmjuːzɪk/', meaning: '音樂', pos: 'n.', example: 'Listening to soft music helps me relax.', exampleZh: '聽輕音樂能幫助我放鬆身心。' },
 
-  /* 🇬🇧 English A2 初級 */
-  { id: 'en-a2-1', lang: 'en', level: 'A2', word: 'Adventure', phonetic: '/ədˈventʃər/', meaning: '冒險、奇遇', pos: 'n.', example: 'They embarked on a thrilling forest adventure.', exampleZh: '他們展開了一場刺激的森林冒險。' },
-  { id: 'en-a2-2', lang: 'en', level: 'A2', word: 'Delicious', phonetic: '/dɪˈlɪʃəs/', meaning: '美味的、可口的', pos: 'adj.', example: 'Mom made a delicious chocolate cake.', exampleZh: '媽媽做了一個非常美味的巧克力蛋糕。' },
-  { id: 'en-a2-3', lang: 'en', level: 'A2', word: 'Travel', phonetic: '/ˈtrævl/', meaning: '旅行', pos: 'v./n.', example: 'I love to travel and explore new cultures.', exampleZh: '我喜歡旅行並探索新文化。' },
-  { id: 'en-a2-4', lang: 'en', level: 'A2', word: 'Weather', phonetic: '/ˈweðər/', meaning: '天氣', pos: 'n.', example: 'The weather is sunny and warm today.', exampleZh: '今天的天氣晴朗又溫暖。' },
+  /* =========================================================================
+     🇬🇧 English A2 初級 / GEPT 初級 / 常用 2000 字 (10 詞)
+     ========================================================================= */
+  { id: 'en-a2-1', lang: 'en', level: 'A2', word: 'Airport', phonetic: '/ˈerpɔːrt/', meaning: '機場', pos: 'n.', example: 'We arrived at the international airport early.', exampleZh: '我們很早就抵達了國際機場。' },
+  { id: 'en-a2-2', lang: 'en', level: 'A2', word: 'Baggage', phonetic: '/ˈbæɡɪdʒ/', meaning: '行李', pos: 'n.', example: 'Please keep an eye on your baggage at all times.', exampleZh: '請隨時看管好您的隨身行李。' },
+  { id: 'en-a2-3', lang: 'en', level: 'A2', word: 'Medicine', phonetic: '/ˈmedɪsn/', meaning: '藥物、藥品', pos: 'n.', example: 'Take this medicine after meals twice a day.', exampleZh: '這個藥一天吃兩次，飯後服用。' },
+  { id: 'en-a2-4', lang: 'en', level: 'A2', word: 'Convenient', phonetic: '/kənˈviːniənt/', meaning: '便利的、方便的', pos: 'adj.', example: 'The convenience store is open twenty-four hours.', exampleZh: '這家便利商店二十四小時營業，非常方便。' },
+  { id: 'en-a2-5', lang: 'en', level: 'A2', word: 'Adventure', phonetic: '/ədˈventʃər/', meaning: '冒險、奇遇', pos: 'n.', example: 'They embarked on a thrilling forest adventure.', exampleZh: '他們展開了一場刺激的森林冒險。' },
+  { id: 'en-a2-6', lang: 'en', level: 'A2', word: 'Delicious', phonetic: '/dɪˈlɪʃəs/', meaning: '美味的、可口的', pos: 'adj.', example: 'Mom made a delicious chocolate cake.', exampleZh: '媽媽做了一個非常美味的巧克力蛋糕。' },
+  { id: 'en-a2-7', lang: 'en', level: 'A2', word: 'Travel', phonetic: '/ˈtrævl/', meaning: '旅行', pos: 'v./n.', example: 'I love to travel and explore new cultures.', exampleZh: '我喜歡旅行並探索新文化。' },
+  { id: 'en-a2-8', lang: 'en', level: 'A2', word: 'Weather', phonetic: '/ˈweðər/', meaning: '天氣', pos: 'n.', example: 'The weather is sunny and warm today.', exampleZh: '今天的天氣晴朗又溫暖。' },
+  { id: 'en-a2-9', lang: 'en', level: 'A2', word: 'Restaurant', phonetic: '/ˈrestrɑːnt/', meaning: '餐廳', pos: 'n.', example: 'We had dinner at a lovely restaurant by the sea.', exampleZh: '我們在海邊一家可愛的餐廳吃了晚餐。' },
+  { id: 'en-a2-10', lang: 'en', level: 'A2', word: 'Health', phonetic: '/helθ/', meaning: '健康', pos: 'n.', example: 'Regular exercise is important for good health.', exampleZh: '規律運動對維持健康非常重要。' },
 
-  /* 🇬🇧 English B1 中級 */
-  { id: 'en-b1-1', lang: 'en', level: 'B1', word: 'Courage', phonetic: '/ˈkɜːrɪdʒ/', meaning: '勇氣、膽量', pos: 'n.', example: 'It takes great courage to speak the truth.', exampleZh: '說出真相需要極大的勇氣。' },
-  { id: 'en-b1-2', lang: 'en', level: 'B1', word: 'Discover', phonetic: '/dɪˈskʌvər/', meaning: '發現、探索', pos: 'v.', example: 'Scientists discovered a new star in galaxy.', exampleZh: '科學家在星系中發現了一顆新恆星。' },
-  { id: 'en-b1-3', lang: 'en', level: 'B1', word: 'Environment', phonetic: '/ɪnˈvaɪrənmənt/', meaning: '環境、大自然', pos: 'n.', example: 'We must protect our natural environment.', exampleZh: '我們必須守護我們的自然環境。' },
-  { id: 'en-b1-4', lang: 'en', level: 'B1', word: 'Confidence', phonetic: '/ˈkɑːnfɪdəns/', meaning: '信心、自信', pos: 'n.', example: 'She spoke on stage with high confidence.', exampleZh: '她在舞台上自信滿滿地發表演說。' },
+  /* =========================================================================
+     🇬🇧 English B1 中級 / GEPT 中級 / 常用 4000 字 (10 詞)
+     ========================================================================= */
+  { id: 'en-b1-1', lang: 'en', level: 'B1', word: 'Opportunity', phonetic: '/ˌɑːpərˈtuːnəti/', meaning: '機會、良機', pos: 'n.', example: 'Studying abroad is a fantastic opportunity to grow.', exampleZh: '出國留學是自我成長的絕佳機會。' },
+  { id: 'en-b1-2', lang: 'en', level: 'B1', word: 'Communicate', phonetic: '/kəˈmjuːnɪkeɪt/', meaning: '溝通、交流', pos: 'v.', example: 'It is important to communicate openly with teammates.', exampleZh: '與團隊夥伴保持坦誠溝通非常重要。' },
+  { id: 'en-b1-3', lang: 'en', level: 'B1', word: 'Atmosphere', phonetic: '/ˈætməsfɪr/', meaning: '氛圍、大氣', pos: 'n.', example: 'The cozy cafe has a relaxing atmosphere.', exampleZh: '這家溫馨的咖啡廳有著令人放鬆的氛圍。' },
+  { id: 'en-b1-4', lang: 'en', level: 'B1', word: 'Courage', phonetic: '/ˈkɜːrɪdʒ/', meaning: '勇氣、膽量', pos: 'n.', example: 'It takes great courage to speak the truth.', exampleZh: '說出真相需要極大的勇氣。' },
+  { id: 'en-b1-5', lang: 'en', level: 'B1', word: 'Discover', phonetic: '/dɪˈskʌvər/', meaning: '發現、探索', pos: 'v.', example: 'Scientists discovered a new star in galaxy.', exampleZh: '科學家在星系中發現了一顆新恆星。' },
+  { id: 'en-b1-6', lang: 'en', level: 'B1', word: 'Environment', phonetic: '/ɪnˈvaɪrənmənt/', meaning: '環境、大自然', pos: 'n.', example: 'We must protect our natural environment.', exampleZh: '我們必須守護我們的自然環境。' },
+  { id: 'en-b1-7', lang: 'en', level: 'B1', word: 'Confidence', phonetic: '/ˈkɑːnfɪdəns/', meaning: '信心、自信', pos: 'n.', example: 'She spoke on stage with high confidence.', exampleZh: '她在舞台上自信滿滿地發表演說。' },
+  { id: 'en-b1-8', lang: 'en', level: 'B1', word: 'Experience', phonetic: '/ɪkˈspɪəriəns/', meaning: '經驗、體驗', pos: 'n./v.', example: 'Traveling gives me valuable life experience.', exampleZh: '旅行帶給我寶貴的人生經驗。' },
+  { id: 'en-b1-9', lang: 'en', level: 'B1', word: 'Responsible', phonetic: '/rɪˈspɑːnsəbl/', meaning: '負責任的', pos: 'adj.', example: 'She is very responsible and always meets deadlines.', exampleZh: '她非常負責任，總能如期完成任務。' },
+  { id: 'en-b1-10', lang: 'en', level: 'B1', word: 'Opinion', phonetic: '/əˈpɪnjən/', meaning: '意見、看法', pos: 'n.', example: 'In my opinion, learning a language opens doors.', exampleZh: '依我看，學習語言能打開通往世界的大門。' },
 
-  /* 🇬🇧 English B2 中高級 */
-  { id: 'en-b2-1', lang: 'en', level: 'B2', word: 'Accomplish', phonetic: '/əˈkɑːmplɪʃ/', meaning: '實現、完成任務', pos: 'v.', example: 'You can accomplish anything with practice.', exampleZh: '只要持續練習，你能實現任何目標。' },
-  { id: 'en-b2-2', lang: 'en', level: 'B2', word: 'Perspective', phonetic: '/pərˈspektɪv/', meaning: '視角、觀點', pos: 'n.', example: 'Traveling gives you a whole new perspective.', exampleZh: '旅行能帶給你全新的視野與觀點。' },
-  { id: 'en-b2-3', lang: 'en', level: 'B2', word: 'Sustainable', phonetic: '/səˈsteɪnəbl/', meaning: '永續的、可持續的', pos: 'adj.', example: 'We should promote sustainable energy.', exampleZh: '我們應提倡可持續的綠色能源。' },
-  { id: 'en-b2-4', lang: 'en', level: 'B2', word: 'Innovative', phonetic: '/ˈɪnəveɪtɪv/', meaning: '創新的、革新的', pos: 'adj.', example: 'The team proposed an innovative solution.', exampleZh: '團隊提出了一個極具創新性的解決方案。' },
+  /* =========================================================================
+     🇬🇧 English B2 中高級 / GEPT 中高級 / 常用 7000 字 (10 詞)
+     ========================================================================= */
+  { id: 'en-b2-1', lang: 'en', level: 'B2', word: 'Accomplishment', phonetic: '/əˈkɑːmplɪʃmənt/', meaning: '成就、完成', pos: 'n.', example: 'Graduating with honors was her greatest accomplishment.', exampleZh: '以優異成績畢業是她最大的成就。' },
+  { id: 'en-b2-2', lang: 'en', level: 'B2', word: 'Comprehensive', phonetic: '/ˌkɑːmprɪˈhensɪv/', meaning: '全面的、詳盡的', pos: 'adj.', example: 'The report provides a comprehensive overview.', exampleZh: '這份報告提供了全面的綜合分析。' },
+  { id: 'en-b2-3', lang: 'en', level: 'B2', word: 'Phenomenon', phonetic: '/fəˈnɑːmɪnɑːn/', meaning: '現象', pos: 'n.', example: 'Global warming is a complex phenomenon.', exampleZh: '全球暖化是一個需要全球關注的複雜現象。' },
+  { id: 'en-b2-4', lang: 'en', level: 'B2', word: 'Accomplish', phonetic: '/əˈkɑːmplɪʃ/', meaning: '實現、完成任務', pos: 'v.', example: 'You can accomplish anything with practice.', exampleZh: '只要持續練習，你能實現任何目標。' },
+  { id: 'en-b2-5', lang: 'en', level: 'B2', word: 'Perspective', phonetic: '/pərˈspektɪv/', meaning: '視角、觀點', pos: 'n.', example: 'Traveling gives you a whole new perspective.', exampleZh: '旅行能帶給你全新的視野與觀點。' },
+  { id: 'en-b2-6', lang: 'en', level: 'B2', word: 'Sustainable', phonetic: '/səˈsteɪnəbl/', meaning: '永續的、可持續的', pos: 'adj.', example: 'We should promote sustainable green energy.', exampleZh: '我們應提倡可持續的綠色能源。' },
+  { id: 'en-b2-7', lang: 'en', level: 'B2', word: 'Innovative', phonetic: '/ˈɪnəveɪtɪv/', meaning: '創新的、革新的', pos: 'adj.', example: 'The team proposed an innovative solution.', exampleZh: '團隊提出了一個極具創新性的解決方案。' },
+  { id: 'en-b2-8', lang: 'en', level: 'B2', word: 'Significant', phonetic: '/sɪɡˈnɪfɪkənt/', meaning: '重大的、顯著的', pos: 'adj.', example: 'There has been a significant increase in sales.', exampleZh: '銷售量有了十分顯著的成長。' },
+  { id: 'en-b2-9', lang: 'en', level: 'B2', word: 'Strategy', phonetic: '/ˈstrætədʒi/', meaning: '策略、戰略', pos: 'n.', example: 'A clear strategy is essential for achieving goals.', exampleZh: '清晰的策略是達成目標所不可或缺的。' },
+  { id: 'en-b2-10', lang: 'en', level: 'B2', word: 'Resilience', phonetic: '/rɪˈzɪliəns/', meaning: '韌性、復原力', pos: 'n.', example: 'Resilience helps you bounce back from setbacks.', exampleZh: '心理韌性能幫助你迅速從挫折中重新振作。' },
 
-  /* 🇬🇧 English C1/C2 精通 & 多益高頻 */
-  { id: 'en-c1-1', lang: 'en', level: 'C1', word: 'Serendipity', phonetic: '/ˌserənˈdɪpəti/', meaning: '意外之喜、美妙的機緣', pos: 'n.', example: 'Meeting my best mentor was pure serendipity.', exampleZh: '遇見我的良師益友純粹是一場美妙的機緣。' },
-  { id: 'en-c1-2', lang: 'en', level: 'C1', word: 'Pragmatic', phonetic: '/præɡˈmætɪk/', meaning: '務實的、注重實效的', pos: 'adj.', example: 'We need a pragmatic approach to this crisis.', exampleZh: '面對這場危機，我們需要務實的因應對策。' },
-  { id: 'en-c1-3', lang: 'en', level: 'C1', word: 'Exacerbate', phonetic: '/ɪɡˈzæsərbeɪt/', meaning: '惡化、加劇', pos: 'v.', example: 'Delaying action will only exacerbate the issue.', exampleZh: '拖延行動只會使問題進一步惡化。' },
-  { id: 'en-c1-4', lang: 'en', level: 'C1', word: 'Paradigm', phonetic: '/ˈpærədaɪm/', meaning: '範式、典型範例', pos: 'n.', example: 'AI brings a new paradigm in digital learning.', exampleZh: '人工智慧為數位學習帶來了全新典範。' },
+  /* =========================================================================
+     🇬🇧 English C1 高級 / GEPT 高級 / 專業商務 (10 詞)
+     ========================================================================= */
+  { id: 'en-c1-1', lang: 'en', level: 'C1', word: 'Negotiate', phonetic: '/nɪˈɡoʊʃieɪt/', meaning: '談判、協商', pos: 'v.', example: 'They managed to negotiate a win-win agreement.', exampleZh: '他們成功協商出一份互利雙贏的協議。' },
+  { id: 'en-c1-2', lang: 'en', level: 'C1', word: 'Implement', phonetic: '/ˈɪmplɪment/', meaning: '實施、貫徹執行', pos: 'v.', example: 'The committee decided to implement new guidelines.', exampleZh: '委員會決定立即實施最新的指導方針。' },
+  { id: 'en-c1-3', lang: 'en', level: 'C1', word: 'Serendipity', phonetic: '/ˌserənˈdɪpəti/', meaning: '意外之喜、美妙的機緣', pos: 'n.', example: 'Meeting my best mentor was pure serendipity.', exampleZh: '遇見我的良師益友純粹是一場美妙的機緣。' },
+  { id: 'en-c1-4', lang: 'en', level: 'C1', word: 'Pragmatic', phonetic: '/præɡˈmætɪk/', meaning: '務實的、注重實效的', pos: 'adj.', example: 'We need a pragmatic approach to this crisis.', exampleZh: '面對這場危機，我們需要務實的因應對策。' },
+  { id: 'en-c1-5', lang: 'en', level: 'C1', word: 'Exacerbate', phonetic: '/ɪɡˈzæsərbeɪt/', meaning: '惡化、加劇', pos: 'v.', example: 'Delaying action will only exacerbate the issue.', exampleZh: '拖延行動只會使問題進一步惡化。' },
+  { id: 'en-c1-6', lang: 'en', level: 'C1', word: 'Paradigm', phonetic: '/ˈpærədaɪm/', meaning: '範式、典型範例', pos: 'n.', example: 'AI brings a new paradigm in digital learning.', exampleZh: '人工智慧為數位學習帶來了全新典範。' },
+  { id: 'en-c1-7', lang: 'en', level: 'C1', word: 'Subtle', phonetic: '/ˈsʌtl/', meaning: '細微的、微妙的', pos: 'adj.', example: 'There are subtle differences between the proposals.', exampleZh: '這兩項提案之間有著微妙而細緻的差異。' },
+  { id: 'en-c1-8', lang: 'en', level: 'C1', word: 'Ambiguous', phonetic: '/æmˈbɪɡjuəs/', meaning: '模糊的、模稜兩可的', pos: 'adj.', example: 'The statement was ambiguous and caused confusion.', exampleZh: '聲明語意含糊不清，引起了大家的困惑。' },
+  { id: 'en-c1-9', lang: 'en', level: 'C1', word: 'Benchmark', phonetic: '/ˈbentʃmɑːrk/', meaning: '基準、檢驗標竿', pos: 'n.', example: 'This product sets a new benchmark in tech.', exampleZh: '這款產品為科技產業樹立了全新標竿。' },
+  { id: 'en-c1-10', lang: 'en', level: 'C1', word: 'Consensus', phonetic: '/kənˈsensəs/', meaning: '共識、一致意見', pos: 'n.', example: 'The committee finally reached a broad consensus.', exampleZh: '委員會經過研討終於達成了廣泛的共識。' },
 
-  /* 🇯🇵 Japanese 五十音基礎 (50音) */
+  /* =========================================================================
+     🇯🇵 Japanese 50音基礎 (10 詞)
+     ========================================================================= */
   { id: 'ja-50-1', lang: 'ja', level: '50音', word: 'あ (ア)', phonetic: 'a', meaning: '五十音：あ段元音', pos: '仮名', example: 'あさ (朝) - 早晨', exampleZh: 'あさごはん：早餐' },
   { id: 'ja-50-2', lang: 'ja', level: '50音', word: 'い (イ)', phonetic: 'i', meaning: '五十音：い段元音', pos: '仮名', example: 'いぬ (犬) - 狗狗', exampleZh: 'かわいい いぬ：可愛的狗狗' },
   { id: 'ja-50-3', lang: 'ja', level: '50音', word: 'う (ウ)', phonetic: 'u', meaning: '五十音：う段元音', pos: '仮名', example: 'うみ (海) - 大海', exampleZh: 'あおい うみ：湛藍的大海' },
   { id: 'ja-50-4', lang: 'ja', level: '50音', word: 'え (エ)', phonetic: 'e', meaning: '五十音：え段元音', pos: '仮名', example: 'えがお (笑顔) - 笑容', exampleZh: 'すてきな えがお：迷人的笑容' },
   { id: 'ja-50-5', lang: 'ja', level: '50音', word: 'お (オ)', phonetic: 'o', meaning: '五十音：お段元音', pos: '仮名', example: 'おんがく (音楽) - 音樂', exampleZh: 'おんがくを きく：聽音樂' },
+  { id: 'ja-50-6', lang: 'ja', level: '50音', word: 'か (カ)', phonetic: 'ka', meaning: '五十音：か行假名', pos: '仮名', example: 'かさ (傘) - 雨傘', exampleZh: 'あめのひに かさを さす：雨天撐傘' },
+  { id: 'ja-50-7', lang: 'ja', level: '50音', word: 'さ (サ)', phonetic: 'sa', meaning: '五十音：さ行假名', pos: '仮名', example: 'さくら (桜) - 櫻花', exampleZh: 'はるに さく さくら：春天綻放的櫻花' },
+  { id: 'ja-50-8', lang: 'ja', level: '50音', word: 'た (タ)', phonetic: 'ta', meaning: '五十音：た行假名', pos: '仮名', example: 'たいよう (太陽) - 太陽', exampleZh: 'あかるい たいよう：明亮的太陽' },
+  { id: 'ja-50-9', lang: 'ja', level: '50音', word: 'な (ナ)', phonetic: 'na', meaning: '五十音：な行假名', pos: '仮名', example: 'なつ (夏) - 夏天', exampleZh: 'たのしい なつやすみ：快樂的暑假' },
+  { id: 'ja-50-10', lang: 'ja', level: '50音', word: 'は (ハ)', phonetic: 'ha', meaning: '五十音：は行假名', pos: '仮名', example: 'はな (花) - 花朵', exampleZh: 'きれいに さいた はな：美麗盛開的花朵' },
 
-  /* 🇯🇵 Japanese N5 入門 */
-  { id: 'ja-n5-1', lang: 'ja', level: 'N5', word: 'こんにちは', phonetic: 'konnichiwa', meaning: '你好 (白天問候)', pos: '挨拶', example: '皆さん、こんにちは！', exampleZh: '各位，大家好！' },
-  { id: 'ja-n5-2', lang: 'ja', level: 'N5', word: '友達 (ともだち)', phonetic: 'tomodachi', meaning: '朋友、同伴', pos: '名詞', example: '公園で友達と遊びます。', exampleZh: '在公園和朋友一起玩耍。' },
-  { id: 'ja-n5-3', lang: 'ja', level: 'N5', word: '食べる (たべる)', phonetic: 'taberu', meaning: '吃 (動詞)', pos: '動詞', example: 'おいしいリンゴを食べます。', exampleZh: '吃著美味的蘋果。' },
-  { id: 'ja-n5-4', lang: 'ja', level: 'N5', word: '猫 (ねこ)', phonetic: 'neko', meaning: '貓咪', pos: '名詞', example: '白い猫が昼寝しています。', exampleZh: '白貓正在悠閒地睡午覺。' },
+  /* =========================================================================
+     🇯🇵 Japanese N5 生活最基礎高頻詞 (10 詞)
+     ========================================================================= */
+  { id: 'ja-n5-1', lang: 'ja', level: 'N5', word: '食べる (たべる)', phonetic: 'taberu', meaning: '吃 (動詞)', pos: '動詞', example: 'おいしいリンゴを食べます。', exampleZh: '吃著美味的蘋果。' },
+  { id: 'ja-n5-2', lang: 'ja', level: 'N5', word: '飲む (のむ)', phonetic: 'nomu', meaning: '喝 (動詞)', pos: '動詞', example: '冷たいお水を飲みます。', exampleZh: '喝著冰涼的水。' },
+  { id: 'ja-n5-3', lang: 'ja', level: 'N5', word: '行く (いく)', phonetic: 'iku', meaning: '去、前往', pos: '動詞', example: '明日、学校へ行きます。', exampleZh: '明天要去學校。' },
+  { id: 'ja-n5-4', lang: 'ja', level: 'N5', word: '駅 (えき)', phonetic: 'eki', meaning: '車站', pos: '名詞', example: '駅の前で友達と待ち合わせます。', exampleZh: '在車站前和朋友碰面集合。' },
+  { id: 'ja-n5-5', lang: 'ja', level: 'N5', word: '先生 (せんせい)', phonetic: 'sensei', meaning: '老師', pos: '名詞', example: '先生、質問があります。', exampleZh: '老師，我有問題想請教。' },
+  { id: 'ja-n5-6', lang: 'ja', level: 'N5', word: '本 (ほん)', phonetic: 'hon', meaning: '書籍、書本', pos: '名詞', example: '図書館で面白い本を読みます。', exampleZh: '在圖書館閱讀有趣的書。' },
+  { id: 'ja-n5-7', lang: 'ja', level: 'N5', word: '車 (くるま)', phonetic: 'kuruma', meaning: '汽車', pos: '名詞', example: '新しい車を運転します。', exampleZh: '開著新買的車。' },
+  { id: 'ja-n5-8', lang: 'ja', level: 'N5', word: 'こんにちは', phonetic: 'konnichiwa', meaning: '你好 (白天問候)', pos: '挨拶', example: '皆さん、こんにちは！', exampleZh: '各位，大家好！' },
+  { id: 'ja-n5-9', lang: 'ja', level: 'N5', word: '友達 (ともだち)', phonetic: 'tomodachi', meaning: '朋友、同伴', pos: '名詞', example: '公園で友達と遊びます。', exampleZh: '在公園和朋友一起玩耍。' },
+  { id: 'ja-n5-10', lang: 'ja', level: 'N5', word: '猫 (ねこ)', phonetic: 'neko', meaning: '貓咪', pos: '名詞', example: '白い猫が昼寝しています。', exampleZh: '白貓正在悠閒地睡午覺。' },
 
-  /* 🇯🇵 Japanese N4 基礎 */
-  { id: 'ja-n4-1', lang: 'ja', level: 'N4', word: '約束 (やくそく)', phonetic: 'yakusoku', meaning: '約定、承諾', pos: '名詞/自サ', example: '友達と遊ぶ約束をしました。', exampleZh: '我和朋友做好了出去玩的約定。' },
-  { id: 'ja-n4-2', lang: 'ja', level: 'N4', word: '案内 (あんない)', phonetic: 'annai', meaning: '嚮導、引導介紹', pos: '名詞/他サ', example: '街の名所を案内します。', exampleZh: '為您介紹導覽這座城市的名勝。' },
-  { id: 'ja-n4-3', lang: 'ja', level: 'N4', word: '準備 (じゅんび)', phonetic: 'junbi', meaning: '準備、籌劃', pos: '名詞/他サ', example: '旅行の準備を始めましょう。', exampleZh: '開始準備旅行的行李吧。' },
+  /* =========================================================================
+     🇯🇵 Japanese N4 初級進階 (10 詞)
+     ========================================================================= */
+  { id: 'ja-n4-1', lang: 'ja', level: 'N4', word: '旅行 (りょこう)', phonetic: 'ryokou', meaning: '旅行', pos: '名詞/自サ', example: '来月、京都へ旅行に行きます。', exampleZh: '下個月要去京都旅行。' },
+  { id: 'ja-n4-2', lang: 'ja', level: 'N4', word: '天気 (てんき)', phonetic: 'tenki', meaning: '天氣', pos: '名詞', example: '今日はいい天気ですね。', exampleZh: '今天天氣真好呢。' },
+  { id: 'ja-n4-3', lang: 'ja', level: 'N4', word: '案内 (あんない)', phonetic: 'annai', meaning: '嚮導、引導介紹', pos: '名詞/他サ', example: '街の名所を案内します。', exampleZh: '為您介紹導覽這座城市的名勝。' },
+  { id: 'ja-n4-4', lang: 'ja', level: 'N4', word: '買い物 (かいもの)', phonetic: 'kaimono', meaning: '購物、買東西', pos: '名詞/自サ', example: '週末にデパートで買い物をします。', exampleZh: '週末去百貨公司買東西。' },
+  { id: 'ja-n4-5', lang: 'ja', level: 'N4', word: '便利 (べんり)', phonetic: 'benri', meaning: '便利的、方便的', pos: '形容動詞', example: '地下鉄はとても便利です。', exampleZh: '地鐵非常方便。' },
+  { id: 'ja-n4-6', lang: 'ja', level: 'N4', word: '約束 (やくそく)', phonetic: 'yakusoku', meaning: '約定、承諾', pos: '名詞/自サ', example: '友達と遊ぶ約束をしました。', exampleZh: '我和朋友做好了出去玩的約定。' },
+  { id: 'ja-n4-7', lang: 'ja', level: 'N4', word: '準備 (じゅんび)', phonetic: 'junbi', meaning: '準備、籌劃', pos: '名詞/他サ', example: '旅行の準備を始めましょう。', exampleZh: '開始準備旅行的行李吧。' },
+  { id: 'ja-n4-8', lang: 'ja', level: 'N4', word: '気持ち (きもち)', phonetic: 'kimochi', meaning: '心情、感受', pos: '名詞', example: '朝の散歩はとてもいい気持ちです。', exampleZh: '早晨散步讓人心情非常舒暢。' },
+  { id: 'ja-n4-9', lang: 'ja', level: 'N4', word: '大切 (たいせつ)', phonetic: 'taisetsu', meaning: '重要的、珍惜的', pos: '形容動詞', example: '家族は大切なものです。', exampleZh: '家人是最重要的存在。' },
+  { id: 'ja-n4-10', lang: 'ja', level: 'N4', word: '予約 (よやく)', phonetic: 'yoyaku', meaning: '預約', pos: '名詞/他サ', example: 'ホテルの部屋を予約しました。', exampleZh: '我預約了飯店的房間。' },
 
-  /* 🇯🇵 Japanese N3 日常 */
-  { id: 'ja-n3-1', lang: 'ja', level: 'N3', word: '経験 (けいけん)', phonetic: 'keiken', meaning: '經驗、體會', pos: '名詞/他サ', example: '留学は素晴らしい経験でした。', exampleZh: '留學是一段非常棒的人生經驗。' },
-  { id: 'ja-n3-2', lang: 'ja', level: 'N3', word: '確かめる (たしかめる)', phonetic: 'tashikameru', meaning: '確認、查明', pos: '動詞', example: '出発時間を確かめてください。', exampleZh: '請再確認一次出發時間。' },
-  { id: 'ja-n3-3', lang: 'ja', level: 'N3', word: '相談 (そうだん)', phonetic: 'soudan', meaning: '商量、諮詢', pos: '名詞/自サ', example: '先生に将来のことを相談した。', exampleZh: '向老師諮詢討論了未來的規劃。' },
+  /* =========================================================================
+     🇯🇵 Japanese N3 日常流暢交流 (10 詞)
+     ========================================================================= */
+  { id: 'ja-n3-1', lang: 'ja', level: 'N3', word: '連絡 (れんらく)', phonetic: 'renraku', meaning: '聯絡、通知', pos: '名詞/他サ', example: '予定が決まったら連絡してください。', exampleZh: '行程確定之後請跟我聯絡。' },
+  { id: 'ja-n3-2', lang: 'ja', level: 'N3', word: '相談 (そうだん)', phonetic: 'soudan', meaning: '商量、諮詢', pos: '名詞/自サ', example: '先生に将来のことを相談した。', exampleZh: '向老師諮詢討論了未來的規劃。' },
+  { id: 'ja-n3-3', lang: 'ja', level: 'N3', word: '複雑 (ふくざつ)', phonetic: 'fukuzatsu', meaning: '複雜的', pos: '形容動詞', example: 'この機械の使い方は少し複雑です。', exampleZh: '這台機器的使用方式稍微有點複雜。' },
+  { id: 'ja-n3-4', lang: 'ja', level: 'N3', word: '経験 (けいけん)', phonetic: 'keiken', meaning: '經驗、體會', pos: '名詞/他サ', example: '留学は素晴らしい経験でした。', exampleZh: '留學是一段非常棒的人生經驗。' },
+  { id: 'ja-n3-5', lang: 'ja', level: 'N3', word: '確かめる (たしかめる)', phonetic: 'tashikameru', meaning: '確認、查明', pos: '動詞', example: '出発時間をもう一度確かめてください。', exampleZh: '請再確認一次出發時間。' },
+  { id: 'ja-n3-6', lang: 'ja', level: 'N3', word: '遠慮 (えんりょ)', phonetic: 'enryo', meaning: '客氣、顧慮', pos: '名詞/他サ', example: 'どうぞ遠慮しないで食べてください。', exampleZh: '請別客氣，盡情享用吧。' },
+  { id: 'ja-n3-7', lang: 'ja', level: 'N3', word: '目的 (もくてき)', phonetic: 'mokuteki', meaning: '目的、目標', pos: '名詞', example: '日本へ来た目的は何ですか？', exampleZh: '您來日本的目的是什麼呢？' },
+  { id: 'ja-n3-8', lang: 'ja', level: 'N3', word: '習慣 (しゅうかん)', phonetic: 'shuukan', meaning: '習慣、習俗', pos: '名詞', example: '毎朝ジョギングする習慣があります。', exampleZh: '我有每天早晨慢跑的習慣。' },
+  { id: 'ja-n3-9', lang: 'ja', level: 'N3', word: '理由 (りゆう)', phonetic: 'riyuu', meaning: '理由、原因', pos: '名詞', example: '遅刻した理由を説明してください。', exampleZh: '請說明遲到的理由。' },
+  { id: 'ja-n3-10', lang: 'ja', level: 'N3', word: '親切 (しんせつ)', phonetic: 'shinsetsu', meaning: '親切的、好心的', pos: '形容動詞', example: '駅員さんはとても親切に教えてくれました。', exampleZh: '站務員非常親切地為我指引方向。' },
 
-  /* 🇯🇵 Japanese N2/N1 進階 */
-  { id: 'ja-n2-1', lang: 'ja', level: 'N2', word: '克服 (こくふく)', phonetic: 'kokufuku', meaning: '克服、戰勝困難', pos: '名詞/他サ', example: '困難を克服して合格した。', exampleZh: '克服一切難關並順利考試合格。' },
-  { id: 'ja-n2-2', lang: 'ja', level: 'N2', word: '貢献 (こうけん)', phonetic: 'kouken', meaning: '貢獻、效勞', pos: '名詞/自サ', example: '地域社会の発展に貢献する。', exampleZh: '為在地社區的繁榮發展做出貢獻。' },
-  { id: 'ja-n1-1', lang: 'ja', level: 'N1', word: '臨機応変 (りんきおうへん)', phonetic: 'rinkiouhen', meaning: '隨機應變', pos: '四字熟語', example: '状況に応じて臨機応変に対応する。', exampleZh: '視現場狀況隨機應變做出最好的應對。' },
+  /* =========================================================================
+     🇯🇵 Japanese N2 職場與新聞 (10 詞)
+     ========================================================================= */
+  { id: 'ja-n2-1', lang: 'ja', level: 'N2', word: '会議 (かいぎ)', phonetic: 'kaigi', meaning: '會議', pos: '名詞/自サ', example: '午後から企画会議が始まります。', exampleZh: '企劃會議將在下午開始。' },
+  { id: 'ja-n2-2', lang: 'ja', level: 'N2', word: '方針 (ほうしん)', phonetic: 'houshin', meaning: '方針、準則', pos: '名詞', example: '会社の方針に従って行動します。', exampleZh: '遵循公司的方針指引行動。' },
+  { id: 'ja-n2-3', lang: 'ja', level: 'N2', word: '効果 (こうか)', phonetic: 'kouka', meaning: '效果、成效', pos: '名詞', example: '新しい薬の効果が現れてきました。', exampleZh: '新藥的療效已經開始顯現。' },
+  { id: 'ja-n2-4', lang: 'ja', level: 'N2', word: '感謝 (かんしゃ)', phonetic: 'kansha', meaning: '感謝、感激', pos: '名詞/自他サ', example: '皆様のご支援に心から感謝いたします。', exampleZh: '衷心感謝各位的大力支持與協助。' },
+  { id: 'ja-n2-5', lang: 'ja', level: 'N2', word: '評価 (ひょうか)', phonetic: 'hyouka', meaning: '評價、評估', pos: '名詞/他サ', example: '上司から高い評価を受けました。', exampleZh: '獲得了主管的高度評價與肯定。' },
+  { id: 'ja-n2-6', lang: 'ja', level: 'N2', word: '克服 (こくふく)', phonetic: 'kokufuku', meaning: '克服、戰勝困難', pos: '名詞/他サ', example: '困難を克服して合格した。', exampleZh: '克服一切難關並順利考試合格。' },
+  { id: 'ja-n2-7', lang: 'ja', level: 'N2', word: '貢献 (こうけん)', phonetic: 'kouken', meaning: '貢獻、效勞', pos: '名詞/自サ', example: '地域社会の発展に貢献する。', exampleZh: '為在地社區的繁榮發展做出貢獻。' },
+  { id: 'ja-n2-8', lang: 'ja', level: 'N2', word: '責任 (せきにん)', phonetic: 'sekinin', meaning: '責任', pos: '名詞', example: 'リーダーとしての責任を果たす。', exampleZh: '克盡身為領導者的責任。' },
+  { id: 'ja-n2-9', lang: 'ja', level: 'N2', word: '改善 (かいぜん)', phonetic: 'kaizen', meaning: '改善、改良', pos: '名詞/他サ', example: '業務効率を改善する提案をする。', exampleZh: '提出改善業務效率的具體方案。' },
+  { id: 'ja-n2-10', lang: 'ja', level: 'N2', word: '協力 (きょうりょく)', phonetic: 'kyouryoku', meaning: '合作、協力', pos: '名詞/自サ', example: 'チーム全員で協力して成功させましょう。', exampleZh: '大家齊心協力讓專案圓滿成功吧。' },
 
-  /* 🇬🇧 English 生活高頻擴充 (A2-B1) */
-  { id: 'en-a2-5', lang: 'en', level: 'A2', word: 'Restaurant', phonetic: '/ˈrestrɑːnt/', meaning: '餐廳', pos: 'n.', example: 'We had dinner at a lovely restaurant by the sea.', exampleZh: '我們在海邊一家可愛的餐廳吃了晚餐。' },
-  { id: 'en-a2-6', lang: 'en', level: 'A2', word: 'Difficult', phonetic: '/ˈdɪfɪkəlt/', meaning: '困難的', pos: 'adj.', example: 'This math problem is very difficult for me.', exampleZh: '這道數學題對我來說很難。' },
-  { id: 'en-a2-7', lang: 'en', level: 'A2', word: 'Health', phonetic: '/helθ/', meaning: '健康', pos: 'n.', example: 'Regular exercise is important for good health.', exampleZh: '規律運動對健康很重要。' },
-  { id: 'en-a2-8', lang: 'en', level: 'A2', word: 'Train', phonetic: '/treɪn/', meaning: '火車', pos: 'n.', example: 'The train arrives at the station at noon.', exampleZh: '火車中午抵達車站。' },
-  { id: 'en-b1-5', lang: 'en', level: 'B1', word: 'Experience', phonetic: '/ɪkˈspɪəriəns/', meaning: '經驗、體驗', pos: 'n./v.', example: 'Traveling gives me valuable life experience.', exampleZh: '旅行帶給我寶貴的人生經驗。' },
-  { id: 'en-b1-6', lang: 'en', level: 'B1', word: 'Responsible', phonetic: '/rɪˈspɒnsəbl/', meaning: '負責任的', pos: 'adj.', example: 'She is very responsible and always meets her deadlines.', exampleZh: '她非常負責任，總能如期完成任務。' },
-  { id: 'en-b1-7', lang: 'en', level: 'B1', word: 'Increase', phonetic: '/ɪnˈkriːs/', meaning: '增加', pos: 'v./n.', example: 'The company plans to increase its sales this year.', exampleZh: '公司計畫今年要增加銷售量。' },
-  { id: 'en-b1-8', lang: 'en', level: 'B1', word: 'Opinion', phonetic: '/əˈpɪnjən/', meaning: '意見、看法', pos: 'n.', example: 'In my opinion, learning a language is great fun.', exampleZh: '依我看，學習語言非常有趣。' },
-
-  /* 🇯🇵 Japanese 生活高頻擴充 (N5-N4) */
-  { id: 'ja-n5-5', lang: 'ja', level: 'N5', word: '天気 (てんき)', phonetic: 'tenki', meaning: '天氣', pos: '名詞', example: '今日はいい天気ですね。', exampleZh: '今天天氣真好呢。' },
-  { id: 'ja-n5-6', lang: 'ja', level: 'N5', word: '仕事 (しごと)', phonetic: 'shigoto', meaning: '工作', pos: '名詞', example: '仕事が終わってから、映画を見ます。', exampleZh: '工作結束後，我要看電影。' },
-  { id: 'ja-n5-7', lang: 'ja', level: 'N5', word: '電車 (でんしゃ)', phonetic: 'densha', meaning: '電車', pos: '名詞', example: '電車で学校へ行きます。', exampleZh: '我搭電車去學校。' },
-  { id: 'ja-n5-8', lang: 'ja', level: 'N5', word: '時間 (じかん)', phonetic: 'jikan', meaning: '時間', pos: '名詞', example: '時間がありません。', exampleZh: '我沒有時間了。' },
-  { id: 'ja-n4-4', lang: 'ja', level: 'N4', word: '気持ち (きもち)', phonetic: 'kimochi', meaning: '心情、感受', pos: '名詞', example: 'いい気持ちですね。', exampleZh: '感覺真舒服呢。' },
-  { id: 'ja-n4-5', lang: 'ja', level: 'N4', word: '大切 (たいせつ)', phonetic: 'taisetsu', meaning: '重要的、珍惜的', pos: '形容動詞', example: '家族は大切なものです。', exampleZh: '家人是最重要的存在。' },
-  { id: 'ja-n4-6', lang: 'ja', level: 'N4', word: '予約 (よやく)', phonetic: 'yoyaku', meaning: '預約', pos: '名詞/他サ', example: 'ホテルを予約しました。', exampleZh: '我預約了飯店。' },
-  { id: 'ja-n4-7', lang: 'ja', level: 'N4', word: '利用 (りよう)', phonetic: 'riyou', meaning: '利用、使用', pos: '名詞/他サ', example: 'この機械を利用してください。', exampleZh: '請使用這台機器。' }
+  /* =========================================================================
+     🇯🇵 Japanese N1 專業與高階語彙 (10 詞)
+     ========================================================================= */
+  { id: 'ja-n1-1', lang: 'ja', level: 'N1', word: '妥協 (だきょう)', phonetic: 'dakyou', meaning: '妥協、讓步', pos: '名詞/自サ', example: '品質に関しては決して妥協しません。', exampleZh: '對於品質的要求我們絕不妥協。' },
+  { id: 'ja-n1-2', lang: 'ja', level: 'N1', word: '配慮 (はいりょ)', phonetic: 'hairyo', meaning: '顧慮、體貼考量', pos: '名詞/自他サ', example: '周囲の環境への配慮が求められる。', exampleZh: '需要對周遭環境予以體貼關照與考量。' },
+  { id: 'ja-n1-3', lang: 'ja', level: 'N1', word: '概念 (がいねん)', phonetic: 'gainen', meaning: '概念、觀念', pos: '名詞', example: '新しい教育の概念を導入する。', exampleZh: '引進引領時代潮流的全新教育概念。' },
+  { id: 'ja-n1-4', lang: 'ja', level: 'N1', word: '推測 (すいそく)', phonetic: 'suisoku', meaning: '推測、推斷', pos: '名詞/他サ', example: '状況から今後の展開を推測する。', exampleZh: '從目前的形勢推斷未來的局勢發展。' },
+  { id: 'ja-n1-5', lang: 'ja', level: 'N1', word: '臨機応変 (りんきおうへん)', phonetic: 'rinkiouhen', meaning: '隨機應變', pos: '四字熟語', example: '状況に応じて臨機応変に対応する。', exampleZh: '視現場狀況隨機應變做出最好的應對。' },
+  { id: 'ja-n1-6', lang: 'ja', level: 'N1', word: '把握 (はあく)', phonetic: 'haaku', meaning: '掌握、領會', pos: '名詞/他サ', example: '問題の本質を正確に把握することが重要だ。', exampleZh: '精準掌握問題的核心本質至關重要。' },
+  { id: 'ja-n1-7', lang: 'ja', level: 'N1', word: '懸念 (けねん)', phonetic: 'kenen', meaning: '擔憂、懸念', pos: '名詞/他サ', example: '景気の先行きに対する懸念が高まっている。', exampleZh: '對未來景氣走向的擔憂日益加劇。' },
+  { id: 'ja-n1-8', lang: 'ja', level: 'N1', word: '兆候 (ちょうこう)', phonetic: 'choukou', meaning: '徵兆、跡象', pos: '名詞', example: '回復の兆候が各所に見られる。', exampleZh: '處處可見經濟復甦的初期徵兆。' },
+  { id: 'ja-n1-9', lang: 'ja', level: 'N1', word: '緩和 (かんわ)', phonetic: 'kanwa', meaning: '緩和、放寬', pos: '名詞/他サ', example: '緊張関係の緩和に向けて対話を続ける。', exampleZh: '持續透過對話以緩和緊繃的雙邊關係。' },
+  { id: 'ja-n1-10', lang: 'ja', level: 'N1', word: '遵守 (じゅんしゅ)', phonetic: 'junshu', meaning: '遵守、恪遵', pos: '名詞/他サ', example: '法令を遵守し、公正な取引を行う。', exampleZh: '嚴格恪遵法律法規，落實公正交易。' }
 ];
 
 /* =========================================================================
@@ -2832,6 +2996,7 @@ const AppState = {
   // Adult Flashcard / SRS State
   flashcardIndex: 0,
   flashcardFlipped: false,
+  flashcardLevel: 'ALL',
   adultSubTab: 'flashcard',
 
   // Dialogue State
@@ -2944,8 +3109,12 @@ const UI = {
         btn.classList.add('active');
         AppState.lang = btn.getAttribute('data-lang');
         AppState.currentLevel = 'ALL';
+        AppState.flashcardLevel = 'ALL';
         this.renderLevelPills();
         this.renderWordsGrid();
+        if (typeof ShadowingStudio !== 'undefined' && ShadowingStudio.setShadowingLang) {
+          ShadowingStudio.setShadowingLang(AppState.lang);
+        }
         if (AppState.mode === 'adult') {
           this.initAdultPractice();
         }
@@ -3015,7 +3184,7 @@ const UI = {
     });
     document.getElementById('fcSpeakBtn').addEventListener('click', (e) => {
       e.stopPropagation();
-      const list = this.getFilteredWords();
+      const list = this.getFlashcardWords();
       if (list.length) SpeechSys.speak(list[AppState.flashcardIndex].word, list[AppState.flashcardIndex].lang);
     });
 
@@ -3052,7 +3221,7 @@ const UI = {
 
     document.getElementById('checkSpellingBtn').addEventListener('click', () => this.checkSpelling());
     document.getElementById('spellAudioBtn').addEventListener('click', () => {
-      const list = this.getFilteredWords();
+      const list = this.getFlashcardWords();
       if (list.length) SpeechSys.speak(list[AppState.flashcardIndex].word, list[AppState.flashcardIndex].lang);
     });
   },
@@ -3070,6 +3239,7 @@ const UI = {
       if (AppState.mode === 'kids') {
         this.nextMonsterBattleQuestion();
       } else {
+        this.renderFlashcardLevelPills();
         this.renderFlashcard();
       }
     } else if (tabId === 'dialogue') {
@@ -3077,6 +3247,10 @@ const UI = {
     } else if (tabId === 'shadowing') {
       if (typeof ShadowingStudio !== 'undefined') {
         ShadowingStudio.stopAllAudio();
+        ShadowingStudio.onTabOpen();
+        document.querySelectorAll('.shadow-lang-selector .pill').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-slang') === (AppState.lang || 'en'));
+        });
       }
     }
   },
@@ -3415,12 +3589,64 @@ const UI = {
      8. 大人高效閃卡與拼寫 (Adult SRS Flashcard & Spelling)
      ========================================================================= */
   initAdultPractice() {
+    this.renderFlashcardLevelPills();
     this.renderFlashcard();
   },
 
+  renderFlashcardLevelPills() {
+    const pillsContainer = document.getElementById('flashcardLevelPills');
+    if (!pillsContainer) return;
+    pillsContainer.innerHTML = '';
+
+    const levels = AppState.lang === 'en'
+      ? ['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', '⭐ 收藏', '✏️ 自訂']
+      : ['ALL', '50音', 'N5', 'N4', 'N3', 'N2', 'N1', '⭐ 收藏', '✏️ 自訂'];
+
+    const current = AppState.flashcardLevel || 'ALL';
+    levels.forEach(lvl => {
+      const btn = document.createElement('button');
+      btn.className = 'pill' + (current === lvl ? ' active' : '');
+      btn.textContent = lvl === 'ALL' ? '全部級別 (All)' : lvl;
+      btn.addEventListener('click', () => {
+        pillsContainer.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        AppState.flashcardLevel = lvl;
+        AppState.flashcardIndex = 0;
+        this.renderFlashcard();
+      });
+      pillsContainer.appendChild(btn);
+    });
+  },
+
+  getFlashcardWords() {
+    const all = [...DEFAULT_WORDS, ...AppState.customWords];
+    const targetLevel = AppState.flashcardLevel || 'ALL';
+    return all.filter(w => {
+      if (w.lang !== AppState.lang) return false;
+      if (targetLevel === '⭐ 收藏') {
+        if (!AppState.bookmarks.includes(w.id)) return false;
+      } else if (targetLevel === '✏️ 自訂') {
+        if (!w.id.startsWith('custom-')) return false;
+      } else if (targetLevel !== 'ALL') {
+        if (w.level !== targetLevel) return false;
+      }
+      return true;
+    });
+  },
+
   renderFlashcard() {
-    const list = this.getFilteredWords();
-    if (!list.length) return;
+    const list = this.getFlashcardWords();
+    if (!list.length) {
+      document.getElementById('fcLevelBadge').textContent = AppState.flashcardLevel || 'ALL';
+      document.getElementById('fcWord').textContent = '無符合卡片';
+      document.getElementById('fcPhonetic').textContent = '';
+      document.getElementById('fcMeaning').textContent = '此級別尚無單字或收藏';
+      document.getElementById('fcExample').textContent = '';
+      document.getElementById('fcExampleZh').textContent = '';
+      AppState.flashcardFlipped = false;
+      document.getElementById('flashcardWrapper').classList.remove('flipped');
+      return;
+    }
     if (AppState.flashcardIndex >= list.length) AppState.flashcardIndex = 0;
 
     const w = list[AppState.flashcardIndex];
@@ -3436,7 +3662,7 @@ const UI = {
   },
 
   rateFlashcard(rating) {
-    const list = this.getFilteredWords();
+    const list = this.getFlashcardWords();
     if (!list.length) return;
 
     if (rating === 'again') {
@@ -3450,8 +3676,9 @@ const UI = {
   },
 
   initSpellingTask() {
-    const list = this.getFilteredWords();
+    const list = this.getFlashcardWords();
     if (!list.length) return;
+    if (AppState.flashcardIndex >= list.length) AppState.flashcardIndex = 0;
     const w = list[AppState.flashcardIndex];
 
     document.getElementById('spellingInput').value = '';
@@ -3464,8 +3691,9 @@ const UI = {
   },
 
   checkSpelling() {
-    const list = this.getFilteredWords();
+    const list = this.getFlashcardWords();
     if (!list.length) return;
+    if (AppState.flashcardIndex >= list.length) AppState.flashcardIndex = 0;
     const w = list[AppState.flashcardIndex];
     const input = document.getElementById('spellingInput').value.trim();
     const res = document.getElementById('spellingResult');
@@ -3854,36 +4082,36 @@ const DIALOGUE_SCENARIOS = {
           {
             npc: {
               text: "いらっしゃいませ！お弁当をお預かりします。",
-              phonetic: "いらっしゃいませ！おべんとうを おあずかり します。",
+              phonetic: "Irasshaimase! Obentō o oazukari shimasu.",
               zh: "歡迎光臨！為您結帳便當。"
             },
             user: {
               target: "これと、しゃけのおにぎりをください。",
-              phonetic: "これと、しゃけの おにぎりを ください。",
+              phonetic: "Kore to, shake no onigiri o kudasai.",
               zh: "我要這個，還有一個鮭魚飯糰。"
             }
           },
           {
             npc: {
               text: "お弁当、温めますか？",
-              phonetic: "おべんとう、あたためますか？",
+              phonetic: "Obentō, atatamemasu ka?",
               zh: "便當需要幫您加熱微波嗎？"
             },
             user: {
               target: "はい、あたためてください！",
-              phonetic: "はい、あたためて ください！",
+              phonetic: "Hai, atatamete kudasai!",
               zh: "好的，請幫我加熱！"
             }
           },
           {
             npc: {
               text: "お待たせしました。アツアツですのでお気をつけください！",
-              phonetic: "おまたせ しました。あつあつ ですので おきを つけて ください！",
+              phonetic: "Omatase shimashita. Atsuatsu desu node okiotsuke kudasai!",
               zh: "讓您久等了。便當很燙請小心拿喔！"
             },
             user: {
               target: "ありがとうございます！いただきます！",
-              phonetic: "ありがとう ございます！いただきます！",
+              phonetic: "Arigatō gozaimasu! Itadakimasu!",
               zh: "非常謝謝！我要開動囉！"
             }
           }
@@ -3900,41 +4128,41 @@ const DIALOGUE_SCENARIOS = {
           {
             npc: {
               text: "こんにちは！うちの柴犬のコロだよ。ワンワン！",
-              phonetic: "こんにちは！うちの しばいぬの コロ だよ。ワンワン！",
+              phonetic: "Konnichiwa! Uchi no shibainu no Koro da yo. Wanwan!",
               zh: "你好！這是我家的柴犬可樂喔。汪汪！"
             },
             user: {
               target: "こんにちは！すごくかわいいワンちゃんですね！",
-              phonetic: "こんにちは！すごく かわいい ワンちゃん ですね！",
+              phonetic: "Konnichiwa! Sugoku kawaii wan-chan desu ne!",
               zh: "你好！這隻狗狗超級可愛呢！"
             }
           },
           {
             npc: {
               text: "コロは人が大好きだよ。優しくなでてみる？",
-              phonetic: "コロは ひとが だいすき だよ。やさしく なでて みる？",
+              phonetic: "Koro wa hito ga daisuki da yo. Yasashiku nadete miru?",
               zh: "可樂很喜歡跟人玩喔。要輕輕摸摸看他嗎？"
             },
             user: {
               target: "なでてもいいですか？いいこ、いいこ！",
-              phonetic: "なでても いいですか？いいこ、いいこ！",
+              phonetic: "Nadete mo ii desu ka? Ii ko, ii ko!",
               zh: "可以摸摸看嗎？乖狗狗、乖狗狗！"
             }
           },
           {
             npc: {
               text: "しっぽを振って喜んでるよ！コロもお友達ができて嬉しいみたい！",
-              phonetic: "しっぽを ふって よろこんでるよ！コロも おともだちが できて うれしい みたい！",
+              phonetic: "Shippo o futte yorokonderu yo! Koro mo otomodachi ga dekite ureshii mitai!",
               zh: "他搖尾巴好開心喔！看來可樂也交到新朋友了！"
             },
             user: {
               target: "また会おうね、コロちゃん、バイバイ！",
-              phonetic: "また あおうね、コロちゃん、バイバイ！",
+              phonetic: "Mata aou ne, Koro-chan, baibai!",
               zh: "下次還要再一起玩喔，可樂拜拜！"
             }
           }
         ],
-        praise: "健太：「コロもすっごく嬉しそうだったよ！またお散歩で会ったら遊ぼうね！」"
+        praise: "健太：「コロもすっごく嬉しそうだったよ！またお散步で会ったら遊ぼうね！」"
       },
       {
         id: 'kids-ja-cake',
@@ -3946,36 +4174,36 @@ const DIALOGUE_SCENARIOS = {
           {
             npc: {
               text: "いらっしゃいませ！おいしいケーキがたくさんありますよ。",
-              phonetic: "いらっしゃいませ！おいしい ケーキが たくさん ありますよ。",
+              phonetic: "Irasshaimase! Oishii kēki ga takusan arimasu yo.",
               zh: "歡迎光臨！今天有好多好吃的蛋糕喔。"
             },
             user: {
               target: "いちごのショートケーキはありますか？",
-              phonetic: "いちごの ショートケーキは ありますか？",
+              phonetic: "Ichigo no shōtokēki wa arimasu ka?",
               zh: "請問有草莓鮮奶油蛋糕嗎？"
             }
           },
           {
             npc: {
               text: "はい、できたてがありますよ！大きなイチゴが三つのっています！",
-              phonetic: "はい、できたてが ありますよ！おおきな イチゴが みっつ のって います！",
+              phonetic: "Hai, dekitate ga arimasu yo! Ōkina ichigo ga mittsu notte imasu!",
               zh: "有的，剛出爐最新鮮的喔！上面放了三顆大草莓！"
             },
             user: {
               target: "それをひとつください！",
-              phonetic: "それを ひとつ ください！",
+              phonetic: "Sore o hitotsu kudasai!",
               zh: "請給我一個！"
             }
           },
           {
             npc: {
               text: "かしこまりました！かわいい箱にお入れしますね。フォークは何本付けますか？",
-              phonetic: "かしこまりました！かわいい はこに おいれ しますね。フォークは なんぼん つけますか？",
+              phonetic: "Kashikomarimashita! Kawaii hako ni oire shimasu ne. Fōku wa nanbon tsukemasu ka?",
               zh: "好的！幫您裝在可愛的盒子裡。請問需要幾支叉子呢？"
             },
             user: {
               target: "フォークをにほんおねがいします！",
-              phonetic: "フォークを にほん おねがい します！",
+              phonetic: "Fōku o nihon onegai shimasu!",
               zh: "請給我兩支叉子，謝謝！"
             }
           }
@@ -4136,36 +4364,36 @@ const DIALOGUE_SCENARIOS = {
           {
             npc: {
               text: "いらっしゃいませ。本日ご宿泊のご予約でしょうか？",
-              phonetic: "いらっしゃいませ。ほんじつ ごしゅくはくの ごよやく でしょうか？",
+              phonetic: "Irasshaimase. Honjitsu goshukuhaku no goyoyaku deshō ka?",
               zh: "歡迎光臨。請問是今天辦理住宿預約的貴賓嗎？"
             },
             user: {
               target: "はい、チェックインをお願いします。予約の名前は王（ワン）です。",
-              phonetic: "はい、チェックインを おねがいします。よやくの なまえは ワン です。",
+              phonetic: "Hai, chekkuin o onegai shimasu. Yoyaku no namae wa Wan desu.",
               zh: "是的，我要辦理入住。預約的名字是王（Wang）。"
             }
           },
           {
             npc: {
               text: "王様ですね、確認いたしました。こちらに氏名と連絡先をご記入いただけますか？",
-              phonetic: "ワンさますね、かくにん いたしました。こちらに しめいと れんらくさきを ごきにゅう いただけますか？",
+              phonetic: "Wan-sama desu ne, kakunin itashimashita. Kochira ni shimei to renrakusaki o gokinyū itadakemasu ka?",
               zh: "王先生/小姐對吧，已經為您確認到了。能請您在這邊填寫姓名與聯絡電話嗎？"
             },
             user: {
               target: "はい、記入しました。朝食は何時からですか？",
-              phonetic: "はい、きにゅう しました。ちょうしょくは なんじから ですか？",
+              phonetic: "Hai, kinyū shimashita. Chōshoku wa nanji kara desu ka?",
               zh: "好的，填寫好了。請問早餐是幾點開始呢？"
             }
           },
           {
             npc: {
               text: "朝食は二階のレストランで朝七時から十時までとなっております。こちらがルームキーです。",
-              phonetic: "ちょうしょくは にかいの レストランで あさしちじから じゅうじまで となって おります。こちらが ルームキー です。",
+              phonetic: "Chōshoku wa nikai no resutoran de asa shichiji kara jūji made to natte orimasu. Kochira ga rūmukī desu.",
               zh: "早餐在二樓餐廳，供應時間為早上七點至十點。這是您的房卡。"
             },
             user: {
               target: "わかりました。丁寧にご案内いただきありがとうございます。",
-              phonetic: "わかりました。ていねいに ごあんない いただき ありがとう ございます。",
+              phonetic: "Wakarimashita. Teinei ni goannai itadaki arigatō gozaimasu.",
               zh: "明白了。謝謝您親切詳盡的指引。"
             }
           }
@@ -4182,36 +4410,36 @@ const DIALOGUE_SCENARIOS = {
           {
             npc: {
               text: "いらっしゃい！食券をお預かりします！",
-              phonetic: "いらっしゃい！しょっけんを おあずかり します！",
+              phonetic: "Irasshai! Shokken o oazukari shimasu!",
               zh: "歡迎光臨！替您收食券！"
             },
             user: {
               target: "特製豚骨ラーメンの食券をお願いします。",
-              phonetic: "とくせい とんこつ ラーメンの しょっけんを おねがい します。",
+              phonetic: "Tokusei tonkotsu rāmen no shokken o onegai shimasu.",
               zh: "這是特製豚骨拉麵的食券，麻煩您了。"
             }
           },
           {
             npc: {
               text: "へい！麺のかたさと、スープの濃さはお好みに合わせられますよ。",
-              phonetic: "へい！めんの かたさと、スープの こさは おこのみに あわせられますよ。",
+              phonetic: "Hei! Men no katasa to, sūpu no kosa wa okonomi ni awaseraremasu yo.",
               zh: "好嘞！麵條軟硬度和湯頭濃度都可以依您的喜好客製喔。"
             },
             user: {
               target: "麺はかため、スープは普通でお願いします。",
-              phonetic: "めんは かため、スープは ふつうで おねがい します。",
+              phonetic: "Men wa katame, sūpu wa futsū de onegai shimasu.",
               zh: "麵條請幫我做偏硬，湯頭濃度普通，謝謝。"
             }
           },
           {
             npc: {
               text: "あいよ！ネギとニンニクは入れても大丈夫ですか？",
-              phonetic: "あいよ！ネギと ニンニクは いれても だいじょうぶ ですか？",
+              phonetic: "Aiyo! Negi to ninniku wa irete mo daijōbu desu ka?",
               zh: "沒問題！蔥花和蒜泥都可以加嗎？"
             },
             user: {
               target: "はい、全部入れてください。楽しみにしています！",
-              phonetic: "はい、ぜんぶ いれて ください。たのしみに して います！",
+              phonetic: "Hai, zenbu irete kudasai. Tanoshimi ni shite imasu!",
               zh: "好的，請全部都加。非常期待！"
             }
           }
@@ -4228,36 +4456,36 @@ const DIALOGUE_SCENARIOS = {
           {
             npc: {
               text: "はい、どうされましたか？ご案内いたします。",
-              phonetic: "はい、どう されましたか？ごあんない いたします。",
+              phonetic: "Hai, dō saremashita ka? Goannai itashimasu.",
               zh: "您好，請問有什麼我可以協助指引的嗎？"
             },
             user: {
               target: "すみません、新宿駅に行きたいのですが、何番線に乗ればいいですか？",
-              phonetic: "すみません、しんじゅくえきに いきたいの ですが、なんばんせんに のれば いいですか？",
+              phonetic: "Sumimasen, Shinjuku-eki ni ikitai no desu ga, nanbansen ni noreba ii desu ka?",
               zh: "不好意思，我想去新宿站，請問應該搭乘幾號月台呢？"
             }
           },
           {
             npc: {
               text: "新宿でしたら、あちらの二番線、山手線内回りにご乗車ください。",
-              phonetic: "しんじゅく でしたら、あちらの にばんせん、やまのてせん うちまわりに ごじょうしゃ ください。",
+              phonetic: "Shinjuku deshitara, achira no nibansen, Yamanote-sen uchimawari ni gojōsha kudasai.",
               zh: "去新宿的話，請到那邊的二號月台搭乘山手線內環線。"
             },
             user: {
               target: "ここから新宿まで、何分くらいかかりますか？",
-              phonetic: "ここから しんじゅくまで、なんぷん くらい かかりますか？",
+              phonetic: "Koko kara Shinjuku made, nanpun kurai kakarimasu ka?",
               zh: "請問從這裡到新宿大約需要幾分鐘呢？"
             }
           },
           {
             npc: {
               text: "電車で約十五分です。四つ目の駅が新宿ですよ。",
-              phonetic: "でんしゃで やく じゅうごふんです。よっつめの えきが しんじゅく ですよ。",
+              phonetic: "Densha de yaku jūgofun desu. Yottsume no eki ga Shinjuku desu yo.",
               zh: "電車大約需要 15 分鐘。第四站就是新宿囉。"
             },
             user: {
               target: "よくわかりました。助かりました、ありがとうございます！",
-              phonetic: "よく わかりました。たすかりました、ありがとう ございます！",
+              phonetic: "Yoku wakarimashita. Tasakarimashita, arigatō gozaimasu!",
               zh: "我完全明白了。太感謝您的幫忙，謝謝！"
             }
           }
@@ -4511,7 +4739,7 @@ const DialogueSys = (() => {
       <div class="bubble-body">
         <div class="bubble-sender">${activeScenario.npc.name}</div>
         <div class="bubble-orig">${turnData.npc.text}</div>
-        ${turnData.npc.phonetic && turnData.npc.phonetic !== turnData.npc.text ? `<div class="bubble-phonetic">${turnData.npc.phonetic}</div>` : ''}
+        ${turnData.npc.phonetic && turnData.npc.phonetic !== turnData.npc.text ? `<div class="bubble-phonetic" style="font-family: monospace; font-size: 13px; opacity: 0.8; color: #4f46e5;">${turnData.npc.phonetic}</div>` : ''}
         <div class="bubble-zh">${turnData.npc.zh}</div>
         <div class="bubble-footer">
           <button class="bubble-btn replay-npc-btn" title="再聽一次 NPC 發音">🔊 朗讀</button>
@@ -4564,6 +4792,7 @@ const DialogueSys = (() => {
       <div class="bubble-body">
         <div class="bubble-sender">你 (You)</div>
         <div class="bubble-orig">${spokenText}</div>
+        ${turnData.user.phonetic && turnData.user.phonetic !== turnData.user.target ? `<div class="bubble-phonetic" style="font-family: monospace; font-size: 13px; opacity: 0.8; color: #4f46e5;">${turnData.user.phonetic}</div>` : ''}
         <div class="bubble-zh">${turnData.user.zh}</div>
         <div class="bubble-footer">
           ${scoreBadge}
@@ -4905,6 +5134,105 @@ const SHADOWING_DATA = {
           { text: "かめは すすみつづけ、ゴールに とどいた！", phonetic: "kame wa susumitsuzuke, gōru ni todoita!", zh: "烏龜持續前進，到達了終點！", pauseHint: "歡慶語氣" },
           { text: "「ゆっくり じゃんけん つよく ぬける！」という ことばが できました。", phonetic: "yukkuri janken tsuyoku nukeru! to iu kotoba ga dekimashita.", zh: "「慢而穩，終能勝」這句話就這樣來了。", pauseHint: "格言收尾" }
         ]
+      },
+      {
+        id: 'ja-story-warashibe',
+        title: '🌾 わらしべ長者',
+        titleZh: '稻草富翁（好心有好報的奇蹟）',
+        level: 'N5',
+        sentences: [
+          {
+            text: "むかし むかし、あるところに、とても まじめで まずしい わかものが いました。",
+            ruby: "むかし むかし、あるところに、とても まじめで <ruby>貧<rt>まず</rt></ruby>しい <ruby>若者<rt>わかもの</rt></ruby>が いました。",
+            phonetic: "mukashi mukashi, aru tokoro ni, totemo majime de mazushii wakamono ga imashita.",
+            zh: "很久很久以前，在一個地方，住著一位非常認真卻很貧窮的年輕人。",
+            pauseHint: "經典開頭、語調平緩"
+          },
+          {
+            text: "わかものは かんのんさまの おてらへ おまいりに いきました。",
+            ruby: "<ruby>若者<rt>わかもの</rt></ruby>は <ruby>観音様<rt>かんのんさま</rt></ruby>の お<ruby>寺<rt>てら</rt></ruby>へ お<ruby>参<rt>まい</rt></ruby>りに <ruby>行<rt>い</rt></ruby>きました。",
+            phonetic: "wakamono wa kannon-sama no otera e omairi ni ikimashita.",
+            zh: "年輕人前往觀音菩薩的寺廟虔誠參拜。",
+            pauseHint: "安詳、虔誠"
+          },
+          {
+            text: "かんのんさまは「てらから でて、さいしょに つかんだものを はなすな」と いいました。",
+            ruby: "<ruby>観音様<rt>かんのんさま</rt></ruby>は「<ruby>寺<rt>てら</rt></ruby>から <ruby>出<rt>で</rt></ruby>て、<ruby>最初<rt>さいしょ</rt></ruby>に つかんだものを <ruby>離<rt>はな</rt></ruby>すな」と <ruby>言<rt>い</rt></ruby>いました。",
+            phonetic: "kannon-sama wa 'tera kara dete, saisho ni tsukanda mono o hanasu na' to iimashita.",
+            zh: "菩薩對他說：「走出寺廟後，抓在手中的第一樣東西，絕對不可放手。」",
+            pauseHint: "神聖開示"
+          },
+          {
+            text: "てらを でた わかものは、ころんで いっぽんの わらしべを つかみました。",
+            ruby: "<ruby>寺<rt>てら</rt></ruby>を <ruby>出<rt>で</rt></ruby>た <ruby>若者<rt>わかもの</rt></ruby>は、ころんで <ruby>一本<rt>いっぽん</rt></ruby>の わらしべを つかみました。",
+            phonetic: "tera o deta wakamono wa, koronde ippon no warashibe o tsukamashita.",
+            zh: "走出寺廟的年輕人不小心跌了一跤，手中抓起了一根稻草。",
+            pauseHint: "意外情節"
+          },
+          {
+            text: "とんできた アブを つかまえて、わらしべの さきに むすびつけました。",
+            ruby: "<ruby>飛<rt>と</rt></ruby>んできた アブを つかまえて、わらしべの <ruby>先<rt>さき</rt></ruby>に むすびつけました。",
+            phonetic: "tondekita abu o tsukamaete, warashibe no saki ni musubitsukemashita.",
+            zh: "他抓住了飛來的牛虻，將牠綁在稻草的一端嗡嗡打轉。",
+            pauseHint: "輕快活潑"
+          },
+          {
+            text: "みちで であった こどもが それを みて、とても よろこびました。",
+            ruby: "<ruby>道<rt>みち</rt></ruby>で <ruby>出会<rt>であ</rt></ruby>った <ruby>子供<rt>こども</rt></ruby>が それを <ruby>見<rt>み</rt></ruby>て、とても <ruby>喜<rt>よろこ</rt></ruby>びました。",
+            phonetic: "michi de deatta kodomo ga sore o mite, totemo yorokobimashita.",
+            zh: "路上遇到的小朋友看見了，開心地拍手笑了起來。",
+            pauseHint: "童趣笑聲"
+          },
+          {
+            text: "こどもの おかあさんは、おれいに みかんを みっつ くれました。",
+            ruby: "<ruby>子供<rt>こども</rt></ruby>の お<ruby>母<rt>かあ</rt></ruby>さんは、お<ruby>礼<rt>れい</rt></ruby>に みかんを <ruby>三<rt>みっ</rt></ruby>つ くれました。",
+            phonetic: "kodomo no okaasan wa, orei ni mikan o mittsu kuremashita.",
+            zh: "孩子的母親為了答謝，送給他三顆香甜的橘子。",
+            pauseHint: "感謝語氣"
+          },
+          {
+            text: "つぎに、のどが かわいて たおれそうな ひとに、みかんを あげました。",
+            ruby: "<ruby>次<rt>つぎ</rt></ruby>に、のどが かわいて <ruby>倒<rt>たお</rt></ruby>れそうな <ruby>人<rt>ひと</rt></ruby>に、みかんを あげました。",
+            phonetic: "tsugi ni, nodo ga kawaite taoresō na hito ni, mikan o agemashita.",
+            zh: "接著，年輕人遇見一位口渴得快昏倒的旅人，毫不猶豫地把橘子送給對方。",
+            pauseHint: "善心助人"
+          },
+          {
+            text: "そのひとは だいかんしゃして、うつくしい ぬのを くれました。",
+            ruby: "<ruby>其<rt>そ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>は <ruby>大感謝<rt>だいかんしゃ</rt></ruby>して、<ruby>美<rt>うつく</rt></ruby>しい <ruby>布<rt>ぬの</rt></ruby>を くれました。",
+            phonetic: "sono hito wa daikansha shite, utsukushii nuno o kuremashita.",
+            zh: "那個人感激涕零，回贈給他三匹華美上等的綢緞。",
+            pauseHint: "驚喜回饋"
+          },
+          {
+            text: "そのぬのを、うまを つれた さむらいの こまった うまと こうかんしました。",
+            ruby: "その<ruby>布<rt>ぬの</rt></ruby>を、<ruby>馬<rt>うま</rt></ruby>を <ruby>連<rt>つ</rt></ruby>れた <ruby>侍<rt>さむらい</rt></ruby>の <ruby>困<rt>こま</rt></ruby>った <ruby>馬<rt>うま</rt></ruby>と <ruby>交換<rt>こうかん</rt></ruby>しました。",
+            phonetic: "sono nuno o, uma o tsureta samurai no komatta uma to kōkan shimashita.",
+            zh: "後來，他用綢緞向一位急著趕路的武士換得了一匹因疲累倒地的病馬。",
+            pauseHint: "轉折點"
+          },
+          {
+            text: "わかものが てあつく かんびょうすると、うまは げんきな めいばに なりました。",
+            ruby: "<ruby>若者<rt>わかもの</rt></ruby>が <ruby>手厚<rt>てあつ</rt></ruby>く <ruby>看病<rt>かんびょう</rt></ruby>すると、<ruby>馬<rt>うま</rt></ruby>は <ruby>元気<rt>げんき</rt></ruby>な <ruby>名馬<rt>めいば</rt></ruby>に なりました。",
+            phonetic: "wakamono ga teatsuku kanbyō suru to, uma wa genki na meiba ni narimashita.",
+            zh: "在年輕人悉心照料餵水後，這匹馬恢復元氣，成為一匹神駿好馬。",
+            pauseHint: "充滿希望"
+          },
+          {
+            text: "さいごに やしきの あるじが うまを みこみ、わかものは やしきを ゆずりうけました。",
+            ruby: "<ruby>最後<rt>さいご</rt></ruby>に <ruby>屋敷<rt>やしき</rt></ruby>の <ruby>主<rt>あるじ</rt></ruby>が <ruby>馬<rt>うま</rt></ruby>を <ruby>見込<rt>みこ</rt></ruby>み、<ruby>若者<rt>わかもの</rt></ruby>は <ruby>屋敷<rt>やしき</rt></ruby>を <ruby>譲<rt>ゆず</rt></ruby>り<ruby>受<rt>う</rt></ruby>けました。",
+            phonetic: "saigo ni yashiki no aruji ga uma o mikomi, wakamono wa yashiki o yuzuriukemashita.",
+            zh: "最後，大富豪看中這匹駿馬，並欣賞年輕人的品格，將大宅邸與田地託付給他。",
+            pauseHint: "大團圓"
+          },
+          {
+            text: "いっぽんの わらしべから、わかものは おおがねもちの『わらしべちょうじゃ』に なったのです。",
+            ruby: "<ruby>一本<rt>いっぽん</rt></ruby>の わらしべから、<ruby>若者<rt>わかもの</rt></ruby>は お<ruby>金持<rt>かねも</rt></ruby>ちの『わらしべ<ruby>長者<rt>ちょうじゃ</rt></ruby>』に なったのです。",
+            phonetic: "ippon no warashibe kara, wakamono wa okanemochi no 'warashibe chōja' ni natta no desu.",
+            zh: "只憑一根小小的稻草，善良的年輕人最終成為了人盡皆知的「稻草富翁」。",
+            pauseHint: "寓意深遠、圓滿結尾"
+          }
+        ]
       }
     ]
   },
@@ -4969,14 +5297,14 @@ const SHADOWING_DATA = {
         title: '🍵 一期一会の心',
         titleZh: '一期一會的待人哲學',
         sentences: [
-          { text: "一期一会。この四文字には、深い日本の哲学が宿っています。", phonetic: "ichigo ichie. kono yonmoji ni wa, fukai nihon no tetsugaku ga yadotte imasu.", zh: "一期一會。這四個字裡，蘊藏著日本深邃的哲學。", pauseHint: "典雅開場" },
-          { text: "たとえ同じ人と何度会っても、その出会いは二度とありません。", phonetic: "tatoe onaji hito to nando aitemo, sono deai wa nidoto arimasen.", zh: "即使與同一人再次相見，那份相遇也不會再有第二次。", pauseHint: "沉穩語速" },
-          { text: "だから、一つひとつの出会いを大切にしなければなりません。", phonetic: "dakara, hitotsu hitotsu no deai wo taisetsu ni shinakereba narimasen.", zh: "因此，每一次的相遇都必須珍而重之。", pauseHint: "敬語節奏" },
-          { text: "お茶を点てるとき、茶道家は「今この瞬間を」と心に留めます。", phonetic: "ocha wo tateru toki, sadōka wa ima kono shunkan wo to kokoro ni todomemasu.", zh: "點茶之時，茶道家心中默念「把握當下這個瞬間」。", pauseHint: "靜謐、專注" },
-          { text: "毎日の生活でも、同じことが言えます。", phonetic: "mainichi no seikatsu demo, onaji koto ga iemasu.", zh: "在日常生活中，這番道理同樣適用。", pauseHint: "" },
-          { text: "朝のコーヒーの香り、友人の笑顔、帰り道の風。", phonetic: "asa no kōhī no kaori, yūjin no egao, kaerimichi no kaze.", zh: "清晨咖啡的香氣、朋友的笑顏、歸途的微風。", pauseHint: "三連列舉" },
-          { text: "どれも、戻らない貴重な時間です。", phonetic: "dore mo, modoranai kichō na jikan desu.", zh: "全都是無法重來的珍貴時光。", pauseHint: "感性語氣" },
-          { text: "一期一会の心で、ひとつひとつの瞬間を、光に変えていきましょう。", phonetic: "ichigo ichie no kokoro de, hitotsu hitotsu no shunkan wo, hikari ni kaete ikimashō.", zh: "懷著一期一會的心，把每一個瞬間，都化為生命中的光吧。", pauseHint: "收尾、溫暖" }
+          { text: "一期一会。この四文字には、深い日本の哲学が宿っています。", ruby: "<ruby>一期一会<rt>いちごいちえ</rt></ruby>。この<ruby>四文字<rt>よんもじ</rt></ruby>には、<ruby>深<rt>ふか</rt></ruby>い<ruby>日本<rt>にほん</rt></ruby>の<ruby>哲学<rt>てつがく</rt></ruby>が<ruby>宿<rt>やど</rt></ruby>っています。", phonetic: "ichigo ichie. kono yonmoji ni wa, fukai nihon no tetsugaku ga yadotte imasu.", zh: "一期一會。這四個字裡，蘊藏著日本深邃的哲學。", pauseHint: "典雅開場" },
+          { text: "たとえ同じ人と何度会っても、その出会いは二度とありません。", ruby: "たとえ<ruby>同<rt>おな</rt></ruby>じ<ruby>人<rt>ひと</rt></ruby>と<ruby>何度<rt>なんど</rt></ruby><ruby>会<rt>あ</rt></ruby>っても、その<ruby>出会<rt>であ</rt></ruby>いは<ruby>二度<rt>にど</rt></ruby>とありません。", phonetic: "tatoe onaji hito to nando aitemo, sono deai wa nidoto arimasen.", zh: "即使與同一人再次相見，那份相遇也不會再有第二次。", pauseHint: "沉穩語速" },
+          { text: "だから、一つひとつの出会いを大切にしなければなりません。", ruby: "だから、<ruby>一つひとつ<rt>ひとつひとつ</rt></ruby>の<ruby>出会<rt>であ</rt></ruby>いを<ruby>大切<rt>たいせつ</rt></ruby>にしなければなりません。", phonetic: "dakara, hitotsu hitotsu no deai wo taisetsu ni shinakereba narimasen.", zh: "因此，每一次的相遇都必須珍而重之。", pauseHint: "敬語節奏" },
+          { text: "お茶を点てるとき、茶道家は「今この瞬間を」と心に留めます。", ruby: "お<ruby>茶<rt>ちゃ</rt></ruby>を<ruby>点<rt>た</rt></ruby>てるとき、<ruby>茶道家<rt>さどうか</rt></ruby>は「<ruby>今<rt>いま</rt></ruby>この<ruby>瞬間<rt>しゅんかん</rt></ruby>を」と<ruby>心<rt>こころ</rt></ruby>に<ruby>留<rt>とど</rt></ruby>めます。", phonetic: "ocha wo tateru toki, sadōka wa ima kono shunkan wo to kokoro ni todomemasu.", zh: "點茶之時，茶道家心中默念「把握當下這個瞬間」。", pauseHint: "靜謐、專注" },
+          { text: "毎日の生活でも、同じことが言えます。", ruby: "<ruby>毎日<rt>まいにち</rt></ruby>の<ruby>生活<rt>せいかつ</rt></ruby>でも、<ruby>同<rt>おな</rt></ruby>じことが<ruby>言<rt>い</rt></ruby>えます。", phonetic: "mainichi no seikatsu demo, onaji koto ga iemasu.", zh: "在日常生活中，這番道理同樣適用。", pauseHint: "" },
+          { text: "朝のコーヒーの香り、友人の笑顔、帰り道の風。", ruby: "<ruby>朝<rt>あさ</rt></ruby>のコーヒーの<ruby>香<rt>かお</rt></ruby>り、<ruby>友人<rt>ゆうじん</rt></ruby>の<ruby>笑顔<rt>えがお</rt></ruby>、<ruby>帰<rt>かえ</rt></ruby>り<ruby>道<rt>みち</rt></ruby>の<ruby>風<rt>かぜ</rt></ruby>。", phonetic: "asa no kōhī no kaori, yūjin no egao, kaerimichi no kaze.", zh: "清晨咖啡的香氣、朋友的笑顏、歸途的微風。", pauseHint: "三連列舉" },
+          { text: "どれも、戻らない貴重な時間です。", ruby: "どれも、<ruby>戻<rt>もど</rt></ruby>らない<ruby>貴重<rt>きちょう</rt></ruby>な<ruby>時間<rt>じかん</rt></ruby>です。", phonetic: "dore mo, modoranai kichō na jikan desu.", zh: "全都是無法重來的珍貴時光。", pauseHint: "感性語氣" },
+          { text: "一期一会の心で、ひとつひとつの瞬間を、光に変えていきましょう。", ruby: "<ruby>一期一会<rt>いちごいちえ</rt></ruby>の<ruby>心<rt>こころ</rt></ruby>で、ひとつひとつの<ruby>瞬間<rt>しゅんかん</rt></ruby>を、<ruby>光<rt>ひかり</rt></ruby>に<ruby>変<rt>か</rt></ruby>えていきましょう。", phonetic: "ichigo ichie no kokoro de, hitotsu hitotsu no shunkan wo, hikari ni kaete ikimashō.", zh: "懷著一期一會的心，把每一個瞬間，都化為生命中的光吧。", pauseHint: "收尾、溫暖" }
         ]
       },
       {
@@ -5027,6 +5355,105 @@ const SHADOWING_DATA = {
           { text: "やがてかぐや姫は月の都へ帰らなければなりません。", phonetic: "", zh: "後來，輝夜姬終究得返回月之都。", pauseHint: "傷感語氣", ruby: "やがてかぐや<ruby>姫<rt>ひめ</rt></ruby>は<ruby>月<rt>つき</rt></ruby>の<ruby>都<rt>みやこ</rt></ruby>へ<ruby>帰<rt>かえ</rt></ruby>らなければなりません。" },
           { text: "名残を惜しみながら、かぐや姫は空へ昇っていきました。", phonetic: "", zh: "她依依不捨地，往天空飛昇而去。", pauseHint: "悲傷優雅", ruby: "<ruby>名残<rt>なごり</rt></ruby>を<ruby>惜<rt>お</rt></ruby>しみながら、かぐや<ruby>姫<rt>ひめ</rt></ruby>は<ruby>空<rt>そら</rt></ruby>へ<ruby>昇<rt>のぼ</rt></ruby>っていきました。" }
         ]
+      },
+      {
+        id: 'ja-story-warashibe',
+        title: '🌾 わらしべ長者',
+        titleZh: '稻草富翁（好心有好報的奇蹟）',
+        level: 'N5',
+        sentences: [
+          {
+            text: "むかし むかし、あるところに、とても まじめで まずしい わかものが いました。",
+            ruby: "むかし むかし、あるところに、とても まじめで <ruby>貧<rt>まず</rt></ruby>しい <ruby>若者<rt>わかもの</rt></ruby>が いました。",
+            phonetic: "mukashi mukashi, aru tokoro ni, totemo majime de mazushii wakamono ga imashita.",
+            zh: "很久很久以前，在一個地方，住著一位非常認真卻很貧窮的年輕人。",
+            pauseHint: "經典開頭、語調平緩"
+          },
+          {
+            text: "わかものは かんのんさまの おてらへ おまいりに いきました。",
+            ruby: "<ruby>若者<rt>わかもの</rt></ruby>は <ruby>観音様<rt>かんのんさま</rt></ruby>の お<ruby>寺<rt>てら</rt></ruby>へ お<ruby>参<rt>まい</rt></ruby>りに <ruby>行<rt>い</rt></ruby>きました。",
+            phonetic: "wakamono wa kannon-sama no otera e omairi ni ikimashita.",
+            zh: "年輕人前往觀音菩薩的寺廟虔誠參拜。",
+            pauseHint: "安詳、虔誠"
+          },
+          {
+            text: "かんのんさまは「てらから でて、さいしょに つかんだものを はなすな」と いいました。",
+            ruby: "<ruby>観音様<rt>かんのんさま</rt></ruby>は「<ruby>寺<rt>てら</rt></ruby>から <ruby>出<rt>で</rt></ruby>て、<ruby>最初<rt>さいしょ</rt></ruby>に つかんだものを <ruby>離<rt>はな</rt></ruby>すな」と <ruby>言<rt>い</rt></ruby>いました。",
+            phonetic: "kannon-sama wa 'tera kara dete, saisho ni tsukanda mono o hanasu na' to iimashita.",
+            zh: "菩薩對他說：「走出寺廟後，抓在手中的第一樣東西，絕對不可放手。」",
+            pauseHint: "神聖開示"
+          },
+          {
+            text: "てらを でた わかものは、ころんで いっぽんの わらしべを つかみました。",
+            ruby: "<ruby>寺<rt>てら</rt></ruby>を <ruby>出<rt>で</rt></ruby>た <ruby>若者<rt>わかもの</rt></ruby>は、ころんで <ruby>一本<rt>いっぽん</rt></ruby>の わらしべを つかみました。",
+            phonetic: "tera o deta wakamono wa, koronde ippon no warashibe o tsukamashita.",
+            zh: "走出寺廟的年輕人不小心跌了一跤，手中抓起了一根稻草。",
+            pauseHint: "意外情節"
+          },
+          {
+            text: "とんできた アブを つかまえて、わらしべの さきに むすびつけました。",
+            ruby: "<ruby>飛<rt>と</rt></ruby>んできた アブを つかまえて、わらしべの <ruby>先<rt>さき</rt></ruby>に むすびつけました。",
+            phonetic: "tondekita abu o tsukamaete, warashibe no saki ni musubitsukemashita.",
+            zh: "他抓住了飛來的牛虻，將牠綁在稻草的一端嗡嗡打轉。",
+            pauseHint: "輕快活潑"
+          },
+          {
+            text: "みちで であった こどもが それを みて、とても よろこびました。",
+            ruby: "<ruby>道<rt>みち</rt></ruby>で <ruby>出会<rt>であ</rt></ruby>った <ruby>子供<rt>こども</rt></ruby>が それを <ruby>見<rt>み</rt></ruby>て、とても <ruby>喜<rt>よろこ</rt></ruby>びました。",
+            phonetic: "michi de deatta kodomo ga sore o mite, totemo yorokobimashita.",
+            zh: "路上遇到的小朋友看見了，開心地拍手笑了起來。",
+            pauseHint: "童趣笑聲"
+          },
+          {
+            text: "こどもの おかあさんは、おれいに みかんを みっつ くれました。",
+            ruby: "<ruby>子供<rt>こども</rt></ruby>の お<ruby>母<rt>かあ</rt></ruby>さんは、お<ruby>礼<rt>れい</rt></ruby>に みかんを <ruby>三<rt>みっ</rt></ruby>つ くれました。",
+            phonetic: "kodomo no okaasan wa, orei ni mikan o mittsu kuremashita.",
+            zh: "孩子的母親為了答謝，送給他三顆香甜的橘子。",
+            pauseHint: "感謝語氣"
+          },
+          {
+            text: "つぎに、のどが かわいて たおれそうな ひとに、みかんを あげました。",
+            ruby: "<ruby>次<rt>つぎ</rt></ruby>に、のどが かわいて <ruby>倒<rt>たお</rt></ruby>れそうな <ruby>人<rt>ひと</rt></ruby>に、みかんを あげました。",
+            phonetic: "tsugi ni, nodo ga kawaite taoresō na hito ni, mikan o agemashita.",
+            zh: "接著，年輕人遇見一位口渴得快昏倒的旅人，毫不猶豫地把橘子送給對方。",
+            pauseHint: "善心助人"
+          },
+          {
+            text: "そのひとは だいかんしゃして、うつくしい ぬのを くれました。",
+            ruby: "<ruby>其<rt>そ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>は <ruby>大感謝<rt>だいかんしゃ</rt></ruby>して、<ruby>美<rt>うつく</rt></ruby>しい <ruby>布<rt>ぬの</rt></ruby>を くれました。",
+            phonetic: "sono hito wa daikansha shite, utsukushii nuno o kuremashita.",
+            zh: "那個人感激涕零，回贈給他三匹華美上等的綢緞。",
+            pauseHint: "驚喜回饋"
+          },
+          {
+            text: "そのぬのを、うまを つれた さむらいの こまった うまと こうかんしました。",
+            ruby: "その<ruby>布<rt>ぬの</rt></ruby>を、<ruby>馬<rt>うま</rt></ruby>を <ruby>連<rt>つ</rt></ruby>れた <ruby>侍<rt>さむらい</rt></ruby>の <ruby>困<rt>こま</rt></ruby>った <ruby>馬<rt>うま</rt></ruby>と <ruby>交換<rt>こうかん</rt></ruby>しました。",
+            phonetic: "sono nuno o, uma o tsureta samurai no komatta uma to kōkan shimashita.",
+            zh: "後來，他用綢緞向一位急著趕路的武士換得了一匹因疲累倒地的病馬。",
+            pauseHint: "轉折點"
+          },
+          {
+            text: "わかものが てあつく かんびょうすると、うまは げんきな めいばに なりました。",
+            ruby: "<ruby>若者<rt>わかもの</rt></ruby>が <ruby>手厚<rt>てあつ</rt></ruby>く <ruby>看病<rt>かんびょう</rt></ruby>すると、<ruby>馬<rt>うま</rt></ruby>は <ruby>元気<rt>げんき</rt></ruby>な <ruby>名馬<rt>めいば</rt></ruby>に なりました。",
+            phonetic: "wakamono ga teatsuku kanbyō suru to, uma wa genki na meiba ni narimashita.",
+            zh: "在年輕人悉心照料餵水後，這匹馬恢復元氣，成為一匹神駿好馬。",
+            pauseHint: "充滿希望"
+          },
+          {
+            text: "さいごに やしきの あるじが うまを みこみ、わかものは やしきを ゆずりうけました。",
+            ruby: "<ruby>最後<rt>さいご</rt></ruby>に <ruby>屋敷<rt>やしき</rt></ruby>の <ruby>主<rt>あるじ</rt></ruby>が <ruby>馬<rt>うま</rt></ruby>を <ruby>見込<rt>みこ</rt></ruby>み、<ruby>若者<rt>わかもの</rt></ruby>は <ruby>屋敷<rt>やしき</rt></ruby>を <ruby>譲<rt>ゆず</rt></ruby>り<ruby>受<rt>う</rt></ruby>けました。",
+            phonetic: "saigo ni yashiki no aruji ga uma o mikomi, wakamono wa yashiki o yuzuriukemashita.",
+            zh: "最後，大富豪看中這匹駿馬，並欣賞年輕人的品格，將大宅邸與田地託付給他。",
+            pauseHint: "大團圓"
+          },
+          {
+            text: "いっぽんの わらしべから、わかものは おおがねもちの『わらしべちょうじゃ』に なったのです。",
+            ruby: "<ruby>一本<rt>いっぽん</rt></ruby>の わらしべから、<ruby>若者<rt>わかもの</rt></ruby>は お<ruby>金持<rt>かねも</rt></ruby>ちの『わらしべ<ruby>長者<rt>ちょうじゃ</rt></ruby>』に なったのです。",
+            phonetic: "ippon no warashibe kara, wakamono wa okanemochi no 'warashibe chōja' ni natta no desu.",
+            zh: "只憑一根小小的稻草，善良的年輕人最終成為了人盡皆知的「稻草富翁」。",
+            pauseHint: "寓意深遠、圓滿結尾"
+          }
+        ]
       }
     ]
   }
@@ -5036,13 +5463,15 @@ const SHADOWING_DATA = {
    12. 影子跟讀訓練室模組 (ShadowingStudio Module)
    ========================================================================= */
 const ShadowingStudio = (() => {
-  let currentLang = 'en';
+  let currentLang = AppState.lang || 'en';
   let currentStoryId = '';
   let currentStep = 1;
   let currentSpeed = 1.0;
   let currentSentenceIdx = 0;
   let isPlaying = false;
   let isRecording = false;
+  let autoFlowEnabled = false;
+  let autoFlowTimer = null;
   let audioBlob = null;
   let mediaRecorder = null;
   let audioChunks = [];
@@ -5050,9 +5479,25 @@ const ShadowingStudio = (() => {
   let playMode = 'native';
   let zhHidden = false;
   let ttsUtterance = null;
-  let karaokeTimer = null;
 
   const $ = (id) => document.getElementById(id);
+
+  function setShadowingLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.shadow-lang-selector .pill').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-slang') === lang);
+    });
+    stopAllAudio();
+    currentStoryId = '';
+    currentSentenceIdx = 0;
+    const sel = $('shadowStorySelect');
+    if (sel) sel.value = '';
+    $('shadowActiveArea').classList.add('hidden');
+    $('shadowEmptyState').classList.remove('hidden');
+    $('shadowFeedback').classList.add('hidden');
+    $('shadowAbDock').classList.add('hidden');
+    populateStorySelect();
+  }
 
   function getModeKey() {
     return AppState.mode === 'adult' ? 'adult' : 'kids';
@@ -5080,7 +5525,63 @@ const ShadowingStudio = (() => {
     });
   }
 
-  function renderSentences() {
+  function renderFocusSentence() {
+    const story = getCurrentStory();
+    if (!story || !story.sentences.length) return;
+    if (currentSentenceIdx >= story.sentences.length) currentSentenceIdx = 0;
+    if (currentSentenceIdx < 0) currentSentenceIdx = story.sentences.length - 1;
+
+    const s = story.sentences[currentSentenceIdx];
+    $('shadowFocusCurrent').textContent = currentSentenceIdx + 1;
+    $('shadowFocusTotal').textContent = story.sentences.length;
+
+    // 渲染主文字
+    $('shadowFocusRuby').innerHTML = s.ruby || s.text;
+
+    // 渲染羅馬拼音
+    if (s.phonetic) {
+      $('shadowFocusRomaji').textContent = s.phonetic;
+      $('shadowFocusRomaji').style.display = 'block';
+    } else {
+      $('shadowFocusRomaji').style.display = 'none';
+    }
+
+    // 渲染中文翻譯
+    const showZh = !zhHidden;
+    $('shadowFocusZh').textContent = s.zh;
+    $('shadowFocusZh').classList.toggle('hidden-text', !showZh);
+
+    // 渲染提示
+    $('shadowFocusHint').textContent = s.pauseHint ? ('💡 ' + s.pauseHint) : '';
+
+    // 更新進度條
+    const pct = ((currentSentenceIdx + 1) / story.sentences.length) * 100;
+    $('shadowKaraokeFill').style.width = pct + '%';
+
+    // 更新迷你清單高亮
+    document.querySelectorAll('.shadow-sentence').forEach((el, i) => {
+      el.classList.toggle('karaoke-highlight', i === currentSentenceIdx);
+    });
+
+    // 隱藏先前的單句錄音與評分
+    $('shadowFeedback').classList.add('hidden');
+    $('shadowAbDock').classList.add('hidden');
+    audioBlob = null;
+    userAudioUrl = null;
+
+    // 狀態橫幅重置
+    setBanner('🎧 點擊【🔊 A 示範這句】先聽母語發音，接著按【🎙️ B 輪到我跟讀】開口模仿！', 'rgba(79,70,229,0.1)', '#4f46e5');
+  }
+
+  function setBanner(text, bg, color) {
+    const b = $('shadowTurnBanner');
+    if (!b) return;
+    b.textContent = text;
+    b.style.background = bg;
+    b.style.color = color;
+  }
+
+  function renderMiniSentences() {
     const area = $('shadowScriptArea');
     if (!area) return;
     area.innerHTML = '';
@@ -5091,46 +5592,26 @@ const ShadowingStudio = (() => {
       const div = document.createElement('div');
       div.className = 'shadow-sentence';
       div.dataset.idx = idx;
-      if (idx === currentSentenceIdx && isPlaying) div.classList.add('karaoke-highlight');
+      if (idx === currentSentenceIdx) div.classList.add('karaoke-highlight');
 
-      let phoneticHtml = '';
-      // 日語模式：<ruby> 標音直接內嵌於主文字（spec Task 2.1），不需要重複 phonetic 列
-      if (s.ruby) {
-        phoneticHtml = '';
-      } else if (s.phonetic) {
-        phoneticHtml = `<div class="shadow-sentence-phonetic">${s.phonetic}</div>`;
-      }
-
-      const showZh = (currentStep === 1 || currentStep === 4) && zhHidden;
       div.innerHTML = `
-        ${s.ruby ? `<div class="shadow-sentence-text">${s.ruby}</div>` : s.text}
-        ${phoneticHtml}
-        <div class="shadow-sentence-zh ${showZh ? 'hidden-text' : ''}">${s.zh}</div>
-        ${s.pauseHint ? `<div class="shadow-pause-hint">💡 ${s.pauseHint}</div>` : ''}
+        <div style="font-size:14px;font-weight:700;">${idx + 1}. ${s.text}</div>
+        <div style="font-size:12px;opacity:0.75;">${s.zh}</div>
       `;
 
       div.addEventListener('click', () => {
-        speakSentence(s.text);
-        highlightSentence(idx);
+        currentSentenceIdx = idx;
+        renderFocusSentence();
+        playCurrentSentence();
       });
 
       area.appendChild(div);
     });
   }
 
-  function highlightSentence(idx) {
-    currentSentenceIdx = idx;
-    document.querySelectorAll('.shadow-sentence').forEach((el, i) => {
-      el.classList.toggle('karaoke-highlight', i === idx);
-    });
-    const target = document.querySelector(`.shadow-sentence[data-idx="${idx}"]`);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-    const story = getCurrentStory();
-    if (story) {
-      const pct = ((idx + 1) / story.sentences.length) * 100;
-      $('shadowKaraokeFill').style.width = pct + '%';
-    }
+  function renderSentences() {
+    renderFocusSentence();
+    renderMiniSentences();
   }
 
   function speakSentence(text, onEnd) {
@@ -5138,7 +5619,12 @@ const ShadowingStudio = (() => {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = (currentLang === 'ja') ? 'ja-JP' : 'en-US';
-    u.rate = currentSpeed;
+    u.rate = (currentLang === 'ja') ? (currentSpeed * 0.88) : currentSpeed;
+    u.pitch = (currentLang === 'ja') ? 0.98 : 1.0;
+    if (typeof SpeechSys !== 'undefined' && SpeechSys.getBestVoice) {
+      const v = SpeechSys.getBestVoice(currentLang);
+      if (v) u.voice = v;
+    }
     ttsUtterance = u;
 
     u.onstart = () => {
@@ -5160,78 +5646,65 @@ const ShadowingStudio = (() => {
     window.speechSynthesis.speak(u);
   }
 
-  function playStory() {
+  // A 示範這句
+  function playCurrentSentence() {
     const story = getCurrentStory();
     if (!story || !story.sentences.length) return;
-    $('shadowFeedback').classList.add('hidden');
-    $('shadowAbDock').classList.add('hidden');
-    audioBlob = null;
-    userAudioUrl = null;
+    stopAllAudio();
 
-    if (currentStep === 1) {
-      playAllSentences(0, story.sentences.length);
-    } else {
-      playAllSentences(0, story.sentences.length);
-    }
-  }
+    const s = story.sentences[currentSentenceIdx];
+    setBanner('🔊 母語者 A 正在示範中... 請仔細聽咬字與抑揚頓挫！', 'rgba(16,185,129,0.15)', '#059669');
 
-  function playAllSentences(idx, total) {
-    const story = getCurrentStory();
-    if (!story || idx >= total) {
-      isPlaying = false;
-      $('shadowWaveBox').classList.remove('playing');
-      $('shadowKaraokeFill').style.width = '100%';
-      if (currentStep <= 2) {
-        $('shadowRecordBtn').disabled = false;
+    speakSentence(s.text, () => {
+      if (autoFlowEnabled) {
+        // 自動連鎖模式：A 念完後留白 4 秒讓 B 跟讀，接著自動下一句
+        startAutoFlowCountdown();
+      } else {
+        setBanner('🎙️ 換你開口囉！請點擊【🎙️ B 輪到我跟讀】錄下你的發音！', 'rgba(245,158,11,0.15)', '#d97706');
       }
-      return;
-    }
-
-    currentSentenceIdx = idx;
-    highlightSentence(idx);
-    isPlaying = true;
-    $('shadowWaveBox').classList.add('playing');
-
-    speakSentence(story.sentences[idx].text, () => {
-      setTimeout(() => playAllSentences(idx + 1, total), 200);
     });
   }
 
-  function startRecordingWithCountdown() {
-    $('shadowFeedback').classList.add('hidden');
-    $('shadowAbDock').classList.add('hidden');
-    audioBlob = null;
-    userAudioUrl = null;
+  // 自動留白倒數
+  function startAutoFlowCountdown() {
+    let countdown = 4;
+    setBanner(`🎙️ 輪到你跟讀！請大聲朗讀這句...（倒數 ${countdown} 秒）`, 'rgba(239,68,68,0.15)', '#dc2626');
+    if (autoFlowTimer) clearInterval(autoFlowTimer);
 
-    const overlay = document.createElement('div');
-    overlay.className = 'shadow-countdown';
-    overlay.innerHTML = '<div class="shadow-countdown-num" id="shadowCountNum">3</div>';
-    document.body.appendChild(overlay);
-
-    let count = 3;
-    const numEl = overlay.querySelector('#shadowCountNum');
-    const interval = setInterval(() => {
-      count--;
-      if (count > 0) {
-        numEl.textContent = count;
-        numEl.style.animation = 'none';
-        void numEl.offsetWidth;
-        numEl.style.animation = 'countdownPop 0.4s ease';
+    autoFlowTimer = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        setBanner(`🎙️ 輪到你跟讀！請大聲朗讀這句...（倒數 ${countdown} 秒）`, 'rgba(239,68,68,0.15)', '#dc2626');
       } else {
-        clearInterval(interval);
-        overlay.remove();
-        startRecordingAndPlay();
+        clearInterval(autoFlowTimer);
+        autoFlowTimer = null;
+        const story = getCurrentStory();
+        if (story && currentSentenceIdx < story.sentences.length - 1) {
+          nextSentence();
+          playCurrentSentence();
+        } else {
+          setBanner('🎉 太棒了！整篇影子跟讀完成！可以針對不熟的句子單獨複習喔～', 'rgba(16,185,129,0.2)', '#059669');
+          toggleAutoFlow(false);
+        }
       }
     }, 1000);
   }
 
-  function startRecordingAndPlay() {
+  // B 輪到我跟讀（錄音）
+  function toggleRecordCurrentSentence() {
+    if (isRecording) {
+      stopRecordingAndScore();
+    } else {
+      startRecordingCurrentSentence();
+    }
+  }
+
+  function startRecordingCurrentSentence() {
     const story = getCurrentStory();
     if (!story) return;
+    stopAllAudio();
 
     audioChunks = [];
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.ondataavailable = (e) => {
@@ -5242,64 +5715,40 @@ const ShadowingStudio = (() => {
         userAudioUrl = URL.createObjectURL(audioBlob);
         stream.getTracks().forEach(t => t.stop());
         $('shadowRecordBtn').classList.remove('recording');
-        $('shadowRecordBtn').querySelector('span:last-child').textContent = '開始跟讀錄音';
+        $('shadowRecordBtnText').textContent = 'B 輪到我跟讀';
         $('shadowAbDock').classList.remove('hidden');
-        $('shadowPlayBtn').disabled = false;
-
-        if (SpeechRecognition) {
-          recognizeAndScore(story);
-        } else {
-          showFeedback(70, '瀏覽器暫不支援語音辨識，已為您錄音完成！可使用 AB 對照播放。');
-        }
+        recognizeAndScoreCurrentSentence();
       };
 
       mediaRecorder.start();
       isRecording = true;
       $('shadowRecordBtn').classList.add('recording');
-      $('shadowRecordBtn').querySelector('span:last-child').textContent = '錄音中...';
-      $('shadowPlayBtn').disabled = true;
-
-      let delay = 300;
-      if (currentStep === 4) delay = 300;
-
-      setTimeout(() => {
-        playAllSentencesForRecording(0, story.sentences.length, () => {
-          if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop();
-            isRecording = false;
-          }
-        });
-      }, delay);
-
+      $('shadowRecordBtnText').textContent = '⏹️ 完成跟讀 (點擊結算)';
+      setBanner('🔴 正在錄下你的聲音... 請朗讀眼前這句話，念完點擊「完成跟讀」！', 'rgba(239,68,68,0.2)', '#dc2626');
+      $('shadowWaveBox').classList.add('playing');
     }).catch(() => {
-      showFeedback(50, '麥克風未授權，無法錄音。請允許麥克風權限後再試。');
-      $('shadowRecordBtn').classList.remove('recording');
+      setBanner('⚠️ 麥克風未授權，無法錄音。請允許瀏覽器麥克風權限後再試。', 'rgba(239,68,68,0.15)', '#dc2626');
     });
   }
 
-  function playAllSentencesForRecording(idx, total, onComplete) {
-    const story = getCurrentStory();
-    if (!story || idx >= total) {
-      isPlaying = false;
+  function stopRecordingAndScore() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      isRecording = false;
       $('shadowWaveBox').classList.remove('playing');
-      $('shadowKaraokeFill').style.width = '100%';
-      if (onComplete) setTimeout(onComplete, 500);
+    }
+  }
+
+  function recognizeAndScoreCurrentSentence() {
+    const story = getCurrentStory();
+    if (!story) return;
+    const targetSentence = story.sentences[currentSentenceIdx];
+
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      showFeedback(75, '錄音完成！可點擊下方【🎧 聽我的錄音】與原音對照。');
       return;
     }
-
-    currentSentenceIdx = idx;
-    highlightSentence(idx);
-    isPlaying = true;
-    $('shadowWaveBox').classList.add('playing');
-
-    speakSentence(story.sentences[idx].text, () => {
-      setTimeout(() => playAllSentencesForRecording(idx + 1, total, onComplete), 250);
-    });
-  }
-
-  function recognizeAndScore(story) {
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRec) return;
 
     const rec = new SpeechRec();
     rec.lang = (currentLang === 'ja') ? 'ja-JP' : 'en-US';
@@ -5309,17 +5758,14 @@ const ShadowingStudio = (() => {
 
     rec.onresult = (e) => {
       const transcript = e.results[0][0].transcript;
-      const fullText = story.sentences.map(s => s.text).join(' ');
-      const score = calculateShadowingAccuracy(transcript, fullText);
+      const score = calculateShadowingAccuracy(transcript, targetSentence.text);
       const pct = Math.min(100, Math.round(score * 100));
-      showFeedback(pct, `辨識到：「${transcript.length > 30 ? transcript.slice(0, 30) + '...' : transcript}」`);
+      showFeedback(pct, `辨識到：「${transcript}」`);
     };
 
     rec.onerror = () => {
-      showFeedback(60, '語音辨識發生問題，但您的錄音已保存，可使用 AB 對照播放。');
+      showFeedback(70, '已錄音完成！可點擊【🎧 聽我的錄音】對照母語原音。');
     };
-
-    rec.onend = () => {};
 
     try { rec.start(); } catch(e) {}
   }
@@ -5329,15 +5775,12 @@ const ShadowingStudio = (() => {
     const isJa = currentLang === 'ja';
     const clean = (s) => {
       const norm = s
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'，。！？、：；「」『』～・]/g, "")
-        .replace(/\s+/g, isJa ? "" : " ")
+        .replace(/[^\p{L}\p{N}]/gu, isJa ? "" : " ")
         .trim();
-      // 日語：全形/半形、平假名/片假名、長音符號正規化
       if (isJa) {
         return norm
           .normalize('NFKC')
-          .replace(/[\u30a1-\u30f6]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60))
-          .replace(/[ぁ-ん]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60));
+          .replace(/[ァ-ヶ]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60));
       }
       return norm.toLowerCase();
     };
@@ -5357,27 +5800,11 @@ const ShadowingStudio = (() => {
     for (let j = 0; j <= n; j++) dp[0][j] = j;
     for (let i = 1; i <= m; i++) {
       for (let j = 1; j <= n; j++) {
-        if (s1[i - 1] === s2[j - 1]) {
-          dp[i][j] = dp[i - 1][j - 1];
-        } else {
-          dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
-        }
+        if (s1[i - 1] === s2[j - 1]) dp[i][j] = dp[i - 1][j - 1];
+        else dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
       }
     }
-    const levScore = 1 - (dp[m][n] / Math.max(m, n));
-
-    // 英文才做詞 token 重疊
-    if (!isJa) {
-      const words1 = s1.split(" ").filter(Boolean);
-      const words2 = s2.split(" ").filter(Boolean);
-      if (words1.length > 1 && words2.length > 1) {
-        let overlap = 0;
-        words1.forEach(w => { if (words2.includes(w)) overlap++; });
-        const tokenScore = (2 * overlap) / (words1.length + words2.length);
-        return Math.max(levScore, tokenScore);
-      }
-    }
-    return levScore;
+    return 1 - (dp[m][n] / Math.max(m, n));
   }
 
   function showFeedback(pct, extraMsg) {
@@ -5386,199 +5813,186 @@ const ShadowingStudio = (() => {
 
     let stars = '';
     let msg = '';
-    if (pct >= 90) {
+    if (pct >= 85) {
       stars = '⭐⭐⭐';
-      msg = '流暢度極佳，咬字清晰！完美影子跟讀！';
-    } else if (pct >= 75) {
+      msg = '發音與語調極為標準！完美跟讀！';
+      AudioSys.correct();
+      KidsApp.addStars(1);
+    } else if (pct >= 65) {
       stars = '⭐⭐';
-      msg = '表現很好！注意連音和語調起伏就更完美了！';
-    } else if (pct >= 55) {
-      stars = '⭐';
-      msg = '不錯的開始！多聽幾次原音，試著跟上節奏～';
+      msg = '表現很好！多注意連音與語調起伏就更棒了！';
+      AudioSys.correct();
     } else {
-      stars = '💪';
-      msg = '別灰心！先從「純聽」和「精讀」階段開始熟讀吧！';
+      stars = '⭐';
+      msg = '勇敢開口就是很棒的一步！再聽一次原音試試看～';
     }
-    $('shadowFeedbackStars').textContent = stars;
-    $('shadowFeedbackMsg').textContent = extraMsg ? `${msg}\n${extraMsg}` : msg;
 
-    if (AppState.mode === 'kids' && pct >= 75) {
-      if (window.KidsApp && typeof KidsApp.addStars === 'function') {
-        KidsApp.addStars(1);
-      }
+    $('shadowFeedbackStars').textContent = stars;
+    $('shadowFeedbackMsg').textContent = msg + (extraMsg ? ' ' + extraMsg : '');
+  }
+
+  function nextSentence() {
+    const story = getCurrentStory();
+    if (!story) return;
+    if (currentSentenceIdx < story.sentences.length - 1) {
+      currentSentenceIdx++;
+      renderFocusSentence();
     }
   }
 
-  function stopAllAudio() {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    isPlaying = false;
-    $('shadowWaveBox').classList.remove('playing');
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      mediaRecorder.stop();
-      isRecording = false;
-      $('shadowRecordBtn').classList.remove('recording');
-      $('shadowRecordBtn').querySelector('span:last-child').textContent = '開始跟讀錄音';
+  function prevSentence() {
+    if (currentSentenceIdx > 0) {
+      currentSentenceIdx--;
+      renderFocusSentence();
+    }
+  }
+
+  function toggleAutoFlow(forceVal) {
+    autoFlowEnabled = typeof forceVal === 'boolean' ? forceVal : !autoFlowEnabled;
+    const btn = $('shadowAutoFlowBtn');
+    if (btn) {
+      btn.textContent = autoFlowEnabled ? '🔁 連續跟讀：開' : '🔁 連續跟讀：關';
+      btn.classList.toggle('active', autoFlowEnabled);
+    }
+    if (autoFlowEnabled) {
+      playCurrentSentence();
+    } else {
+      if (autoFlowTimer) {
+        clearInterval(autoFlowTimer);
+        autoFlowTimer = null;
+      }
     }
   }
 
   function playAbAudio(mode) {
+    stopAllAudio();
     playMode = mode;
-    document.querySelectorAll('.shadow-ab-btn').forEach(b => b.classList.remove('active'));
+    $('shadowAbNative').classList.toggle('active', mode === 'native');
+    $('shadowAbUser').classList.toggle('active', mode === 'user');
+
     if (mode === 'native') {
-      $('shadowAbNative').classList.add('active');
-      playStory();
+      const story = getCurrentStory();
+      if (story) speakSentence(story.sentences[currentSentenceIdx].text);
     } else if (mode === 'user' && userAudioUrl) {
-      $('shadowAbUser').classList.add('active');
       const audio = new Audio(userAudioUrl);
+      audio.onplay = () => $('shadowWaveBox').classList.add('playing');
+      audio.onended = () => $('shadowWaveBox').classList.remove('playing');
       audio.play();
     }
   }
 
-  function resetForRetry() {
-    stopAllAudio();
-    audioBlob = null;
-    userAudioUrl = null;
-    currentSentenceIdx = 0;
-    $('shadowFeedback').classList.add('hidden');
-    $('shadowAbDock').classList.add('hidden');
-    $('shadowKaraokeFill').style.width = '0%';
-    renderSentences();
-  }
-
-  function onModeChange() {
-    currentStoryId = '';
-    $('shadowStorySelect').value = '';
-    $('shadowActiveArea').classList.add('hidden');
-    $('shadowEmptyState').classList.remove('hidden');
-    $('shadowFeedback').classList.add('hidden');
-    $('shadowAbDock').classList.add('hidden');
-    $('shadowRecordBtn').disabled = true;
-    populateStorySelect();
-  }
-
-  function init() {
-    populateStorySelect();
-
-    const tabShadowingText = $('tabShadowingText');
-    if (tabShadowingText) {
-      AppState._origShadowingTextUpdate = () => {
-        tabShadowingText.textContent = (AppState.mode === 'kids') ? '影子跟讀' : '影子跟讀';
-      };
+  function stopAllAudio() {
+    isPlaying = false;
+    isRecording = false;
+    if (autoFlowTimer) {
+      clearInterval(autoFlowTimer);
+      autoFlowTimer = null;
     }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+    $('shadowWaveBox')?.classList.remove('playing');
+    $('shadowRecordBtn')?.classList.remove('recording');
+    if ($('shadowRecordBtnText')) $('shadowRecordBtnText').textContent = 'B 輪到我跟讀';
+  }
 
-    $('shadowStorySelect').addEventListener('change', (e) => {
+  function bindEvents() {
+    // 語言切換
+    $('shadowLangEnBtn')?.addEventListener('click', () => setShadowingLang('en'));
+    $('shadowLangJaBtn')?.addEventListener('click', () => setShadowingLang('ja'));
+
+    // 故事選擇
+    $('shadowStorySelect')?.addEventListener('change', (e) => {
       currentStoryId = e.target.value;
-      if (!currentStoryId) {
-        $('shadowActiveArea').classList.add('hidden');
-        $('shadowEmptyState').classList.remove('hidden');
-        $('shadowFeedback').classList.add('hidden');
-        $('shadowAbDock').classList.add('hidden');
-        $('shadowRecordBtn').disabled = true;
-        return;
-      }
-      stopAllAudio();
       currentSentenceIdx = 0;
-      $('shadowActiveArea').classList.remove('hidden');
-      $('shadowEmptyState').classList.add('hidden');
-      $('shadowFeedback').classList.add('hidden');
-      $('shadowAbDock').classList.add('hidden');
-      $('shadowKaraokeFill').style.width = '0%';
-      renderSentences();
-      AudioSys.correct();
+      stopAllAudio();
+      if (currentStoryId) {
+        $('shadowEmptyState').classList.add('hidden');
+        $('shadowActiveArea').classList.remove('hidden');
+        renderSentences();
+      } else {
+        $('shadowEmptyState').classList.remove('hidden');
+        $('shadowActiveArea').classList.add('hidden');
+      }
     });
 
+    // 導航
+    $('shadowPrevBtn')?.addEventListener('click', () => {
+      prevSentence();
+      playCurrentSentence();
+    });
+    $('shadowNextBtn')?.addEventListener('click', () => {
+      nextSentence();
+      playCurrentSentence();
+    });
+    $('shadowAutoFlowBtn')?.addEventListener('click', () => toggleAutoFlow());
+
+    // 核心按鈕
+    $('shadowPlayBtn')?.addEventListener('click', () => playCurrentSentence());
+    $('shadowRecordBtn')?.addEventListener('click', () => toggleRecordCurrentSentence());
+
+    // AB 對照
+    $('shadowAbNative')?.addEventListener('click', () => playAbAudio('native'));
+    $('shadowAbUser')?.addEventListener('click', () => playAbAudio('user'));
+    $('shadowAbRetry')?.addEventListener('click', () => {
+      startRecordingCurrentSentence();
+    });
+    $('shadowFeedbackRetry')?.addEventListener('click', () => {
+      startRecordingCurrentSentence();
+    });
+
+    // 顯示隱藏翻譯
+    $('shadowToggleEye')?.addEventListener('click', () => {
+      zhHidden = !zhHidden;
+      $('shadowEyeLabel').textContent = zhHidden ? '顯示翻譯' : '隱藏翻譯';
+      $('shadowFocusZh')?.classList.toggle('hidden-text', zhHidden);
+    });
+
+    // 速度調整
     document.querySelectorAll('.speed-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        currentSpeed = parseFloat(btn.dataset.speed);
+        currentSpeed = parseFloat(btn.getAttribute('data-speed')) || 1.0;
       });
     });
 
+    // 4 步驟 Tab 切換
     document.querySelectorAll('.step-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.step-tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        currentStep = parseInt(btn.dataset.step);
-        stopAllAudio();
-        currentSentenceIdx = 0;
-        $('shadowKaraokeFill').style.width = '0%';
-
-        if (currentStep === 1 || currentStep === 4) {
-          zhHidden = true;
-          $('shadowToggleEye').classList.add('active');
-          $('shadowEyeIcon').textContent = '🙈';
-          $('shadowEyeLabel').textContent = '顯示翻譯';
-        } else {
-          zhHidden = false;
-          $('shadowToggleEye').classList.remove('active');
-          $('shadowEyeIcon').textContent = '👁️';
-          $('shadowEyeLabel').textContent = '偷看翻譯';
-        }
-
-        renderSentences();
-
-        if (currentStep === 4) {
-          $('shadowRecordBtn').disabled = false;
-        } else {
-          $('shadowRecordBtn').disabled = !currentStoryId;
-        }
+        currentStep = parseInt(btn.getAttribute('data-step')) || 1;
+        zhHidden = (currentStep === 1 || currentStep === 4);
+        renderFocusSentence();
       });
     });
-
-    $('shadowToggleEye').addEventListener('click', () => {
-      zhHidden = !zhHidden;
-      const eye = $('shadowToggleEye');
-      const icon = $('shadowEyeIcon');
-      const label = $('shadowEyeLabel');
-      if (zhHidden) {
-        eye.classList.add('active');
-        icon.textContent = '🙈';
-        label.textContent = '顯示翻譯';
-      } else {
-        eye.classList.remove('active');
-        icon.textContent = '👁️';
-        label.textContent = '偷看翻譯';
-      }
-      document.querySelectorAll('.shadow-sentence-zh').forEach(el => {
-        el.classList.toggle('hidden-text', zhHidden);
-      });
-    });
-
-    $('shadowPlayBtn').addEventListener('click', () => {
-      if (isPlaying) {
-        stopAllAudio();
-        $('shadowPlayBtn').querySelector('span:last-child').textContent = '播放原音';
-      } else {
-        playStory();
-        $('shadowPlayBtn').querySelector('span:last-child').textContent = '暫停播放';
-      }
-    });
-
-    $('shadowRecordBtn').addEventListener('click', () => {
-      if (isRecording) {
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-          mediaRecorder.stop();
-          isRecording = false;
-        }
-        return;
-      }
-      startRecordingWithCountdown();
-    });
-
-    $('shadowAbNative').addEventListener('click', () => playAbAudio('native'));
-    $('shadowAbUser').addEventListener('click', () => playAbAudio('user'));
-    $('shadowAbRetry').addEventListener('click', resetForRetry);
-    $('shadowFeedbackRetry').addEventListener('click', resetForRetry);
   }
 
   return {
-    init,
-    onModeChange,
+    init() {
+      populateStorySelect();
+      bindEvents();
+    },
+    onModeChange() {
+      if (AppState.lang && AppState.lang !== currentLang) {
+        setShadowingLang(AppState.lang);
+      }
+    },
+    setShadowingLang(lang) {
+      setShadowingLang(lang);
+    },
+    onTabOpen() {
+      if (AppState.lang && AppState.lang !== currentLang) {
+        setShadowingLang(AppState.lang);
+      }
+    },
     stopAllAudio
   };
 })();
 
+/* =========================================================================
+   啟動與全域事件監聽
+   ========================================================================= */
 document.addEventListener('DOMContentLoaded', () => {
   UI.init();
   ShadowingStudio.init();
