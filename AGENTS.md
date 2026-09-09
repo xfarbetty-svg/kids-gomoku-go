@@ -72,10 +72,15 @@
   - 🔊 手機音訊喚醒（Mobile Audio Unlock）：全域監聽初次互動喚醒 Web Audio `AudioContext` 與 `SpeechSynthesis`，外加播放外框動效。
   - 🔄 PWA Service Worker 自動更新偵測與快取版本推進至 `kids-games-v33`。
 - [ ] **魔王討伐動畫／音效**
+- [x] **徹底解決手機音訊無聲問題（v34）**：
+  - 🚫 移除 `unlockMobileAudio()` 中的空字串 `speak('')`，解除 Android Chrome Web Speech 佇列死結。
+  - 🌾 kids 模式日文故事全面掛載 51 句真人音檔版《稻草富翁》（`s01.mp3` ~ `s51.mp3`），100% 透過 `<audio>` 真人原聲播放，不走本地 TTS。
+  - 🛡️ 實作 TTS 雲端音訊 Fallback（Google Translate TTS + 有道辭典音訊），外加 1.5 秒超時自動降級與 `onerror` 容錯，徹底告別手機無聲。
+  - 🔄 PWA 快取升級至 `kids-games-v34`。
 
 ## 🕐 最後更新
 
 - **日期**：2026-09-09
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：完成全面行動端版面重構（防穿透、防直排、雙層導航、72px盲按錄音鈕）、手機音訊喚醒解鎖（WebAudio + TTS）、更新快取至 `kids-games-v33` 並推送到 GitHub Pages。
+- **內容**：徹底解決手機音訊無聲問題（移除佇列死結、kids 模式掛載 51 句真人音檔版稻草富翁、實作雲端 TTS 雙重 Fallback 備援）、推進快取至 `kids-games-v34` 並推送到 GitHub Pages。
 - **Git 狀態**：已提交並推送到 origin/main
