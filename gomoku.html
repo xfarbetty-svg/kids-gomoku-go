@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>獵魔五子棋 ⭐👾</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -196,8 +196,9 @@ function buildBoard(){
 }
 function fitScale(){
   var box = $('boardBox');
-  var avail = Math.min(window.innerWidth - 24, 580);
-  var scale = Math.min(1, avail / box.offsetWidth);
+  var isWide = window.matchMedia('(min-width: 920px) and (orientation: landscape)').matches;
+  var avail = Math.min(window.innerWidth - 24, isWide ? 900 : 580);
+  var scale = Math.min(isWide ? 1.5 : 1, avail / box.offsetWidth);
   box.style.transform = 'scale(' + scale + ')';
 }
 window.addEventListener('resize', function(){ fitScale(); });

@@ -252,6 +252,15 @@
     .wcard .word { font-size: 15px; }
     .rate-btn { font-size: 11px; padding: 11px 2px; }
   }
+
+  /* 平板橫向：加寬閱讀區、放大閃卡與測驗面板、避免左右大空白 */
+  @media (min-width: 900px) and (orientation: landscape) {
+    #app { max-width: 1180px; }
+    .bottom-inner { max-width: 1180px; }
+    .fc-panel, .quiz-setup, .quiz-q, .q-result, .modal { max-width: 720px; }
+    .flashcard-wrapper { height: min(60vh, 480px); }
+    .word-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  }
 </style>
 </head>
 <body>

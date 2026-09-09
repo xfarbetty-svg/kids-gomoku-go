@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>封印記憶 🃏</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -46,6 +46,13 @@
   .modal .scoreLine { font-size:16px; color:#cdb8ff; margin-bottom:14px; }
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .hidden { display:none !important; }
+
+  /* 平板橫向：加寬記憶牌面與字級 */
+  @media (min-width: 900px) and (orientation: landscape) {
+    .grid { max-width: 640px; }
+    .card .back { font-size: 40px; }
+    .card .front { font-size: 60px; }
+  }
 </style>
 <script src="common.js?v=4"></script>
 </head>

@@ -34,6 +34,7 @@
   .chipBtn { border:none; border-radius:999px; font-weight:800; font-size:14px; color:#fff; padding:9px 18px; background:linear-gradient(135deg,#4f9cff,#2b6ef2); box-shadow:0 4px 10px rgba(43,110,242,.3); }
 
   .cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:16px; max-width:780px; margin:0 auto; }
+  @media (min-width: 900px) { .cards { max-width: 1180px; } }
   .game { position:relative; background:linear-gradient(180deg,#ffffff,#f0f7ff); border:2px solid rgba(43,110,242,.28); border-radius:24px;
     padding:20px 14px; cursor:pointer; box-shadow:0 8px 22px rgba(43,110,242,.14); transition:.15s; text-decoration:none; color:#1e3a5f; display:block; }
   .game:hover { transform:translateY(-5px) rotate(-1deg); box-shadow:0 16px 34px rgba(43,110,242,.22); }

@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>獵魔拼圖 🧩</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -49,6 +49,13 @@
   .modal .scoreLine { font-size:16px; color:#cdb8ff; margin-bottom:14px; }
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .hidden { display:none !important; }
+
+  /* 平板橫向：加寬拼圖板與字級 */
+  @media (min-width: 900px) and (orientation: landscape) {
+    .boardBox, .bossBox { max-width: 640px; }
+    .tile .num { font-size: 40px; }
+    .tile .em { font-size: 32px; }
+  }
 </style>
 <script src="common.js?v=4"></script>
 </head>

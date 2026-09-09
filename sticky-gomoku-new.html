@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>黏黏圍棋 💧⭐👾</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -749,6 +749,42 @@
   @keyframes confettiFall {
     to { transform: translateY(108vh) rotate(540deg); opacity: 0; }
   }
+
+  /* 🖥️ 平板橫向：雙欄版面（左：棋盤主力，右：比分/狀態/技能列），棋盤可用空間放大 */
+  @media (min-width: 920px) and (orientation: landscape) {
+    body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      grid-template-areas:
+        "header header"
+        "title  score"
+        "coach  status"
+        "board  skill"
+        "board  hint"
+        "ctrl   ctrl";
+      column-gap: 12px;
+      row-gap: 2px;
+      align-items: start;
+      justify-items: center;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    .header-bar { grid-area: header; max-width: none; width: 100%; }
+    .title-wrap { grid-area: title; max-width: none; }
+    .coach-box { grid-area: coach; max-width: none; width: 100%; }
+    .scoreboard { grid-area: score; max-width: none; width: 100%; }
+    .status-bar { grid-area: status; max-width: none; width: 100%; }
+    .skill-panel { grid-area: skill; max-width: none; width: 100%; }
+    .skill-hint-msg { grid-area: hint; max-width: none; }
+    .board-outer { grid-area: board; max-width: none; width: 100%; }
+    .ctrl-bar {
+      grid-area: ctrl;
+      max-width: none;
+      width: 100%;
+      position: static;
+      margin-top: 10px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1102,9 +1138,10 @@ function fitScale(){
   
   var cellSize = getCellSize();
   var boardTotal = cellSize * N + 16;
-  var availWidth = Math.min(window.innerWidth - 12, 480);
+  var isWide = window.matchMedia('(min-width: 920px) and (orientation: landscape)').matches;
   
-  // 計算視窗扣除其他頂部與底部 UI 後的可用高度
+  var availWidth;
+  var otherHeight = 0;
   var headerEl = document.querySelector('.header-bar');
   var titleEl = document.querySelector('.title-wrap');
   var coachEl = document.getElementById('coachCard');
@@ -1114,16 +1151,28 @@ function fitScale(){
   var hintEl = document.getElementById('skillHint');
   var ctrlEl = document.querySelector('.ctrl-bar');
   
-  var otherHeight = 0;
-  [headerEl, titleEl, coachEl, scoreEl, statusEl, skillEl, hintEl, ctrlEl].forEach(function(el){
-    if(el && el.offsetHeight){
-      var s = window.getComputedStyle(el);
-      otherHeight += el.offsetHeight + (parseFloat(s.marginTop)||0) + (parseFloat(s.marginBottom)||0);
-    }
-  });
+  if(isWide){
+    // 平板橫向：可用寬度 = 主欄（扣右側 300px 資訊欄與間距）
+    var appMax = Math.min(window.innerWidth, 1240);
+    availWidth = Math.max(320, appMax - 12 - 300 - 12 - 8);
+    [headerEl, titleEl, coachEl, ctrlEl].forEach(function(el){
+      if(el && el.offsetHeight){
+        var s = window.getComputedStyle(el);
+        otherHeight += el.offsetHeight + (parseFloat(s.marginTop)||0) + (parseFloat(s.marginBottom)||0);
+      }
+    });
+  } else {
+    availWidth = Math.min(window.innerWidth - 12, 480);
+    [headerEl, titleEl, coachEl, scoreEl, statusEl, skillEl, hintEl, ctrlEl].forEach(function(el){
+      if(el && el.offsetHeight){
+        var s = window.getComputedStyle(el);
+        otherHeight += el.offsetHeight + (parseFloat(s.marginTop)||0) + (parseFloat(s.marginBottom)||0);
+      }
+    });
+  }
   
   var availHeight = Math.max(160, window.innerHeight - otherHeight - 16);
-  var scale = Math.min(1, Math.min(availWidth / boardTotal, availHeight / boardTotal));
+  var scale = Math.min(isWide ? 1.6 : 1, Math.min(availWidth / boardTotal, availHeight / boardTotal));
   
   scaler.style.transform = 'scale(' + scale + ')';
   boardOuter.style.width = Math.round(boardTotal * scale) + 'px';

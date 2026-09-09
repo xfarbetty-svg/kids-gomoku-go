@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>影子跟讀 🎙️ Shadowing Studio</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -1701,6 +1701,37 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+  }
+
+  /* 平板橫向：影子跟讀改用雙欄（左：選單/步驟/全文稿，右：訓練舞台） */
+  @media (min-width: 960px) and (orientation: landscape) {
+    .shadowing-container {
+      max-width: 1180px;
+      display: grid;
+      grid-template-columns: 380px minmax(0, 1fr);
+      grid-template-areas:
+        "lang lang"
+        "story stage"
+        "steps stage"
+        "script dock"
+        "script ab"
+        "script fb";
+      gap: 16px;
+      align-items: start;
+    }
+    .shadowing-container > .shadow-lang-selector { grid-area: lang; }
+    .shadowing-container > .shadow-story-bar { grid-area: story; }
+    .shadowing-container > .step-tabs { grid-area: steps; }
+    .shadowing-container > .shadow-stage { grid-area: stage; }
+    .shadowing-container > .shadow-control-dock { grid-area: dock; }
+    .shadowing-container > .shadow-ab-dock { grid-area: ab; }
+    .shadowing-container > .shadow-feedback-pill { grid-area: fb; }
+    .shadowing-container > .shadow-story-details { grid-area: script; }
+    .shadowing-container > .shadow-feedback-pill { position: static; margin: 0; }
+    .shadowing-container > .shadow-story-details { margin-top: 0; }
+    .shadowing-container > .shadow-story-bar,
+    .shadowing-container > .step-tabs,
+    .shadowing-container > .shadow-story-details { width: 100%; }
   }
 
   /* Story Selector Bar */

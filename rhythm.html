@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>節奏打怪 🎵</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -58,6 +58,12 @@
   .modal .scoreLine { font-size:16px; color:#cdb8ff; margin-bottom:14px; }
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
   .hidden { display:none !important; }
+
+  /* 平板橫向：加寬節奏舞台與按鈕，善用寬螢幕 */
+  @media (min-width: 900px) and (orientation: landscape) {
+    .stage, .pads, .bossBox, .speedRow { max-width: 720px; }
+    .pad { height: 76px; font-size: 15px; }
+  }
 </style>
 <script src="common.js?v=4"></script>
 </head>
