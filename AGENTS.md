@@ -62,6 +62,11 @@
   - [ ] 單字庫主題 Pills 顯示修復：修復主題篩選列被截斷、無法橫向滾動選取完整主題（兒童美語與多益）
 - [ ] **TASK-008 內容包實作**：預載 VOA Learning English + BBC 6 Minute English 逐字稿素材包
 - [ ] **實測魔王系統**：手機端實測各關卡解鎖與討伐流程
+- [x] **手機端部署全面審計與執行計畫（2026-09-09）**：
+  - 🔍 徹底檢查 learn.html、toeic.html、index.html、common.js/css、sw.js，共發現 **87 個問題**（🔴 致命 12 / 🟡 中等 32 / 🟢 低 43）
+  - 📋 產出完整執行計畫 `PLAN-MOBILE-FIX.md`：分 5 個 Sprint（止血→手機體驗→音訊 PWA→效能資料→收尾測試）
+  - 🚨 致命問題包括：麥克風 stream 未釋放、YT API 無限重試、閃卡 3D flip 閃爍、評分按鈕按不到、SW 安裝單檔 404 拖垮整體
+  - ⏳ 狀態：審計完成、計畫產出，待依 Sprint 1 開始逐項修正
 - [x] **全面行動端（Mobile First）版面重構與手機音訊解鎖（v33）**：
   - 📱 Header 頂部導航重構：實心背景防穿透、手機端隱藏副標題、膠囊模式按鈕固定高度防拉伸、z-index 1000 常駐置頂。
   - 🚀 導航 Tabs 橫向平滑滑動列：`flex: 0 0 auto !important; white-space: nowrap !important;` 徹底消除單字直排擠壓災難。
@@ -82,5 +87,5 @@
 
 - **日期**：2026-09-09
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：徹底解決手機音訊無聲問題（移除佇列死結、kids 模式掛載 51 句真人音檔版稻草富翁、實作雲端 TTS 雙重 Fallback 備援）、推進快取至 `kids-games-v34` 並推送到 GitHub Pages。
+- **內容**：完成手機端部署全面審計（87 個問題）與 5-Sprint 執行計畫（PLAN-MOBILE-FIX.md），待依 Sprint 1 開始逐項修正。
 - **Git 狀態**：已提交並推送到 origin/main
