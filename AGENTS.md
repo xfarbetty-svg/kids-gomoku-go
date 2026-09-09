@@ -50,11 +50,11 @@
 
 ## ⚠️ 待完成事項
 
-- [ ] **影音精聽室 ➔ 影子跟讀 橋接實作**（依 `PLAN-YT-SHADOW-BRIDGE.md` 四階段任務開發）
-  - Task 1：統一句子資料格式
-  - Task 2：精聽室持久化 + 「送到影子跟讀」按鈕
-  - Task 3：影子跟讀載入用戶 YouTube 影片 + 逐句播放
-  - Task 4：進度追蹤
+- [x] **影音精聽室 ➔ 影子跟讀 橋接實作**（依 `PLAN-YT-SHADOW-BRIDGE.md` 四階段任務開發）
+  - Task 1：統一句子資料格式（source: 'youtube', start/end 時間戳與原文翻譯橋接）
+  - Task 2：精聽室持久化 + 「📤 送到影子跟讀」按鈕 + 簡易字幕匯入與編輯器
+  - Task 3：影子跟讀載入用戶 YouTube 影片 + 小型專用播放器與逐句原音精準播放
+  - Task 4：進度追蹤（localStorage shadow_progress_${lang}_${storyId} 持久化）
 - [ ] **日文老師《稻草富翁》真人音檔切分整合**（日文老師 `jp_teacher_ja.m4a` 10.28MB 已下載暫存，待抓取日文 SRT 字幕後以 ffmpeg 自動切分成句檔並掛入影子跟讀）
 - [ ] **單字星球（toeic.html）體驗優化備忘**：
   - [ ] 兒童美語題庫擴充：解析整合資料夾內 3 份 PDF（`國小英文單字.pdf`、`國小英文單字 （2）.pdf`、`GEPTKid_wordlist01.pdf`），參考 https://teachers.dale.nthu.edu.tw/?page_id=921
@@ -62,16 +62,20 @@
   - [ ] 單字庫主題 Pills 顯示修復：修復主題篩選列被截斷、無法橫向滾動選取完整主題（兒童美語與多益）
 - [ ] **TASK-008 內容包實作**：預載 VOA Learning English + BBC 6 Minute English 逐字稿素材包
 - [ ] **實測魔王系統**：手機端實測各關卡解鎖與討伐流程
+- [x] **全面行動端（Mobile First）版面重構與手機音訊解鎖（v33）**：
+  - 📱 Header 頂部導航重構：實心背景防穿透、手機端隱藏副標題、膠囊模式按鈕固定高度防拉伸、z-index 1000 常駐置頂。
+  - 🚀 導航 Tabs 橫向平滑滑動列：`flex: 0 0 auto !important; white-space: nowrap !important;` 徹底消除單字直排擠壓災難。
+  - 📖 影子跟讀故事列雙行化：下拉選單 100% 滿版，老師聲音與語速切換排入第二行。
+  - 🎯 步驟切換 4 格等寬網格：等分寬度、防溢出。
+  - 🧭 影子跟讀導航列雙層架構：進度置中帶小進度條，上一句/秒數/連續/下一句排成寬敞底列，告別文字折行與按鈕擠壓。
+  - 🎙️ 核心卡片字級響應（`clamp`）與 72x72px 超大錄音麥克風按鈕（大拇指盲按優化，圖示隨錄音狀態切換 🎙️ / ⏹️）。
+  - 🔊 手機音訊喚醒（Mobile Audio Unlock）：全域監聽初次互動喚醒 Web Audio `AudioContext` 與 `SpeechSynthesis`，外加播放外框動效。
+  - 🔄 PWA Service Worker 自動更新偵測與快取版本推進至 `kids-games-v33`。
 - [ ] **魔王討伐動畫／音效**
 
 ## 🕐 最後更新
 
 - **日期**：2026-09-09
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：
-  - 修復多益字典雙重編碼亂碼（11,238 字 UTF-8 無損還原，繁體中文與例句正常）。
-  - 修復啟動腳本 Port 8088 衝突（切換至 Port 8090），成功在 Windows 桌面建立「星光單字星球.lnk」捷徑。
-  - 雙語學院影子跟讀麥克風串流長效重用，修復每次跟讀重複彈出瀏覽器權限警示。
-  - 打通影子跟讀點詞即時收藏：自動綁定當前上下文影音例句、中文翻譯、影片標題與時間戳存入生字庫。
-  - 雙語學院單字庫與大人記憶閃卡重心轉向「🎙️ 跟讀收藏」，並常駐直達星光單字星球入口。
-- **Git 狀態**：已 commit + push 至 origin/main
+- **內容**：完成全面行動端版面重構（防穿透、防直排、雙層導航、72px盲按錄音鈕）、手機音訊喚醒解鎖（WebAudio + TTS）、更新快取至 `kids-games-v33` 並推送到 GitHub Pages。
+- **Git 狀態**：已提交並推送到 origin/main

@@ -1,4 +1,4 @@
-const CACHE = 'kids-games-v31';
+const CACHE = 'kids-games-v33';
 const FILES = [
   './',
   './index.html',
