@@ -4,55 +4,48 @@
 
 ## ⏯️ 目前做到哪
 
-1. **完成手機端部署全面審計**：對 learn.html、toeic.html、index.html、common.js/css、sw.js 進行徹底檢查，共發現 **87 個問題**（🔴 致命 12 / 🟡 中等 32 / 🟢 低 43）。
-2. **產出完整執行計畫**：已寫入 `PLAN-MOBILE-FIX.md`，分 5 個 Sprint（止血→手機體驗→音訊 PWA→效能資料→收尾測試），每項任務有具體行號與修正方案。
-3. **✅ Sprint 1 止血 10 項致命 bug 全部修完**（learn.html ×4、toeic.html ×4、sw.js ×1、index.html ×1），JS 語法檢查通過。
-4. **已把教訓寫成全域使用手冊**：`C:\Users\PXP\.config\opencode\usage-manuals\code-pitfalls-mobile.md`（10 個致命收正教訓 + 對所有專案寫 CODE 的硬性要求），並已在全域 AGENTS.md 掛引用。
-5. **下一步：Sprint 2 手機體驗修復**（33 項中/低問題）。
+1. **完成全部 APP 平板橫向（landscape）版面最佳化**（commit a9a1889，已 push）：
+   - `index.html`：卡片網格 780→1180px 用滿平板寬度。
+   - `learn.html`：影子跟讀 ≥960px 橫向改雙欄 CSS Grid（左：選單/步驟/全文稿 380px，右：訓練舞台 1fr）。
+   - `toeic.html`：容器加寬至 1180px，閃卡/測驗/彈窗 520→720px，字卡 280px。
+   - `sticky-gomoku-new.html`：解除棋盤 480px 上限，橫向雙欄（左棋盤/右比分技能），`fitScale` 依 `isWide` 分流可放大至 1.6x。
+   - `rhythm/memory/puzzle`：舞台/牌面/拼圖板加寬至 640~720px；`gomoku.html` 棋盤放大至 1.5x。
+   - ♿ 全部移除 `user-scalable=no`（WCAG 縮放合規，也完成 Sprint 2.2）。
+2. **8 檔案 JS/CSS 語法檢驗通過**（node `new Function` 檢查 + CSS braces 平衡檢查）。
+3. **SW 為上線優先策略**，HTML 不會快取過期，本次改版不需推快取版本（目前 `kids-games-v36`）。
 
 ## 🚦 目前狀態
 
-- 專案：星光獵魔團（K-pop 少女獵人主題），純前端 HTML/CSS/JS，無框架、無 build 步驟
+- 專案：純前端 HTML/CSS/JS，無框架、無 build 步驟
 - 主要應用：
   - `index.html`：四關魔王討伐卡片 + 影子跟讀入口 + 星光單字星球入口
-  - `learn.html`：影子跟讀（沉浸式影子跟讀 V2、影音精聽室、情境對話、跟讀生字庫、語境記憶閃卡）
-  - `toeic.html`：星光單字星球（兒童美語 684 字 + 多益 11,238 字，SM-2 閃卡、三向測驗）
-  - `sticky-gomoku-new.html`：黏黏圍棋（Gooey 果凍融合、4 段 AI 棋力）
-- 快取版本：`sw.js` 為 `kids-games-v34`
-- **審計報告**：`PLAN-MOBILE-FIX.md`（87 個問題 + 5 Sprint 執行計畫）
+  - `learn.html`：影子跟讀 V2、影音精聽室、情境對話、跟讀生字庫、語境記憶閃卡
+  - `toeic.html`：星光單字星球（兒童美語 684 + 多益 11,238 字）
+  - `sticky-gomoku-new.html`：黏黏圍棋（Gooey 果凍、4 段 AI、AI 教練）
+- 快取版本：`sw.js` = `kids-games-v36`（上線優先，改 HTML 不需推版）
+- 審計計畫：`PLAN-MOBILE-FIX.md`（87 問題，Sprint 1 ✅，Sprint 2 進行中）
+- GitHub Pages：https://xfarbetty-svg.github.io/kids-gomoku-go/
 
 ## ➡️ 尚未做的工作清單（待辦路線圖）
 
-### 🔴 最優先：Sprint 1 止血（PLAN-MOBILE-FIX.md → Sprint 1）— ✅ 已完成
-1. ✅ `learn.html` KidsApp.addStars null guard（line 7351）
-2. ✅ `learn.html` 麥克風 stream 釋放（line 7451 stopAllAudio）
-3. ✅ `learn.html` YT API 無限重試加 maxRetry=5（line 6768）
-4. ✅ `learn.html` localStorage parse 包 try/catch（line 3611）
-5. ✅ `toeic.html` 「忘了」卡片 re-queue 而非移除（line 791）
-6. ✅ `toeic.html` onvoiceschanged 統一綁定（line 386+1062）
-7. ✅ `toeic.html` 閃卡背面 3D flip 修復（line 145）
-8. ✅ `toeic.html` 評分按鈕觸控 ≥44px（line 250）
-9. ✅ `sw.js` addAll 改逐筆 put（line 75）
-10. ✅ `index.html` 加 viewport-fit=cover（line 5）
-
-### 現在進行中：Sprint 2（手機體驗）
-
-### Sprint 2-5 詳見 PLAN-MOBILE-FIX.md
-
-### 其他待辦（沿用）
-- TASK-008 內容包實作（VOA + BBC 素材包）
-- 魔王討伐動畫／音效
-- 兒童美語題庫擴充（3 份 PDF 整合）
+1. **🔴 平板實機驗證**：iPad／Android 平板轉橫向，逐頁確認雙欄與放大效果（本次改版尚未實機看過）。
+2. **Sprint 2 手機體驗剩餘項**（見 `PLAN-MOBILE-FIX.md`）：
+   - 2.1 底部 safe-area-inset、2.3 觸控按鈕 ≥44px、2.4 alert→toast、2.5 控制列 sticky、2.6 Pills 滾動、2.7 閃卡 swipe、2.8 中英測驗發音、2.9 搜尋 debounce
+3. **Sprint 3-5**（音訊 PWA、效能資料、收尾測試，詳見 `PLAN-MOBILE-FIX.md`）
+4. **單字星球優化**：PDF 題庫擴充、閃卡左右翻動效、主題 Pills 修復
+5. **TASK-008 內容包**（VOA + BBC 素材）
+6. **魔王討伐動畫／音效**
 
 ## ⚠️ 注意事項
 
-- 純前端應用，直接以瀏覽器開啟或透過本地伺服器啟動
-- 修改 `learn.html` 時保留 ShadowingStudio 生命週期 API（`onModeChange`, `setShadowingLang`, `onTabOpen`, `stopAllAudio`）
-- `toeic.html` 是獨立 APP，不引用 common.js，所有修正在該檔案內完成
-- 87 個問題的完整行號與修正方案在 `PLAN-MOBILE-FIX.md`
+- 平板斷點慣例：`@media (min-width: 900~960px) and (orientation: landscape)`，已涵蓋 iPad 1024px。
+- 修改 `learn.html` 時保留 ShadowingStudio 生命週期 API（`onModeChange`, `setShadowingLang`, `onTabOpen`, `stopAllAudio`）。
+- `toeic.html` 是獨立 APP，不引用 common.js。
+- `sticky-gomoku-new.html` 的 `fitScale` 有瀏覽模式分流（`isWide`：landscape ≥920px 用主欄寬度公式計算棋盤放大）。
+- 舊版遊戲（mole/jump/go/dressup/color/sticky-gomoku.html）未在 index 引用，為 legacy 檔案，本次未改。
 
 ## 🕐 最後更新
-- 時間：2026-09-09 22:30
+- 時間：2026-09-10
 - 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：完成手機端部署全面審計（87 個問題），產出 5-Sprint 執行計畫 PLAN-MOBILE-FIX.md
-- Git push：✅ 已推送到 origin/main
+- 內容：完成平板橫向版面最佳化（8 檔案）+ 更新 AGENTS.md 路線圖
+- Git push：✅ 已推送到 origin/main（a9a1889 + 本次紀錄檔 commit）

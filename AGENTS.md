@@ -82,10 +82,18 @@
   - 🌾 kids 模式日文故事全面掛載 51 句真人音檔版《稻草富翁》（`s01.mp3` ~ `s51.mp3`），100% 透過 `<audio>` 真人原聲播放，不走本地 TTS。
   - 🛡️ 實作 TTS 雲端音訊 Fallback（Google Translate TTS + 有道辭典音訊），外加 1.5 秒超時自動降級與 `onerror` 容錯，徹底告別手機無聲。
   - 🔄 PWA 快取升級至 `kids-games-v34`。
+- [x] **平板橫向（landscape）版面最佳化**（commit a9a1889）：
+  - 全 APP 加入 `@media (min-width: 900~960px) and (orientation: landscape)` 平板斷點（涵蓋 iPad 1024px 橫向）。
+  - 🏠 index.html：卡片網格 780→1180px 用滿寬度。
+  - 🎙️ learn.html：影子跟讀 ≥960px 橫向改雙欄（380px 選單/步驟/全文稿 ＋ 訓練舞台 1fr）。
+  - 🌠 toeic.html：容器加寬至 1180px，閃卡/測驗/彈窗 520→720px，字卡 280px。
+  - 💧 sticky-gomoku-new.html：解除 480px 上限＋橫向雙欄（左棋盤/右比分技能），棋盤放大上限 1.6x（`fitScale` 依 isWide 分流）。
+  - 🎵 節奏/記憶/拼圖/五子棋：舞台/牌面加寬至 640~720px，五子棋棋盤 1.5x。
+  - ♿ 全部移除 `user-scalable=no`（WCAG 縮放合規）。
 
 ## 🕐 最後更新
 
-- **日期**：2026-09-09
+- **日期**：2026-09-10
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：完成手機端部署全面審計（87 個問題）與 5-Sprint 執行計畫（PLAN-MOBILE-FIX.md），待依 Sprint 1 開始逐項修正。
-- **Git 狀態**：已提交並推送到 origin/main
+- **內容**：完成全部 APP 平板橫向版面最佳化（8 檔案，JS/CSS 語法驗證通過），已推送到 GitHub Pages 待實機驗證。
+- **Git 狀態**：已提交並推送到 origin/main（a9a1889）
