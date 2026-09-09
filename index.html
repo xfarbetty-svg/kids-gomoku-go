@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#2b6ef2">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="雙語探索學院">
 <link rel="stylesheet" href="common.css?v=4">
@@ -51,6 +51,14 @@
   .game .bossInfo { margin-top:8px; background:rgba(43,110,242,.08); border:1.5px solid rgba(43,110,242,.3); border-radius:12px; padding:4px 8px; font-size:12px; font-weight:800; color:#2b6ef2; display:flex; justify-content:space-around; align-items:center; }
   .game .bossInfo.defeated { border-color:#2ea877; color:#2ea877; background:rgba(46,168,119,.1); }
   .install { margin-top:26px; border:none; border-radius:999px; font-size:17px; font-weight:800; cursor:pointer; color:#fff; padding:12px 28px; background:linear-gradient(135deg,#4f9cff,#2b6ef2); box-shadow:0 4px 12px rgba(43,110,242,.3); }
+  .guideBtn { margin-top:18px; display:inline-flex; align-items:center; gap:7px; border:none; border-radius:999px; font-size:15px; font-weight:800; cursor:pointer; color:#2b6ef2; background:rgba(255,255,255,.85); border:2px solid rgba(43,110,242,.3); padding:11px 22px; box-shadow:0 3px 10px rgba(43,110,242,.15); }
+  .guide-steps { text-align:left; margin-top:6px; }
+  .guide-os { display:flex; gap:8px; justify-content:center; margin-bottom:6px; }
+  .guide-os button { flex:1; border:none; border-radius:999px; padding:9px; font-weight:800; font-size:14px; cursor:pointer; background:rgba(43,110,242,.08); color:#4a6fa5; }
+  .guide-os button.on { background:linear-gradient(135deg,#4f9cff,#2b6ef2); color:#fff; }
+  .guide-steps ol { margin:6px 0 0 20px; line-height:2; }
+  .guide-steps li b { color:#2b6ef2; }
+  .guide-note { margin-top:10px; background:rgba(43,110,242,.07); border:1.5px dashed rgba(43,110,242,.4); border-radius:12px; padding:8px 12px; font-size:12.5px; font-weight:700; color:#4a6fa5; }
   .hidden { display:none !important; }
 
   .modal { position:fixed; inset:0; background:rgba(20,50,110,.5); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
@@ -94,6 +102,23 @@
   <div class="cards" id="cards"></div>
 
   <button id="installBtn" class="install hidden">📲 安裝到桌面</button>
+
+  <div>
+    <button id="guideBtn" class="guideBtn">📲 安裝到手機／平板（教學）</button>
+  </div>
+
+  <div id="guideModal" class="modal hidden">
+    <div class="card">
+      <h2>📲 安裝到手機／平板</h2>
+      <div class="guide-os">
+        <button data-os="ios" class="on">🍎 蘋果 iPhone/iPad</button>
+        <button data-os="android">🤖 安卓 Android</button>
+      </div>
+      <div class="guide-steps" id="guideSteps"></div>
+      <div class="guide-note" id="guideNote"></div>
+      <button class="chipBtn" id="closeGuide" style="margin-top:16px;">知道了</button>
+    </div>
+  </div>
 
   <div id="albumModal" class="modal hidden">
     <div class="card">
@@ -166,6 +191,46 @@ function renderAlbum(){
 }
 $('albumBtn').addEventListener('click', function(){ renderAlbum(); $('albumModal').classList.remove('hidden'); });
 $('closeSticker').addEventListener('click', function(){ $('albumModal').classList.add('hidden'); });
+
+// 安裝教學（蘋果／安卓）
+var GUIDE = {
+  ios: {
+    steps: [
+      '用 <b>Safari</b> 打開本網頁（建議在手機上完整輸入網址）。',
+      '點下方工具列的 <b>「分享」</b>按鈕（方框帶向上箭頭）。',
+      '往下滑，點選 <b>「加入主畫面」</b>（Add to Home Screen）。',
+      '右上角點 <b>「新增」</b>，桌面就會出現「雙語探索學院」的圖示。',
+      '點桌面圖示即可像 App 一樣全螢幕開啟、離線使用！'
+    ],
+    note: '⚠️ 蘋果裝置要加到主畫面，請用內建的「Safari」瀏覽器，其他瀏覽器恐不支援。'
+  },
+  android: {
+    steps: [
+      '用 <b>Chrome</b>（或其他瀏覽器）打開本網頁。',
+      '如果下方或瀏覽器選單出現 <b>「安裝 App」「加到主畫面」</b>提示，直接點它。',
+      '若沒看到，點瀏覽器右上角 <b>「⋮」</b>（三點）選單。',
+      '點 <b>「加到主畫面」</b>或 <b>「安裝應用程式」</b>，然後按「安裝」。',
+      '桌面就會出現 App 圖示，點開即可全螢幕使用！'
+    ],
+    note: '🤖 安裝後可離線使用；資料（星星、單字進度）會存在這支手機上。'
+  }
+};
+function renderGuide(os){
+  var g = GUIDE[os];
+  var h = '<ol>';
+  g.steps.forEach(function(s){ h += '<li>' + s + '</li>'; });
+  h += '</ol>';
+  $('guideSteps').innerHTML = h;
+  $('guideNote').textContent = g.note;
+  document.querySelectorAll('.guide-os button').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-os') === os);
+  });
+}
+$('guideBtn').addEventListener('click', function(){ renderGuide('ios'); $('guideModal').classList.remove('hidden'); });
+$('closeGuide').addEventListener('click', function(){ $('guideModal').classList.add('hidden'); });
+document.querySelectorAll('.guide-os button').forEach(function(b){
+  b.addEventListener('click', function(){ renderGuide(b.getAttribute('data-os')); });
+});
 
 var deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', function(e){
