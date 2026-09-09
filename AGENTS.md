@@ -55,7 +55,7 @@
   - Task 2：精聽室持久化 + 「📤 送到影子跟讀」按鈕 + 簡易字幕匯入與編輯器
   - Task 3：影子跟讀載入用戶 YouTube 影片 + 小型專用播放器與逐句原音精準播放
   - Task 4：進度追蹤（localStorage shadow_progress_${lang}_${storyId} 持久化）
-- [ ] **日文老師《稻草富翁》真人音檔切分整合**（日文老師 `jp_teacher_ja.m4a` 10.28MB 已下載暫存，待抓取日文 SRT 字幕後以 ffmpeg 自動切分成句檔並掛入影子跟讀）
+- [x] **日文老師《稻草富翁》真人音檔切分整合**（51 段獨立句檔已全數整合進 ShadowingStudio 真人原聲播放庫，覆蓋 kids 與 adult 雙模式）
 - [ ] **單字星球（toeic.html）體驗優化備忘**：
   - [ ] 兒童美語題庫擴充：解析整合資料夾內 3 份 PDF（`國小英文單字.pdf`、`國小英文單字 （2）.pdf`、`GEPTKid_wordlist01.pdf`），參考 https://teachers.dale.nthu.edu.tw/?page_id=921
   - [ ] 閃卡翻面動效修正：需改為「左右翻轉（3D rotateY）」，修復目前無法左右翻問題
