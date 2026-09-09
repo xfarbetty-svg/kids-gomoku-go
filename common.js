@@ -5,13 +5,13 @@
 
   var STAGES = ['rhythm', 'memory', 'puzzle', 'gomoku'];
 
-  /* 圖鑑收集物與魔王定義：每款遊戲一種主題收藏物與對應魔王 */
+  /* 圖鑑收集物與關主定義：每款學習遊戲一種主題收藏物與對應關主 */
   var FIGURES = {
-    learn:  { e:'🌍', n:'雙語學者', t:'探索', boss:'貪吃字魔 👾', hp:100 },
-    rhythm: { e:'🎵', n:'節奏主唱', t:'舞台', boss:'噪音魔王 👾', hp:300 },
-    memory: { e:'🃏', n:'封印守護', t:'封印', boss:'幻影魔王 🃏', hp:200 },
-    puzzle: { e:'🧩', n:'拼圖獵人', t:'拼圖', boss:'混沌魔王 🧩', hp:150 },
-    gomoku: { e:'⭐', n:'五子棋王', t:'對弈', boss:'虛空魔王 👑', hp:100 }
+    learn:  { e:'🌍', n:'雙語學者', t:'探索', boss:'字句關主 👾', hp:100 },
+    rhythm: { e:'🎵', n:'節奏之星', t:'舞台', boss:'節拍關主 👾', hp:300 },
+    memory: { e:'🃏', n:'記憶守護', t:'記憶', boss:'幻影關主 🃏', hp:200 },
+    puzzle: { e:'🧩', n:'拼圖之星', t:'拼圖', boss:'空間關主 🧩', hp:150 },
+    gomoku: { e:'⭐', n:'棋藝之星', t:'對弈', boss:'棋藝關主 👑', hp:100 }
   };
 
   function defaultState(){

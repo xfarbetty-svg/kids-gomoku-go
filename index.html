@@ -3,117 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>星光獵魔團 🌟</title>
+<title>雙語探索學院</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
-<meta name="theme-color" content="#7c3fb5">
+<meta name="theme-color" content="#2b6ef2">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="星光獵魔團">
+<meta name="apple-mobile-web-app-title" content="雙語探索學院">
 <link rel="stylesheet" href="common.css?v=4">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; min-height:100vh; text-align:center; padding:26px 14px 40px;
-    background:linear-gradient(160deg,#120a2a 0%,#24144d 40%,#3a1d6e 70%,#5b2d9b 100%); background-attachment:fixed; color:#fff; }
-  .logo { font-size:60px; display:block; animation:floatY 2.6s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(255,216,107,.6)); }
-  h1 { font-size:36px; font-weight:900; letter-spacing:1px; margin:8px 0 4px; color:#ffd86b; text-shadow:0 3px 0 rgba(0,0,0,.3), 0 0 20px rgba(255,216,107,.5); }
-  .sub { color:#cdb8ff; font-size:15px; font-weight:700; margin-bottom:14px; }
-  .mission { display:inline-block; color:#fff; background:linear-gradient(90deg,#24144d,#7c3fb5,#d9a800); border-radius:999px; padding:6px 14px; font-size:13px; font-weight:900; letter-spacing:.4px; margin-bottom:14px; box-shadow:0 4px 14px rgba(0,0,0,.35); }
+    background:linear-gradient(160deg,#eaf3ff 0%,#dcebff 40%,#f0f8ff 75%,#e6f2ff 100%); background-attachment:fixed; color:#1e3a5f; }
+  .logo { font-size:58px; display:block; animation:floatY 2.6s ease-in-out infinite; filter:drop-shadow(0 3px 8px rgba(43,110,242,.25)); }
+  h1 { font-size:34px; font-weight:900; letter-spacing:1px; margin:8px 0 4px; color:#2b6ef2; text-shadow:0 2px 0 rgba(255,255,255,.8); }
+  .sub { color:#4a6fa5; font-size:15px; font-weight:700; margin-bottom:12px; }
+  .mission { display:inline-block; color:#fff; background:linear-gradient(90deg,#2b6ef2,#4f9cff,#6fb1ff); border-radius:999px; padding:6px 16px; font-size:13px; font-weight:900; letter-spacing:.4px; margin-bottom:14px; box-shadow:0 4px 12px rgba(43,110,242,.3); }
 
   .themeRow { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
-  .themeChip { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:6px 13px; font-size:13px; font-weight:800; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,.25); }
-  .stage  { background:linear-gradient(135deg,#9a7fff,#7059d0); }
-  .seal   { background:linear-gradient(135deg,#ffc93c,#d9a800); }
-  .neon   { background:linear-gradient(135deg,#ff5ca8,#d52d82); }
-  .moon   { background:linear-gradient(135deg,#75f4ff,#1e9fe0); }
+  .themeChip { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:6px 13px; font-size:13px; font-weight:800; color:#fff; box-shadow:0 3px 8px rgba(43,110,242,.22); }
+  .stage  { background:linear-gradient(135deg,#4f9cff,#2b6ef2); }
+  .seal   { background:linear-gradient(135deg,#6fb1ff,#4f9cff); }
+  .neon   { background:linear-gradient(135deg,#7cc2ff,#2b6ef2); }
+  .moon   { background:linear-gradient(135deg,#4f9cff,#8fc6ff); }
 
   .toprow { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
-  .chip { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.14); border:2px solid rgba(255,255,255,.3); border-radius:999px; padding:7px 16px; font-weight:800; font-size:15px; }
-  .chip b { color:#ffd86b; font-size:18px; }
-  .chipBtn { border:none; border-radius:999px; font-weight:800; font-size:14px; color:#fff; padding:9px 18px; }
+  .chip { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.8); border:2px solid rgba(43,110,242,.25); border-radius:999px; padding:7px 16px; font-weight:800; font-size:15px; color:#1e3a5f; box-shadow:0 2px 8px rgba(43,110,242,.12); }
+  .chip b { color:#2b6ef2; font-size:18px; }
+  .chipBtn { border:none; border-radius:999px; font-weight:800; font-size:14px; color:#fff; padding:9px 18px; background:linear-gradient(135deg,#4f9cff,#2b6ef2); box-shadow:0 4px 10px rgba(43,110,242,.3); }
 
   .cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:16px; max-width:780px; margin:0 auto; }
-  .game { position:relative; background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06)); border:3px solid rgba(255,216,107,.55); border-radius:26px;
-    padding:20px 14px; cursor:pointer; box-shadow:0 12px 30px rgba(0,0,0,.35); transition:.15s; text-decoration:none; color:inherit; display:block; backdrop-filter:blur(2px); }
-  .game:hover { transform:translateY(-5px) rotate(-1deg); box-shadow:0 18px 40px rgba(0,0,0,.5); }
+  .game { position:relative; background:linear-gradient(180deg,#ffffff,#f0f7ff); border:2px solid rgba(43,110,242,.28); border-radius:24px;
+    padding:20px 14px; cursor:pointer; box-shadow:0 8px 22px rgba(43,110,242,.14); transition:.15s; text-decoration:none; color:#1e3a5f; display:block; }
+  .game:hover { transform:translateY(-5px) rotate(-1deg); box-shadow:0 16px 34px rgba(43,110,242,.22); }
   .game .gicon { font-size:50px; display:block; animation:floatY 2.8s ease-in-out infinite; }
-  .game h2 { color:#ffd86b; font-size:20px; margin:6px 0 4px; }
-  .game p { color:#e3d7ff; font-size:13px; font-weight:700; line-height:1.6; }
+  .game h2 { color:#2b6ef2; font-size:20px; margin:6px 0 4px; }
+  .game p { color:#4a6fa5; font-size:13px; font-weight:700; line-height:1.6; }
   .game .badge { position:absolute; top:10px; right:10px; font-size:24px; filter:grayscale(1) opacity(.4); }
   .game.earned .badge { filter:none; animation:sparkleTwinkle 2s ease-in-out infinite; }
   .game .tag { display:inline-block; margin-top:6px; border-radius:999px; font-size:11px; font-weight:800; padding:2px 9px; color:#fff; }
-  .game .wins { display:inline-block; margin-top:7px; background:rgba(0,0,0,.3); border:2px solid rgba(255,216,107,.4); color:#ffd86b;
+  .game .wins { display:inline-block; margin-top:7px; background:rgba(43,110,242,.1); border:1.5px solid rgba(43,110,242,.35); color:#2b6ef2;
     border-radius:999px; font-size:12px; font-weight:800; padding:2px 10px; margin-left:4px; }
-  .game.locked { filter:grayscale(0.9) opacity(0.55); cursor:not-allowed; border-color:rgba(255,255,255,.2); box-shadow:none; }
+  .game.locked { filter:grayscale(0.9) opacity(0.6); cursor:not-allowed; border-color:rgba(0,0,0,.12); box-shadow:none; }
   .game.locked:hover { transform:none; box-shadow:none; }
-  .game .lockTag { display:inline-block; margin-top:6px; background:rgba(0,0,0,.6); border:1px solid rgba(255,255,255,.3); color:#ffb8b8; border-radius:999px; font-size:11px; font-weight:800; padding:3px 10px; }
-  .game .bossInfo { margin-top:8px; background:rgba(0,0,0,.35); border:1.5px solid rgba(255,216,107,.5); border-radius:12px; padding:4px 8px; font-size:12px; font-weight:800; color:#ffd86b; display:flex; justify-content:space-around; align-items:center; }
-  .game .bossInfo.defeated { border-color:#62d6a5; color:#62d6a5; background:rgba(46,94,46,.35); }
-  .install { margin-top:26px; border:none; border-radius:999px; font-size:17px; font-weight:800; cursor:pointer; color:#fff; padding:12px 28px; }
+  .game .lockTag { display:inline-block; margin-top:6px; background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.25); color:#ffe3e3; border-radius:999px; font-size:11px; font-weight:800; padding:3px 10px; }
+  .game .bossInfo { margin-top:8px; background:rgba(43,110,242,.08); border:1.5px solid rgba(43,110,242,.3); border-radius:12px; padding:4px 8px; font-size:12px; font-weight:800; color:#2b6ef2; display:flex; justify-content:space-around; align-items:center; }
+  .game .bossInfo.defeated { border-color:#2ea877; color:#2ea877; background:rgba(46,168,119,.1); }
+  .install { margin-top:26px; border:none; border-radius:999px; font-size:17px; font-weight:800; cursor:pointer; color:#fff; padding:12px 28px; background:linear-gradient(135deg,#4f9cff,#2b6ef2); box-shadow:0 4px 12px rgba(43,110,242,.3); }
   .hidden { display:none !important; }
 
-  .modal { position:fixed; inset:0; background:rgba(8,3,24,.85); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
-  .modal .card { background:linear-gradient(180deg,#2c1a5e,#1b1140); border-radius:26px; padding:20px; max-width:480px; width:100%;
-    border:4px solid #ffd86b; box-shadow:0 16px 50px rgba(0,0,0,.5); text-align:center; animation:pop .25s ease; max-height:86vh; overflow-y:auto; color:#fff; }
+  .modal { position:fixed; inset:0; background:rgba(20,50,110,.5); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; backdrop-filter:blur(3px); }
+  .modal .card { background:linear-gradient(180deg,#ffffff,#eef5ff); border-radius:26px; padding:20px; max-width:480px; width:100%;
+    border:3px solid #2b6ef2; box-shadow:0 16px 50px rgba(18,50,120,.3); text-align:center; animation:pop .25s ease; max-height:86vh; overflow-y:auto; color:#1e3a5f; }
   @keyframes pop { 0%{transform:scale(.7); opacity:0} 100%{transform:scale(1); opacity:1} }
-  .modal h2 { color:#ffd86b; font-size:22px; margin-bottom:6px; }
-  .albumProg { font-size:13px; font-weight:800; color:#cdb8ff; margin-bottom:12px; }
-  .albumBar { height:12px; background:rgba(255,255,255,.15); border-radius:999px; overflow:hidden; margin:6px auto 14px; max-width:320px; border:2px solid rgba(255,255,255,.25); }
-  .albumBar > div { height:100%; width:0; background:linear-gradient(90deg,#ffd86b,#ff8fb3,#75f4ff); transition:width .4s; border-radius:999px; }
+  .modal h2 { color:#2b6ef2; font-size:22px; margin-bottom:6px; }
+  .albumProg { font-size:13px; font-weight:800; color:#4a6fa5; margin-bottom:12px; }
+  .albumBar { height:12px; background:rgba(43,110,242,.12); border-radius:999px; overflow:hidden; margin:6px auto 14px; max-width:320px; border:2px solid rgba(43,110,242,.25); }
+  .albumBar > div { height:100%; width:0; background:linear-gradient(90deg,#4f9cff,#2b6ef2); transition:width .4s; border-radius:999px; }
   .stickers { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
-  .st { width:82px; padding:8px 4px; border-radius:18px; background:rgba(255,255,255,.1); border:3px solid rgba(255,255,255,.3); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; filter:grayscale(1) opacity(.45); }
+  .st { width:82px; padding:8px 4px; border-radius:18px; background:#fff; border:2px solid rgba(43,110,242,.2); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; filter:grayscale(1) opacity(.5); }
   .st .e { font-size:36px; }
-  .st .nm { font-size:11px; font-weight:800; color:#e3d7ff; }
-  .st .th { font-size:10px; font-weight:700; color:#9a8ac8; }
-  .st.got { background:rgba(255,216,107,.18); border-color:#ffc93c; box-shadow:0 0 14px rgba(255,216,107,.5); filter:none; animation:sparkleTwinkle 2.5s ease-in-out infinite; }
+  .st .nm { font-size:11px; font-weight:800; color:#4a6fa5; }
+  .st .th { font-size:10px; font-weight:700; color:#8fa8c6; }
+  .st.got { background:rgba(43,110,242,.08); border-color:#2b6ef2; box-shadow:0 0 14px rgba(43,110,242,.4); filter:none; animation:sparkleTwinkle 2.5s ease-in-out infinite; }
 </style>
 <script src="common.js?v=4"></script>
 </head>
-<body>
-  <span class="logo">🌟</span>
-  <h1>星光獵魔團</h1>
-  <div class="sub">五名少女獵人，用音樂與封印守護世界！</div>
-  <div class="mission">✨ 任務：完成四關訓練，成為最強獵人 ✨</div>
+<body class="ocean-bg">
+  <span class="logo">🎓</span>
+  <h1>雙語探索學院</h1>
+  <div class="sub">透過影子跟讀、單字與趣味遊戲，快樂探索英日雙語！</div>
+  <div class="mission">✨ 任務：完成各關卡，累積星星成為雙語小達人 ✨</div>
 
   <div class="themeRow">
     <span class="themeChip stage">🌍 雙語冒險</span>
-    <span class="themeChip stage">🎤 節奏打怪</span>
-    <span class="themeChip seal">🃏 封印記憶</span>
-    <span class="themeChip moon">🧩 獵魔拼圖</span>
-    <span class="themeChip neon">⭐ 獵魔五子棋</span>
+    <span class="themeChip stage">🎤 節奏挑戰</span>
+    <span class="themeChip seal">🃏 記憶挑戰</span>
+    <span class="themeChip moon">🧩 拼圖挑戰</span>
+    <span class="themeChip neon">⭐ 棋藝對弈</span>
   </div>
 
   <div class="toprow">
     <span class="chip">⭐ 星星 <b id="starCount">0</b></span>
-    <button class="chipBtn glossy-lav" id="albumBtn">🎁 獵人圖鑑</button>
+    <button class="chipBtn" id="albumBtn">🎁 成就圖鑑</button>
   </div>
 
   <div class="ribbon ribbon-bar"></div>
 
   <div class="cards" id="cards"></div>
 
-  <button id="installBtn" class="install glossy hidden">📲 安裝到桌面</button>
+  <button id="installBtn" class="install hidden">📲 安裝到桌面</button>
 
   <div id="albumModal" class="modal hidden">
     <div class="card">
-      <h2>🎁 我的獵人圖鑑</h2>
+      <h2>🎁 我的成就圖鑑</h2>
       <div class="albumProg" id="albumProg"></div>
       <div class="albumBar"><div id="albumFill"></div></div>
       <div class="stickers" id="stickerGrid"></div>
-      <button class="chipBtn glossy" id="closeSticker" style="margin-top:16px;">知道了</button>
+      <button class="chipBtn" id="closeSticker" style="margin-top:16px;">知道了</button>
     </div>
   </div>
 
 <script>
 var GAMES = [
-  {id:'learn',   name:'影子跟讀', icon:'🎙️', boss:'貪吃字魔 👾', hp:100, desc:'YouTube 逐句精聽 ‧ 原音影子跟讀 ‧ 錄音對照評分！', link:'learn.html', st:'🎙️', theme:'moon', tag:'🎙️ 影子跟讀', unlocked:true},
-  {id:'toeic',   name:'星光單字星球', icon:'🌠', boss:'詞彙星魔 👾', hp:500, desc:'🌟 兒童美語 684 字 + 多益 11238 字 ‧ SM-2 間隔重複 ‧ 測驗與收藏追蹤！', link:'toeic.html', st:'🌠', theme:'moon', tag:'🌟 萬字星艦', unlocked:true},
-  {id:'rhythm',  name:'節奏打怪',   icon:'🎵', boss:'噪音魔王 👾', hp:300, desc:'跟著節拍敲下去，擊退噪音魔王！', link:'rhythm.html',  st:'🎵', theme:'stage', tag:'🎤 節奏'},
-  {id:'memory',  name:'封印記憶',   icon:'🃏', boss:'幻影魔王 🃏', hp:200, desc:'限時 90 秒，破解魔王幻影加固封印！', link:'memory.html',  st:'🃏', theme:'seal',  tag:'🃏 封印'},
-  {id:'puzzle',  name:'獵魔拼圖',   icon:'🧩', boss:'混沌魔王 🧩', hp:150, desc:'解除魔王空間扭曲，將拼圖滑回正確位置！', link:'puzzle.html',  st:'🧩', theme:'moon',  tag:'🧩 拼圖'},
-  {id:'gomoku',  name:'獵魔五子棋', icon:'⭐', boss:'虛空魔王 👑', hp:100, desc:'驅逐虛空魔王 AI，小心冰凍陷阱！', link:'gomoku.html',  st:'⭐', theme:'neon',  tag:'⭐ 對弈'},
-  {id:'stickyGomoku', name:'黏黏圍棋', icon:'💧', boss:'黏黏魔王 👾', hp:120, desc:'🧲 Gooey 果凍融合成型 ‧ 🎓 AI 星光導師解說 ‧ 3段難度！', link:'sticky-gomoku-new.html', st:'💧', theme:'neon', tag:'💧 果凍融合', unlocked:true}
+  {id:'learn',   name:'影子跟讀', icon:'🎙️', boss:'字句關主 👾', hp:100, desc:'YouTube 逐句精聽 ‧ 原音影子跟讀 ‧ 錄音對照評分！', link:'learn.html', st:'🎙️', theme:'moon', tag:'🎙️ 影子跟讀', unlocked:true},
+  {id:'toeic',   name:'雙語單字星球', icon:'🌠', boss:'詞彙關主 👾', hp:500, desc:'🌟 兒童美語 684 字 + 多益 11238 字 ‧ SM-2 間隔重複 ‧ 測驗與收藏追蹤！', link:'toeic.html', st:'🌠', theme:'moon', tag:'🌟 單字星球', unlocked:true},
+  {id:'rhythm',  name:'節奏挑戰',   icon:'🎵', boss:'節拍關主 👾', hp:300, desc:'跟著節拍敲下去，挑戰節拍關主！', link:'rhythm.html',  st:'🎵', theme:'stage', tag:'🎤 節奏'},
+  {id:'memory',  name:'記憶挑戰',   icon:'🃏', boss:'幻影關主 🃏', hp:200, desc:'限時 90 秒，破解關主的幻影印記！', link:'memory.html',  st:'🃏', theme:'seal',  tag:'🃏 記憶'},
+  {id:'puzzle',  name:'拼圖挑戰',   icon:'🧩', boss:'空間關主 🧩', hp:150, desc:'解除空間扭曲，將拼圖滑回正確位置！', link:'puzzle.html',  st:'🧩', theme:'moon',  tag:'🧩 拼圖'},
+  {id:'gomoku',  name:'棋藝對弈',   icon:'⭐', boss:'棋藝關主 👑', hp:100, desc:'與棋藝關主對弈，小心冰凍陷阱！', link:'gomoku.html',  st:'⭐', theme:'neon',  tag:'⭐ 對弈'},
+  {id:'stickyGomoku', name:'黏黏圍棋', icon:'💧', boss:'果凍關主 👾', hp:120, desc:'🧲 Gooey 果凍融合成型 ‧ 🎓 AI 導師解說 ‧ 3段難度！', link:'sticky-gomoku-new.html', st:'💧', theme:'neon', tag:'💧 果凍融合', unlocked:true}
 ];
 function $(id){ return document.getElementById(id); }
 
@@ -134,12 +134,12 @@ function render(){
     }
 
     var bossHtml = isDefeated
-      ? '<div class="bossInfo defeated"><span>👑 ' + g.boss + '</span><span>✅ 已討伐</span></div>'
-      : '<div class="bossInfo"><span>👿 魔王：' + g.boss + '</span><span>HP ' + g.hp + '</span></div>';
+      ? '<div class="bossInfo defeated"><span>🏆 ' + g.boss + '</span><span>✅ 已通關</span></div>'
+      : '<div class="bossInfo"><span>🎯 關主：' + g.boss + '</span><span>HP ' + g.hp + '</span></div>';
 
     var statusHtml = isUnlocked
       ? '<span class="wins">🏆 玩過 ' + wins + ' 次' + (earned?' · 圖鑑 GET！':'') + '</span>'
-      : '<span class="lockTag">🔒 請先擊敗前一關魔王解鎖</span>';
+      : '<span class="lockTag">🔒 請先完成前一關解鎖</span>';
 
     a.innerHTML = '<span class="badge">' + (isUnlocked ? g.st : '🔒') + '</span>' +
       '<span class="gicon">' + (isUnlocked ? g.icon : '🔒') + '</span>' +

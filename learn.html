@@ -1873,6 +1873,25 @@
       padding: 8px 2px !important;
       font-size: 11.5px !important;
     }
+    .shadow-nav-controls {
+      flex-wrap: wrap;
+      gap: 6px !important;
+    }
+    .shadow-nav-controls .shadow-nav-btn,
+    .shadow-nav-controls .shadow-nav-mid-group {
+      min-height: 40px;
+    }
+    .shadow-nav-btn {
+      font-size: 12px !important;
+      padding: 0 6px !important;
+    }
+    .shadow-nav-mid-group #shadowAutoFlowBtn {
+      font-size: 11px !important;
+      padding: 0 6px !important;
+    }
+    .shadow-nav-mid-group .shadow-silence-select {
+      max-width: 80px !important;
+    }
   }
 
   /* Training Stage Card */
@@ -2494,22 +2513,26 @@
     font-weight: 800;
   }
 
-  /* Countdown overlay */
+  /* Countdown overlay - 改為不遮蓋句子的內嵌倒數徽章（不再黑畫面） */
   .shadow-countdown {
-    position: fixed;
-    inset: 0;
+    position: static;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.6);
-    z-index: 9999;
+    margin: 4px auto 0;
+    padding: 4px 16px;
+    background: rgba(239, 68, 68, 0.12);
+    border: 2px dashed rgba(239, 68, 68, 0.5);
+    border-radius: 999px;
+    width: fit-content;
+    z-index: 5;
     animation: fadeIn 0.2s ease;
   }
   .shadow-countdown-num {
-    font-size: 96px;
+    font-size: 24px;
     font-weight: 900;
-    color: #fff;
-    text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    color: #dc2626;
+    text-shadow: none;
     animation: countdownPop 0.4s ease;
   }
   @keyframes countdownPop {
@@ -2956,6 +2979,7 @@
             </select>
           </div>
           <div class="speed-btns">
+            <button class="speed-btn" data-speed="0.7">0.7x 超慢</button>
             <button class="speed-btn" data-speed="0.8">0.8x 慢速</button>
             <button class="speed-btn active" data-speed="1.0">1.0x 標準</button>
             <button class="speed-btn" data-speed="1.2">1.2x 挑戰</button>
@@ -3003,6 +3027,7 @@
                 </select>
                 <button class="pill shadow-nav-flow-btn" id="shadowAutoFlowBtn" title="開啟自動留白跟讀模式">🔁 連續：關</button>
               </div>
+              <button class="pill shadow-nav-btn" id="shadowStopBtn" title="停止播放／取消倒數">⏹️ 停止</button>
               <button class="pill shadow-nav-btn" id="shadowNextBtn">下一句 ➡️</button>
             </div>
           </div>
@@ -6910,6 +6935,7 @@ const ShadowingStudio = (() => {
 
     const audio = new Audio(url);
     fallbackAudioEl = audio;
+    audio.playbackRate = currentSpeed;
 
     audio.onplay = () => {
       isPlaying = true;
@@ -6963,6 +6989,7 @@ const ShadowingStudio = (() => {
       if (realAudioEl) { realAudioEl.pause(); realAudioEl.src = ''; }
       const audio = new Audio(audioPath);
       realAudioEl = audio;
+      audio.playbackRate = currentSpeed;
       audio.onplay = () => {
         isPlaying = true;
         $('shadowWaveBox')?.classList.add('playing');
@@ -7109,13 +7136,13 @@ const ShadowingStudio = (() => {
     const countdownEl = $('shadowCountdown');
     if (countdownEl) {
       countdownEl.style.display = 'flex';
-      countdownEl.innerHTML = `<span class="shadow-countdown-num">${countdown}</span>`;
+      countdownEl.innerHTML = `🎙️ 輪到你跟讀 <span class="shadow-countdown-num">${countdown}</span> 秒`;
     }
     if (autoFlowTimer) clearInterval(autoFlowTimer);
 
     autoFlowTimer = setInterval(() => {
       countdown--;
-      if (countdownEl) countdownEl.innerHTML = `<span class="shadow-countdown-num">${countdown}</span>`;
+      if (countdownEl) countdownEl.innerHTML = `🎙️ 輪到你跟讀 <span class="shadow-countdown-num">${countdown}</span> 秒`;
       if (countdown > 0) {
         setBanner(`🎙️ 輪到你跟讀！請大聲朗讀這句...（倒數 ${countdown} 秒）`, 'rgba(239,68,68,0.15)', '#dc2626');
       } else {
@@ -7429,6 +7456,22 @@ const ShadowingStudio = (() => {
     }
   }
 
+  // 停止／暫停：結束目前播放、取消倒數、關閉連續模式
+  function stopShadowing() {
+    stopAllAudio();
+    if (autoFlowEnabled) {
+      autoFlowEnabled = false;
+      autoFlowTimer = null;
+      const btn = $('shadowAutoFlowBtn');
+      if (btn) {
+        btn.textContent = '🔁 連續：關';
+        btn.classList.remove('active');
+      }
+    }
+    $('shadowAbDock')?.classList.remove('hidden');
+    setBanner('⏹️ 已停止。準備好後再按【🔊 A 示範這句】或【🎙️ B 輪到我跟讀】繼續。', 'rgba(100,116,139,0.15)', '#64748b');
+  }
+
   function playAbAudio(mode) {
     stopAllAudio();
     playMode = mode;
@@ -7557,6 +7600,7 @@ const ShadowingStudio = (() => {
       playCurrentSentence();
     });
     $('shadowAutoFlowBtn')?.addEventListener('click', () => toggleAutoFlow());
+    $('shadowStopBtn')?.addEventListener('click', () => stopShadowing());
 
     // 核心按鈕
     $('shadowPlayBtn')?.addEventListener('click', () => playCurrentSentence());
