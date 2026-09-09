@@ -22,6 +22,10 @@
   - 💬 情境實境對話（12 組日常情境劇本、Web Speech 麥克風即時語音辨識判定、星級評分、聽示範與安靜送出模式）
   - 🎙️ 影子跟讀訓練室（Shadowing Studio）：4 階段階梯跟讀訓練法（純聽磨耳朵、理解精讀、視讀跟讀、脫稿影子+錄音AB對照）、大人/小孩英日語精選故事庫、動態聲波、Levenshtein 語音評分與星星連動
   - 🚀 Shadowing V2（TASK-007）：四階段獨立 UI 行為（applyStepUI）、可調靜音間隔（3/5/7 秒）、聽寫模式（Dictation Mode）、寬容評分（Metaphone 模糊匹配 + Levenshtein 取高）、Tap-to-Lookup 單字即時查詢卡片、學習進度持久化（localStorage）
+- [ ] 綠野仙蹤教材（The Wizard of Oz）：
+  - [x] 第 1 章《The Cyclone》純聽力試用版（`woo_trial_audio.html`，49 句英中字幕，本地音訊）
+  - [ ] 確認字幕同步品質與中文翻譯 → 正式加入 `learn.html` 的 PRESET_VIDEOS
+  - [ ] 其餘 7 集（Chapter 2-24）依相同流程製作
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
 
