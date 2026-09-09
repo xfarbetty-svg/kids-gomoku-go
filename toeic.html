@@ -112,16 +112,16 @@
     content: ''; position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; border-radius: 50%;
     background: var(--gold); box-shadow: 0 0 8px var(--gold);
   }
-  .wcard-top { display: flex; align-items: center; gap: 6px; }
-  .wcard .word { font-size: 17px; font-weight: 800; word-break: break-word; }
-  .wcard .pos { font-size: 10px; background: rgba(139,92,246,.25); color: #c4b5fd; border-radius: 6px; padding: 2px 6px; }
-  .wcard .stars { color: var(--gold); font-size: 11px; margin-left: auto; }
+  .wcard-top { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+  .wcard .word { font-size: 17px; font-weight: 800; word-break: break-word; flex: 1 1 0; min-width: 0; }
+  .wcard .pos { font-size: 10px; background: rgba(139,92,246,.25); color: #c4b5fd; border-radius: 6px; padding: 2px 6px; flex-shrink: 0; }
+  .wcard .stars { color: var(--gold); font-size: 11px; flex-shrink: 0; }
   .wcard .meaning { font-size: 13px; color: var(--muted); margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .wcard .cat { font-size: 10px; color: #a5b4fc; margin-top: 6px; }
-  .wcard-actions { display: flex; gap: 6px; margin-top: 8px; }
+  .wcard-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .mini-btn {
     border: 1px solid var(--border); background: rgba(255,255,255,.07); color: var(--text);
-    border-radius: 8px; padding: 5px 9px; font-size: 12px; cursor: pointer; transition: all .15s;
+    border-radius: 8px; padding: 5px 9px; font-size: 12px; cursor: pointer; transition: all .15s; flex-shrink: 0;
   }
   .mini-btn:active { transform: scale(.94); }
   .mini-btn.bookmarked { background: rgba(251,191,36,.18); border-color: rgba(251,191,36,.5); color: var(--gold); }
@@ -249,6 +249,7 @@
     .tabs { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); top: auto; }
     #app { padding-bottom: 140px; }
     .word-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .wcard .word { font-size: 15px; }
     .rate-btn { font-size: 11px; padding: 11px 2px; }
   }
 </style>
