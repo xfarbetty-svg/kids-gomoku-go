@@ -72,7 +72,11 @@ const FILES = [
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())
+    caches.open(CACHE).then(async (c) => {
+      for (const f of FILES) {
+        try { await c.add(f); } catch (err) { console.warn('[SW] skip cache add:', f, err); }
+      }
+    }).then(() => self.skipWaiting())
   );
 });
 

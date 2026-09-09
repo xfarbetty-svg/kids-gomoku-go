@@ -2550,10 +2550,22 @@
   .shadow-word-popup {
     pointer-events: auto;
   }
+  #shadowToast {
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%) translateY(20px); z-index: 9999; max-width: 86vw;
+    background: rgba(30, 41, 59, .96); color: #fff; border: 1px solid rgba(255,255,255,.18);
+    padding: 12px 18px; border-radius: 14px; font-size: 14px; font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4); opacity: 0; pointer-events: none;
+    transition: opacity .25s, transform .25s; text-align: center;
+  }
+  #shadowToast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #shadowToast.toast-error { border-color: rgba(244,63,94,.6); background: rgba(127,29,29,.95); }
+  #shadowToast.toast-success { border-color: rgba(52,211,153,.6); background: rgba(6,78,59,.95); }
 </style>
 </head>
 <body class="mode-kids">
 
+<div id="shadowToast"></div>
 <!-- Top Sticky Header -->
 <header class="top-header">
   <div class="header-main">
@@ -3608,12 +3620,12 @@ const PRESET_VIDEOS = [
    5. 全域狀態管理 (State Store)
    ========================================================================= */
 const AppState = {
-  mode: localStorage.getItem('lang_app_mode') || 'kids',
+  mode: (() => { try { return localStorage.getItem('lang_app_mode') || 'kids'; } catch(e){ return 'kids'; } })(),
   lang: 'en',
   currentLevel: 'ALL',
   searchQuery: '',
-  bookmarks: JSON.parse(localStorage.getItem('lang_app_bookmarks') || '[]'),
-  customWords: JSON.parse(localStorage.getItem('lang_app_custom_words') || '[]'),
+  bookmarks: (() => { try { return JSON.parse(localStorage.getItem('lang_app_bookmarks') || '[]') || []; } catch(e){ return []; } })(),
+  customWords: (() => { try { return JSON.parse(localStorage.getItem('lang_app_custom_words') || '[]') || []; } catch(e){ return []; } })(),
   activeTab: 'shadowing',
 
   // YouTube Player State
@@ -6322,6 +6334,18 @@ const ShadowingStudio = (() => {
 
   const $ = (id) => document.getElementById(id);
 
+  let shadowToastTimer = null;
+  function showToast(msg, type) {
+    const t = $('shadowToast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.remove('toast-error', 'toast-success');
+    if (type) t.classList.add('toast-' + type);
+    t.classList.add('show');
+    clearTimeout(shadowToastTimer);
+    shadowToastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
   function setShadowingLang(lang) {
     currentLang = lang;
     document.querySelectorAll('.shadow-lang-selector .pill').forEach(b => {
@@ -6761,18 +6785,23 @@ const ShadowingStudio = (() => {
     renderMiniSentences();
   }
 
-  function initShadowYtPlayer(videoId) {
+  function initShadowYtPlayer(videoId, retry) {
+    retry = retry || 0;
     const container = $('shadowYtContainer');
     if (container) container.style.display = 'block';
 
     if (!window.YT || !window.YT.Player) {
+      if (retry >= 5) {
+        showToast('⚠️ YouTube 播放器載入失敗，請檢查網路後重試', 'error');
+        return;
+      }
       if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         const first = document.getElementsByTagName('script')[0];
         first.parentNode.insertBefore(tag, first);
       }
-      setTimeout(() => initShadowYtPlayer(videoId), 400);
+      setTimeout(() => initShadowYtPlayer(videoId, retry + 1), 400);
       return;
     }
 
@@ -6809,14 +6838,19 @@ const ShadowingStudio = (() => {
     }
   }
 
-  function playYoutubeSentence(start, end, onEnd) {
+  function playYoutubeSentence(start, end, onEnd, retry) {
+    retry = retry || 0;
     stopAllAudio();
     if (!shadowYtPlayer || typeof shadowYtPlayer.seekTo !== 'function') {
       const story = getCurrentStory();
       if (story && story.videoId) {
         initShadowYtPlayer(story.videoId);
       }
-      setTimeout(() => playYoutubeSentence(start, end, onEnd), 400);
+      if (retry >= 5) {
+        showToast('⚠️ YouTube 播放器載入失敗，請檢查網路後重試', 'error');
+        return;
+      }
+      setTimeout(() => playYoutubeSentence(start, end, onEnd, retry + 1), 400);
       return;
     }
 
@@ -7348,7 +7382,7 @@ const ShadowingStudio = (() => {
       stars = '⭐⭐⭐';
       msg = '發音與語調極為標準！完美跟讀！';
       AudioSys.correct();
-      KidsApp.addStars(1);
+      if (window.KidsApp && typeof KidsApp.addStars === 'function') KidsApp.addStars(1);
     } else if (pct >= 65) {
       stars = '⭐⭐';
       msg = '表現很好！多注意連音與語調起伏就更棒了！';
@@ -7449,6 +7483,10 @@ const ShadowingStudio = (() => {
     if (realAudioEl) { try { realAudioEl.pause(); } catch(e) {} realAudioEl = null; }
     if (fallbackAudioEl) { try { fallbackAudioEl.pause(); fallbackAudioEl.src = ''; } catch(e) {} fallbackAudioEl = null; }
     if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+    if (sharedMicStream) {
+      try { sharedMicStream.getTracks().forEach(t => t.stop()); } catch(e){}
+      sharedMicStream = null;
+    }
     $('shadowWaveBox')?.classList.remove('playing');
     $('shadowRecordBtn')?.classList.remove('recording');
     $('shadowFocusCard')?.classList.remove('playing-border');

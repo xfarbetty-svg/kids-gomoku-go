@@ -6,7 +6,9 @@
 
 1. **完成手機端部署全面審計**：對 learn.html、toeic.html、index.html、common.js/css、sw.js 進行徹底檢查，共發現 **87 個問題**（🔴 致命 12 / 🟡 中等 32 / 🟢 低 43）。
 2. **產出完整執行計畫**：已寫入 `PLAN-MOBILE-FIX.md`，分 5 個 Sprint（止血→手機體驗→音訊 PWA→效能資料→收尾測試），每項任務有具體行號與修正方案。
-3. **目前未修改任何程式碼**，純審計 + 計畫產出階段。
+3. **✅ Sprint 1 止血 10 項致命 bug 全部修完**（learn.html ×4、toeic.html ×4、sw.js ×1、index.html ×1），JS 語法檢查通過。
+4. **已把教訓寫成全域使用手冊**：`C:\Users\PXP\.config\opencode\usage-manuals\code-pitfalls-mobile.md`（10 個致命收正教訓 + 對所有專案寫 CODE 的硬性要求），並已在全域 AGENTS.md 掛引用。
+5. **下一步：Sprint 2 手機體驗修復**（33 項中/低問題）。
 
 ## 🚦 目前狀態
 
@@ -21,17 +23,19 @@
 
 ## ➡️ 尚未做的工作清單（待辦路線圖）
 
-### 🔴 最優先：Sprint 1 止血（PLAN-MOBILE-FIX.md → Sprint 1）
-1. `learn.html` KidsApp.addStars null guard（line 7351）
-2. `learn.html` 麥克風 stream 釋放（line 7451 stopAllAudio）
-3. `learn.html` YT API 無限重試加 maxRetry=5（line 6768）
-4. `learn.html` localStorage parse 包 try/catch（line 3611）
-5. `toeic.html` 「忘了」卡片 re-queue 而非移除（line 791）
-6. `toeic.html` onvoiceschanged 統一綁定（line 386+1062）
-7. `toeic.html` 閃卡背面 3D flip 修復（line 145）
-8. `toeic.html` 評分按鈕觸控 ≥44px（line 250）
-9. `sw.js` addAll 改逐筆 put（line 75）
-10. `index.html` 加 viewport-fit=cover（line 5）
+### 🔴 最優先：Sprint 1 止血（PLAN-MOBILE-FIX.md → Sprint 1）— ✅ 已完成
+1. ✅ `learn.html` KidsApp.addStars null guard（line 7351）
+2. ✅ `learn.html` 麥克風 stream 釋放（line 7451 stopAllAudio）
+3. ✅ `learn.html` YT API 無限重試加 maxRetry=5（line 6768）
+4. ✅ `learn.html` localStorage parse 包 try/catch（line 3611）
+5. ✅ `toeic.html` 「忘了」卡片 re-queue 而非移除（line 791）
+6. ✅ `toeic.html` onvoiceschanged 統一綁定（line 386+1062）
+7. ✅ `toeic.html` 閃卡背面 3D flip 修復（line 145）
+8. ✅ `toeic.html` 評分按鈕觸控 ≥44px（line 250）
+9. ✅ `sw.js` addAll 改逐筆 put（line 75）
+10. ✅ `index.html` 加 viewport-fit=cover（line 5）
+
+### 現在進行中：Sprint 2（手機體驗）
 
 ### Sprint 2-5 詳見 PLAN-MOBILE-FIX.md
 

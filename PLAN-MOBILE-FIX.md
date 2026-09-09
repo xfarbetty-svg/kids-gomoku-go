@@ -17,7 +17,20 @@
 
 ---
 
-## Sprint 1：止血（致命 bug 修復）
+## Sprint 1：止血（致命 bug 修復）— ✅ 已完成（2026-09-09）
+
+> **狀態**：10/10 全數修正並通過 JS 語法檢查。修正方式摘要（完整 diff 見 git）：
+> 1.1 `KidsApp.addStars` 加 `window.KidsApp && typeof` guard
+> 1.2 `stopAllAudio()` 加 `sharedMicStream.getTracks().forEach(t => t.stop()); sharedMicStream = null;`
+> 1.3 `initShadowYtPlayer`／`playYoutubeSentence` 加 `retry` 參數，≥5 放棄並 `showToast` 提示（learn.html 已新增共用 `showToast`）
+> 1.4 `AppState` 內 `localStorage` 取得/parse 全包 IIFE + try/catch + 預設值
+> 1.5 `rateCurrent` 改成「again 一律 re-queue」，不再判斷 `isNew`
+> 1.6 `SpeechSys` 暴露 `__reloadVoices()`，boot 綁單一 handler 同時更新 voices 與選擇器
+> 1.7 `.fc-back` 移除 `overflow-y:auto`，改內層 `.fc-back-scroll` wrapper（兩處 HTML 範本同步加）
+> 1.8 `.rate-btn` → `padding:12px 8px; min-height:44px;`
+> 1.9 `install` 改逐筆 `c.add()` + try/catch，單檔 404 跳過不拖垮
+> 1.10 viewport 加 `viewport-fit=cover` + `apple-mobile-web-app-status-bar-style:black-translucent`（並順手移除 `user-scalable=no`）
+> 教訓彙整已寫入全域手冊 `~/.config/opencode/usage-manuals/code-pitfalls-mobile.md`
 
 ### 1.1 `learn.html` — KidsApp null guard
 - **行號**：7351, 7355
