@@ -44,6 +44,11 @@
 
 - 綠野仙蹤素材來源：`youtube.com/playlist?list=PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`（Read Me A Classic，24 章，每集 6~21 分鐘）
 - 無 auto-caption，字幕全靠 Whisper 切 + Gutenberg 原文校正。
+- **免費有聲書資源研究**（2026-09-10）：
+  - 推薦 **Alice in Wonderland**（公版、有文本、章節清晰適合切片）
+  - 美式口音版本：**Eric Leach（Version 4）** → `librivox.app/book/4240`
+  - 免費有聲書平台：LibriVox、Internet Archive、Open Culture、YouTube
+  - Kobo 有聲書有 DRM 限制，建議改用 Audible + Libation 解 DRM，或直接用 LibriVox 公版書
 - 平板斷點慣例：`@media (min-width: 900~960px) and (orientation: landscape)`。
 - 修改 `learn.html` 時保留 ShadowingStudio 生命週期 API。
 - `toeic.html` 是獨立 APP，不引用 common.js。
