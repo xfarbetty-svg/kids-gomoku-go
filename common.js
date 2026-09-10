@@ -153,7 +153,7 @@
       sp.style.fontSize = (13 + Math.random()*11) + 'px';
       sp.style.animationDuration = (4 + Math.random()*3) + 's';
       sp.style.animationDelay = (Math.random()*4) + 's';
-      document.body.appendChild(sp);
+      if (document.body) document.body.appendChild(sp);
     })(i);
   }
 

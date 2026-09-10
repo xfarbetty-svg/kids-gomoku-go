@@ -25,7 +25,7 @@
 - [ ] 綠野仙蹤教材（The Wizard of Oz）：
 - [x] 第 1 章《The Cyclone》純聽力試用版（`woo_trial_audio.html`，49 句英中字幕，本地音訊）
 - [x] 第 1 章影子跟讀版（`woo_shadow_ch1.html`，Read Me A Classic 朗讀 + Whisper 字幕 + Gutenberg 原文校正 + 中翻）
-- [ ] 確認影子跟讀版品質 → 正式加入 `learn.html` 的 PRESET_VIDEOS
+- [x] Ch.1 正式收編 `learn.html` 影子跟讀故事庫（`WOO_CH1_STORY`，source `localaudio`，`woo_shadow_ch1.webm` 81 句逐句時間戳）
 - [ ] 其餘 23 集（Chapter 2-24）依相同流程製作（YouTube playlist PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU）
 - ⛔ Deep Work Session 頻道（lwAG7bBg4n8）不適合做影子跟讀（節奏斷裂、文本解析感）
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
@@ -103,11 +103,24 @@
   - ⏱️ `playEchoSentence()` 延遲重播機制：播放一句原音 → 暫停 5 秒倒數「換你說！」→ 自動重播原音對照 → 銜接下一句。
   - 🔄 `speakSentence()` 智慧路由：YouTube 來源在 Step 5 自動導向回音法流程。
   - 🔬 BBT 經典素材：新增《The Big Bang Theory》Sheldon 考駕照原聲片段與 13 句中英對照字幕。
+- [x] **影音精聽室 YouTube 修復＋影子跟讀自動同步（v37）**：
+  - 🎬 YT 播放器 lazy 建立：`playerBuilt` flag＋`ensureReady()`，第一次開啟精聽室才 new YT.Player（修黑畫面無法播放）。
+  - 📖 影子跟讀「📖 全文對照」檢視器：逐句雙語＋時間戳＋🎯 跳句回訓練、隱藏中文切換。
+  - 🔗 精聽室精選自動同步：`getPresetStories()` 把 PRESET_VIDEOS 依 mode+lang 自動列入影子跟讀故事選單（手動「送」按鈕只給自訂影片）。
+  - 🌪️ 綠野仙蹤 Ch.1 收編故事庫：`WOO_CH1_STORY`（source `localaudio`）、`playLocalAudioSegment()` 逐句切播 `woo_shadow_ch1.webm`。
+  - 🔄 PWA 快取升級至 `kids-games-v37`（含 `woo_shadow_ch1.webm`）。
+- [x] **驗收 Bug 修復＋全文閱讀器（本次，未 commit）**：
+  - 🔴 全文對照無法開啟：`openFullTextView()` 誤用 `$('#fullTextViewModal')`（`$`=getElementById）→ null 拋錯；改 `$('fullTextViewModal')`。
+  - 🔴 WOO 連播斷裂：`stopLocalAudioSegment()` 設 `src=''` 觸發舊元素非同步 `error` → 舊 `onerror` 回退把新元素清掉（無限 rebuild、第二句之後全啞）。改為解綁 handler＋`removeAttribute('src')+load()`；localaudio 的 `onerror` 不觸發 TTS 回退。
+  - 🔴 語速無效：`audio.playbackRate=currentSpeed` 寫在 `load()` 之前，Chrome 的 `load()` 會重設回 1.0；移到 `begin()` 播放前再設，並對播放中音訊即時套用。
+  - 🟢 `common.js:156` `document.body.appendChild(sp)` 加 null 防護（`<head>` 載入時 sparkles 全消失＋console error）。
+  - 📖 全文對照升級「閱讀器」：`openFullTextViewEx(title, rows, onJump)` 共用（故事＋影片字幕）、整排可點跳句、字級放大 hover 高亮；精聽室新增「📖 全文閱讀」按鈕。
+  - ✅ 無頭 Chrome e2e 10/10（`C:\Users\PXP\AppData\Local\Temp\opencode\end_to_end.js`；YT.Player 會把 `#player` 換成同 id iframe）。
 
 ## 🕐 最後更新
 
 - **日期**：2026-09-11
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：影子跟讀第 5 步驟「回音法」（Echo Method）+ BBT 經典考駕照片段整合（commit 888ef19）
-- **Git 狀態**：已提交並推送到 origin/main（888ef19）
+- **內容**：YT 精聽室播放修復＋全文對照檢視器＋精聽室精選自動同步＋綠野仙蹤 Ch.1 收編 learn.html＋驗收修復（全文彈窗/WOO 連播/語速/停止）＋全文升級閱讀器＋精聽室「📖 全文閱讀」（v37＋，未 commit）
+- **Git 狀態**：⏳ 尚未 commit/push
 

@@ -1127,6 +1127,159 @@
     to { transform: scale(1); opacity: 1; }
   }
 
+  /* ====== 全文雙語對照檢視器 ====== */
+  .shadow-fulltext-btn {
+    flex: 0 0 auto;
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
+  }
+  .fulltext-dialog {
+    max-width: 780px;
+    max-height: 86vh;
+    width: 100%;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  body.mode-kids .fulltext-dialog { color: #1e293b; }
+  .fulltext-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .fulltext-title {
+    font-size: 16px;
+    font-weight: 900;
+    flex: 1;
+    min-width: 0;
+  }
+  .fulltext-tools { display: flex; gap: 8px; align-items: center; }
+  .fulltext-tool-btn {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff;
+    border-radius: 10px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  body.mode-kids .fulltext-tool-btn { background: rgba(0,0,0,0.06); color: #334155; border-color: rgba(0,0,0,0.15); }
+  .fulltext-tool-btn.off { opacity: 0.55; text-decoration: line-through; }
+  .fulltext-sub {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-bottom: 8px;
+  }
+  .fulltext-body {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 2px 4px 6px 2px;
+    scrollbar-width: thin;
+  }
+  .ft-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  }
+  .ft-row:hover {
+    background: rgba(79,70,229,0.16);
+    border-color: rgba(99,102,241,0.45);
+    transform: translateX(2px);
+  }
+  body.mode-kids .ft-row { background: #fff; border-color: rgba(0,0,0,0.08); }
+  body.mode-kids .ft-row:hover { background: #eef2ff; }
+  .ft-index {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #4f46e5;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ft-content { flex: 1; min-width: 0; }
+  .ft-time {
+    display: block;
+    font-size: 11px;
+    opacity: 0.55;
+    margin-bottom: 2px;
+    font-family: monospace;
+  }
+  .ft-orig {
+    font-size: 16px;
+    font-weight: 800;
+    color: #e2e8f0;
+    line-height: 1.65;
+    word-break: break-word;
+    letter-spacing: 0.01em;
+  }
+  body.mode-kids .ft-orig { color: #1e293b; }
+  .ft-phonetic {
+    font-size: 12px;
+    color: #60a5fa;
+    opacity: 0.85;
+    margin-top: 2px;
+    word-break: break-word;
+  }
+  body.mode-kids .ft-phonetic { color: #2563eb; }
+  .ft-zh {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-top: 4px;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  body.mode-kids .ft-zh { color: #64748b; }
+  .ft-jump {
+    flex: 0 0 auto;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(16,185,129,0.28);
+  }
+  .fulltext-hidden .ft-zh,
+  .fulltext-hidden .ft-phonetic { display: none; }
+  @media (max-width: 520px) {
+    .ft-row { flex-wrap: wrap; }
+    .ft-jump { width: 100%; }
+    .fulltext-dialog { padding: 14px 14px; }
+  }
+
   .form-group {
     margin-bottom: 12px;
     text-align: left;
@@ -2725,6 +2878,7 @@
         <input type="text" id="ytUrlInput" placeholder="貼上 YouTube 影片網址或 ID (例如: dQw4w9WgXcQ)...">
         <button class="yt-btn" id="ytLoadBtn">▶️ 載入影片</button>
         <button type="button" class="yt-btn" id="toggleSubEditorBtn" style="background: rgba(255,255,255,0.15); font-size: 12px; white-space: nowrap;">📝 匯入/編輯字幕</button>
+        <button type="button" class="yt-btn" id="fullTextVideoBtn" style="background: rgba(255,255,255,0.15); font-size: 12px; white-space: nowrap;">📖 全文閱讀</button>
       </div>
 
       <!-- Subtitles Editor Drawer -->
@@ -3007,6 +3161,7 @@
           <select id="shadowStorySelect">
             <option value="">— 請選擇故事 —</option>
           </select>
+          <button type="button" class="shadow-fulltext-btn" id="shadowFullTextBtn" title="以中英／中日雙語全文對照檢視整篇故事">📖 全文對照</button>
         </div>
         <div class="shadow-story-row-2">
           <div class="shadow-voice-wrap">
@@ -3175,6 +3330,21 @@
   </section>
 
 </main>
+
+<!-- Modal: 全文雙語對照檢視器 -->
+<div id="fullTextViewModal" class="modal-overlay hidden">
+  <div class="glass-card modal-dialog fulltext-dialog">
+    <div class="fulltext-header">
+      <div class="fulltext-title" id="fullTextViewTitle">📖 全文雙語對照</div>
+      <div class="fulltext-tools">
+        <button type="button" class="fulltext-tool-btn" id="fullTextToggleZh" title="顯示／隱藏中文翻譯">🙈 隱藏中文</button>
+        <button type="button" class="fulltext-tool-btn fulltext-close-btn" id="fullTextCloseBtn">✖ 關閉</button>
+      </div>
+    </div>
+    <div class="fulltext-sub" id="fullTextViewSub">點擊句子右側的「🎯 跳句」可直接回到該句做影子跟讀</div>
+    <div class="fulltext-body" id="fullTextBody"></div>
+  </div>
+</div>
 
 <!-- Modal: 新增自訂生字 -->
 <div id="addWordModal" class="modal-overlay hidden">
@@ -4004,6 +4174,11 @@ const UI = {
       }
     } else if (tabId === 'dialogue') {
       DialogueSys.onOpen();
+    } else if (tabId === 'video') {
+      // 精聽室首次打開才建立 YouTube 播放器（隱藏容器內建立會導致無法播放）
+      if (typeof YTPlayerSys !== 'undefined' && YTPlayerSys.ensureReady) {
+        setTimeout(() => YTPlayerSys.ensureReady(), 50);
+      }
     } else if (tabId === 'shadowing') {
       if (typeof ShadowingStudio !== 'undefined') {
         ShadowingStudio.stopAllAudio();
@@ -4487,6 +4662,7 @@ const YTPlayerSys = (() => {
   let currentVideoId = '';
   let currentTitle = '';
   let currentDesc = '';
+  let playerBuilt = false;
 
   function init() {
     const preset = PRESET_VIDEOS[AppState.currentVideoIndex] || PRESET_VIDEOS[0];
@@ -4496,19 +4672,28 @@ const YTPlayerSys = (() => {
     currentSubtitles = preset.subtitles;
 
     bindBridgeEvents();
+    // 重點：畫面載入時精聽室 Tab 仍是 display:none。若此時就 new YT.Player，
+    // YouTube iframe 會在零尺寸容器內初始化 → 之後切進來整片黑、無法播放。
+    // 因此改為延後到「第一次打開精聽室」時才建立（ensureReady）。
+  }
 
+  // 第一次開啟精聽室時呼叫（容器已顯示），視需求載入 YT API 再建立播放器
+  function ensureReady() {
+    if (playerBuilt && player && typeof player.destroy === 'function') return;
     if (window.YT && window.YT.Player) {
       createPlayer(currentVideoId);
+      playerBuilt = true;
       return;
     }
-
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
+    if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
     window.onYouTubeIframeAPIReady = () => {
       createPlayer(currentVideoId);
+      playerBuilt = true;
     };
   }
 
@@ -4535,7 +4720,41 @@ const YTPlayerSys = (() => {
       });
     }
 
-    // 2. 自訂字幕抽屜開關
+    // 2. 全文閱讀（閱讀器）：以目前影片字幕開啟雙語閱讀＋跳句練習
+    const fullTextVideoBtn = document.getElementById('fullTextVideoBtn');
+    if (fullTextVideoBtn) {
+      fullTextVideoBtn.addEventListener('click', () => {
+        const videoData = getCurrentVideoData();
+        if (!videoData.videoId) {
+          alert('請先載入 YouTube 影片！');
+          return;
+        }
+        if (!videoData.sentences || !videoData.sentences.length) {
+          alert('當前影片尚未設定字幕！');
+          return;
+        }
+        if (typeof ShadowingStudio === 'undefined' || !ShadowingStudio.openFullTextViewEx) return;
+        ShadowingStudio.openFullTextViewEx(
+          `📖 ${videoData.title}${videoData.titleZh && videoData.titleZh !== videoData.title ? '（' + videoData.titleZh + '）' : ''}`,
+          videoData.sentences,
+          (idx) => {
+            if (ShadowingStudio.closeFullTextView) ShadowingStudio.closeFullTextView();
+            AppState.saveUserVideo(videoData);
+            UI.switchTab('shadowing');
+            const storyId = 'yt-' + videoData.videoId;
+            const cur = ShadowingStudio.getCurrentStory ? ShadowingStudio.getCurrentStory() : null;
+            if (cur && cur.id === storyId) {
+              ShadowingStudio.selectAndPlaySentence(idx);
+            } else if (ShadowingStudio.loadStory) {
+              ShadowingStudio.loadStory(storyId);
+              ShadowingStudio.selectAndPlaySentence(idx);
+            }
+          }
+        );
+      });
+    }
+
+    // 3. 自訂字幕抽屜開關
     const toggleSubEditorBtn = document.getElementById('toggleSubEditorBtn');
     const subEditorPanel = document.getElementById('subEditorPanel');
     const closeSubEditorBtn = document.getElementById('closeSubEditorBtn');
@@ -4661,6 +4880,7 @@ const YTPlayerSys = (() => {
         }
       });
     }
+    playerBuilt = true;
   }
 
   function onPlayerReady(event) {
@@ -4833,6 +5053,7 @@ const YTPlayerSys = (() => {
 
   return {
     init,
+    ensureReady,
     loadPreset,
     loadFromUrlOrId,
     getCurrentVideoData,
@@ -6395,6 +6616,101 @@ const SHADOWING_DATA = {
 };
 
 /* =========================================================================
+   綠野仙蹤 Ch.1《The Cyclone》影子跟讀素材（單檔音訊 woo_shadow_ch1.webm + 逐句時間戳）
+   ========================================================================= */
+const WOO_CH1_STORY = {
+  id: 'woo-ch1',
+  title: '🌪️ 綠野仙蹤 Ch.1：The Cyclone',
+  titleZh: '龍捲風',
+  source: 'localaudio',
+  audioFile: 'woo_shadow_ch1.webm',
+  lang: 'en',
+  sentences: [
+    { start: 11.96, end: 16.82, text: "Dorothy lived in the midst of the great Kansas prairies,", zh: "桃樂絲住在遼闊的堪薩斯大草原中央，", pauseHint: "" },
+    { start: 17.42, end: 22.5, text: "with Uncle Henry, who was a farmer, and Aunt Em, who was the farmer's wife.", zh: "和她的農夫叔叔亨利以及嬸嬸艾姆住在一起。", pauseHint: "" },
+    { start: 23.2, end: 28.32, text: "Their house was small, for the lumber to build it had to be carried by wagon many miles.", zh: "他們的房子很小，因為建材必須用馬車運送好幾英里才能到達。", pauseHint: "" },
+    { start: 28.32, end: 43.38, text: "There were four walls, a floor and a roof, which made one room; and this room contained a rusty looking cook stove, a cupboard for the dishes, a table, three or four chairs, and the beds.", zh: "四面牆、地板和屋頂構成了一個房間；裡面有一個鏽跡斑斑的爐子、一個碗櫥、一張桌子、三四張椅子，還有床。", pauseHint: "" },
+    { start: 44.32, end: 51.04, text: "Uncle Henry and Aunt Em had a big bed in one corner, and Dorothy a little bed in another corner.", zh: "亨利叔叔和艾姆嬸嬸在一個角落有一張大床，桃樂絲在另一個角落有一張小床。", pauseHint: "" },
+    { start: 51.04, end: 59.88, text: "There was no garret at all, and no cellar — except a small hole dug in the ground, called a cyclone cellar,", zh: "完全沒有閣樓，也沒有地窖——除了地上挖的一個小洞，叫做旋風地窖，", pauseHint: "" },
+    { start: 60.2, end: 67.68, text: "where the family could go in case one of those great whirlwinds arose, mighty enough to crush any building in its path.", zh: "全家可以在巨大的旋風來襲時躲進去，那種旋風強大到能粉碎路上的任何建築。", pauseHint: "" },
+    { start: 68.7, end: 76.48, text: "It was reached by a trap door in the middle of the floor, from which a ladder led down into the small, dark hole.", zh: "從地板中間的活板門可以爬梯子下去，進入那個又小又黑的洞。", pauseHint: "" },
+    { start: 76.48, end: 84.64, text: "When Dorothy stood in the doorway and looked around, she could see nothing but the great gray prairie on every side.", zh: "當桃樂絲站在門口環顧四周時，她只能看到灰茫茫的大草原延伸到四面八方。", pauseHint: "" },
+    { start: 85.36, end: 93.4, text: "Not a tree nor a house broke the broad sweep of flat country that reached to the edge of the sky in all directions.", zh: "沒有一棵樹或一棟房子打破這片平坦大地的廣闊景色，一直延伸到天際。", pauseHint: "" },
+    { start: 94.18, end: 100.28, text: "The sun had baked the plowed land into a gray mass, with little cracks running through it.", zh: "太陽把犁過的田地曬成灰色的斑塊，上面佈滿了細小的裂縫。", pauseHint: "" },
+    { start: 100.28, end: 111.28, text: "Even the grass was not green, for the sun had burned the tops of the long blades until they were the same gray color to be seen everywhere.", zh: "連草都不是綠色的，因為太陽把長長的草葉頂端都曬成了到處可見的灰色。", pauseHint: "" },
+    { start: 111.28, end: 123.53, text: "Once the house had been painted, but the sun blistered the paint and the rains washed it away, and now the house was as dull and gray as everything else.", zh: "曾經漆過的房子，被太陽曬得起泡、被雨水沖走，現在和其他東西一樣灰濛濛的。", pauseHint: "" },
+    { start: 124.29, end: 127.91, text: "When Aunt Em came there to live, she was a young, pretty wife.", zh: "艾姆嬸嬸剛來的時候，是個年輕漂亮的妻子。", pauseHint: "" },
+    { start: 128.69, end: 130.99, text: "The sun and wind had changed her, too.", zh: "太陽和風也改變了她。", pauseHint: "" },
+    { start: 131.65, end: 135.75, text: "They had taken the sparkle from her eyes and left them a sober gray.", zh: "奪走了她眼中的光彩，讓那雙眼睛變得灰濛濛的。", pauseHint: "" },
+    { start: 136.19, end: 140.71, text: "They had taken the red from her cheeks and lips, and they were gray also.", zh: "也奪走了她臉頰和嘴唇上的紅潤，那裡也變成了灰色。", pauseHint: "" },
+    { start: 141.19, end: 143.47, text: "She was thin and gaunt,", zh: "她又瘦又憔悴，", pauseHint: "" },
+    { start: 143.51, end: 152.01, text: "and never smiled now. When Dorothy, who was an orphan, first came to her,", zh: "現在從來不笑。當桃樂絲——一個孤兒——剛來到她身邊時，", pauseHint: "" },
+    { start: 152.01, end: 158.31, text: "Aunt Em had been so startled by the child's laughter that she would scream and press her hand upon her heart", zh: "艾姆嬸嬸被孩子的笑聲嚇了一跳，從此桃樂絲的歡笑聲每傳入她耳中，她都會尖叫著捂住心口。", pauseHint: "" },
+    { start: 158.31, end: 164.31, text: "whenever Dorothy's merry voice reached her ears,", zh: "每當桃樂絲的歡笑聲傳入她耳中，", pauseHint: "" },
+    { start: 164.31, end: 171.67, text: "and she still looked at the little girl with wonder that she could find anything to laugh at.", zh: "她仍然驚訝地看著這個小女孩，不明白她怎麼能找到什麼好笑的事。", pauseHint: "" },
+    { start: 171.67, end: 180.09, text: "Uncle Henry never laughed. He worked hard from morning till night and did not know what joy was.", zh: "亨利叔叔從不笑。他從早到晚辛苦工作，不知道什麼是快樂。", pauseHint: "" },
+    { start: 180.69, end: 188.91, text: "He was gray also, from his long beard to his rough boots, and he looked stern and solemn and rarely spoke.", zh: "他也是灰濛濛的，從長鬍子到粗糙的靴子，看起來嚴肅而莊重，很少說話。", pauseHint: "" },
+    { start: 188.91, end: 195.83, text: "It was Toto that made Dorothy laugh, and saved her from growing as gray as her other surroundings.", zh: "是托托讓桃樂絲笑了起來，讓她沒有變得和周遭一樣灰濛濛。", pauseHint: "" },
+    { start: 195.83, end: 203.15, text: "Toto was not gray. He was a little black dog, with long silky hair and small black eyes that twinkled merrily on either side of his funny, wee nose.", zh: "托托不是灰色的；他是一隻小黑狗，有著長長的絲綢般毛髮，小黑眼睛在有趣的小鼻子兩側閃爍。", pauseHint: "" },
+    { start: 203.49, end: 210.93, text: "Toto played all day long, and Dorothy played with him, and loved him dearly.", zh: "托托整天都在玩，桃樂絲也和他一起玩，深深地愛著他。", pauseHint: "" },
+    { start: 211.81, end: 219.19, text: "Today, however, they were not playing. Uncle Henry sat upon the door step and looked anxiously at the sky,", zh: "但今天他們沒有在玩。亨利叔叔坐在門階上，憂心忡忡地望著天空，", pauseHint: "" },
+    { start: 219.19, end: 223.17, text: "which was even grayer than usual.", zh: "那天空比平時更加灰暗。", pauseHint: "" },
+    { start: 223.17, end: 228.19, text: "Dorothy stood in the door with Toto in her arms, and looked at the sky too.", zh: "桃樂絲抱著托托站在門口，也看著天空。", pauseHint: "" },
+    { start: 228.19, end: 231.21, text: "Aunt Em was washing the dishes.", zh: "艾姆嬸嬸正在洗碗。", pauseHint: "" },
+    { start: 231.21, end: 241.05, text: "From the far north they heard a low wail of the wind, and Uncle Henry and Dorothy could see where the long grass bowed in waves before the coming storm.", zh: "從北方遠處傳來一陣低沉的風聲，亨利叔叔和桃樂絲看到長長的草在即將到來的風暴前像波浪一樣彎下了腰。", pauseHint: "" },
+    { start: 242.01, end: 252.05, text: "There now came a sharp whistling in the air from the south, and as they turned their eyes that way they saw ripples in the grass coming from that direction also.", zh: "這時南方傳來一陣尖銳的哨聲，當他們把目光轉向那邊時，也看到草叢中有波紋從那個方向傳來。", pauseHint: "" },
+    { start: 253.09, end: 254.81, text: "Suddenly Uncle Henry stood up.", zh: "突然亨利叔叔站了起來。", pauseHint: "" },
+    { start: 255.35, end: 258.99, text: "\"There's a cyclone coming, Em,\" he called to his wife;", zh: "「有旋風來了，艾姆，」他對妻子喊道，", pauseHint: "" },
+    { start: 259.61, end: 260.87, text: "\"I'll go look after the stock.\"", zh: "「我去看看牲口。」", pauseHint: "" },
+    { start: 261.51, end: 265.17, text: "Then he ran toward the sheds where the cows and horses were kept.", zh: "然後他朝著牛馬所在的棚子跑去。", pauseHint: "" },
+    { start: 265.81, end: 268.29, text: "Aunt Em dropped her work and came to the door.", zh: "艾姆嬸嬸放下手邊的活兒來到門口。", pauseHint: "" },
+    { start: 268.95, end: 272.15, text: "One glance told her of the danger close at hand.", zh: "看了一眼就知道危險就在眼前。", pauseHint: "" },
+    { start: 272.89, end: 275.05, text: "\"Quick, Dorothy!\" she screamed;", zh: "「快，桃樂絲！」她尖叫道，", pauseHint: "" },
+    { start: 275.35, end: 276.45, text: "\"run for the cellar!\"", zh: "「快跑到地窖去！」", pauseHint: "" },
+    { start: 277.25, end: 280.21, text: "Toto jumped out of Dorothy's arms and hid under the bed,", zh: "托托從桃樂絲懷裡跳出來躲到床底下，", pauseHint: "" },
+    { start: 280.53, end: 282.23, text: "and the girl started to get him.", zh: "小女孩開始去抓他。", pauseHint: "" },
+    { start: 282.59, end: 286.53, text: "Aunt Em, badly frightened, threw open the trap door in the floor", zh: "艾姆嬸嬸嚇壞了，一把推開地板上的活板門，", pauseHint: "" },
+    { start: 286.53, end: 289.97, text: "and climbed down the ladder into the small, dark hole.", zh: "爬下梯子鑽進了那個又小又黑的洞裡。", pauseHint: "" },
+    { start: 290.87, end: 294.67, text: "Dorothy caught Toto at last, and started to follow her aunt.", zh: "桃樂絲終於抓到了托托，開始跟上嬸嬸。", pauseHint: "" },
+    { start: 295.45, end: 300.55, text: "When she was half way across the room there came a great shriek from the wind,", zh: "當她走到房間中央時，風發出一聲尖嘯，", pauseHint: "" },
+    { start: 300.55, end: 306.77, text: "and the house shook so hard that she lost her footing and sat down suddenly upon the floor.", zh: "房子劇烈搖晃，她站不穩，突然跌坐在地板上。", pauseHint: "" },
+    { start: 307.67, end: 310.53, text: "Then a strange thing happened.", zh: "接下來發生了一件奇怪的事。", pauseHint: "" },
+    { start: 311.45, end: 316.91, text: "The house whirled around two or three times and rose slowly through the air.", zh: "房子轉了兩三圈，慢慢升到空中。", pauseHint: "" },
+    { start: 317.65, end: 320.11, text: "Dorothy felt as if she were going up in a balloon.", zh: "桃樂絲感覺自己好像坐在氣球裡。", pauseHint: "" },
+    { start: 321.12, end: 324.07, text: "The north and south winds met where the house stood", zh: "南北兩股風在房子所在的地方交匯，", pauseHint: "" },
+    { start: 324.07, end: 327.73, text: "and made it the exact center of the cyclone.", zh: "讓它成為旋風的正中心。", pauseHint: "" },
+    { start: 328.31, end: 331.53, text: "In the middle of a cyclone the air is generally still,", zh: "在旋風的中心，空氣通常是平靜的，", pauseHint: "" },
+    { start: 332.18, end: 335.65, text: "but the great pressure of the wind on every side of the house", zh: "但巨大的風壓從房子的四面八方", pauseHint: "" },
+    { start: 335.65, end: 338.89, text: "raised it up higher and higher,", zh: "把它抬得越來越高，", pauseHint: "" },
+    { start: 338.89, end: 342.43, text: "until it was at the very top of the cyclone;", zh: "直到它到了旋風的最頂端；", pauseHint: "" },
+    { start: 342.43, end: 347.43, text: "and there it remained and was carried miles and miles away,", zh: "它就留在那裡，被輕輕鬆鬆地帶著飛了數英里，", pauseHint: "" },
+    { start: 347.43, end: 350.43, text: "as easily as you could carry a feather.", zh: "就像你帶一片羽毛一樣容易。", pauseHint: "" },
+    { start: 350.43, end: 357, text: "It was very dark, and the wind howled horribly around her,", zh: "四周非常黑暗，風在她周圍恐怖地咆哮著，", pauseHint: "" },
+    { start: 357, end: 364.74, text: "but Dorothy found she was riding quite easily.", zh: "但桃樂絲發現自己坐得相當平穩。", pauseHint: "" },
+    { start: 365.42, end: 370.1, text: "After the first few whirls around, and one other time when the house tipped badly,", zh: "在最初的幾次旋轉之後，還有一次房子嚴重傾斜時，", pauseHint: "" },
+    { start: 370.1, end: 375.5, text: "she felt as if she were being rocked gently, like a baby in a cradle.", zh: "她感覺自己好像在緩緩地搖進一個搖籃裡。", pauseHint: "" },
+    { start: 375.5, end: 378.88, text: "Toto did not like it.", zh: "托托不喜歡這樣。", pauseHint: "" },
+    { start: 378.88, end: 384.26, text: "He ran about the room, now here, now there, barking loudly;", zh: "他在房間裡跑來跑去，一會兒在這裡，一會兒在那裡，大聲地叫著；", pauseHint: "" },
+    { start: 384.26, end: 389.7, text: "but Dorothy sat quite still on the floor and waited to see what would happen.", zh: "但桃樂絲一動也不動地坐在地板上，等著看接下來會發生什麼事。", pauseHint: "" },
+    { start: 390.46, end: 393.64, text: "Once Toto got too near the open trap door, and fell in;", zh: "有一次托托跑到了活板門附近，掉了進去；", pauseHint: "" },
+    { start: 393.96, end: 398.02, text: "and at first the little girl thought she had lost him.", zh: "一開始小女孩以為她失去他了。", pauseHint: "" },
+    { start: 398.54, end: 402.9, text: "But soon she saw one of his ears sticking up through the hole,", zh: "但很快她看到他的一隻耳朵從洞口伸了出來，", pauseHint: "" },
+    { start: 402.9, end: 407, text: "for the strong pressure of the air was keeping him up so that he could not fall.", zh: "因為強大的空氣壓力把他托住了，讓他掉不下去。", pauseHint: "" },
+    { start: 407, end: 414.66, text: "She crept to the hole, caught Toto by the ear, and dragged him into the room again,", zh: "她爬到洞口，抓住托托的一隻耳朵，把他拖回了房間；", pauseHint: "" },
+    { start: 414.66, end: 419, text: "afterward closing the trap door so that no more accidents could happen.", zh: "然後關上了活板門，以防再發生意外。", pauseHint: "" },
+    { start: 419, end: 424, text: "Hour after hour passed away, and slowly Dorothy got over her fright;", zh: "一個小時又一個小時過去了，桃樂絲慢慢地克服了恐懼；", pauseHint: "" },
+    { start: 424, end: 430.08, text: "but she felt quite lonely, and the wind shrieked so loudly all about her that she nearly became deaf.", zh: "但她覺得很孤單，風在她周圍尖嘯得如此響亮，讓她幾乎聽不見了。", pauseHint: "" },
+    { start: 430.98, end: 436.14, text: "At first she had wondered if she would be dashed to pieces when the house fell again;", zh: "一開始她想著房子再次掉落時她是否會被摔得粉碎；", pauseHint: "" },
+    { start: 436.92, end: 440.4, text: "but as the hours passed and nothing terrible happened,", zh: "但隨著時間過去，什麼可怕的事都沒發生，", pauseHint: "" },
+    { start: 440.98, end: 446.38, text: "she stopped worrying and resolved to wait calmly and see what the future would bring.", zh: "她不再擔心，決定冷靜等待，看看未來會帶來什麼。", pauseHint: "" },
+    { start: 447.24, end: 452.5, text: "At last she crawled over the swaying floor to her bed, and lay down upon it,", zh: "最後她爬過搖晃的地板來到床邊，躺了下來，", pauseHint: "" },
+    { start: 452.64, end: 456.12, text: "and Toto followed and lay down beside her.", zh: "托托跟著趴在她身旁。", pauseHint: "" },
+    { start: 456.98, end: 460.92, text: "In spite of the swaying of the house and the wailing of the wind,", zh: "儘管房子在搖晃、風在哀號，", pauseHint: "" },
+    { start: 461.58, end: 465.8, text: "Dorothy soon closed her eyes and fell fast asleep.", zh: "桃樂絲很快就閉上眼睛，沉沉地睡著了。", pauseHint: "" }
+  ]
+};
+
+/* =========================================================================
    12. 影子跟讀訓練室模組 (ShadowingStudio Module)
    ========================================================================= */
 const ShadowingStudio = (() => {
@@ -6459,12 +6775,50 @@ const ShadowingStudio = (() => {
     return AppState.mode === 'adult' ? 'adult' : 'kids';
   }
 
+  function getPresetStories() {
+    const mode = getModeKey();
+    if (typeof PRESET_VIDEOS === 'undefined') return [];
+    return (PRESET_VIDEOS || [])
+      .filter(p => p && p.category)
+      .filter(p => {
+        const langForCat = String(p.category).includes('ja') ? 'ja' : 'en';
+        const modeOk = (mode === 'kids') ? p.category.startsWith('kids-') : p.category.startsWith('adult-');
+        return modeOk && langForCat === currentLang;
+      })
+      .map(p => ({
+        id: 'yt-' + p.videoId,
+        title: p.title,
+        titleZh: p.desc || '影音精聽室精選片段',
+        source: 'youtube',
+        videoId: p.videoId,
+        lang: String(p.category).includes('ja') ? 'ja' : 'en',
+        sentences: (p.subtitles || []).map(sub => ({
+          text: sub.orig,
+          phonetic: '',
+          zh: sub.zh || '',
+          pauseHint: '',
+          start: sub.start,
+          end: sub.end
+        }))
+      }));
+  }
+
+  function getWooStories() {
+    if (typeof WOO_CH1_STORY === 'undefined' || currentLang !== 'en') return [];
+    return [WOO_CH1_STORY];
+  }
+
   function getCurrentStory() {
+    if (currentStoryId === 'woo-ch1') {
+      return getWooStories()[0] || null;
+    }
     if (currentStoryId && currentStoryId.startsWith('yt-')) {
       const vid = currentStoryId.slice(3);
       const userVideos = AppState.getUserVideos ? AppState.getUserVideos() : [];
       const found = userVideos.find(v => v.videoId === vid || v.id === currentStoryId);
       if (found) return found;
+      const preset = getPresetStories().find(s => s.id === currentStoryId);
+      if (preset) return preset;
     }
     const mode = getModeKey();
     const stories = SHADOWING_DATA[mode] && SHADOWING_DATA[mode][currentLang];
@@ -6532,6 +6886,40 @@ const ShadowingStudio = (() => {
         opt.textContent = `${s.title}（${s.titleZh}）${badge} (${completedCount}/${total})`;
         sel.appendChild(opt);
       });
+    }
+
+    // 影音精聽室精選影片（自動同步，永遠一致）
+    const presetStories = getPresetStories();
+    if (presetStories.length > 0) {
+      const group = document.createElement('optgroup');
+      group.label = '── 🎬 影音精聽室精選（自動同步）──';
+      presetStories.forEach(s => {
+        const progress = loadProgress(s.id);
+        const completedCount = progress && Array.isArray(progress.completed) ? progress.completed.length : 0;
+        const total = s.sentences ? s.sentences.length : 0;
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = `🎬 ${s.title} (${completedCount}/${total})`;
+        group.appendChild(opt);
+      });
+      sel.appendChild(group);
+    }
+
+    // 綠野仙蹤 Ch.1（昨天完成的影子跟讀版，正式收編進故事庫）
+    const wooStories = getWooStories();
+    if (wooStories.length > 0) {
+      const group = document.createElement('optgroup');
+      group.label = '── 🌪️ 綠野仙蹤（經典朗讀）──';
+      wooStories.forEach(s => {
+        const progress = loadProgress(s.id);
+        const completedCount = progress && Array.isArray(progress.completed) ? progress.completed.length : 0;
+        const total = s.sentences ? s.sentences.length : 0;
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = `${s.title}（${s.titleZh}） (${completedCount}/${total})`;
+        group.appendChild(opt);
+      });
+      sel.appendChild(group);
     }
 
     // 用戶 YouTube 影片分類
@@ -6884,6 +7272,123 @@ const ShadowingStudio = (() => {
     renderMiniSentences();
   }
 
+  /* ============ 全文雙語對照檢視器 ============ */
+  function fmtFullTextTime(sec) {
+    sec = Math.max(0, Math.floor(sec || 0));
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  }
+
+  let fullTextRows = [];
+  let fullTextOnJump = null;
+
+  function openFullTextView() {
+    const story = getCurrentStory();
+    if (!story || !story.sentences || !story.sentences.length) {
+      showToast('請先選擇一個故事，再開啟全文對照', 'error');
+      return;
+    }
+    stopAllAudio();
+    openFullTextViewEx(
+      (story.titleZh ? `📖 ${story.title}（${story.titleZh}）` : `📖 ${story.title}`),
+      story.sentences,
+      (idx) => jumpToSentenceFromFullText(idx)
+    );
+  }
+
+  // 可重用閱讀器：可被影子跟讀（故事）與影音精聽室（影片字幕）共用
+  function openFullTextViewEx(title, rows, onJump) {
+    fullTextRows = rows || [];
+    fullTextOnJump = onJump || null;
+    stopAllAudio();
+    $('fullTextViewTitle').textContent = title || '📖 全文雙語閱讀';
+    renderFullTextView(fullTextRows);
+    $('fullTextViewModal').classList.remove('hidden');
+  }
+
+  function renderFullTextView(rows) {
+    const body = $('fullTextBody');
+    if (!body) return;
+    body.innerHTML = '';
+    const zhBtn = $('fullTextToggleZh');
+    if (zhBtn) zhBtn.textContent = '🙈 隱藏中文';
+
+    rows.forEach((s, idx) => {
+      const row = document.createElement('div');
+      row.className = 'ft-row';
+      const hasTime = typeof s.start === 'number';
+      const origText = s.text || s.orig || '';
+      const phoneticHtml = (s.phonetic && s.phonetic !== origText) ? `<div class="ft-phonetic">${s.phonetic}</div>` : '';
+      const timeHtml = hasTime
+        ? `<span class="ft-time">⏱️ ${fmtFullTextTime(s.start)} - ${fmtFullTextTime(s.end)}</span>`
+        : '';
+      row.innerHTML = `
+        <div class="ft-index">${idx + 1}</div>
+        <div class="ft-content">
+          ${timeHtml}
+          <div class="ft-orig">${origText}</div>
+          ${phoneticHtml}
+          <div class="ft-zh">${s.zh || ''}</div>
+        </div>
+        <button type="button" class="ft-jump" data-idx="${idx}">🎯 跳句</button>
+      `;
+      row.querySelector('.ft-jump').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (fullTextOnJump) fullTextOnJump(idx);
+      });
+      row.addEventListener('click', () => {
+        if (fullTextOnJump) fullTextOnJump(idx);
+      });
+      body.appendChild(row);
+    });
+  }
+
+  function selectAndPlaySentence(idx) {
+    const story = getCurrentStory();
+    if (!story) return;
+    currentSentenceIdx = idx;
+    renderFocusSentence();
+    renderMiniSentences();
+    playCurrentSentence();
+  }
+
+  function jumpToSentenceFromFullText(idx) {
+    const story = getCurrentStory();
+    if (!story) return;
+    $('fullTextViewModal').classList.add('hidden');
+    if (currentStoryId !== story.id) {
+      loadStory(story.id);
+    }
+    selectAndPlaySentence(idx);
+  }
+
+  function closeFullTextView() {
+    const m = $('fullTextViewModal');
+    if (m) m.classList.add('hidden');
+    stopAllAudio();
+  }
+
+  function toggleFullTextZh() {
+    const modal = $('fullTextViewModal');
+    const btn = $('fullTextToggleZh');
+    if (!modal || !btn) return;
+    const hidden = modal.classList.toggle('fulltext-hidden');
+    btn.textContent = hidden ? '👁️ 顯示中文' : '🙈 隱藏中文';
+  }
+
+  function initFullTextViewEvents() {
+    $('shadowFullTextBtn')?.addEventListener('click', openFullTextView);
+    $('fullTextCloseBtn')?.addEventListener('click', closeFullTextView);
+    $('fullTextToggleZh')?.addEventListener('click', toggleFullTextZh);
+    const overlay = $('fullTextViewModal');
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeFullTextView();
+      });
+    }
+  }
+
   function initShadowYtPlayer(videoId, retry) {
     retry = retry || 0;
     const container = $('shadowYtContainer');
@@ -7210,6 +7715,13 @@ const ShadowingStudio = (() => {
         } else {
           playYoutubeSentence(sentence.start, sentence.end, onEnd);
         }
+        return;
+      }
+    }
+    if (story && story.source === 'localaudio') {
+      const s = story.sentences[currentSentenceIdx];
+      if (s && typeof s.start === 'number' && typeof s.end === 'number') {
+        playLocalAudioSegment(s.start, s.end, onEnd);
         return;
       }
     }
@@ -7750,6 +8262,81 @@ const ShadowingStudio = (() => {
     }
   }
 
+  let localSegmentAudio = null;
+  let localSegmentTimer = null;
+
+  function stopLocalAudioSegment() {
+    if (localSegmentTimer) { clearInterval(localSegmentTimer); localSegmentTimer = null; }
+    const a = localSegmentAudio;
+    localSegmentAudio = null;
+    if (a) {
+      a.onplay = a.onended = a.onerror = null;
+      try { a.pause(); } catch (e) {}
+      try { a.removeAttribute('src'); a.load(); } catch (e) {}
+    }
+  }
+
+  function playLocalAudioSegment(start, end, onEnd) {
+    stopLocalAudioSegment();
+    const story = getCurrentStory();
+    const file = story && story.audioFile;
+    if (!file) {
+      const s = story && story.sentences[currentSentenceIdx];
+      if (s && s.text) speakSentence(s.text, null, s.audio);
+      else if (onEnd) onEnd();
+      return;
+    }
+    const audio = new Audio(file);
+    localSegmentAudio = audio;
+    audio.preload = 'auto';
+    audio.playbackRate = currentSpeed;
+
+    const finish = () => {
+      stopLocalAudioSegment();
+      $('shadowWaveBox')?.classList.remove('playing');
+      $('shadowFocusCard')?.classList.remove('playing-border');
+      $('shadowPlayBtn')?.classList.remove('playing');
+      isPlaying = false;
+      if (onEnd) onEnd();
+    };
+
+    audio.onplay = () => {
+      isPlaying = true;
+      $('shadowWaveBox')?.classList.add('playing');
+      $('shadowFocusCard')?.classList.add('playing-border');
+      $('shadowPlayBtn')?.classList.add('playing');
+      if (localSegmentTimer) clearInterval(localSegmentTimer);
+      localSegmentTimer = setInterval(() => {
+        try {
+          if (audio.currentTime >= end) {
+            audio.pause();
+            finish();
+          }
+        } catch (e) {}
+      }, 100);
+    };
+    audio.onended = finish;
+    audio.onerror = () => {
+      const st = getCurrentStory();
+      const s = st && st.sentences[currentSentenceIdx];
+      finish();
+      if (st && st.source !== 'localaudio' && s && s.text) speakSentence(s.text, null, s.audio);
+    };
+
+    const begin = () => {
+      try { audio.currentTime = start; } catch (e) {}
+      try { audio.playbackRate = currentSpeed; } catch (e) {}
+      const p = audio.play();
+      if (p && p.catch) p.catch(() => finish());
+    };
+    if (audio.readyState < 1) {
+      audio.addEventListener('loadedmetadata', begin, { once: true });
+      try { audio.load(); } catch (e) {}
+    } else {
+      begin();
+    }
+  }
+
   function stopAllAudio() {
     isPlaying = false;
     isRecording = false;
@@ -7773,6 +8360,7 @@ const ShadowingStudio = (() => {
       clearTimeout(echoPauseTimer);
       echoPauseTimer = null;
     }
+    stopLocalAudioSegment();
     if (shadowYtPlayer && typeof shadowYtPlayer.pauseVideo === 'function') {
       try { shadowYtPlayer.pauseVideo(); } catch(e){}
     }
@@ -7890,6 +8478,8 @@ const ShadowingStudio = (() => {
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentSpeed = parseFloat(btn.getAttribute('data-speed')) || 1.0;
+        if (localSegmentAudio) { try { localSegmentAudio.playbackRate = currentSpeed; } catch (e) {} }
+        if (realAudioEl) { try { realAudioEl.playbackRate = currentSpeed; } catch (e) {} }
       });
     });
 
@@ -7911,6 +8501,7 @@ const ShadowingStudio = (() => {
       populateStorySelect();
       populateVoiceSelect();
       bindEvents();
+      initFullTextViewEvents();
     },
     onModeChange() {
       if (AppState.lang && AppState.lang !== currentLang) {
@@ -7926,7 +8517,11 @@ const ShadowingStudio = (() => {
       }
     },
     loadStory,
-    stopAllAudio
+    stopAllAudio,
+    openFullTextViewEx,
+    closeFullTextView,
+    jumpToSentenceFromFullText,
+    selectAndPlaySentence
   };
 })();
 
