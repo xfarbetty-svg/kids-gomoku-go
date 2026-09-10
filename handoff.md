@@ -9,7 +9,8 @@
    - `woo_p1_audio.webm`：第 1 章《The Cyclone》音訊（35MB，yt-dlp 下載）
    - 功能：A-B 循環、遮蔽中文、上/下一句導航、進度條
    - 流程驗證：YouTube auto-caption 抓取 → Gutenberg 書本句子對齊 → 中文翻譯 → 本地音訊播放
-   - 待確認：字幕同步品質、中文翻譯是否可接受 → 確認後正式加入 `learn.html` 的 PRESET_VIDEOS
+   - ⚠️ 已知問題：**字幕時間序不夠精準**，auto-caption 對齊演算法需要改善（目前用 word-overlap greedy matching，中間穿插老師講解段落導致偏移）
+   - 下次：調整對齊演算法 → 確認字幕品質 → 正式加入 `learn.html` 的 PRESET_VIDEOS
 2. **完成全部 APP 平板橫向（landscape）版面最佳化**（commit a9a1889，已 push）：
    - `index.html`：卡片網格 780→1180px 用滿平板寬度。
    - `learn.html`：影子跟讀 ≥960px 橫向改雙欄 CSS Grid（左：選單/步驟/全文稿 380px，右：訓練舞台 1fr）。
@@ -53,5 +54,5 @@
 ## 🕐 最後更新
 - 時間：2026-09-10
 - 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：完成平板橫向版面最佳化（8 檔案）+ 更新 AGENTS.md 路線圖
-- Git push：✅ 已推送到 origin/main（a9a1889 + 本次紀錄檔 commit）
+- 內容：綠野仙蹤第 1 章純聽力試用版（音訊 OK，字幕時序待調整）
+- Git push：✅ 已推送到 origin/main（5ac4484 + cc9b26e）
