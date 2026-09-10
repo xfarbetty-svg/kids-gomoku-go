@@ -23,9 +23,11 @@
   - 🎙️ 影子跟讀訓練室（Shadowing Studio）：4 階段階梯跟讀訓練法（純聽磨耳朵、理解精讀、視讀跟讀、脫稿影子+錄音AB對照）、大人/小孩英日語精選故事庫、動態聲波、Levenshtein 語音評分與星星連動
   - 🚀 Shadowing V2（TASK-007）：四階段獨立 UI 行為（applyStepUI）、可調靜音間隔（3/5/7 秒）、聽寫模式（Dictation Mode）、寬容評分（Metaphone 模糊匹配 + Levenshtein 取高）、Tap-to-Lookup 單字即時查詢卡片、學習進度持久化（localStorage）
 - [ ] 綠野仙蹤教材（The Wizard of Oz）：
-  - [x] 第 1 章《The Cyclone》純聽力試用版（`woo_trial_audio.html`，49 句英中字幕，本地音訊）
-  - [ ] 確認字幕同步品質與中文翻譯 → 正式加入 `learn.html` 的 PRESET_VIDEOS
-  - [ ] 其餘 7 集（Chapter 2-24）依相同流程製作
+- [x] 第 1 章《The Cyclone》純聽力試用版（`woo_trial_audio.html`，49 句英中字幕，本地音訊）
+- [x] 第 1 章影子跟讀版（`woo_shadow_ch1.html`，Read Me A Classic 朗讀 + Whisper 字幕 + Gutenberg 原文校正 + 中翻）
+- [ ] 確認影子跟讀版品質 → 正式加入 `learn.html` 的 PRESET_VIDEOS
+- [ ] 其餘 23 集（Chapter 2-24）依相同流程製作（YouTube playlist PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU）
+- ⛔ Deep Work Session 頻道（lwAG7bBg4n8）不適合做影子跟讀（節奏斷裂、文本解析感）
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
 
@@ -99,5 +101,5 @@
 
 - **日期**：2026-09-10
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：完成全部 APP 平板橫向版面最佳化（8 檔案，JS/CSS 語法驗證通過），已推送到 GitHub Pages 待實機驗證。
+- **內容**：綠野仙蹤第 1 章影子跟讀版（Read Me A Classic 朗讀 + Whisper 字幕 + Gutenberg 原文校正 + 中翻，commit f26bb8e）
 - **Git 狀態**：已提交並推送到 origin/main（a9a1889）
