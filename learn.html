@@ -1280,6 +1280,139 @@
     .fulltext-dialog { padding: 14px 14px; }
   }
 
+  /* 閱讀器（Reading Tab） */
+  .yt-embed-notice {
+    background: rgba(239,68,68,0.12);
+    border: 1px solid rgba(239,68,68,0.45);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fecaca;
+    line-height: 1.55;
+  }
+  .reading-section { max-width: 860px; margin: 0 auto; }
+  .reading-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .reading-toolbar select {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .reading-tool-btn {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff;
+    border-radius: 10px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .12s ease;
+  }
+  .reading-tool-btn:hover { background: rgba(255,255,255,0.24); }
+  .reading-tool-btn.reading-font-btn { width: 36px; padding: 7px 0; text-align: center; }
+  .reading-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 6px 0 2px;
+  }
+  .reading-meta {
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.65;
+  }
+  .reading-empty {
+    text-align: center;
+    padding: 40px 16px;
+    font-size: 14px;
+    opacity: 0.7;
+  }
+  .reading-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 2px 20px;
+    font-size: 16px;
+  }
+  .reading-body .rt-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .reading-body .rt-index {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #4f46e5;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reading-body .rt-content { flex: 1; min-width: 0; }
+  .reading-body .rt-time {
+    display: block;
+    font-size: 11px;
+    opacity: 0.55;
+    margin-bottom: 3px;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .reading-body .rt-orig {
+    font-size: 1em;
+    font-weight: 800;
+    color: #e2e8f0;
+    line-height: 1.75;
+    word-break: break-word;
+    letter-spacing: 0.01em;
+  }
+  .reading-body .rt-phonetic {
+    font-size: 13px;
+    color: #60a5fa;
+    opacity: 0.85;
+    margin-top: 4px;
+    word-break: break-word;
+  }
+  .reading-body .rt-zh {
+    font-size: 0.9em;
+    color: #94a3b8;
+    margin-top: 6px;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+  .reading-body.hide-zh .rt-zh { display: none; }
+  body.mode-kids .reading-body .rt-row { background: #fff; border-color: rgba(0,0,0,0.08); }
+  body.mode-kids .reading-body .rt-orig { color: #1e293b; }
+  body.mode-kids .reading-body .rt-phonetic { color: #2563eb; opacity: 0.9; }
+  body.mode-kids .reading-body .rt-zh { color: #64748b; }
+  body.mode-kids .reading-toolbar select { background: #fff; color: #1e293b; border-color: rgba(0,0,0,0.15); }
+  body.mode-kids .reading-tool-btn { background: rgba(0,0,0,0.06); color: #334155; border-color: rgba(0,0,0,0.15); }
+  @media (max-width: 520px) {
+    .reading-toolbar select { min-width: 100%; }
+    .reading-body .rt-row { flex-wrap: wrap; }
+  }
+
   .form-group {
     margin-bottom: 12px;
     text-align: left;
@@ -2822,6 +2955,9 @@
     <button class="tab-btn active" data-tab="shadowing">
       <span>🎙️</span> <span id="tabShadowingText">影子跟讀</span>
     </button>
+    <button class="tab-btn" data-tab="reading">
+      <span>📖</span> <span>閱讀器</span>
+    </button>
   </nav>
 </header>
 
@@ -2880,6 +3016,9 @@
         <button type="button" class="yt-btn" id="toggleSubEditorBtn" style="background: rgba(255,255,255,0.15); font-size: 12px; white-space: nowrap;">📝 匯入/編輯字幕</button>
         <button type="button" class="yt-btn" id="fullTextVideoBtn" style="background: rgba(255,255,255,0.15); font-size: 12px; white-space: nowrap;">📖 全文閱讀</button>
       </div>
+
+      <!-- YouTube Embed Error Notice (錯誤 153 / 150) -->
+      <div id="ytEmbedNotice" class="yt-embed-notice hidden" style="margin-bottom:12px;">⚠️ 影片載入失敗</div>
 
       <!-- Subtitles Editor Drawer -->
       <div id="subEditorPanel" class="glass-card hidden" style="margin-bottom: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.15);">
@@ -3161,7 +3300,6 @@
           <select id="shadowStorySelect">
             <option value="">— 請選擇故事 —</option>
           </select>
-          <button type="button" class="shadow-fulltext-btn" id="shadowFullTextBtn" title="以中英／中日雙語全文對照檢視整篇故事">📖 全文對照</button>
         </div>
         <div class="shadow-story-row-2">
           <div class="shadow-voice-wrap">
@@ -3330,6 +3468,27 @@
   </section>
 
 </main>
+
+<!-- ==================== TAB: 閱讀器（純文字） ==================== -->
+<section id="tab-reading" class="tab-content reading-section">
+  <div class="glass-card reading-toolbar">
+    <div class="reading-lang" style="display: flex; gap: 8px; align-items: center;">
+      <button type="button" class="pill active" data-rid="en" style="cursor:pointer;">🇬🇧 英語</button>
+      <button type="button" class="pill" data-rid="ja" style="cursor:pointer;">🇯🇵 日語</button>
+    </div>
+    <select id="readingStorySelect" title="選擇文章">
+      <option value="">— 請選擇文章 —</option>
+    </select>
+    <span style="flex:1;"></span>
+    <button type="button" class="reading-tool-btn" id="readingToggleZh" title="顯示／隱藏中文翻譯">🙈 隱藏中文</button>
+    <button type="button" class="reading-tool-btn reading-font-btn" id="readingFontMinus" title="縮小字級">A−</button>
+    <button type="button" class="reading-tool-btn reading-font-btn" id="readingFontPlus" title="放大字級">A+</button>
+  </div>
+  <div id="readingInfo">
+    <div class="reading-empty">📖 請先從上方選單挑選一篇影子跟讀文章，開啟純文字閱讀模式。</div>
+  </div>
+  <div class="reading-body" id="readingBody"></div>
+</section>
 
 <!-- Modal: 全文雙語對照檢視器 -->
 <div id="fullTextViewModal" class="modal-overlay hidden">
@@ -4187,6 +4346,10 @@ const UI = {
           b.classList.toggle('active', b.getAttribute('data-slang') === (AppState.lang || 'en'));
         });
       }
+    } else if (tabId === 'reading') {
+      if (typeof FULL_TEXT_READER !== 'undefined') {
+        FULL_TEXT_READER.onOpen();
+      }
     }
   },
 
@@ -4861,6 +5024,7 @@ const YTPlayerSys = (() => {
 
   function createPlayer(videoId) {
     currentVideoId = videoId;
+    hideYtEmbedNotice();
     if (player && typeof player.destroy === 'function') {
       try { player.destroy(); } catch(e){}
     }
@@ -4876,11 +5040,32 @@ const YTPlayerSys = (() => {
         },
         events: {
           'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
+          'onStateChange': onPlayerStateChange,
+          'onError': onPlayerError
         }
       });
     }
     playerBuilt = true;
+  }
+
+  function onPlayerError(event) {
+    const code = event && typeof event.data === 'number' ? event.data : '?';
+    showYtEmbedNotice('⚠️ 影片載入失敗' + (typeof code === 'number' ? '（錯誤 ' + code + '）' : '') + (code === 153 || code === 150
+      ? '：此影片不允許嵌入第三方播放器，無法在網頁內直接觀看。可改用「📖 全文閱讀」讀字幕，或在影子跟讀練習此片字幕。'
+      : '，請檢查網址是否有效。'));
+  }
+
+  function showYtEmbedNotice(msg) {
+    const el = document.getElementById('ytEmbedNotice');
+    if (el) {
+      el.classList.remove('hidden');
+      el.textContent = msg;
+    }
+  }
+
+  function hideYtEmbedNotice() {
+    const el = document.getElementById('ytEmbedNotice');
+    if (el) el.classList.add('hidden');
   }
 
   function onPlayerReady(event) {
@@ -6736,6 +6921,7 @@ const ShadowingStudio = (() => {
   let realAudioEl = null;
   let sharedMicStream = null;
   let shadowYtPlayer = null;
+  let youtubeEmbedBlocked = false;
   let ytPlayTimer = null;
 
   const $ = (id) => document.getElementById(id);
@@ -6806,6 +6992,53 @@ const ShadowingStudio = (() => {
   function getWooStories() {
     if (typeof WOO_CH1_STORY === 'undefined' || currentLang !== 'en') return [];
     return [WOO_CH1_STORY];
+  }
+
+  // 完整文章目錄（閱讀器／影子跟讀共用）：依 模式+語言 回傳所有可讀故事
+  function getAllStories(lang, mode) {
+    const key = (mode === 'adult') ? 'adult' : 'kids';
+    const out = [];
+    const base = SHADOWING_DATA[key] && SHADOWING_DATA[key][lang];
+    if (base && Array.isArray(base)) out.push(...base);
+    if (typeof PRESET_VIDEOS !== 'undefined') {
+      (PRESET_VIDEOS || []).forEach(p => {
+        if (!p || !p.category) return;
+        const pLang = String(p.category).includes('ja') ? 'ja' : 'en';
+        const modeOk = key === 'kids' ? p.category.startsWith('kids-') : p.category.startsWith('adult-');
+        if (modeOk && pLang === lang) {
+          out.push({
+            id: 'yt-' + p.videoId,
+            title: p.title,
+            titleZh: p.desc || '影音精聽室精選片段',
+            source: 'youtube',
+            videoId: p.videoId,
+            lang: pLang,
+            sentences: (p.subtitles || []).map(sub => ({
+              text: sub.orig,
+              phonetic: '',
+              zh: sub.zh || '',
+              start: sub.start,
+              end: sub.end
+            }))
+          });
+        }
+      });
+    }
+    if (lang === 'en' && typeof WOO_CH1_STORY !== 'undefined') out.push(WOO_CH1_STORY);
+    (AppState.getUserVideos ? AppState.getUserVideos() : [])
+      .filter(v => !v.lang || v.lang === lang)
+      .forEach(v => {
+        out.push({
+          id: 'yt-' + v.videoId,
+          title: v.title,
+          titleZh: v.titleZh || '我的 YouTube 影片',
+          source: v.source || 'youtube',
+          videoId: v.videoId,
+          lang: lang,
+          sentences: v.sentences || []
+        });
+      });
+    return out;
   }
 
   function getCurrentStory() {
@@ -7410,6 +7643,7 @@ const ShadowingStudio = (() => {
     }
 
     if (shadowYtPlayer && typeof shadowYtPlayer.loadVideoById === 'function') {
+      youtubeEmbedBlocked = false;
       try {
         shadowYtPlayer.loadVideoById(videoId);
         shadowYtPlayer.pauseVideo();
@@ -7434,9 +7668,16 @@ const ShadowingStudio = (() => {
               isPlaying = false;
               $('shadowWaveBox')?.classList.remove('playing');
             }
+          },
+          'onError': (e) => {
+            if (e && (e.data === 153 || e.data === 150)) {
+              youtubeEmbedBlocked = true;
+              setBanner('⚠️ 此影片不允許嵌入播放（錯誤 ' + e.data + '），句子將改以語音合成朗讀', 'rgba(239,68,68,0.12)', '#dc2626');
+            }
           }
         }
       });
+      youtubeEmbedBlocked = false;
     } catch (err) {
       console.warn('initShadowYtPlayer error:', err);
     }
@@ -7445,6 +7686,15 @@ const ShadowingStudio = (() => {
   function playYoutubeSentence(start, end, onEnd, retry) {
     retry = retry || 0;
     stopAllAudio();
+    if (youtubeEmbedBlocked) {
+      const yst = getCurrentStory();
+      const ys = yst && yst.sentences[currentSentenceIdx];
+      if (ys && ys.text) {
+        setBanner('🤖 此影片不允許嵌入（錯誤 153），這句改以語音合成朗讀', 'rgba(245,158,11,0.12)', '#d97706');
+        playFallbackCloudAudio(ys.text, currentLang, onEnd);
+      } else if (onEnd) onEnd();
+      return;
+    }
     if (!shadowYtPlayer || typeof shadowYtPlayer.seekTo !== 'function') {
       const story = getCurrentStory();
       if (story && story.videoId) {
@@ -7489,6 +7739,15 @@ const ShadowingStudio = (() => {
   function playEchoSentence(start, end, onEnd, retry) {
     retry = retry || 0;
     stopAllAudio();
+    if (youtubeEmbedBlocked) {
+      const est = getCurrentStory();
+      const es = est && est.sentences[currentSentenceIdx];
+      if (es && es.text) {
+        setBanner('🤖 此影片不允許嵌入（錯誤 153），這句改以語音合成朗讀', 'rgba(245,158,11,0.12)', '#d97706');
+        playFallbackCloudAudio(es.text, currentLang, onEnd);
+      } else if (onEnd) onEnd();
+      return;
+    }
     if (!shadowYtPlayer || typeof shadowYtPlayer.seekTo !== 'function') {
       const story = getCurrentStory();
       if (story && story.videoId) {
@@ -8516,6 +8775,7 @@ const ShadowingStudio = (() => {
         setShadowingLang(AppState.lang);
       }
     },
+    getAllStories,
     loadStory,
     stopAllAudio,
     openFullTextViewEx,
@@ -8526,11 +8786,157 @@ const ShadowingStudio = (() => {
 })();
 
 /* =========================================================================
+   閱讀器（Reading Tab）：純文字全文閱讀，不錄音、不跟讀、不播影片
+   ========================================================================= */
+const FULL_TEXT_READER = (() => {
+  const $ = (id) => document.getElementById(id);
+  const FONT_KEY = 'reader_font_size';
+  const STORY_KEY = 'reader_story_';
+  let lang = (typeof AppState !== 'undefined' && AppState.lang) || 'en';
+  let fontSize = 16;
+  let storyId = '';
+
+  function modeKey() {
+    return (typeof AppState !== 'undefined' && AppState.mode === 'adult') ? 'adult' : 'kids';
+  }
+
+  function allStories() {
+    if (typeof ShadowingStudio !== 'undefined' && typeof ShadowingStudio.getAllStories === 'function') {
+      return ShadowingStudio.getAllStories(lang, modeKey()) || [];
+    }
+    return [];
+  }
+
+  function fmt(t) {
+    if (typeof t !== 'number' || !isFinite(t)) return '--:--';
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function populate() {
+    const sel = $('readingStorySelect');
+    if (!sel) return;
+    const stories = allStories();
+    const keep = (storyId && stories.some(s => s.id === storyId)) ? storyId : '';
+    sel.innerHTML = '<option value="">— 請選擇文章 —</option>';
+    stories.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.title + (s.titleZh ? '（' + s.titleZh + '）' : '') + ' · ' + (s.sentences ? s.sentences.length : 0) + ' 句';
+      sel.appendChild(opt);
+    });
+    const saved = localStorage.getItem(STORY_KEY + lang);
+    let target = (saved && stories.some(s => s.id === saved)) ? saved : keep;
+    if (target) sel.value = target;
+    storyId = target;
+  }
+
+  function render() {
+    const body = $('readingBody');
+    const info = $('readingInfo');
+    if (!body) return;
+    body.innerHTML = '';
+    if (!storyId) {
+      if (info) info.innerHTML = '<div class="reading-empty">📖 請先從上方選單挑選一篇影子跟讀文章，開啟純文字閱讀模式。</div>';
+      return;
+    }
+    const story = allStories().find(s => s.id === storyId);
+    if (!story) {
+      if (info) info.innerHTML = '<div class="reading-empty">⚠️ 找不到這篇文章。</div>';
+      return;
+    }
+    localStorage.setItem(STORY_KEY + lang, storyId);
+    if (info) {
+      info.innerHTML = '<div class="reading-title">📖 ' + story.title + (story.titleZh ? '（' + story.titleZh + '）' : '') + '</div>' +
+        '<div class="reading-meta">純文字閱讀 · 共 ' + (story.sentences ? story.sentences.length : 0) + ' 句</div>';
+    }
+    (story.sentences || []).forEach((s, idx) => {
+      const row = document.createElement('div');
+      row.className = 'rt-row';
+      const orig = s.text || s.orig || '';
+      const timeHtml = (typeof s.start === 'number' && isFinite(s.start)) ? ('<span class="rt-time">⏱️ ' + fmt(s.start) + ' – ' + fmt(s.end) + '</span>') : '';
+      const zh = s.zh || '';
+      row.innerHTML =
+        '<div class="rt-index">' + (idx + 1) + '</div>' +
+        '<div class="rt-content">' +
+        timeHtml +
+        '<div class="rt-orig">' + orig + '</div>' +
+        (s.phonetic && s.phonetic !== orig ? '<div class="rt-phonetic">' + s.phonetic + '</div>' : '') +
+        (zh ? '<div class="rt-zh">' + zh + '</div>' : '') +
+        '</div>';
+      body.appendChild(row);
+    });
+  }
+
+  function setLang(l) {
+    lang = l;
+    document.querySelectorAll('.reading-lang .pill').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-rid') === l);
+    });
+    populate();
+    render();
+  }
+
+  function applyFont() {
+    const body = $('readingBody');
+    if (body) body.style.fontSize = fontSize + 'px';
+  }
+
+  function switchToStory(id) {
+    storyId = id || '';
+    if (storyId) localStorage.setItem(STORY_KEY + lang, storyId);
+    else localStorage.removeItem(STORY_KEY + lang);
+    populate();
+    render();
+  }
+
+  function init() {
+    const savedFont = parseInt(localStorage.getItem(FONT_KEY) || '16', 10);
+    if (!isNaN(savedFont)) fontSize = Math.min(24, Math.max(13, savedFont));
+    document.querySelectorAll('.reading-lang .pill').forEach(b => {
+      b.addEventListener('click', () => setLang(b.getAttribute('data-rid')));
+    });
+    $('readingStorySelect')?.addEventListener('change', (e) => switchToStory(e.target.value));
+    $('readingToggleZh')?.addEventListener('click', () => {
+      const body = $('readingBody');
+      const btn = $('readingToggleZh');
+      if (!body) return;
+      const hidden = body.classList.toggle('hide-zh');
+      if (btn) btn.textContent = hidden ? '👁️ 顯示中文' : '🙈 隱藏中文';
+    });
+    $('readingFontPlus')?.addEventListener('click', () => {
+      fontSize = Math.min(24, fontSize + 2);
+      localStorage.setItem(FONT_KEY, String(fontSize));
+      applyFont();
+    });
+    $('readingFontMinus')?.addEventListener('click', () => {
+      fontSize = Math.max(13, fontSize - 2);
+      localStorage.setItem(FONT_KEY, String(fontSize));
+      applyFont();
+    });
+    setLang(lang);
+  }
+
+  function onOpen() {
+    document.querySelectorAll('.reading-lang .pill').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-rid') === lang);
+    });
+    populate();
+    render();
+    applyFont();
+  }
+
+  return { init, onOpen, switchToStory, setLang };
+})();
+
+/* =========================================================================
    啟動與全域事件監聽
    ========================================================================= */
 document.addEventListener('DOMContentLoaded', () => {
   UI.init();
   ShadowingStudio.init();
+  FULL_TEXT_READER.init();
 });
 
 // PWA Service Worker 註冊與自動更新偵測（v33）

@@ -109,18 +109,29 @@
   - 🔗 精聽室精選自動同步：`getPresetStories()` 把 PRESET_VIDEOS 依 mode+lang 自動列入影子跟讀故事選單（手動「送」按鈕只給自訂影片）。
   - 🌪️ 綠野仙蹤 Ch.1 收編故事庫：`WOO_CH1_STORY`（source `localaudio`）、`playLocalAudioSegment()` 逐句切播 `woo_shadow_ch1.webm`。
   - 🔄 PWA 快取升級至 `kids-games-v37`（含 `woo_shadow_ch1.webm`）。
-- [x] **驗收 Bug 修復＋全文閱讀器（本次，未 commit）**：
+- [x] **驗收 Bug 修復＋全文閱讀器（commit f8ac473）**：
   - 🔴 全文對照無法開啟：`openFullTextView()` 誤用 `$('#fullTextViewModal')`（`$`=getElementById）→ null 拋錯；改 `$('fullTextViewModal')`。
   - 🔴 WOO 連播斷裂：`stopLocalAudioSegment()` 設 `src=''` 觸發舊元素非同步 `error` → 舊 `onerror` 回退把新元素清掉（無限 rebuild、第二句之後全啞）。改為解綁 handler＋`removeAttribute('src')+load()`；localaudio 的 `onerror` 不觸發 TTS 回退。
   - 🔴 語速無效：`audio.playbackRate=currentSpeed` 寫在 `load()` 之前，Chrome 的 `load()` 會重設回 1.0；移到 `begin()` 播放前再設，並對播放中音訊即時套用。
   - 🟢 `common.js:156` `document.body.appendChild(sp)` 加 null 防護（`<head>` 載入時 sparkles 全消失＋console error）。
   - 📖 全文對照升級「閱讀器」：`openFullTextViewEx(title, rows, onJump)` 共用（故事＋影片字幕）、整排可點跳句、字級放大 hover 高亮；精聽室新增「📖 全文閱讀」按鈕。
   - ✅ 無頭 Chrome e2e 10/10（`C:\Users\PXP\AppData\Local\Temp\opencode\end_to_end.js`；YT.Player 會把 `#player` 換成同 id iframe）。
+- [x] **閱讀器分頁＋YT 錯誤 153 降級（v38，commit 待 push）**：
+  - 🗑️ 移除影子跟讀列「📖 全文對照」按鈕（改由獨立閱讀分頁承擔全文閱讀）。
+  - 📖 新增「📖 閱讀器」導航分頁（`FULL_TEXT_READER`）：純文字全文閱讀互動，不錄音／不跟讀／不播影片。
+    - 語系切換（🇬🇧／🇯🇵）、文章下拉（`ShadowingStudio.getAllStories(lang, mode)` 共用目錄：內建影子故事＋影音精聽室（YT）自動同步＋綠野仙蹤＋用戶影片）。
+    - 逐句卡片（編號＋時間戳＋原文＋音標＋中文）、🙈 隱藏中文、A+／A− 字級（13–24px、localStorage 持久化、上次文章記憶）。
+  - ⚠️ YT 錯誤 153／150（影片禁止嵌入）處理：
+    - 精聽室：`onError` → `ytEmbedNotice` 醒目提示（附使用建議），切換影片時自動清除。
+    - 影子跟讀：`youtubeEmbedBlocked` 旗標＋onError 偵測；句子播放遇 153 自動改由雲端 TTS（Google/有道）朗讀該句，不再死等無聲播放、不再無限重試。
+    - 🔍 實測：PRESET_VIDEOS 全部 5 支皆為 embed-restricted（153，非 code bug）；沙箱無法以 yt-dlp 下載（連測試片都失敗，IP 限制）→ 原版音訊抽取需在使用者自己的網路環境完成，之後於 preset 加上 `audioFile` 走 localaudio 即可。
+  - 🔄 PWA 快取升級至 `kids-games-v38`。
+  - ✅ e2e 10/10＋新功能探針 8/8（`C:\Users\PXP\AppData\Local\Temp\opencode\new_tab_probe.js`）。
 
 ## 🕐 最後更新
 
 - **日期**：2026-09-11
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：YT 精聽室播放修復＋全文對照檢視器＋精聽室精選自動同步＋綠野仙蹤 Ch.1 收編 learn.html＋驗收修復（全文彈窗/WOO 連播/語速/停止）＋全文升級閱讀器＋精聽室「📖 全文閱讀」（v37＋，未 commit）
-- **Git 狀態**：⏳ 尚未 commit/push
+- **內容**：移除影子跟讀全文對照按鈕、新增「閱讀器」分頁（純文字全文、語系/隱藏中文/字級/文章記憶）、YT 錯誤 153 處理（精聽室提示＋影子跟讀雲端 TTS 降級）、sw.js v38＋e2e 10/10＋新功能探針 8/8
+- **Git 狀態**：✅ commit 完成，待 push
 

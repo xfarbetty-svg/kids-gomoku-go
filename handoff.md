@@ -31,13 +31,19 @@
    - 修正 `woo_shadow_ch1.html` 兩處字典型 typo（`start:375.5,en:378.88`、`start:419,en:424` → `end:`）。
    - `sw.js` 快取版本升為 `kids-games-v37`，加入 `woo_shadow_ch1.webm` 與 `woo_shadow_ch1.html`。
 
-9. **網頁版＋無頭瀏覽器驗收＆Bug 修復（本次）**：
+9. **網頁版＋無頭瀏覽器驗收＆Bug 修復＋閱讀器分頁＋YT 153 降級（本次）**：
    - 🔴 修 `openFullTextView()` 的 `$('#fullTextViewModal')` → `$('fullTextViewModal')`（`$`=getElementById，null.classList 曾讓「全文對照」完全無法開啟）。
    - 🔴 修 `playLocalAudioSegment()` 播放斷裂：`stopLocalAudioSegment()` 對舊元素設 `src=''` 會觸發非同步 `error`（Empty src attribute）→ 舊 `onerror` 再呼叫 `finish()`＋`speakSentence()` 回退，把新元素清掉並無限 rebuild。改為「先解綁事件 handler → pause → removeAttribute('src')+load()」；localaudio 的 `onerror` 不再觸發 TTS 回退（避免無限遞迴）。
    - 🔴 修語速無效：`audio.playbackRate = currentSpeed` 在 `audio.load()` 之前設定會被 Chrome 重設回 1.0。移到 `begin()`（load 之後、play 之前）再設一次；speed-btn 對播放中的 `localSegmentAudio`／`realAudioEl` 即時套用。
    - 🟢 `common.js:156` sparkle `document.body.appendChild` 在 `<head>` 載入時 body 尚未解析 → 加 null 防護（原本 sparkles 全消失＋console error）。
-   - 📖 **全文對照升級為「閱讀器」**：`openFullTextViewEx(title, rows, onJump)` 可重用（故事與影片字幕共用）＋整排可點跳句（hover 高亮、字級放大）；精聽室載入列新增「📖 全文閱讀」按鈕，點擊開目前影片雙語閱讀、跳句自動送出並切影子跟讀。
-   - ✅ 無頭 Chrome e2e 10/10 通過：選單/81 句/全文彈窗/sentence0/1/重播/語速0.7與1.0/停止/YT iframe 建立。
+   - 📖 全文對照升級為「閱讀器」：`openFullTextViewEx(title, rows, onJump)` 可重用（故事與影片字幕共用）＋整排可點跳句；精聽室載入列新增「📖 全文閱讀」按鈕。
+   - 🗑️ 移除影子跟讀列「📖 全文對照」按鈕；新增**獨立「📖 閱讀器」導航分頁**（`FULL_TEXT_READER`）：純文字全文互動，不錄音／不跟讀／不播影片；語系切換（🇬🇧/🇯🇵）、文章下拉（新公開 API `ShadowingStudio.getAllStories(lang, mode)` 共用目錄）、逐句卡片（編號＋時間戳＋原文＋音標＋中文）、🙈 隱藏中文、A+/A− 字級（13–24px、localStorage 持久化、文章記憶）。
+   - ⚠️ **YT 錯誤 153/150 處理**：PRESET_VIDEOS 全部 5 支皆 embed-restricted（探針實測確認為影片端限制，非 code bug）。
+     - 精聽室：`createPlayer` 掛 `onError` → `#ytEmbedNotice` 醒目提示（附使用建議），切換影片自動清除。
+     - 影子跟讀：`youtubeEmbedBlocked` 旗標＋onError 偵測；句子播放遇 153 自動改雲端 TTS（Google/有道）朗讀該句，不再死等無聲播放。
+     - 原版音訊抽取（yt-dlp）需在**使用者自己的網路**跑（沙箱 IP 限制，測試片 BaW_jenozKc 也失敗）；之後 preset 加 `audioFile` 走 localaudio 即可。
+   - 🔄 `sw.js` 快取升為 `kids-games-v38`。
+   - ✅ e2e 10/10＋新功能探針 8/8（`C:\Users\PXP\AppData\Local\Temp\opencode\new_tab_probe.js`）。
    - ⚠️ 已知測試工具陷阱：YT.Player 會把 `#player` div「替換成」同 id 的 iframe（內部不會再巢狀 iframe）；puppeteer 新版無 `page.waitForTimeout`，須自製 setTimeout promise；語速測試時 `load()` 會重設 rate。e2e 腳本在 `C:\Users\PXP\AppData\Local\Temp\opencode\`。
 
 ## 🚦 目前狀態
@@ -49,7 +55,7 @@
   - `toeic.html`：星光單字星球（兒童美語 684 + 多益 11,238 字）
   - `sticky-gomoku-new.html`：黏黏圍棋（Gooey 果凍、4 段 AI、AI 教練）
   - `woo_shadow_ch1.html`：綠野仙蹤 Ch.1 影子跟讀（獨立檔案）
-- 快取版本：`sw.js` = `kids-games-v37`
+- 快取版本：`sw.js` = `kids-games-v38`
 - GitHub Pages：https://xfarbetty-svg.github.io/kids-gomoku-go/
 - 依賴工具鏈現況（DESKTOP-6ELKIRH）：
   - `yt-dlp`：2026.08.19
@@ -83,5 +89,5 @@
 
 - 時間：2026-09-11
 - 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：網頁版＋無頭瀏覽器驗收修復（全文彈窗、WOO 連播、語速、stop、pepper YT 確認）＋全文對照升級閱讀器＋精聽室「📖 全文閱讀」入口（未 commit）
-- Git push：⏳ 尚未 commit/push（本次修改未提交）
+- 內容：驗收修復（全文彈窗、WOO 連播、語速、stop）＋全文閱讀器＋移除影子全文按鈕＋「📖 閱讀器」分頁（純文字全文、語系/隱藏中文/字級/文章記憶）＋YT 153/150 降級（精聽室提示＋影子跟讀雲端 TTS）＋sw.js v38＋e2e 10/10＋新功能探針 8/8
+- Git push：✅ commit 完成，待 push
