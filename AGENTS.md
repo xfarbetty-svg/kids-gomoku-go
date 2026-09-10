@@ -97,9 +97,17 @@
   - 🎵 節奏/記憶/拼圖/五子棋：舞台/牌面加寬至 640~720px，五子棋棋盤 1.5x。
   - ♿ 全部移除 `user-scalable=no`（WCAG 縮放合規）。
 
+- [x] **升級影子跟讀第 5 步驟「回音法」（Echo Method）與 BBT 素材**（commit 888ef19）：
+  - 🔊 5 步驟 Tab 切換：新增 `[🔊 回音]` 按鈕，CSS `.step-tabs` 響應式 `repeat(5, 1fr)` 排版。
+  - 🙈 盲聽複述 UI 狀態：`applyStepUI()` Step 5 隱藏原文、翻譯、提示與徽章，保持錄音按鈕常駐。
+  - ⏱️ `playEchoSentence()` 延遲重播機制：播放一句原音 → 暫停 5 秒倒數「換你說！」→ 自動重播原音對照 → 銜接下一句。
+  - 🔄 `speakSentence()` 智慧路由：YouTube 來源在 Step 5 自動導向回音法流程。
+  - 🔬 BBT 經典素材：新增《The Big Bang Theory》Sheldon 考駕照原聲片段與 13 句中英對照字幕。
+
 ## 🕐 最後更新
 
-- **日期**：2026-09-10
+- **日期**：2026-09-11
 - **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：綠野仙蹤第 1 章影子跟讀版（Read Me A Classic 朗讀 + Whisper 字幕 + Gutenberg 原文校正 + 中翻，commit f26bb8e）
-- **Git 狀態**：已提交並推送到 origin/main（a9a1889）
+- **內容**：影子跟讀第 5 步驟「回音法」（Echo Method）+ BBT 經典考駕照片段整合（commit 888ef19）
+- **Git 狀態**：已提交並推送到 origin/main（888ef19）
+

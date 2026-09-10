@@ -4,36 +4,43 @@
 
 ## ⏯️ 目前做到哪
 
-1. **綠野仙蹤影子跟讀版第 1 章完成**（commit f26bb8e，已 push）：
-   - `woo_shadow_ch1.html`：Read Me A Classic 朗讀版影子跟讀（49 句英中對照）
-   - `woo_shadow_ch1.webm`：第 1 章音訊（6MB，yt-dlp 下載）
-   - 流程：yt-dlp 下載 → Whisper verbose_json 切字幕 → Gutenberg 原文校正 → 中翻
-   - 素材來源：YouTube playlist `PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`（Read Me A Classic 頻道，24 章）
-   - ⛔ 已確認 Deep Work Session 頻道（lwAG7bBg4n8）不適合做影子跟讀（節奏斷裂、文本解析感）
-   - 狀態：獨立 HTML，尚未整合進 `learn.html`
-2. **純聽力試用版**（commit 5ac4484）：
-   - `woo_trial_audio.html`：49 句英中字幕，本地音訊，字幕時序不夠精準（已知問題）
-3. **平板橫向版面最佳化**（commit a9a1889，已 push）。
+1. **影子跟讀第 5 步驟「回音法」（Echo Method）全套實作完成**（commit a736e19 / 888ef19，已 push）：
+   - `learn.html` 新增第 5 個步驟 Tab `[🔊 回音]`，CSS `.step-tabs` 改為 5 欄等寬網格。
+   - `applyStepUI()` 實作 Step 5 盲聽狀態（隱藏 ruby/romaji/zh/hint/badge，常駐錄音按鈕）。
+   - `playEchoSentence()` 實作原音播放 → 5 秒複述倒數「換你說！」→ 原音對照重播 → 銜接下一句。
+   - `speakSentence()` 智慧分流，YouTube 來源在 Step 5 自動導向回音法。
+   - `zhHidden` 與音訊定時器清理邏輯同步整合。
+2. **BBT《The Big Bang Theory》素材整合**（commit 888ef19，已 push）：
+   - `PRESET_VIDEOS` 納入 Sheldon 考駕照經典對白（13 句中英對照字幕）。
+   - 支援「📤 送到影子跟讀」與 Step 5 回音法練習。
+3. **綠野仙蹤影子跟讀版第 1 章完成**（commit f26bb8e）：
+   - `woo_shadow_ch1.html`（獨立檔案，49 句英中對照，Read Me A Classic 朗讀版）。
+4. **平板橫向版面最佳化**（commit a9a1889）。
 
 ## 🚦 目前狀態
 
-- 專案：純前端 HTML/CSS/JS，無框架、無 build 步驟
+- 專案：純前端 HTML/CSS/JS，無框架、無 build 步驟。
 - 主要應用：
   - `index.html`：四關魔王討伐卡片 + 影子跟讀入口 + 星光單字星球入口
-  - `learn.html`：影子跟讀 V2、影音精聽室、情境對話、跟讀生字庫、語境記憶閃卡
+  - `learn.html`：影子跟讀 V2（含 Step 5 回音法）、影音精聽室、情境對話、跟讀生字庫、語境記憶閃卡
   - `toeic.html`：星光單字星球（兒童美語 684 + 多益 11,238 字）
   - `sticky-gomoku-new.html`：黏黏圍棋（Gooey 果凍、4 段 AI、AI 教練）
   - `woo_shadow_ch1.html`：綠野仙蹤 Ch.1 影子跟讀（獨立檔案）
-- 快取版本：`sw.js` = `kids-games-v36`（上線優先，改 HTML 不需推版）
-- 審計計畫：`PLAN-MOBILE-FIX.md`（87 問題，Sprint 1 ✅，Sprint 2 進行中）
+- 快取版本：`sw.js` = `kids-games-v36`
 - GitHub Pages：https://xfarbetty-svg.github.io/kids-gomoku-go/
+- 依賴工具鏈現況（DESKTOP-6ELKIRH）：
+  - `yt-dlp`：2026.08.19
+  - `ffmpeg`：9.0-full_build（已加入系統 PATH）
+  - `whisper`：openai-whisper 20250625 已安裝於 Python 3.10
 
 ## ➡️ 尚未做的工作清單（待辦路線圖）
 
 1. **綠野仙蹤後續**：
    - 確認 Ch.1 影子跟讀版品質 → 正式加入 `learn.html` 的 PRESET_VIDEOS
    - 製作 Ch.2~24（YouTube playlist 已確認，流程已跑通）
-2. **🔴 平板實機驗證**：iPad／Android 平板轉橫向，逐頁確認雙欄與放大效果。
+2. **平板與手機實機體驗走查**：
+   - 實機確認 Step 5「回音法」在 iPhone / Android 上之觸控與 5 個 Tab 寬度體驗。
+   - 平板橫向雙欄體驗驗收。
 3. **Sprint 2 手機體驗剩餘項**（見 `PLAN-MOBILE-FIX.md`）。
 4. **Sprint 3-5**（音訊 PWA、效能資料、收尾測試）。
 5. **單字星球優化**：PDF 題庫擴充、閃卡左右翻動效、主題 Pills 修復。
@@ -42,19 +49,14 @@
 
 ## ⚠️ 注意事項
 
-- 綠野仙蹤素材來源：`youtube.com/playlist?list=PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`（Read Me A Classic，24 章，每集 6~21 分鐘）
-- 無 auto-caption，字幕全靠 Whisper 切 + Gutenberg 原文校正。
-- **免費有聲書資源研究**（2026-09-10）：
-  - 推薦 **Alice in Wonderland**（公版、有文本、章節清晰適合切片）
-  - 美式口音版本：**Eric Leach（Version 4）** → `librivox.app/book/4240`
-  - 免費有聲書平台：LibriVox、Internet Archive、Open Culture、YouTube
-  - Kobo 有聲書有 DRM 限制，建議改用 Audible + Libation 解 DRM，或直接用 LibriVox 公版書
+- 本機目前未配置 Obsidian MCP 工具，L3 筆記暫未自動同步，待回到有 Obsidian 工具之環境時補齊。
+- 綠野仙蹤素材來源：`youtube.com/playlist?list=PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`（Read Me A Classic，24 章）。
 - 平板斷點慣例：`@media (min-width: 900~960px) and (orientation: landscape)`。
-- 修改 `learn.html` 時保留 ShadowingStudio 生命週期 API。
-- `toeic.html` 是獨立 APP，不引用 common.js。
+- 修改 `learn.html` 時務必保留 ShadowingStudio 生命週期與各 Step UI 獨立分流機制。
 
 ## 🕐 最後更新
-- 時間：2026-09-10
+
+- 時間：2026-09-11
 - 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：綠野仙蹤第 1 章影子跟讀版（Read Me A Classic 朗讀 + Whisper 字幕 + 中翻）
-- Git push：✅ 已推送到 origin/main（f26bb8e）
+- 內容：影子跟讀 Step 5 回音法（Echo Method）+ BBT 經典考駕照片段整合
+- Git push：✅ 已推送到 origin/main（888ef19）
