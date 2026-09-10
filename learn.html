@@ -1839,10 +1839,10 @@
     box-shadow: 0 3px 10px rgba(255,95,162,0.35);
   }
 
-  /* Step Indicator Tabs: 4 格等寬網格 */
+  /* Step Indicator Tabs: 5 格等寬網格 */
   .step-tabs {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 6px;
     padding: 0 0 8px;
     width: 100%;
@@ -3024,12 +3024,13 @@
         </div>
       </div>
 
-      <!-- 2. Step Indicator Tabs: 4 格等寬網格 -->
+      <!-- 2. Step Indicator Tabs: 5 格等寬網格 -->
       <div class="step-tabs" id="shadowStepTabs">
         <button class="step-tab-btn active" data-step="1">👂 純聽</button>
         <button class="step-tab-btn" data-step="2">📖 精讀</button>
         <button class="step-tab-btn" data-step="3">📑 視讀</button>
         <button class="step-tab-btn" data-step="4">🎙️ 脫稿</button>
+        <button class="step-tab-btn" data-step="5">🔊 回音</button>
       </div>
 
       <!-- 3. Training Stage Card -->
@@ -3674,6 +3675,29 @@ const PRESET_VIDEOS = [
       { start: 11, end: 17, orig: "ありがとうございます！歩いてどのくらいかかりますか？", zh: "太感謝了！請問走路大概需要多久呢？" },
       { start: 17, end: 23, orig: "三分ほどです。季節限定の抹茶ラテがおすすめですよ。", zh: "大約三分鐘。我很推薦他們季節限定的抹茶拿鐵喔。" },
       { start: 23, end: 30, orig: "とても楽しみです！教えていただきありがとうございました。", zh: "好期待呀！非常謝謝您的熱心指引。" }
+    ]
+  },
+  {
+    id: 'bbt-echo',
+    title: '🔬 The Big Bang Theory',
+    category: 'adult-en',
+    videoId: 'StcfvDFM7LQ',
+    desc: '生活美語回音法練習（BBT 經典片段）',
+    subtitles: [
+      { start: 63, end: 68, orig: "Many people have heard this encouragement: just open your mouth.", zh: "許多人都聽過這種鼓勵：只要大膽開口說就好。" },
+      { start: 68, end: 72, orig: "It does not matter if pronunciation is inaccurate, as long as people understand.", zh: "發音不標準也沒關係，只要外國人聽得懂就好。" },
+      { start: 72, end: 76, orig: "This sentence can really give students a lot of courage.", zh: "這句話確實給了許多英語學習者莫大的勇氣。" },
+      { start: 76, end: 81, orig: "However, Professor Karen Chung at Taiwan University challenged this view.", zh: "然而台大教授史嘉琳卻對這個觀點提出了質疑。" },
+      { start: 81, end: 87, orig: "Foreigners will try their best to guess, but they will be very tired.", zh: "外國人確實會盡力去猜，但他們聽了會非常疲憊。" },
+      { start: 87, end: 92, orig: "When you speak English, do you really want the other party to suffer?", zh: "當你說英語時，真的希望對方聽得這麼辛苦嗎？" },
+      { start: 92, end: 98, orig: "Language creates connection; poor pronunciation turns communication into torture.", zh: "語言是為了順暢交流，糟糕的發音卻會讓對話變成折磨。" },
+      { start: 98, end: 104, orig: "Many students start practicing shadowing crazily every single day.", zh: "許多學生每天瘋狂地練習影子跟讀法。" },
+      { start: 104, end: 110, orig: "Their tongues move faster, but their voice still carries a heavy accent.", zh: "舌頭肌肉確實練熟了，但發出來的聲音依然口音很重。" },
+      { start: 110, end: 116, orig: "Why do we imitate native speakers every day, yet sound like a lifeless machine?", zh: "為什麼我們每天都在模仿外國人，發音卻還是像沒有感情的機器？" },
+      { start: 116, end: 123, orig: "To find the answer, I searched through language learning forums on Reddit.", zh: "為了尋找答案，我翻遍了 Reddit 上的語言學習討論版。" },
+      { start: 123, end: 130, orig: "Even B2 and C1 level learners still find their accents difficult to correct.", zh: "許多達到 B2 或 C1 高階水平的學習者，口音依舊難以改善。" },
+      { start: 130, end: 137, orig: "Practicing with incorrect habits only reinforces inaccurate muscle memory.", zh: "如果帶著錯誤的發音習慣高強度練習，只會固化錯誤的肌肉記憶。" },
+      { start: 137, end: 145, orig: "This is why the Echo Method was created: to achieve true accuracy first.", zh: "這就是回音法的核心：先透過大腦回音建立精準的聲音基礎。" }
     ]
   }
 ];
@@ -6800,6 +6824,15 @@ const ShadowingStudio = (() => {
       if (eyeLabel) eyeLabel.textContent = zhHidden ? '提示文字' : '隱藏文字';
       if (eyeIcon) eyeIcon.textContent = zhHidden ? '👁️' : '🙈';
       setBanner('🎙️ 放開文字，像影子一樣跟隨！', '#5f1e3a', '#fcc2d7');
+    } else if (currentStep === 5) {
+      // 回音法：文字全隱藏，播放→暫停複述→再播一次
+      [ruby, romaji, zh, hint, badge].forEach(el => { if (el) el.style.display = 'none'; });
+      if (eyeLabel) eyeLabel.textContent = '回音練習';
+      if (eyeIcon) eyeIcon.textContent = '🔊';
+      if (recordBtn) recordBtn.style.display = '';        // 錄音按鈕常駐
+      if (abDock) abDock.style.display = 'none';
+      if (dictateBtn) dictateBtn.style.display = 'none';
+      setBanner('🔊 聽一句 → 暫停複述 → 再聽一次', '#1a1a2e', '#e0e0e0');
     }
   }
 
@@ -6938,6 +6971,86 @@ const ShadowingStudio = (() => {
         isPlaying = false;
         $('shadowWaveBox')?.classList.remove('playing');
         if (onEnd) onEnd();
+      }
+    }, 100);
+  }
+
+  let echoTimer1 = null;
+  let echoTimer2 = null;
+  let echoPauseTimer = null;
+
+  function playEchoSentence(start, end, onEnd, retry) {
+    retry = retry || 0;
+    stopAllAudio();
+    if (!shadowYtPlayer || typeof shadowYtPlayer.seekTo !== 'function') {
+      const story = getCurrentStory();
+      if (story && story.videoId) {
+        initShadowYtPlayer(story.videoId);
+      }
+      if (retry >= 5) {
+        showToast('⚠️ YouTube 播放器載入失敗，請檢查網路後重試', 'error');
+        return;
+      }
+      setTimeout(() => playEchoSentence(start, end, onEnd, retry + 1), 400);
+      return;
+    }
+
+    const PAUSE_MS = 5000; // 暫停 5 秒讓使用者複述
+    
+    // 第一次播放原音
+    setBanner('🔊 第一遍：請仔細聆聽...', '#1a1a2e', '#e0e0e0');
+    try {
+      shadowYtPlayer.seekTo(start, true);
+      shadowYtPlayer.playVideo();
+    } catch (e) {
+      console.warn(e);
+    }
+    isPlaying = true;
+    $('shadowWaveBox')?.classList.add('playing');
+
+    if (echoTimer1) clearInterval(echoTimer1);
+    if (echoTimer2) clearInterval(echoTimer2);
+    if (echoPauseTimer) clearTimeout(echoPauseTimer);
+
+    echoTimer1 = setInterval(() => {
+      if (!shadowYtPlayer || typeof shadowYtPlayer.getCurrentTime !== 'function') return;
+      const t = shadowYtPlayer.getCurrentTime();
+      if (t >= end) {
+        clearInterval(echoTimer1);
+        echoTimer1 = null;
+        try { shadowYtPlayer.pauseVideo(); } catch(e){}
+        isPlaying = false;
+        $('shadowWaveBox')?.classList.remove('playing');
+        
+        // 暫停 5 秒，顯示提示
+        setBanner('🎤 換你說！聽完後複述這句', '#2d1a4e', '#e0c3fc');
+        
+        echoPauseTimer = setTimeout(() => {
+          // 第二次播放原音（讓使用者對照）
+          setBanner('🔊 再聽一次原音...', '#1a1a2e', '#e0e0e0');
+          try {
+            shadowYtPlayer.seekTo(start, true);
+            shadowYtPlayer.playVideo();
+          } catch (e) {
+            console.warn(e);
+          }
+          isPlaying = true;
+          $('shadowWaveBox')?.classList.add('playing');
+          
+          echoTimer2 = setInterval(() => {
+            if (!shadowYtPlayer || typeof shadowYtPlayer.getCurrentTime !== 'function') return;
+            const t2 = shadowYtPlayer.getCurrentTime();
+            if (t2 >= end) {
+              clearInterval(echoTimer2);
+              echoTimer2 = null;
+              try { shadowYtPlayer.pauseVideo(); } catch(e){}
+              isPlaying = false;
+              $('shadowWaveBox')?.classList.remove('playing');
+              setBanner('🔊 聽一句 → 暫停複述 → 再聽一次', '#1a1a2e', '#e0e0e0');
+              if (onEnd) onEnd();
+            }
+          }, 100);
+        }, PAUSE_MS);
       }
     }, 100);
   }
@@ -7088,8 +7201,13 @@ const ShadowingStudio = (() => {
     const story = getCurrentStory();
     if (story && story.source === 'youtube') {
       const s = story.sentences[currentSentenceIdx];
-      if (s && typeof s.start === 'number' && typeof s.end === 'number') {
-        playYoutubeSentence(s.start, s.end, onEnd);
+      const sentence = s;
+      if (sentence && typeof sentence.start === 'number' && typeof sentence.end === 'number') {
+        if (currentStep === 5) {
+          playEchoSentence(sentence.start, sentence.end, onEnd);
+        } else {
+          playYoutubeSentence(sentence.start, sentence.end, onEnd);
+        }
         return;
       }
     }
@@ -7641,6 +7759,18 @@ const ShadowingStudio = (() => {
       clearInterval(ytPlayTimer);
       ytPlayTimer = null;
     }
+    if (echoTimer1) {
+      clearInterval(echoTimer1);
+      echoTimer1 = null;
+    }
+    if (echoTimer2) {
+      clearInterval(echoTimer2);
+      echoTimer2 = null;
+    }
+    if (echoPauseTimer) {
+      clearTimeout(echoPauseTimer);
+      echoPauseTimer = null;
+    }
     if (shadowYtPlayer && typeof shadowYtPlayer.pauseVideo === 'function') {
       try { shadowYtPlayer.pauseVideo(); } catch(e){}
     }
@@ -7761,14 +7891,14 @@ const ShadowingStudio = (() => {
       });
     });
 
-    // 4 步驟 Tab 切換
+    // 5 步驟 Tab 切換
     document.querySelectorAll('.step-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.step-tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentStep = parseInt(btn.getAttribute('data-step')) || 1;
         peekText = false;
-        zhHidden = (currentStep === 1 || currentStep === 3 || currentStep === 4);
+        zhHidden = (currentStep === 1 || currentStep === 3 || currentStep === 4 || currentStep === 5);
         renderFocusSentence();
       });
     });
