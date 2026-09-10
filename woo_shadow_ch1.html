@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📖 綠野仙蹤 Ch.1 — 影子跟讀版</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;background:#0f0f23;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column}
+.header{background:linear-gradient(135deg,#1a1a3e,#2d1b69);padding:14px 16px;text-align:center;border-bottom:2px solid rgba(139,92,246,0.3)}
+.header h1{font-size:clamp(14px,2.5vw,18px);color:#c4b5fd;margin-bottom:2px}
+.header .sub{font-size:12px;color:#8b8baa}
+.audio-bar{background:#16162e;padding:12px 16px;border-bottom:1px solid rgba(139,92,246,0.2);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.audio-bar audio{flex:1;min-width:200px;height:36px;border-radius:8px}
+.audio-bar .time{font-size:12px;color:#8b8baa;font-family:monospace;white-space:nowrap}
+.main{display:flex;flex:1;overflow:hidden}
+@media(max-width:700px){.main{flex-direction:column}}
+.sidebar{flex:1;display:flex;flex-direction:column;overflow:hidden;max-width:600px;margin:0 auto;width:100%}
+.sidebar-header{padding:10px 14px;background:#1a1a3e;border-bottom:1px solid rgba(139,92,246,0.2);font-size:13px;font-weight:700;color:#c4b5fd;display:flex;justify-content:space-between;align-items:center}
+.sidebar-header .count{font-size:11px;color:#8b8baa;font-weight:400}
+.sub-list{flex:1;overflow-y:auto;padding:6px 0;scroll-behavior:smooth}
+.sub-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.05);transition:all 0.2s}
+.sub-item:hover{background:rgba(139,92,246,0.1)}
+.sub-item.active{background:rgba(139,92,246,0.2);border-left:3px solid #8b5cf6}
+.sub-item .time{font-size:11px;color:#8b8baa;font-family:monospace}
+.sub-item .en{font-size:14px;line-height:1.6;margin:4px 0;color:#e8e8f0}
+.sub-item .zh{font-size:13px;line-height:1.6;color:#a0a0c0}
+.controls{padding:8px 14px;background:#1a1a3e;border-top:1px solid rgba(139,92,246,0.2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.controls button{padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.2s}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff}
+.btn-primary:hover{transform:scale(1.03)}
+.btn-outline{background:transparent;border:1px solid rgba(139,92,246,0.4);color:#c4b5fd}
+.btn-outline:hover{background:rgba(139,92,246,0.15)}
+.progress-bar{width:100%;height:3px;background:rgba(255,255,255,0.1);border-radius:2}
+.progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:2;width:0%;transition:width 0.3s}
+.blind-hidden{visibility:hidden}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>📖 The Wizard of Oz — Ch.1 The Cyclone</h1>
+  <div class="sub">Read Me A Classic 朗讀版 · 影子跟讀（49 句）</div>
+</div>
+<div class="audio-bar">
+  <audio id="audio" preload="auto">
+    <source src="woo_shadow_ch1.webm" type="audio/webm">
+  </audio>
+  <span class="time" id="timeDisplay">00:00 / 00:00</span>
+</div>
+<div class="main">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <span>📝 英中對照</span>
+      <span class="count" id="countInfo">49 句</span>
+    </div>
+    <div class="sub-list" id="subList"></div>
+    <div class="controls">
+      <button class="btn-primary" id="abBtn" onclick="toggleAB()">🔂 A-B 循環</button>
+      <button class="btn-outline" id="blindBtn" onclick="toggleBlind()">🙈 遮蔽中文</button>
+      <div style="flex:1"></div>
+      <button class="btn-outline" onclick="goNext(-1)">⏮ 上一句</button>
+      <button class="btn-outline" onclick="goNext(1)">⏭ 下一句</button>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<script>
+const SUBS = [
+  {start:11.96,end:16.82,en:"Dorothy lived in the midst of the great Kansas prairies,",zh:"桃樂絲住在遼闊的堪薩斯大草原中央，"},
+  {start:17.42,end:22.5,en:"with Uncle Henry, who was a farmer, and Aunt Em, who was the farmer's wife.",zh:"和她的農夫叔叔亨利以及嬸嬸艾姆住在一起。"},
+  {start:23.2,end:28.32,en:"Their house was small, for the lumber to build it had to be carried by wagon many miles.",zh:"他們的房子很小，因為建材必須用馬車運送好幾英里才能到達。"},
+  {start:28.32,end:43.38,en:"There were four walls, a floor and a roof, which made one room; and this room contained a rusty looking cook stove, a cupboard for the dishes, a table, three or four chairs, and the beds.",zh:"四面牆、地板和屋頂構成了一個房間；裡面有一個鏽跡斑斑的爐子、一個碗櫥、一張桌子、三四張椅子，還有床。"},
+  {start:44.32,end:51.04,en:"Uncle Henry and Aunt Em had a big bed in one corner, and Dorothy a little bed in another corner.",zh:"亨利叔叔和艾姆嬸嬸在一個角落有一張大床，桃樂絲在另一個角落有一張小床。"},
+  {start:51.04,end:59.88,en:"There was no garret at all, and no cellar — except a small hole dug in the ground, called a cyclone cellar,",zh:"完全沒有閣樓，也沒有地窖——除了地上挖的一個小洞，叫做旋風地窖，"},
+  {start:60.2,end:67.68,en:"where the family could go in case one of those great whirlwinds arose, mighty enough to crush any building in its path.",zh:"全家可以在巨大的旋風來襲時躲進去，那種旋風強大到能粉碎路上的任何建築。"},
+  {start:68.7,end:76.48,en:"It was reached by a trap door in the middle of the floor, from which a ladder led down into the small, dark hole.",zh:"從地板中間的活板門可以爬梯子下去，進入那個又小又黑的洞。"},
+  {start:76.48,end:84.64,en:"When Dorothy stood in the doorway and looked around, she could see nothing but the great gray prairie on every side.",zh:"當桃樂絲站在門口環顧四周時，她只能看到灰茫茫的大草原延伸到四面八方。"},
+  {start:85.36,end:93.4,en:"Not a tree nor a house broke the broad sweep of flat country that reached to the edge of the sky in all directions.",zh:"沒有一棵樹或一棟房子打破這片平坦大地的廣闊景色，一直延伸到天際。"},
+  {start:94.18,end:100.28,en:"The sun had baked the plowed land into a gray mass, with little cracks running through it.",zh:"太陽把犁過的田地曬成灰色的斑塊，上面佈滿了細小的裂縫。"},
+  {start:100.28,end:111.28,en:"Even the grass was not green, for the sun had burned the tops of the long blades until they were the same gray color to be seen everywhere.",zh:"連草都不是綠色的，因為太陽把長長的草葉頂端都曬成了到處可見的灰色。"},
+  {start:111.28,end:123.53,en:"Once the house had been painted, but the sun blistered the paint and the rains washed it away, and now the house was as dull and gray as everything else.",zh:"曾經漆過的房子，被太陽曬得起泡、被雨水沖走，現在和其他東西一樣灰濛濛的。"},
+  {start:124.29,end:127.91,en:"When Aunt Em came there to live, she was a young, pretty wife.",zh:"艾姆嬸嬸剛來的時候，是個年輕漂亮的妻子。"},
+  {start:128.69,end:130.99,en:"The sun and wind had changed her, too.",zh:"太陽和風也改變了她。"},
+  {start:131.65,end:135.75,en:"They had taken the sparkle from her eyes and left them a sober gray.",zh:"奪走了她眼中的光彩，讓那雙眼睛變得灰濛濛的。"},
+  {start:136.19,end:140.71,en:"They had taken the red from her cheeks and lips, and they were gray also.",zh:"也奪走了她臉頰和嘴唇上的紅潤，那裡也變成了灰色。"},
+  {start:141.19,end:143.47,en:"She was thin and gaunt,",zh:"她又瘦又憔悴，"},
+  {start:143.51,end:152.01,en:"and never smiled now. When Dorothy, who was an orphan, first came to her,",zh:"現在從來不笑。當桃樂絲——一個孤兒——剛來到她身邊時，"},
+  {start:152.01,end:158.31,en:"Aunt Em had been so startled by the child's laughter that she would scream and press her hand upon her heart",zh:"艾姆嬸嬸被孩子的笑聲嚇了一跳，從此桃樂絲的歡笑聲每傳入她耳中，她都會尖叫著捂住心口。"},
+  {start:158.31,end:164.31,en:"whenever Dorothy's merry voice reached her ears,",zh:"每當桃樂絲的歡笑聲傳入她耳中，"},
+  {start:164.31,end:171.67,en:"and she still looked at the little girl with wonder that she could find anything to laugh at.",zh:"她仍然驚訝地看著這個小女孩，不明白她怎麼能找到什麼好笑的事。"},
+  {start:171.67,end:180.09,en:"Uncle Henry never laughed. He worked hard from morning till night and did not know what joy was.",zh:"亨利叔叔從不笑。他從早到晚辛苦工作，不知道什麼是快樂。"},
+  {start:180.69,end:188.91,en:"He was gray also, from his long beard to his rough boots, and he looked stern and solemn and rarely spoke.",zh:"他也是灰濛濛的，從長鬍子到粗糙的靴子，看起來嚴肅而莊重，很少說話。"},
+  {start:188.91,end:195.83,en:"It was Toto that made Dorothy laugh, and saved her from growing as gray as her other surroundings.",zh:"是托托讓桃樂絲笑了起來，讓她沒有變得和周遭一樣灰濛濛。"},
+  {start:195.83,end:203.15,en:"Toto was not gray. He was a little black dog, with long silky hair and small black eyes that twinkled merrily on either side of his funny, wee nose.",zh:"托托不是灰色的；他是一隻小黑狗，有著長長的絲綢般毛髮，小黑眼睛在有趣的小鼻子兩側閃爍。"},
+  {start:203.49,end:210.93,en:"Toto played all day long, and Dorothy played with him, and loved him dearly.",zh:"托托整天都在玩，桃樂絲也和他一起玩，深深地愛著他。"},
+  {start:211.81,end:219.19,en:"Today, however, they were not playing. Uncle Henry sat upon the door step and looked anxiously at the sky,",zh:"但今天他們沒有在玩。亨利叔叔坐在門階上，憂心忡忡地望著天空，"},
+  {start:219.19,end:223.17,en:"which was even grayer than usual.",zh:"那天空比平時更加灰暗。"},
+  {start:223.17,end:228.19,en:"Dorothy stood in the door with Toto in her arms, and looked at the sky too.",zh:"桃樂絲抱著托托站在門口，也看著天空。"},
+  {start:228.19,end:231.21,en:"Aunt Em was washing the dishes.",zh:"艾姆嬸嬸正在洗碗。"},
+  {start:231.21,end:241.05,en:"From the far north they heard a low wail of the wind, and Uncle Henry and Dorothy could see where the long grass bowed in waves before the coming storm.",zh:"從北方遠處傳來一陣低沉的風聲，亨利叔叔和桃樂絲看到長長的草在即將到來的風暴前像波浪一樣彎下了腰。"},
+  {start:242.01,end:252.05,en:"There now came a sharp whistling in the air from the south, and as they turned their eyes that way they saw ripples in the grass coming from that direction also.",zh:"這時南方傳來一陣尖銳的哨聲，當他們把目光轉向那邊時，也看到草叢中有波紋從那個方向傳來。"},
+  {start:253.09,end:254.81,en:"Suddenly Uncle Henry stood up.",zh:"突然亨利叔叔站了起來。"},
+  {start:255.35,end:258.99,en:"\"There's a cyclone coming, Em,\" he called to his wife;",zh:"「有旋風來了，艾姆，」他對妻子喊道，"},
+  {start:259.61,end:260.87,en:"\"I'll go look after the stock.\"",zh:"「我去看看牲口。」"},
+  {start:261.51,end:265.17,en:"Then he ran toward the sheds where the cows and horses were kept.",zh:"然後他朝著牛馬所在的棚子跑去。"},
+  {start:265.81,end:268.29,en:"Aunt Em dropped her work and came to the door.",zh:"艾姆嬸嬸放下手邊的活兒來到門口。"},
+  {start:268.95,end:272.15,en:"One glance told her of the danger close at hand.",zh:"看了一眼就知道危險就在眼前。"},
+  {start:272.89,end:275.05,en:"\"Quick, Dorothy!\" she screamed;",zh:"「快，桃樂絲！」她尖叫道，"},
+  {start:275.35,end:276.45,en:"\"run for the cellar!\"",zh:"「快跑到地窖去！」"},
+  {start:277.25,end:280.21,en:"Toto jumped out of Dorothy's arms and hid under the bed,",zh:"托托從桃樂絲懷裡跳出來躲到床底下，"},
+  {start:280.53,end:282.23,en:"and the girl started to get him.",zh:"小女孩開始去抓他。"},
+  {start:282.59,end:286.53,en:"Aunt Em, badly frightened, threw open the trap door in the floor",zh:"艾姆嬸嬸嚇壞了，一把推開地板上的活板門，"},
+  {start:286.53,end:289.97,en:"and climbed down the ladder into the small, dark hole.",zh:"爬下梯子鑽進了那個又小又黑的洞裡。"},
+  {start:290.87,end:294.67,en:"Dorothy caught Toto at last, and started to follow her aunt.",zh:"桃樂絲終於抓到了托托，開始跟上嬸嬸。"},
+  {start:295.45,end:300.55,en:"When she was half way across the room there came a great shriek from the wind,",zh:"當她走到房間中央時，風發出一聲尖嘯，"},
+  {start:300.55,end:306.77,en:"and the house shook so hard that she lost her footing and sat down suddenly upon the floor.",zh:"房子劇烈搖晃，她站不穩，突然跌坐在地板上。"},
+  {start:307.67,end:310.53,en:"Then a strange thing happened.",zh:"接下來發生了一件奇怪的事。"},
+  {start:311.45,end:316.91,en:"The house whirled around two or three times and rose slowly through the air.",zh:"房子轉了兩三圈，慢慢升到空中。"},
+  {start:317.65,end:320.11,en:"Dorothy felt as if she were going up in a balloon.",zh:"桃樂絲感覺自己好像坐在氣球裡。"},
+  {start:321.12,end:324.07,en:"The north and south winds met where the house stood",zh:"南北兩股風在房子所在的地方交匯，"},
+  {start:324.07,end:327.73,en:"and made it the exact center of the cyclone.",zh:"讓它成為旋風的正中心。"},
+  {start:328.31,end:331.53,en:"In the middle of a cyclone the air is generally still,",zh:"在旋風的中心，空氣通常是平靜的，"},
+  {start:332.18,end:335.65,en:"but the great pressure of the wind on every side of the house",zh:"但巨大的風壓從房子的四面八方"},
+  {start:335.65,end:338.89,en:"raised it up higher and higher,",zh:"把它抬得越來越高，"},
+  {start:338.89,end:342.43,en:"until it was at the very top of the cyclone;",zh:"直到它到了旋風的最頂端；"},
+  {start:342.43,end:347.43,en:"and there it remained and was carried miles and miles away,",zh:"它就留在那裡，被輕輕鬆鬆地帶著飛了數英里，"},
+  {start:347.43,end:350.43,en:"as easily as you could carry a feather.",zh:"就像你帶一片羽毛一樣容易。"},
+  {start:350.43,end:357,en:"It was very dark, and the wind howled horribly around her,",zh:"四周非常黑暗，風在她周圍恐怖地咆哮著，"},
+  {start:357,end:364.74,en:"but Dorothy found she was riding quite easily.",zh:"但桃樂絲發現自己坐得相當平穩。"},
+  {start:365.42,end:370.1,en:"After the first few whirls around, and one other time when the house tipped badly,",zh:"在最初的幾次旋轉之後，還有一次房子嚴重傾斜時，"},
+  {start:370.1,end:375.5,en:"she felt as if she were being rocked gently, like a baby in a cradle.",zh:"她感覺自己好像在緩緩地搖進一個搖籃裡。"},
+  {start:375.5,en:378.88,en:"Toto did not like it.",zh:"托托不喜歡這樣。"},
+  {start:378.88,end:384.26,en:"He ran about the room, now here, now there, barking loudly;",zh:"他在房間裡跑來跑去，一會兒在這裡，一會兒在那裡，大聲地叫著；"},
+  {start:384.26,end:389.7,en:"but Dorothy sat quite still on the floor and waited to see what would happen.",zh:"但桃樂絲一動也不動地坐在地板上，等著看接下來會發生什麼事。"},
+  {start:390.46,end:393.64,en:"Once Toto got too near the open trap door, and fell in;",zh:"有一次托托跑到了活板門附近，掉了進去；"},
+  {start:393.96,end:398.02,en:"and at first the little girl thought she had lost him.",zh:"一開始小女孩以為她失去他了。"},
+  {start:398.54,end:402.9,en:"But soon she saw one of his ears sticking up through the hole,",zh:"但很快她看到他的一隻耳朵從洞口伸了出來，"},
+  {start:402.9,end:407,en:"for the strong pressure of the air was keeping him up so that he could not fall.",zh:"因為強大的空氣壓力把他托住了，讓他掉不下去。"},
+  {start:407,end:414.66,en:"She crept to the hole, caught Toto by the ear, and dragged him into the room again,",zh:"她爬到洞口，抓住托托的一隻耳朵，把他拖回了房間；"},
+  {start:414.66,end:419,en:"afterward closing the trap door so that no more accidents could happen.",zh:"然後關上了活板門，以防再發生意外。"},
+  {start:419,en:424,en:"Hour after hour passed away, and slowly Dorothy got over her fright;",zh:"一個小時又一個小時過去了，桃樂絲慢慢地克服了恐懼；"},
+  {start:424,end:430.08,en:"but she felt quite lonely, and the wind shrieked so loudly all about her that she nearly became deaf.",zh:"但她覺得很孤單，風在她周圍尖嘯得如此響亮，讓她幾乎聽不見了。"},
+  {start:430.98,end:436.14,en:"At first she had wondered if she would be dashed to pieces when the house fell again;",zh:"一開始她想著房子再次掉落時她是否會被摔得粉碎；"},
+  {start:436.92,end:440.4,en:"but as the hours passed and nothing terrible happened,",zh:"但隨著時間過去，什麼可怕的事都沒發生，"},
+  {start:440.98,end:446.38,en:"she stopped worrying and resolved to wait calmly and see what the future would bring.",zh:"她不再擔心，決定冷靜等待，看看未來會帶來什麼。"},
+  {start:447.24,end:452.5,en:"At last she crawled over the swaying floor to her bed, and lay down upon it,",zh:"最後她爬過搖晃的地板來到床邊，躺了下來，"},
+  {start:452.64,end:456.12,en:"and Toto followed and lay down beside her.",zh:"托托跟著趴在她身旁。"},
+  {start:456.98,end:460.92,en:"In spite of the swaying of the house and the wailing of the wind,",zh:"儘管房子在搖晃、風在哀號，"},
+  {start:461.58,end:465.8,en:"Dorothy soon closed her eyes and fell fast asleep.",zh:"桃樂絲很快就閉上眼睛，沉沉地睡著了。"}
+];
+
+const audio = document.getElementById('audio');
+let currentIdx = -1, abA = -1, abB = -1, abEnabled = false, blindEnabled = false;
+
+function renderSubs() {
+  const list = document.getElementById('subList');
+  list.innerHTML = SUBS.map((s, i) => `
+    <div class="sub-item" id="sub${i}" onclick="jumpTo(${i})">
+      <div class="time">[${fmtTime(s.start)} → ${fmtTime(s.end)}]</div>
+      <div class="en">${s.en}</div>
+      <div class="zh ${blindEnabled ? 'blind-hidden' : ''}">${s.zh}</div>
+    </div>
+  `).join('');
+  document.getElementById('countInfo').textContent = SUBS.length + ' 句';
+}
+
+function checkSync() {
+  if (!audio || !audio.currentTime) return;
+  const t = audio.currentTime;
+  let activeIdx = -1;
+  for (let i = 0; i < SUBS.length; i++) {
+    if (t >= SUBS[i].start && t <= SUBS[i].end + 1) { activeIdx = i; break; }
+  }
+  if (activeIdx !== currentIdx) {
+    currentIdx = activeIdx;
+    highlightSub();
+    if (abEnabled && abA >= 0 && abB >= 0) {
+      if (t > SUBS[abB].end + 0.1) audio.currentTime = SUBS[abA].start;
+    }
+  }
+  const dur = audio.duration || 1;
+  document.getElementById('progressFill').style.width = (t / dur * 100) + '%';
+  document.getElementById('timeDisplay').textContent = fmtTime(t) + ' / ' + fmtTime(dur);
+}
+
+function jumpTo(i) {
+  audio.currentTime = SUBS[i].start;
+  audio.play();
+}
+
+function highlightSub() {
+  document.querySelectorAll('.sub-item').forEach((el, i) => {
+    el.classList.toggle('active', i === currentIdx);
+  });
+  if (currentIdx >= 0) {
+    document.getElementById('sub' + currentIdx)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function fmtTime(sec) {
+  if (!sec || !isFinite(sec)) return '00:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+function toggleAB() {
+  if (!abEnabled) {
+    abEnabled = true;
+    abA = currentIdx >= 0 ? currentIdx : 0;
+    abB = Math.min(abA + 2, SUBS.length - 1);
+    document.getElementById('abBtn').textContent = `🔂 A-B (${fmtTime(SUBS[abA].start)}→${fmtTime(SUBS[abB].end)})`;
+  } else {
+    abEnabled = false;
+    document.getElementById('abBtn').textContent = '🔂 A-B 循環';
+  }
+}
+
+function toggleBlind() {
+  blindEnabled = !blindEnabled;
+  document.querySelectorAll('.zh').forEach(el => {
+    el.classList.toggle('blind-hidden', blindEnabled);
+  });
+  document.getElementById('blindBtn').textContent = blindEnabled ? '👁 顯示中文' : '🙈 遮蔽中文';
+}
+
+function goNext(dir) {
+  const next = currentIdx + dir;
+  if (next >= 0 && next < SUBS.length) jumpTo(next);
+}
+
+audio.addEventListener('timeupdate', checkSync);
+renderSubs();
+</script>
+</body>
+</html>
