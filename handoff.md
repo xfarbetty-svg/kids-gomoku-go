@@ -46,6 +46,16 @@
    - ✅ e2e 10/10＋新功能探針 8/8（`C:\Users\PXP\AppData\Local\Temp\opencode\new_tab_probe.js`）。
    - ⚠️ 已知測試工具陷阱：YT.Player 會把 `#player` div「替換成」同 id 的 iframe（內部不會再巢狀 iframe）；puppeteer 新版無 `page.waitForTimeout`，須自製 setTimeout promise；語速測試時 `load()` 會重設 rate。e2e 腳本在 `C:\Users\PXP\AppData\Local\Temp\opencode\`。
 
+10. **本機地端 AI 環境建置與評估（本次；非專案程式碼變更）**：
+    - Ollama `qwen2.5-coder:7b` 已安裝，經 opencode 實測可用（`opencode run -m ollama/qwen2.5-coder:7b` 正常回應）。
+    - Open-WebUI（`localhost:3000`）＋Python 3.11＋Cline（VS Code）環境皆已就緒。
+    - **改了全域設定** `~/.config/opencode/opencode.json`（⚠️ 不在 repo、push 不會帶走）：
+      - ollama provider 補 `"apiKey": "ollama"`、npm 換成 `@ai-sdk/openai-compatible`（`@ai-sdk/openai` 會一直報 "OpenAI API key is missing"）。
+      - permission：`edit`、`bash` 改 `"ask"`（7B 會hallucinate 亂叫 `write` 工具；原本 `"*": "allow"` 下會不問就寫檔）。
+    - 硬體盤點：Ryzen 9 3950X（16C/32T）、RAM 64GB、GPU RTX 5060 **8GB** VRAM。
+    - 結論：7B 適合「日常小任務」（解釋程式碼、小改動、問答），不適合多檔案 agentic 重構（tool-calling 弱、會誤寫檔）；30B 得靠 CPU 跑（估 15~25 tok/s）。
+    - ➡️ **待決策**：是否 `ollama pull qwen3-coder:30b-a3b`（~19GB）當正式 coding 模型。使用者顧慮硬體能否吃下 30B 尚在溝通中。
+
 ## 🚦 目前狀態
 
 - 專案：純前端 HTML/CSS/JS，無框架、無 build 步驟。
@@ -87,7 +97,7 @@
 
 ## 🕐 最後更新
 
-- 時間：2026-09-11
+- 時間：2026-09-15
 - 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：驗收修復（全文彈窗、WOO 連播、語速、stop）＋全文閱讀器＋移除影子全文按鈕＋「📖 閱讀器」分頁（純文字全文、語系/隱藏中文/字級/文章記憶）＋YT 153/150 降級（精聽室提示＋影子跟讀雲端 TTS）＋sw.js v38＋e2e 10/10＋新功能探針 8/8
-- Git push：✅ commit 完成，待 push
+- 內容：地端 AI 串接 opencode 完成（Ollama qwen2.5-coder:7b 實測可用、修正全域設定 `~/.config/opencode/opencode.json`、硬體盤點）、7B vs 30B 待決策（使用者顧慮硬體能力）
+- Git push：✅ 本次無 repo 變更（專案 git 乾淨；全域 opencode 設定不在 repo，換電腦需手動重設）
