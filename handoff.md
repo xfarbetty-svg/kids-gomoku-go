@@ -100,4 +100,4 @@
 - 時間：2026-09-15
 - 更新者：antigravity @ DESKTOP-6ELKIRH
 - 內容：地端 AI 串接 opencode 完成（Ollama qwen2.5-coder:7b 實測可用、修正全域設定 `~/.config/opencode/opencode.json`、硬體盤點）、7B vs 30B 待決策（使用者顧慮硬體能力）
-- Git push：✅ 本次無 repo 變更（專案 git 乾淨；全域 opencode 設定不在 repo，換電腦需手動重設）
+- Git push：✅ 已推（4f4da82，handoff 更新本身）；全域 opencode 設定不在 repo，換電腦需手動重設
