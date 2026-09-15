@@ -53,8 +53,21 @@
       - ollama provider 補 `"apiKey": "ollama"`、npm 換成 `@ai-sdk/openai-compatible`（`@ai-sdk/openai` 會一直報 "OpenAI API key is missing"）。
       - permission：`edit`、`bash` 改 `"ask"`（7B 會hallucinate 亂叫 `write` 工具；原本 `"*": "allow"` 下會不問就寫檔）。
     - 硬體盤點：Ryzen 9 3950X（16C/32T）、RAM 64GB、GPU RTX 5060 **8GB** VRAM。
-    - 結論：7B 適合「日常小任務」（解釋程式碼、小改動、問答），不適合多檔案 agentic 重構（tool-calling 弱、會誤寫檔）；30B 得靠 CPU 跑（估 15~25 tok/s）。
-    - ➡️ **待決策**：是否 `ollama pull qwen3-coder:30b-a3b`（~19GB）當正式 coding 模型。使用者顧慮硬體能否吃下 30B 尚在溝通中。
+    - **評估決策（2026-09-15 完成）**：
+      - 8GB VRAM 鐵律：模型 + KV/compute buffer 只能塞 ~7GB → **全 VRAM 極限就是 7~8B 級**；任何 14B（q4 9.0GB 或 q3_K_S 8.4GB）都 >26% 丟 CPU，實測 **7.4 / 15.5 tok/s**，agentic 無法用，已刪除。
+      - 30B（`qwen3-coder:30b-a3b` 19GB）→ 60%+ offload，估 3~8 tok/s，**確認跳過**；`qwen3-coder-next` 52GB 更大不考慮。
+      - ✅ **採用 `qwen3:8b`（5.2GB）為本地主模型**：100% GPU、52~69 tok/s、**唯一通過原生工具呼叫測試的**（`qwen2.5-coder:7b` 不會回結構化 `tool_calls`，只把 JSON 當文字吐；qwen3 多步迴圈 read→edit 全通）。缺點：純文字回答偏長篇（沉默無效），走 agent 工具迴圈時簡潔。
+      - 已把 `qwen3:8b` 寫進開場設定為預設 `model`（`options.enable_thinking:false`、limit context 40960）、`qwen2.5-coder:7b` 留作 `small_model`（標題/摘要用，78 tok/s）；benchmark 腳本 `C:\Users\PXP\AppData\Local\Temp\opencode\bench.ps1`。
+      - **需重啟 opencode 才生效**（config 開機才載入）。
+      - 待辦：重啟後用 `opencode run -m ollama/qwen3:8b` 實測 agentic 小任務。
+
+11. **Ollama 桌面開關捷徑（本次；環境設定，非 repo 檔案）**：
+    - 診斷本地模型 "CANNOT CONTACT to API"：根因是 Ollama 服務沒跑（`localhost:11434` 無監聽）。
+    - 桌面新增單一「Ollama」捷徑（雙擊切換開關）：`Ollama.lnk` → `%LOCALAPPDATA%\opencode-scripts\start-ollama.ps1`（腳本已移出桌面，避免誤認成兩個捷徑）。
+    - 捷徑圖示換成 Ollama 羊駝圖示（原 PowerShell 藍圖示易混淆）。
+    - 踩坑：PS 5.1 控制台中文顯示為 `??` 亂碼 → 腳本輸出改純英文 `[ON]/[OFF]`。
+    - Ollama 0.34.0 已驗證運行中（綠燈）；以後用 opencode 前先雙擊捷徑確認啟動。
+    - ⚠️ 捷徑與腳本都在 repo 之外，push 不會帶走；換電腦需重建。
 
 ## 🚦 目前狀態
 
@@ -99,5 +112,9 @@
 
 - 時間：2026-09-15
 - 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：地端 AI 串接 opencode 完成（Ollama qwen2.5-coder:7b 實測可用、修正全域設定 `~/.config/opencode/opencode.json`、硬體盤點）、7B vs 30B 待決策（使用者顧慮硬體能力）
-- Git push：✅ 已推（4f4da82，handoff 更新本身）；全域 opencode 設定不在 repo，換電腦需手動重設
+- 內容：
+  - 本地模型評估定案：8GB VRAM 極限 7~8B，14B 全量化（7.4/15.5 tok/s）已刪、30B 確認跳過；採用 `qwen3:8b` 為本地主模型（100% GPU、52~69 tok/s、唯一通過原生工具呼叫測試）、`qwen2.5-coder:7b` 降為 `small_model`。
+  - **新增子代理委派**：全域 opencode 設定 `agent.general`／`agent.explore` 鎖定 `ollama/qwen3:8b`──主對話跑雲端時粗活分包給本地模型，雲端成本歸零。
+  - ⚠️ 全域設定（`~/.config/opencode/opencode.json`）不在 repo，push 不會帶走；換電腦需重建。**需完全重啟 opencode 才生效**，重啟後先跑一個 explore 子代理驗收是否走 ollama。
+  - 💡 本地模型使用守則（已回覆使用者）：適合單檔微修／小腳本／讀檔摘要／依慣例複製；跨檔重構要一次一指；深度推理與長篇創作建議交雲端。
+- Git push：✅ 已推（本次）

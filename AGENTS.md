@@ -130,8 +130,8 @@
 
 ## 🕐 最後更新
 
-- **日期**：2026-09-11
-- **更新者**：antigravity @ DESKTOP-6ELKIRH
-- **內容**：移除影子跟讀全文對照按鈕、新增「閱讀器」分頁（純文字全文、語系/隱藏中文/字級/文章記憶）、YT 錯誤 153 處理（精聽室提示＋影子跟讀雲端 TTS 降級）、sw.js v38＋e2e 10/10＋新功能探針 8/8
+- **日期**：2026-09-15
+- **更新者**：opencode (muse-spark) @ DESKTOP-6ELKIRH
+- **內容**：Ollama 桌面開關捷徑——本地模型 CANNOT CONTACT 診斷（Ollama 未啟動）；桌面單一 toggle 捷徑（羊駝圖示→AppData 腳本，純英文輸出修 PS 5.1 亂碼）；捷徑/腳本不在 repo 內，換電腦需重建
 - **Git 狀態**：✅ commit 完成，待 push
 
