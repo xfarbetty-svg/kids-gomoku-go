@@ -22,11 +22,10 @@
   - 💬 情境實境對話（12 組日常情境劇本、Web Speech 麥克風即時語音辨識判定、星級評分、聽示範與安靜送出模式）
   - 🎙️ 影子跟讀訓練室（Shadowing Studio）：4 階段階梯跟讀訓練法（純聽磨耳朵、理解精讀、視讀跟讀、脫稿影子+錄音AB對照）、大人/小孩英日語精選故事庫、動態聲波、Levenshtein 語音評分與星星連動
   - 🚀 Shadowing V2（TASK-007）：四階段獨立 UI 行為（applyStepUI）、可調靜音間隔（3/5/7 秒）、聽寫模式（Dictation Mode）、寬容評分（Metaphone 模糊匹配 + Levenshtein 取高）、Tap-to-Lookup 單字即時查詢卡片、學習進度持久化（localStorage）
-- [ ] 綠野仙蹤教材（The Wizard of Oz）：
-- [x] 第 1 章《The Cyclone》純聽力試用版（`woo_trial_audio.html`，49 句英中字幕，本地音訊）
-- [x] 第 1 章影子跟讀版（`woo_shadow_ch1.html`，Read Me A Classic 朗讀 + Whisper 字幕 + Gutenberg 原文校正 + 中翻）
-- [x] Ch.1 正式收編 `learn.html` 影子跟讀故事庫（`WOO_CH1_STORY`，source `localaudio`，`woo_shadow_ch1.webm` 81 句逐句時間戳）
-- [ ] 其餘 23 集（Chapter 2-24）依相同流程製作（YouTube playlist PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU）
+- [x] 綠野仙蹤教材（The Wizard of Oz）：
+  - [x] 第 1 章《The Cyclone》影子跟讀版與故事庫全面修復（`woo_shadow_ch1.html` / `learn.html` 修正 350s~465s 錯位，81 句）
+  - [x] 第 2 章《The Council with the Munchkins》製作並收編（`woo_shadow_ch2.html` / `woo_shadow_ch2.webm` / `WOO_CH2_STORY` 134 句，本地 Qwen3:8b 批次翻譯 + Whisper Word-level 精準錨定，sw.js v39）
+  - [ ] 其餘 22 集（Chapter 3-24）依相同流程製作（YouTube playlist PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU）
 - ⛔ Deep Work Session 頻道（lwAG7bBg4n8）不適合做影子跟讀（節奏斷裂、文本解析感）
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）

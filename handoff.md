@@ -69,6 +69,17 @@
     - Ollama 0.34.0 已驗證運行中（綠燈）；以後用 opencode 前先雙擊捷徑確認啟動。
     - ⚠️ 捷徑與腳本都在 repo 之外，push 不會帶走；換電腦需重建。
 
+12. **綠野仙蹤 Ch.1 錯位修復 ＋ Ch.2 本地模型流水線全套上線（本次，sw.js v39）**：
+    - 🔴 **第 1 章切片錯位修復**：找出 350s～465s（原始 segment 61 處）人為標記 off-by-one 造成後面 22 句文字聲音脫節的根本原因；全面校準 `woo_shadow_ch1.html` 與 `learn.html`（`WOO_CH1_STORY` 81 句）。
+    - 🌪️ **第 2 章全套製作並收編**：
+      - 音訊壓制：`woo_shadow_ch2.webm`（6.2MB，11 分 41 秒）。
+      - Whisper Large-v3 逐詞/逐段轉錄：134 句、2013 單字 word-level timestamps 精準錨定，0 漂移、0 倒流。
+      - 本地模型（Ollama `qwen3:8b`）批次高速翻譯（190s 完成 134 句）。
+      - 人工嚴格覆核與精修：補齊 10 句缺漏、統一臺灣童書專有名詞規範（桃樂絲／芒奇金人／北方女巫／翡翠城／奧茲／托托／博克）。
+      - 獨立播放頁：`woo_shadow_ch2.html`（134 句）。
+      - 整合進 `learn.html`：新增 `WOO_CH2_STORY`、擴充 `getWooStories()` / `getCurrentStory()` / `getAllStories()`，影子跟讀與「📖 閱讀器」同步就緒。
+    - 🔄 **PWA 快取升級**：`sw.js` 升至 `kids-games-v39`（加入 `woo_shadow_ch2.webm` 與 `woo_shadow_ch2.html`）。
+
 ## 🚦 目前狀態
 
 - 專案：純前端 HTML/CSS/JS，無框架、無 build 步驟。

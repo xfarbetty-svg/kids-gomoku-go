@@ -1,4 +1,4 @@
-const CACHE = 'kids-games-v38';
+const CACHE = 'kids-games-v39';
 const FILES = [
   './',
   './index.html',
@@ -6,6 +6,8 @@ const FILES = [
   './toeic.html',
   './woo_shadow_ch1.html',
   './woo_shadow_ch1.webm',
+  './woo_shadow_ch2.html',
+  './woo_shadow_ch2.webm',
   './data/toeic.json',
   './rhythm.html',
   './memory.html',
