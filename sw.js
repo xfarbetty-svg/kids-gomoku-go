@@ -1,4 +1,4 @@
-const CACHE = 'kids-games-v39';
+const CACHE = 'kids-games-v41';
 const FILES = [
   './',
   './index.html',
@@ -71,7 +71,8 @@ const FILES = [
   './audio/warashibe/s48.mp3',
   './audio/warashibe/s49.mp3',
   './audio/warashibe/s50.mp3',
-  './audio/warashibe/s51.mp3'
+  './audio/warashibe/s51.mp3',
+  './audio/warashibe/warashibe_full.mp3'
 ];
 
 self.addEventListener('install', (e) => {
