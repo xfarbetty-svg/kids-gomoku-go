@@ -45,13 +45,18 @@
   /* 頂部導航列 */
   .header-bar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     max-width: 480px;
     margin: 0 auto 4px;
     padding: 0 2px;
     gap: 4px;
-    flex-wrap: wrap;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 4px;
   }
   .home-btn {
     font-size: 16px;
@@ -69,6 +74,70 @@
     flex-shrink: 0;
   }
   .home-btn:active { transform: scale(0.9); }
+
+  /* 🎯 防誤按落子確認切換鈕 */
+  .confirm-toggle-btn {
+    border: 2px solid #00cec9;
+    background: rgba(255,255,255,0.9);
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #00897b;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    box-shadow: 0 2px 6px rgba(0, 206, 201, 0.18);
+  }
+  .confirm-toggle-btn.active {
+    background: linear-gradient(135deg, #00cec9, #0984e3);
+    color: #fff;
+    border-color: #74b9ff;
+    box-shadow: 0 2px 8px rgba(9, 132, 227, 0.4);
+    transform: scale(1.02);
+  }
+
+  /* 模式切換 (🤖 單人魔王 / 👥 雙人對弈) */
+  .mode-switch {
+    display: inline-flex;
+    background: rgba(255,255,255,0.85);
+    border: 2px solid #ff9ec6;
+    border-radius: 999px;
+    padding: 1px;
+    box-shadow: 0 2px 6px rgba(255,107,157,0.18);
+    gap: 1px;
+  }
+  .mode-opt {
+    border: none;
+    background: transparent;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #b33971;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+  }
+  .mode-opt.active {
+    background: linear-gradient(135deg, #ff6b9d, #ff3377);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(255,51,119,0.4);
+    transform: scale(1.03);
+  }
+  .pvp-badge {
+    font-size: 10px;
+    font-weight: 800;
+    color: #6c5ce7;
+    background: rgba(255,255,255,0.92);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1.5px dashed #a29bfe;
+    white-space: nowrap;
+  }
 
   /* 規格切換膠囊 (7x7 / 9x9 / 13x13 / 19x19) */
   .switch-group {
@@ -127,9 +196,43 @@
     box-shadow: 0 2px 6px rgba(124,77,255,0.4);
     transform: scale(1.03);
   }
+  #diffSprout.active {
+    background: linear-gradient(135deg, #00b894, #55efc4);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 184, 148, 0.45);
+  }
   #diffGrand.active {
     background: linear-gradient(135deg, #ff3838, #ff9f1a);
     box-shadow: 0 2px 6px rgba(255, 56, 56, 0.5);
+  }
+
+  /* 🍬 讓子選擇膠囊 (分先 / 讓2子 / 讓4子 / 讓9子) */
+  .handicap-switch {
+    display: inline-flex;
+    background: rgba(255, 255, 255, 0.88);
+    border: 2px solid #ff7675;
+    border-radius: 999px;
+    padding: 1px;
+    box-shadow: 0 2px 6px rgba(255, 118, 117, 0.2);
+    gap: 1px;
+  }
+  .handicap-opt {
+    border: none;
+    background: transparent;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #d63031;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+  }
+  .handicap-opt.active {
+    background: linear-gradient(135deg, #ff7675, #d63031);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(214, 48, 49, 0.4);
+    transform: scale(1.03);
   }
 
   .title-wrap { margin: 1px 0 3px; }
@@ -561,6 +664,10 @@
     justify-content: center;
     animation: ghostPulse 0.8s infinite alternate;
   }
+  .ghost-preview.purple {
+    border-color: #7c4dff;
+    background: rgba(179, 136, 255, 0.35);
+  }
   .ghost-preview.forbidden {
     border-color: #e74c3c;
     background: rgba(231, 76, 60, 0.4);
@@ -568,6 +675,56 @@
   @keyframes ghostPulse {
     from { transform: scale(0.88); opacity: 0.65; }
     to { transform: scale(1.04); opacity: 0.95; }
+  }
+
+  /* 浮動確認泡泡 (Touch Confirm Bubble) */
+  .confirm-bubble {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid #ff77a9;
+    border-radius: 999px;
+    padding: 3px 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), 0 0 12px rgba(255, 119, 169, 0.45);
+    z-index: 80;
+    pointer-events: auto;
+    animation: bubbleElasticPop 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .confirm-bubble.purple {
+    border-color: #7c4dff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), 0 0 12px rgba(124, 77, 255, 0.45);
+  }
+  @keyframes bubbleElasticPop {
+    0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+  }
+  .confirm-btn {
+    border: none;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 3px 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .confirm-btn:active { transform: scale(0.92); }
+  .confirm-btn.ok-btn {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 184, 148, 0.35);
+  }
+  .confirm-btn.cancel-btn {
+    background: linear-gradient(135deg, #ff7675, #d63031);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(214, 48, 49, 0.35);
   }
 
   /* 🎓 AI 教練推薦落子高亮光環 */
@@ -791,28 +948,56 @@
 
 <!-- 頂部導航與切換列 -->
 <div class="header-bar">
-  <a class="home-btn" href="index.html" title="回首頁">🏠</a>
-  
-  <!-- 規格切換 (7x7 / 9x9 / 13x13 / 19x19) -->
-  <div class="switch-group">
-    <button class="switch-opt" id="opt7" onclick="switchSize(7)">7x7</button>
-    <button class="switch-opt active" id="opt9" onclick="switchSize(9)">9x9</button>
-    <button class="switch-opt" id="opt13" onclick="switchSize(13)">13x13</button>
-    <button class="switch-opt" id="opt19" onclick="switchSize(19)">19x19</button>
+  <div class="header-row">
+    <a class="home-btn" href="index.html" title="回首頁">🏠</a>
+    
+    <!-- 規格切換 (7x7 / 9x9 / 13x13 / 19x19) -->
+    <div class="switch-group">
+      <button class="switch-opt" id="opt7" onclick="switchSize(7)">7x7</button>
+      <button class="switch-opt active" id="opt9" onclick="switchSize(9)">9x9</button>
+      <button class="switch-opt" id="opt13" onclick="switchSize(13)">13x13</button>
+      <button class="switch-opt" id="opt19" onclick="switchSize(19)">19x19</button>
+    </div>
+
+    <!-- 🎯 防誤按落子確認切換鈕 -->
+    <button class="confirm-toggle-btn" id="confirmToggleBtn" onclick="toggleConfirmMode()" title="切換防誤按落子確認">
+      🎯 防誤按：關
+    </button>
   </div>
 
-  <!-- 難度切換 (🐣 初級 / 🌸 中級 / 👑 大師 / 🔥 宗師) -->
-  <div class="diff-switch">
-    <button class="diff-opt" id="diffEasy" onclick="switchDiff('easy')">🐣 初級</button>
-    <button class="diff-opt active" id="diffMed" onclick="switchDiff('medium')">🌸 中級</button>
-    <button class="diff-opt" id="diffHard" onclick="switchDiff('hard')">👑 大師</button>
-    <button class="diff-opt" id="diffGrand" onclick="switchDiff('grand')">🔥 宗師</button>
+  <div class="header-row">
+    <!-- 模式切換 (🤖 單人魔王 / 👥 雙人對弈) -->
+    <div class="mode-switch">
+      <button class="mode-opt active" id="modePve" onclick="switchGameMode('pve')">🤖 單人魔王</button>
+      <button class="mode-opt" id="modePvp" onclick="switchGameMode('pvp')">👥 雙人對弈</button>
+    </div>
+
+    <!-- 難度切換 (🌱 萌芽 / 🐣 初級 / 🌸 中級 / 👑 大師 / 🔥 宗師) -->
+    <div class="diff-switch" id="diffSwitchGroup">
+      <button class="diff-opt" id="diffSprout" onclick="switchDiff('sprout')">🌱 萌芽</button>
+      <button class="diff-opt" id="diffEasy" onclick="switchDiff('easy')">🐣 初級</button>
+      <button class="diff-opt active" id="diffMed" onclick="switchDiff('medium')">🌸 中級</button>
+      <button class="diff-opt" id="diffHard" onclick="switchDiff('hard')">👑 大師</button>
+      <button class="diff-opt" id="diffGrand" onclick="switchDiff('grand')">🔥 宗師</button>
+    </div>
+    <div class="pvp-badge hidden" id="pvpBadge">👥 雙人同機對弈中</div>
+  </div>
+
+  <!-- 🍬 讓子選擇列 (人機模式專用) -->
+  <div class="header-row" id="handicapRow" style="justify-content: center; gap: 4px;">
+    <span class="handicap-label" style="font-size: 10px; font-weight: 800; color: #b33971;">🍬 讓子局：</span>
+    <div class="handicap-switch" id="handicapSwitch">
+      <button class="handicap-opt active" id="hc0" onclick="setHandicap(0)">讓0 (分先)</button>
+      <button class="handicap-opt" id="hc2" onclick="setHandicap(2)">讓2子</button>
+      <button class="handicap-opt" id="hc4" onclick="setHandicap(4)">讓4子</button>
+      <button class="handicap-opt hidden" id="hc9" onclick="setHandicap(9)">讓9子</button>
+    </div>
   </div>
 </div>
 
 <div class="title-wrap">
-  <div class="main-title">💧 黏黏圍棋 ⭐vs👾</div>
-  <div class="subtitle">🧲 Gooey 果凍融合成型 ‧ 🎓 AI 星光導師解說</div>
+  <div class="main-title" id="pageMainTitle">💧 黏黏圍棋 ⭐vs👾</div>
+  <div class="subtitle" id="pageSubtitle">🧲 Gooey 果凍融合成型 ‧ 🎓 AI 星光導師解說</div>
 </div>
 
 <!-- 🎓 AI 教練智慧解說氣泡卡片 -->
@@ -829,14 +1014,14 @@
 <div class="scoreboard">
   <div class="score-card player">
     <div class="score-info">
-      <div class="score-name">⭐ 你的果凍</div>
+      <div class="score-name" id="pName">⭐ 你的果凍</div>
       <div class="score-detail">提子 <b id="pCap">0</b> ‧ 領地 <b id="pTerr">0</b></div>
     </div>
     <div class="score-num" id="pTotal">0</div>
   </div>
   <div class="score-card ai">
     <div class="score-info">
-      <div class="score-name">👾 魔王果凍</div>
+      <div class="score-name" id="aName">👾 魔王果凍</div>
       <div class="score-detail">提子 <b id="aCap">0</b> ‧ 領地 <b id="aTerr">0</b></div>
     </div>
     <div class="score-num" id="aTotal">0</div>
@@ -896,8 +1081,8 @@
     <div class="modal-title" id="modalTitle">🎉 遊戲結束！</div>
     <div class="modal-score-box">
       <div class="modal-score-row">
-        <span style="color:#ff3377;">⭐ 玩家：<b id="endPScore">0</b> 分</span>
-        <span style="color:#7c4dff;">👾 AI：<b id="endAScore">0</b> 分</span>
+        <span style="color:#ff3377;" id="modalPLabel">⭐ 玩家：<b id="endPScore">0</b> 分</span>
+        <span style="color:#7c4dff;" id="modalALabel">👾 AI：<b id="endAScore">0</b> 分</span>
       </div>
       <div class="modal-detail" id="modalDetail"></div>
     </div>
@@ -911,7 +1096,11 @@
 <script>
 /* ================= 全域變數與常數 ================= */
 var N = 9; // 棋盤大小 (7, 9, 13, 19)
-var difficulty = 'medium'; // 'easy', 'medium', 'hard'
+var difficulty = 'medium'; // 'sprout', 'easy', 'medium', 'hard', 'grand'
+var handicapStones = 0; // 讓子數 (0, 2, 4, 9)
+var confirmMode = (N >= 13); // 防誤按預選確認模式 (13x13 / 19x19 預設開啟)
+var pendingMove = null; // {r, c, who}
+var gameMode = 'pve'; // 'pve' (單人魔王) 或 'pvp' (雙人同機)
 var EMPTY = 0, ME = 1, AI = 2;
 var board = [];
 var turn = ME;
@@ -924,7 +1113,7 @@ var energy = 0;
 var skillMode = ''; // 'fire', 'seal' 或 ''
 var sealedCells = {}; // 'r,c' -> true
 var lastMove = null; // {r, c, who}
-var ghostPreviewPos = null; // {r, c, valid, liberties, captures}
+var ghostPreviewPos = null; // {r, c, who, valid, liberties, captures}
 var currentHintPos = null;
 
 /* 粒子系統變數 */
@@ -1012,6 +1201,12 @@ function inb(r, c){ return r >= 0 && r < N && c >= 0 && c < N; }
 function switchSize(newSize){
   if(N === newSize) return;
   N = newSize;
+  confirmMode = (N >= 13);
+  updateConfirmModeUI();
+  if(N < 13 && handicapStones === 9){
+    handicapStones = 4;
+  }
+  updateHandicapUI();
   ['7','9','13','19'].forEach(function(sz){
     var el = document.getElementById('opt' + sz);
     if(el) el.classList.toggle('active', N === parseInt(sz));
@@ -1019,20 +1214,127 @@ function switchSize(newSize){
   resetGame();
 }
 
+function toggleConfirmMode(){
+  confirmMode = !confirmMode;
+  updateConfirmModeUI();
+  if(!confirmMode && pendingMove){
+    clearPendingMove();
+    removeGhost();
+  }
+  var tip = confirmMode ? '已開啟防誤按確認（點擊預選，點按鈕或同格確認）' : '已關閉防誤按確認（單擊直接落子）';
+  document.getElementById('statusText').textContent = tip;
+}
+
+function updateConfirmModeUI(){
+  var btn = document.getElementById('confirmToggleBtn');
+  if(btn){
+    btn.classList.toggle('active', confirmMode);
+    btn.textContent = '🎯 防誤按：' + (confirmMode ? '開' : '關');
+  }
+}
+
+function switchGameMode(mode){
+  if(gameMode === mode) return;
+  gameMode = mode;
+  var pveBtn = document.getElementById('modePve');
+  var pvpBtn = document.getElementById('modePvp');
+  var diffGroup = document.getElementById('diffSwitchGroup');
+  var pvpBadge = document.getElementById('pvpBadge');
+  var handicapRow = document.getElementById('handicapRow');
+  var skillPanel = document.querySelector('.skill-panel');
+  var skillHint = document.getElementById('skillHint');
+
+  if(pveBtn) pveBtn.classList.toggle('active', gameMode === 'pve');
+  if(pvpBtn) pvpBtn.classList.toggle('active', gameMode === 'pvp');
+
+  if(gameMode === 'pvp'){
+    if(diffGroup) diffGroup.classList.add('hidden');
+    if(pvpBadge) pvpBadge.classList.remove('hidden');
+    if(handicapRow) handicapRow.classList.add('hidden');
+    if(skillPanel) skillPanel.classList.add('hidden');
+    if(skillHint) skillHint.classList.add('hidden');
+    var pTitle = document.getElementById('pageMainTitle');
+    var pSub = document.getElementById('pageSubtitle');
+    if(pTitle) pTitle.textContent = '👥 黏黏圍棋 🩷vs💜';
+    if(pSub) pSub.textContent = '🧲 Gooey 果凍融合成型 ‧ 👥 雙人同機對弈';
+    document.getElementById('pName').innerHTML = '🩷 玩家一（粉）';
+    document.getElementById('aName').innerHTML = '💜 玩家二（紫）';
+    document.getElementById('coachTacticsBadge').textContent = '✨ 對弈指引';
+    document.getElementById('coachMsg').textContent = '「兩位棋士請就座～一人一手，公平對弈！」';
+  } else {
+    if(diffGroup) diffGroup.classList.remove('hidden');
+    if(pvpBadge) pvpBadge.classList.add('hidden');
+    if(handicapRow) handicapRow.classList.remove('hidden');
+    if(skillPanel) skillPanel.classList.remove('hidden');
+    if(skillHint) skillHint.classList.remove('hidden');
+    var pTitle = document.getElementById('pageMainTitle');
+    var pSub = document.getElementById('pageSubtitle');
+    if(pTitle) pTitle.textContent = '💧 黏黏圍棋 ⭐vs👾';
+    if(pSub) pSub.textContent = '🧲 Gooey 果凍融合成型 ‧ 🎓 AI 星光導師解說';
+    document.getElementById('pName').innerHTML = '⭐ 你的果凍';
+    document.getElementById('aName').innerHTML = '👾 魔王果凍';
+    document.getElementById('coachTacticsBadge').textContent = '✨ 戰術指引';
+    document.getElementById('coachMsg').textContent = '「你好呀！我是星光教練🦊！點我或右邊按鈕，我會幫你分析最好的下法喔！」';
+  }
+
+  resetGame();
+}
+
 function switchDiff(newDiff){
   difficulty = newDiff;
+  var sproutEl = document.getElementById('diffSprout');
+  if(sproutEl) sproutEl.classList.toggle('active', difficulty === 'sprout');
   document.getElementById('diffEasy').classList.toggle('active', difficulty === 'easy');
   document.getElementById('diffMed').classList.toggle('active', difficulty === 'medium');
   document.getElementById('diffHard').classList.toggle('active', difficulty === 'hard');
   var grandEl = document.getElementById('diffGrand');
   if(grandEl) grandEl.classList.toggle('active', difficulty === 'grand');
   var diffNames = {
+    sprout: '🌱 萌芽（慈悲放水模式）',
     easy: '🐣 初級（休閒萌新）',
     medium: '🌸 中級（見招拆招）',
     hard: '👑 大師（戰術高手）',
     grand: '🔥 宗師（頂級算力魔王）'
   };
   document.getElementById('statusText').textContent = '已切換為 ' + (diffNames[difficulty] || difficulty) + '！';
+}
+
+function setHandicap(num){
+  handicapStones = parseInt(num) || 0;
+  updateHandicapUI();
+  resetGame();
+}
+
+function updateHandicapUI(){
+  [0, 2, 4, 9].forEach(function(cnt){
+    var el = document.getElementById('hc' + cnt);
+    if(el){
+      el.classList.toggle('active', handicapStones === cnt);
+      if(cnt === 9){
+        el.classList.toggle('hidden', N < 13);
+      }
+    }
+  });
+}
+
+function getHandicapPositions(n, count){
+  if(count <= 0) return [];
+  if(n === 7){
+    if(count === 2) return [[2,2], [4,4]];
+    if(count === 4) return [[2,2], [2,4], [4,2], [4,4]];
+  } else if(n === 9){
+    if(count === 2) return [[2,6], [6,2]];
+    if(count === 4) return [[2,2], [2,6], [6,2], [6,6]];
+  } else if(n === 13){
+    if(count === 2) return [[3,9], [9,3]];
+    if(count === 4) return [[3,3], [3,9], [9,3], [9,9]];
+    if(count === 9) return [[3,3], [3,9], [9,3], [9,9], [3,6], [6,3], [6,9], [9,6], [6,6]];
+  } else if(n === 19){
+    if(count === 2) return [[3,15], [15,3]];
+    if(count === 4) return [[3,3], [3,15], [15,3], [15,15]];
+    if(count === 9) return [[3,3], [3,15], [15,3], [15,15], [3,9], [9,3], [9,15], [15,9], [9,9]];
+  }
+  return [];
 }
 
 function getCellSize(){
@@ -1111,8 +1413,10 @@ function buildGridDOM(){
           onCellClick(r_idx, c_idx);
         });
         cellEl.addEventListener('mouseenter', function(){
-          if(!gameOver && !aiThinking && turn === ME && !skillMode){
-            calcGhostPreview(r_idx, c_idx);
+          if(confirmMode && pendingMove) return;
+          if(!gameOver && !aiThinking && !skillMode){
+            if(gameMode === 'pve' && turn !== ME) return;
+            calcGhostPreview(r_idx, c_idx, turn);
             renderGhost();
           }
         });
@@ -1521,8 +1825,39 @@ function render(){
     }
   }
 
-  // 恢復當前教練推薦標記
-  if(currentHintPos && !gameOver && turn === ME){
+  // 🎓 星光教練瀕死強提示：若玩家有任何棋子剩 1 氣瀕死，自動強烈警報並推薦逃跑點
+  if(!gameOver && turn === ME && gameMode === 'pve'){
+    var dangerPlayerGroup = null;
+    var visitedPlayerGroup = {};
+    for(var r=0; r<N; r++){
+      for(var c=0; c<N; c++){
+        if(board[r][c] === ME && !visitedPlayerGroup[r+','+c]){
+          var pg = getGroup(r, c, visitedPlayerGroup);
+          if(pg.liberties === 1){
+            dangerPlayerGroup = pg;
+            break;
+          }
+        }
+      }
+      if(dangerPlayerGroup) break;
+    }
+
+    if(dangerPlayerGroup){
+      var escKey = Object.keys(dangerPlayerGroup.libertySet)[0];
+      if(escKey){
+        var parts = escKey.split(',');
+        var er = parseInt(parts[0]), ec = parseInt(parts[1]);
+        if(!isSuicideMove(er, ec, ME)){
+          currentHintPos = { r: er, c: ec };
+          document.getElementById('coachTacticsBadge').textContent = '🚨 救命警報';
+          document.getElementById('coachMsg').textContent = '🚨 救命！粉粉果凍快沒氣了！點我教你逃跑！';
+          showHintMarker(er, ec);
+        }
+      }
+    } else if(currentHintPos){
+      showHintMarker(currentHintPos.r, currentHintPos.c);
+    }
+  } else if(currentHintPos && !gameOver && turn === ME){
     showHintMarker(currentHintPos.r, currentHintPos.c);
   }
 
@@ -1540,22 +1875,95 @@ function render(){
   dot.className = 'status-dot ' + (turn === ME ? 'me' : 'ai');
 
   updateEnergyUI();
+
+  // 若有 pendingMove，恢復其預覽與確認泡泡
+  if(pendingMove && !gameOver){
+    calcGhostPreview(pendingMove.r, pendingMove.c, pendingMove.who);
+    renderGhost();
+    showConfirmBubble(pendingMove.r, pendingMove.c, pendingMove.who);
+  }
+}
+
+/* ================= 浮動確認泡泡與防誤按操作 ================= */
+function showConfirmBubble(r, c, who){
+  var existing = document.getElementById('confirmBubble');
+  if(existing) existing.remove();
+
+  var container = document.getElementById('boardContainer');
+  if(!container) return;
+  var cellSize = getCellSize();
+  var cx = c * cellSize + cellSize / 2;
+  var topY = r * cellSize;
+  var botY = (r + 1) * cellSize;
+
+  // 若在頂部兩行 (r <= 1)，泡泡顯示在格子下方避免被頂部遮擋；其他顯示在格子上方
+  var bubbleY = (r <= 1) ? (botY + 6) : (topY - 36);
+  var halfW = 56;
+  var bubbleX = Math.max(halfW + 4, Math.min(N * cellSize - halfW - 4, cx));
+
+  var bubble = document.createElement('div');
+  bubble.className = 'confirm-bubble' + (who === AI ? ' purple' : '');
+  bubble.id = 'confirmBubble';
+  bubble.style.left = bubbleX + 'px';
+  bubble.style.top = bubbleY + 'px';
+
+  bubble.innerHTML = 
+    '<button class="confirm-btn ok-btn" onclick="commitPendingMove(event)">✓ 下子</button>' +
+    '<button class="confirm-btn cancel-btn" onclick="cancelPendingMove(event)">✕ 取消</button>';
+
+  bubble.addEventListener('click', function(e){ e.stopPropagation(); });
+  container.appendChild(bubble);
+}
+
+function commitPendingMove(e){
+  if(e) e.stopPropagation();
+  if(!pendingMove) return;
+  var r = pendingMove.r;
+  var c = pendingMove.c;
+  var who = pendingMove.who;
+  clearPendingMove();
+  placeStone(r, c, who);
+}
+
+function cancelPendingMove(e){
+  if(e) e.stopPropagation();
+  clearPendingMove();
+  removeGhost();
+  if(gameMode === 'pvp'){
+    document.getElementById('statusText').textContent = (turn === ME) ? '輪到 🩷 玩家一（粉粉果凍）落子 ✨' : '輪到 💜 玩家二（紫紫果凍）落子 🔮';
+  } else {
+    document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
+  }
+}
+
+function clearPendingMove(){
+  pendingMove = null;
+  var b = document.getElementById('confirmBubble');
+  if(b) b.remove();
+}
+
+function removeGhost(){
+  ghostPreviewPos = null;
+  var existingGhost = document.querySelector('.ghost-preview');
+  if(existingGhost) existingGhost.remove();
 }
 
 /* ================= 落子預覽與即時算氣 ================= */
-function calcGhostPreview(r, c){
+function calcGhostPreview(r, c, who){
+  who = who || turn;
   if(board[r][c] !== EMPTY || sealedCells[r+','+c]){
     ghostPreviewPos = null;
     return;
   }
-  board[r][c] = ME;
-  var caps = checkCaptures(r, c, ME);
+  board[r][c] = who;
+  var caps = checkCaptures(r, c, who);
   var g = getGroup(r, c, {});
   var suicide = (caps.length === 0 && g.liberties === 0);
   board[r][c] = EMPTY;
 
   ghostPreviewPos = {
     r: r, c: c,
+    who: who,
     valid: !suicide,
     liberties: g.liberties,
     captures: caps.length
@@ -1566,15 +1974,18 @@ function renderGhost(){
   var existingGhost = document.querySelector('.ghost-preview');
   if(existingGhost) existingGhost.remove();
 
-  if(!ghostPreviewPos || gameOver || turn !== ME) return;
+  if(!ghostPreviewPos || gameOver) return;
+  if(gameMode === 'pve' && turn !== ME) return;
 
   var grid = document.getElementById('boardGrid');
   var cellEl = grid.children[ghostPreviewPos.r * N + ghostPreviewPos.c];
+  if(!cellEl) return;
   var cellSize = getCellSize();
   var ghostSize = cellSize * 0.82;
+  var isPurple = (ghostPreviewPos.who === AI);
 
   var ghost = document.createElement('div');
-  ghost.className = 'ghost-preview' + (ghostPreviewPos.valid ? '' : ' forbidden');
+  ghost.className = 'ghost-preview' + (ghostPreviewPos.valid ? '' : ' forbidden') + (isPurple ? ' purple' : '');
   ghost.style.width = ghostSize + 'px';
   ghost.style.height = ghostSize + 'px';
 
@@ -1587,12 +1998,13 @@ function renderGhost(){
     ghost.style.fontSize = Math.max(9, Math.floor(cellSize * 0.28)) + 'px';
     ghost.style.fontWeight = '900';
     ghost.style.color = '#fff';
-    document.getElementById('statusText').textContent = '💥 下這裡可吃掉 ' + ghostPreviewPos.captures + ' 顆魔王果凍！';
+    var targetName = (gameMode === 'pvp') ? (isPurple ? '玩家一' : '玩家二') : '魔王';
+    document.getElementById('statusText').textContent = '💥 下這裡可吃掉 ' + ghostPreviewPos.captures + ' 顆' + targetName + '果凍！';
   } else {
     ghost.textContent = ghostPreviewPos.liberties + '氣';
     ghost.style.fontSize = Math.max(9, Math.floor(cellSize * 0.26)) + 'px';
     ghost.style.fontWeight = '900';
-    ghost.style.color = '#ff3377';
+    ghost.style.color = isPurple ? '#7c4dff' : '#ff3377';
     document.getElementById('statusText').textContent = '✨ 下在這裡，果凍群有 ' + ghostPreviewPos.liberties + ' 口氣～';
   }
 
@@ -1600,7 +2012,13 @@ function renderGhost(){
 }
 
 /* ================= 🎓 AI 教練智慧解說系統 ================= */
-function analyzeTacticsForPlayer(){
+function analyzeTacticsForPlayer(who){
+  who = who || turn;
+  var opp = (who === ME) ? AI : ME;
+  var isPlayerOne = (who === ME);
+  var sideName = (gameMode === 'pvp') ? (isPlayerOne ? '玩家一（粉）' : '玩家二（紫）') : '我們';
+  var oppName = (gameMode === 'pvp') ? (isPlayerOne ? '玩家二' : '玩家一') : '對手';
+
   var candidates = [];
   var myGroups = [];
   var oppGroups = [];
@@ -1608,27 +2026,27 @@ function analyzeTacticsForPlayer(){
 
   for(var r=0; r<N; r++){
     for(var c=0; c<N; c++){
-      if(board[r][c] === ME && !visitedMe[r+','+c]){
+      if(board[r][c] === who && !visitedMe[r+','+c]){
         myGroups.push(getGroup(r, c, visitedMe));
-      } else if(board[r][c] === AI && !visitedAi[r+','+c]){
+      } else if(board[r][c] === opp && !visitedAi[r+','+c]){
         oppGroups.push(getGroup(r, c, visitedAi));
       }
     }
   }
 
-  // 1. 檢查是否有我方果凍處於 1 氣瀕死狀態 (🛡️ 救命逃氣)
+  // 1. 檢查是否有我方果凍處於 1 氣瀕死狀態 (🚨 救命警報)
   var dangerMyGroup = myGroups.find(function(g){ return g.liberties === 1; });
   if(dangerMyGroup){
     var escapeMove = Object.keys(dangerMyGroup.libertySet)[0];
     if(escapeMove){
       var parts = escapeMove.split(',');
       var er = parseInt(parts[0]), ec = parseInt(parts[1]);
-      if(!isSuicideMove(er, ec, ME)){
+      if(!isSuicideMove(er, ec, who)){
         return {
           r: er, c: ec,
           type: 'save',
-          badge: '🛡️ 救命逃氣',
-          msg: '我們的果凍只剩 1 氣快被吃掉啦！快下在 (' + (er+1) + ', ' + (ec+1) + ') 逃跑生氣！'
+          badge: '🚨 救命警報',
+          msg: (gameMode === 'pve' ? '🚨 救命！粉粉果凍快沒氣了！點我教你逃跑！' : (sideName + '的果凍只剩 1 氣快被吃掉啦！快下在 (' + (er+1) + ', ' + (ec+1) + ') 逃跑生氣！'))
         };
       }
     }
@@ -1638,9 +2056,9 @@ function analyzeTacticsForPlayer(){
   var bestCap = null, maxCap = 0;
   for(var r=0; r<N; r++){
     for(var c=0; c<N; c++){
-      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, ME)) continue;
-      board[r][c] = ME;
-      var caps = checkCaptures(r, c, ME);
+      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, who)) continue;
+      board[r][c] = who;
+      var caps = checkCaptures(r, c, who);
       board[r][c] = EMPTY;
       if(caps.length > maxCap){
         maxCap = caps.length;
@@ -1653,7 +2071,7 @@ function analyzeTacticsForPlayer(){
       r: bestCap.r, c: bestCap.c,
       type: 'capture',
       badge: '💥 封氣提子',
-      msg: '對手的果凍被包圍了！下在 (' + (bestCap.r+1) + ', ' + (bestCap.c+1) + ') 封住最後一口氣，一口氣吃掉 ' + maxCap + ' 顆！'
+      msg: oppName + '的果凍被包圍了！下在 (' + (bestCap.r+1) + ', ' + (bestCap.c+1) + ') 封住最後一口氣，一口氣吃掉 ' + maxCap + ' 顆！'
     };
   }
 
@@ -1661,16 +2079,15 @@ function analyzeTacticsForPlayer(){
   var bestMerge = null, maxMergedLibs = 0;
   for(var r=0; r<N; r++){
     for(var c=0; c<N; c++){
-      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, ME)) continue;
-      // 檢查周圍相鄰的己方果凍數量
+      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, who)) continue;
       var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
       var adjacentMeCount = 0;
       for(var d=0; d<4; d++){
         var nr = r + dirs[d][0], nc = c + dirs[d][1];
-        if(inb(nr, nc) && board[nr][nc] === ME) adjacentMeCount++;
+        if(inb(nr, nc) && board[nr][nc] === who) adjacentMeCount++;
       }
       if(adjacentMeCount >= 2){
-        board[r][c] = ME;
+        board[r][c] = who;
         var g = getGroup(r, c, {});
         board[r][c] = EMPTY;
         if(g.liberties > maxMergedLibs){
@@ -1694,8 +2111,8 @@ function analyzeTacticsForPlayer(){
   var center = (N - 1) / 2;
   for(var r=0; r<N; r++){
     for(var c=0; c<N; c++){
-      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, ME)) continue;
-      board[r][c] = ME;
+      if(board[r][c] !== EMPTY || sealedCells[r+','+c] || isSuicideMove(r, c, who)) continue;
+      board[r][c] = who;
       var g = getGroup(r, c, {});
       board[r][c] = EMPTY;
       
@@ -1720,16 +2137,19 @@ function analyzeTacticsForPlayer(){
 }
 
 function giveCoachHint(){
-  if(gameOver || aiThinking || turn !== ME) return;
-  var tactic = analyzeTacticsForPlayer();
+  if(gameOver || aiThinking) return;
+  if(gameMode === 'pve' && turn !== ME) return;
+
+  var tactic = analyzeTacticsForPlayer(turn);
   if(!tactic) return;
 
   sCoachHint();
   currentHintPos = { r: tactic.r, c: tactic.c };
 
-  document.getElementById('coachTacticsBadge').textContent = tactic.badge;
+  var badgeText = (gameMode === 'pvp') ? ((turn === ME ? '🩷 玩家一：' : '💜 玩家二：') + tactic.badge) : tactic.badge;
+  document.getElementById('coachTacticsBadge').textContent = badgeText;
   document.getElementById('coachMsg').textContent = tactic.msg;
-  document.getElementById('statusText').textContent = tactic.badge + '：' + tactic.msg;
+  document.getElementById('statusText').textContent = badgeText + '：' + tactic.msg;
 
   showHintMarker(tactic.r, tactic.c);
 }
@@ -1808,36 +2228,60 @@ function useSealSkill(r, c){
 
 /* ================= 遊戲落子與流程控制 ================= */
 function onCellClick(r, c){
-  if(gameOver || aiThinking || turn !== ME) return;
+  if(gameOver || aiThinking) return;
+  if(gameMode === 'pve' && turn !== ME) return;
+
+  var currentWho = turn;
 
   if(skillMode === 'fire'){ useFireSkill(r, c); return; }
   if(skillMode === 'seal'){ useSealSkill(r, c); return; }
 
+  // 點擊非法格（已有子或封印格）
   if(board[r][c] !== EMPTY || sealedCells[r+','+c]){
     triggerWiggleReject(r, c);
+    clearPendingMove();
+    removeGhost();
     return;
   }
 
   // 檢查禁自殺規則
-  if(isSuicideMove(r, c, ME)){
+  if(isSuicideMove(r, c, currentWho)){
     triggerWiggleReject(r, c);
     sRejectBoing();
     document.getElementById('statusText').textContent = '🚫 不能自殺喔！這裡完全沒有氣～';
+    clearPendingMove();
+    removeGhost();
     return;
   }
 
   // 清除教練提示點
   currentHintPos = null;
 
-  // 合法落子
-  placeStone(r, c, ME);
+  // 防誤按機制判斷
+  if(confirmMode){
+    if(pendingMove && pendingMove.r === r && pendingMove.c === c){
+      // 雙擊同一個合法格 -> 直接確認下子
+      commitPendingMove();
+    } else {
+      // 點擊其他合法空格 -> 設置 pendingMove 並彈出確認泡泡與 Ghost 預覽
+      pendingMove = { r: r, c: c, who: currentWho };
+      calcGhostPreview(r, c, currentWho);
+      renderGhost();
+      showConfirmBubble(r, c, currentWho);
+    }
+  } else {
+    // 關閉防誤按 -> 單擊直接下子
+    clearPendingMove();
+    placeStone(r, c, currentWho);
+  }
 }
 
 function placeStone(r, c, who){
   board[r][c] = who;
   lastMove = { r: r, c: c, who: who };
   passCount = 0;
-  ghostPreviewPos = null;
+  clearPendingMove();
+  removeGhost();
 
   // 提子檢查
   var captured = checkCaptures(r, c, who);
@@ -1847,10 +2291,10 @@ function placeStone(r, c, who){
     });
     if(who === ME){
       capturedAi += captured.length;
-      showFloatingScore(r, c, '💥 提子 +' + captured.length + '!');
+      showFloatingScore(r, c, (gameMode === 'pvp' ? '🩷 提吃 +' : '💥 提子 +') + captured.length + '!');
     } else {
       capturedMe += captured.length;
-      showFloatingScore(r, c, '👾 提吃 ' + captured.length + ' 顆!');
+      showFloatingScore(r, c, (gameMode === 'pvp' ? '💜 提吃 +' : '👾 提吃 ') + captured.length + ' 顆!');
     }
     sCaptureBurst();
     spawnParticleBurst(r, c, who === ME ? '#ff3377' : '#7c4dff', captured.length * 12);
@@ -1858,24 +2302,36 @@ function placeStone(r, c, who){
     sPlaceJelly();
   }
 
-  // 累積能量 (玩家落子每步 +1)
-  if(who === ME && energy < 9) energy++;
+  // 累積能量 (僅單人模式玩家落子每步 +1)
+  if(gameMode === 'pve' && who === ME && energy < 9) energy++;
 
   render();
 
   // 換手
   turn = (who === ME) ? AI : ME;
-  if(turn === AI){
-    document.getElementById('statusText').textContent = '魔王思考中…👾';
-    aiThinking = true;
-    var thinkDelay = 450;
-    if(difficulty === 'grand') thinkDelay = 650 + Math.random() * 300;
-    else if(difficulty === 'hard') thinkDelay = 550 + Math.random() * 250;
-    else if(difficulty === 'medium') thinkDelay = 450 + Math.random() * 200;
-    else thinkDelay = 350 + Math.random() * 150;
-    setTimeout(aiTurn, thinkDelay);
+
+  if(gameMode === 'pvp'){
+    aiThinking = false;
+    if(turn === ME){
+      document.getElementById('statusText').textContent = '輪到 🩷 玩家一（粉粉果凍）落子 ✨';
+    } else {
+      document.getElementById('statusText').textContent = '輪到 💜 玩家二（紫紫果凍）落子 🔮';
+    }
   } else {
-    document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
+    // 單人模式
+    if(turn === AI){
+      document.getElementById('statusText').textContent = '魔王思考中…👾';
+      aiThinking = true;
+      var thinkDelay = 450;
+      if(difficulty === 'grand') thinkDelay = 650 + Math.random() * 300;
+      else if(difficulty === 'hard') thinkDelay = 550 + Math.random() * 250;
+      else if(difficulty === 'medium') thinkDelay = 450 + Math.random() * 200;
+      else if(difficulty === 'sprout') thinkDelay = 300 + Math.random() * 150;
+      else thinkDelay = 350 + Math.random() * 150;
+      setTimeout(aiTurn, thinkDelay);
+    } else {
+      document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
+    }
   }
 }
 
@@ -1887,7 +2343,7 @@ function triggerWiggleReject(r, c){
   cellEl.classList.add('jelly-reject-shake');
 }
 
-/* ================= 🧠 AI 輔助演算法 (真眼判定、落子模擬、切斷點) ================= */
+/* ================= 🧠 AI 輔助演算法 (真眼判定、落子模擬、切斷點、征子模擬) ================= */
 function isTrueEye(r, c, who){
   if(board[r][c] !== EMPTY) return false;
   var dirs = [[-1,0],[1,0],[0,-1],[0,1]];
@@ -1946,7 +2402,71 @@ function isCutPoint(r, c, who){
   return Object.keys(oppGroupRoots).length >= 2;
 }
 
-/* ================= 🧠 AI 棋力難度切換決策系統 (4 段難度) ================= */
+/* 征子模擬 (Ladder Lookahead)：連續追吃 4~6 步測試能否長氣逃脫 */
+function simulateLadder(targetR, targetC, attacker, maxSteps){
+  var defender = (attacker === ME) ? AI : ME;
+  maxSteps = maxSteps || 5;
+
+  function step(currentSteps){
+    if(currentSteps >= maxSteps) return true; // 追吃達指定步數始終無法長氣逃脫，判定征子成功
+    var tg = getGroup(targetR, targetC, {});
+    if(tg.stones.length === 0 || tg.liberties === 0) return true; // 已經提吃或被消滅
+    if(tg.liberties >= 3) return false; // 氣數大於等於3，成功逃脫
+    
+    // 若剩1氣，防守方必須逃跑
+    if(tg.liberties === 1){
+      var escKey = Object.keys(tg.libertySet)[0];
+      if(!escKey) return true;
+      var ep = escKey.split(',');
+      var er = parseInt(ep[0]), ec = parseInt(ep[1]);
+      if(isSuicideMove(er, ec, defender)) return true; // 無法落子逃跑
+      
+      board[er][ec] = defender;
+      var afterEscGroup = getGroup(targetR, targetC, {});
+      if(afterEscGroup.liberties >= 3){
+        board[er][ec] = EMPTY;
+        return false;
+      }
+      
+      // 攻擊方尋找能否繼續叫吃 (Atari)
+      var canKeepAtari = false;
+      var escLibs = Object.keys(afterEscGroup.libertySet);
+      for(var i=0; i<escLibs.length; i++){
+        var lp = escLibs[i].split(',');
+        var lr = parseInt(lp[0]), lc = parseInt(lp[1]);
+        if(isSuicideMove(lr, lc, attacker)) continue;
+        
+        board[lr][lc] = attacker;
+        var caps = checkCaptures(lr, lc, attacker);
+        if(caps.length > 0){
+          board[lr][lc] = EMPTY;
+          canKeepAtari = true;
+          break;
+        }
+        var nextTg = getGroup(targetR, targetC, {});
+        if(nextTg.liberties === 1){
+          var subResult = step(currentSteps + 1);
+          board[lr][lc] = EMPTY;
+          if(subResult){
+            canKeepAtari = true;
+            break;
+          }
+        } else {
+          board[lr][lc] = EMPTY;
+        }
+      }
+      
+      board[er][ec] = EMPTY;
+      return canKeepAtari;
+    }
+    
+    return false;
+  }
+
+  return step(0);
+}
+
+/* ================= 🧠 AI 棋力難度切換決策系統 (5 段難度) ================= */
 function aiTurn(){
   if(gameOver) return;
   var bestMove = chooseAIMove(difficulty);
@@ -1981,6 +2501,79 @@ function chooseAIMove(diff){
     }
   }
   if(legalMoves.length === 0) return null;
+
+  // -------------------------------------------------------------
+  // 【🌱 萌芽 (sprout)】慈悲放水模式 Mercy AI（新手友善）
+  // -------------------------------------------------------------
+  if(diff === 'sprout'){
+    // 慈悲機制 2：AI 在選擇落子時，有 40% 機率故意走到只有 1~2 氣的破綻位置（送吃或給予玩家叫吃機會），引導小朋友享受提子樂趣
+    if(Math.random() < 0.40){
+      var blunderMoves = [];
+      legalMoves.forEach(function(m){
+        var sim = simulateMove(m.r, m.c, AI);
+        if(sim.captured.length === 0){
+          var g = getGroup(m.r, m.c, {});
+          if(g.liberties === 1 || g.liberties === 2){
+            blunderMoves.push(m);
+          }
+        }
+        sim.revert();
+      });
+      if(blunderMoves.length > 0){
+        return blunderMoves[Math.floor(Math.random() * blunderMoves.length)];
+      }
+    }
+
+    // 慈悲機制 1 & 3：嚴禁提吃、散步模式、絕不主動切斷玩家連通
+    var scoredSproutMoves = [];
+    legalMoves.forEach(function(m){
+      var sim = simulateMove(m.r, m.c, AI);
+      var g = getGroup(m.r, m.c, {});
+      var score = 0;
+
+      // 慈悲機制 1：嚴禁提吃玩家任何棋子 (-9999)
+      if(sim.captured.length > 0){
+        score -= 9999;
+      }
+
+      // 慈悲機制 3：絕不主動切斷玩家連通 (-5000)
+      if(isCutPoint(m.r, m.c, AI)){
+        score -= 5000;
+      }
+
+      // 避免主動讓玩家群組變成 1 氣叫吃
+      for(var d=0; d<4; d++){
+        var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+        if(inb(nr, nc) && board[nr][nc] === ME){
+          var eg = getGroup(nr, nc, {});
+          if(eg.liberties === 1) score -= 300;
+        }
+      }
+
+      // 散步模式：優先走在棋盤外圍空曠處或天元附近
+      var distCenter = Math.abs(m.r - center) + Math.abs(m.c - center);
+      if(distCenter <= 1.5) score += 35; // 天元附近
+      var distEdge = Math.min(m.r, N - 1 - m.r, m.c, N - 1 - m.c);
+      if(distEdge === 1 || distEdge === 2) score += 25; // 外圍
+
+      // 空曠避戰：周圍無敵方玩家棋子加分
+      var adjMe = 0;
+      for(var d=0; d<4; d++){
+        var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+        if(inb(nr, nc) && board[nr][nc] === ME) adjMe++;
+      }
+      if(adjMe === 0) score += 30;
+      else score -= adjMe * 20;
+
+      sim.revert();
+      scoredSproutMoves.push({ move: m, score: score });
+    });
+
+    scoredSproutMoves.sort(function(a, b){ return b.score - a.score; });
+    var topCount = Math.min(3, scoredSproutMoves.length);
+    var pick = scoredSproutMoves[Math.floor(Math.random() * topCount)];
+    return pick ? pick.move : legalMoves[0];
+  }
 
   // -------------------------------------------------------------
   // 【🐣 初級 (easy)】：60% 隨機休閒探索，40% 基礎提子
@@ -2214,12 +2807,23 @@ function chooseAIMove(diff){
       if(dmg.libertySet[m.r+','+m.c]) score += 300;
     });
 
-    // 4. 叫吃與破壞假眼
+    // 4. 叫吃、破壞假眼與征子模擬 (Ladder Lookahead)
     for(var d=0; d<4; d++){
       var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
       if(inb(nr, nc) && board[nr][nc] === ME){
         var eg = getGroup(nr, nc, {});
-        if(eg.liberties === 1) score += 320; // 製造 1 氣叫吃
+        if(eg.liberties === 1){
+          score += 320; // 製造 1 氣叫吃
+          // 征子模擬：模擬連續追吃 4~6 步
+          if(eg.stones.length > 0){
+            var ladderCaught = simulateLadder(eg.stones[0].r, eg.stones[0].c, AI, 5);
+            if(ladderCaught){
+              score += 850; // 對手無法逃出，給予巨幅提吃獎勵 (+850)
+            } else {
+              score -= 150; // 對手能逃出長氣，不浪費步數追征子
+            }
+          }
+        }
         else if(eg.liberties === 2) score += 85;  // 逼入 2 氣
       }
     }
@@ -2233,7 +2837,7 @@ function chooseAIMove(diff){
       score += 240;
     }
 
-    // 5. 死活做兩眼 (檢查周圍獨立真眼數)
+    // 5. 活三與做兩眼 (Make Two Eyes)
     var eyeCount = 0;
     var checkedEye = {};
     g.stones.forEach(function(st){
@@ -2246,6 +2850,50 @@ function chooseAIMove(diff){
       }
     });
     if(eyeCount >= 2) score += 500;
+
+    // 做成真眼的關鍵眼位 (+550)
+    var madeTrueEye = false;
+    for(var d=0; d<4; d++){
+      var er = m.r + dirs[d][0], ec = m.c + dirs[d][1];
+      if(inb(er, ec) && board[er][ec] === EMPTY && isTrueEye(er, ec, AI)){
+        madeTrueEye = true;
+        break;
+      }
+    }
+    if(!madeTrueEye){
+      var diagDirs = [[-1,-1],[-1,1],[1,-1],[1,1]];
+      for(var di=0; di<4; di++){
+        var dr = m.r + diagDirs[di][0], dc = m.c + diagDirs[di][1];
+        if(inb(dr, dc) && board[dr][dc] === EMPTY && isTrueEye(dr, dc, AI)){
+          madeTrueEye = true;
+          break;
+        }
+      }
+    }
+    if(madeTrueEye) score += 550;
+
+    // 破除敵方眼位 (+380)
+    var destroysOppEye = false;
+    board[m.r][m.c] = ME;
+    for(var d=0; d<4; d++){
+      var er = m.r + dirs[d][0], ec = m.c + dirs[d][1];
+      if(inb(er, ec) && board[er][ec] === EMPTY && isTrueEye(er, ec, ME)){
+        destroysOppEye = true;
+        break;
+      }
+    }
+    if(!destroysOppEye){
+      var diagDirs = [[-1,-1],[-1,1],[1,-1],[1,1]];
+      for(var di=0; di<4; di++){
+        var dr = m.r + diagDirs[di][0], dc = m.c + diagDirs[di][1];
+        if(inb(dr, dc) && board[dr][dc] === EMPTY && isTrueEye(dr, dc, ME)){
+          destroysOppEye = true;
+          break;
+        }
+      }
+    }
+    board[m.r][m.c] = AI;
+    if(destroysOppEye) score += 380;
 
     // 6. 金角銀邊與佔大場 (開局期評估)
     if(isEarlyGame){
@@ -2265,8 +2913,22 @@ function chooseAIMove(diff){
       else if(m.r === 1 || m.r === N-2 || m.c === 1 || m.c === N-2) score -= 40;
     }
 
-    // 7. 切斷敵方連接與強化己方連通
-    if(isCutPoint(m.r, m.c, AI)) score += 220;
+    // 7. 切斷與分斷（Cut & Separate）：檢測對手兩塊弱棋的交叉切斷點，優先切斷敵軍 (+420)
+    if(isCutPoint(m.r, m.c, AI)){
+      var cutWeakCount = 0;
+      for(var d=0; d<4; d++){
+        var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
+        if(inb(nr, nc) && board[nr][nc] === ME){
+          var cg = getGroup(nr, nc, {});
+          if(cg.liberties <= 3) cutWeakCount++;
+        }
+      }
+      if(cutWeakCount >= 2){
+        score += 420; // 成功切斷對手兩塊弱棋！
+      } else {
+        score += 240;
+      }
+    }
 
     for(var d=0; d<4; d++){
       var nr = m.r + dirs[d][0], nc = m.c + dirs[d][1];
@@ -2389,11 +3051,29 @@ function chooseAIMove(diff){
 
 /* ================= Pass 功能 ================= */
 function userPass(){
-  if(gameOver || aiThinking || turn !== ME) return;
+  if(gameOver || aiThinking) return;
+  if(gameMode === 'pve' && turn !== ME) return;
+
+  clearPendingMove();
+  removeGhost();
   passCount++;
+
   if(passCount >= 2){
     endGame();
+    return;
+  }
+
+  if(gameMode === 'pvp'){
+    var passedWho = turn;
+    turn = (turn === ME) ? AI : ME;
+    if(passedWho === ME){
+      document.getElementById('statusText').textContent = '🩷 玩家一 Pass！輪到 💜 玩家二（紫紫果凍）落子 🔮';
+    } else {
+      document.getElementById('statusText').textContent = '💜 玩家二 Pass！輪到 🩷 玩家一（粉粉果凍）落子 ✨';
+    }
+    render();
   } else {
+    // 單人模式
     turn = AI;
     document.getElementById('statusText').textContent = '你選擇了 Pass！魔王思考中…👾';
     render();
@@ -2405,24 +3085,48 @@ function userPass(){
 /* ================= 遊戲結算與勝利回報 ================= */
 function endGame(){
   gameOver = true;
+  clearPendingMove();
+  removeGhost();
   var terr = calculateTerritory();
   var pTotal = capturedAi + terr.me;
   var aTotal = capturedMe + terr.ai;
 
   var title = '', detail = '';
-  if(pTotal > aTotal){
-    title = '🎉 勝利！果凍大獲全勝！';
-    detail = '⭐ 你的果凍圍了 ' + terr.me + ' 目地盤並提吃 ' + capturedAi + ' 顆！<br>成功擊敗了魔王果凍！';
-    sWinSong();
-    triggerConfetti();
-    if(window.KidsApp) KidsApp.reportWin('stickyGomoku', '💧');
-  } else if(aTotal > pTotal){
-    title = '👾 惜敗！魔王佔據了更多地盤';
-    detail = '魔王果凍圍了 ' + terr.ai + ' 目地盤…<br>別灰心，多黏幾顆再挑戰一次！';
-    sLoseSong();
+  if(gameMode === 'pvp'){
+    if(pTotal > aTotal){
+      title = '🎉 玩家一（粉）獲勝！';
+      detail = '🩷 玩家一圍了 ' + terr.me + ' 目並提吃 ' + capturedAi + ' 顆（總分 ' + pTotal + '）！<br>恭喜玩家一獲得勝利！';
+      sWinSong();
+      triggerConfetti();
+    } else if(aTotal > pTotal){
+      title = '🎉 玩家二（紫）獲勝！';
+      detail = '💜 玩家二圍了 ' + terr.ai + ' 目並提吃 ' + capturedMe + ' 顆（總分 ' + aTotal + '）！<br>恭喜玩家二獲得勝利！';
+      sWinSong();
+      triggerConfetti();
+    } else {
+      title = '🤝 雙方握手和棋！';
+      detail = '兩位棋士各展神通，比分完全相同（' + pTotal + ' 平手）！';
+    }
+    document.getElementById('modalPLabel').innerHTML = '🩷 玩家一：<b id="endPScore">' + pTotal + '</b> 分';
+    document.getElementById('modalALabel').innerHTML = '💜 玩家二：<b id="endAScore">' + aTotal + '</b> 分';
   } else {
-    title = '🤝 旗鼓相當！和局！';
-    detail = '雙方果凍勢均力敵，表現太精彩了！';
+    // 單人魔王模式
+    if(pTotal > aTotal){
+      title = '🎉 勝利！果凍大獲全勝！';
+      detail = '⭐ 你的果凍圍了 ' + terr.me + ' 目地盤並提吃 ' + capturedAi + ' 顆！<br>成功擊敗了魔王果凍！';
+      sWinSong();
+      triggerConfetti();
+      if(window.KidsApp) KidsApp.reportWin('stickyGomoku', '💧');
+    } else if(aTotal > pTotal){
+      title = '👾 惜敗！魔王佔據了更多地盤';
+      detail = '魔王果凍圍了 ' + terr.ai + ' 目地盤…<br>別灰心，多黏幾顆再挑戰一次！';
+      sLoseSong();
+    } else {
+      title = '🤝 旗鼓相當！和局！';
+      detail = '雙方果凍勢均力敵，表現太精彩了！';
+    }
+    document.getElementById('modalPLabel').innerHTML = '⭐ 玩家：<b id="endPScore">' + pTotal + '</b> 分';
+    document.getElementById('modalALabel').innerHTML = '👾 AI：<b id="endAScore">' + aTotal + '</b> 分';
   }
 
   document.getElementById('modalTitle').textContent = title;
@@ -2447,13 +3151,38 @@ function resetGame(){
   lastMove = null;
   ghostPreviewPos = null;
   currentHintPos = null;
+  clearPendingMove();
+  removeGhost();
   triggerSkill('');
   document.getElementById('endModal').classList.add('hidden');
-  document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
-  document.getElementById('coachTacticsBadge').textContent = '✨ 戰術指引';
-  document.getElementById('coachMsg').textContent = '「新的一局開始囉！隨時點我，我會為你推薦最佳著手喔！」';
-  buildGridDOM();
-  render();
+
+  var isHandicapGame = (gameMode === 'pve' && handicapStones > 0);
+  if(isHandicapGame){
+    var hPositions = getHandicapPositions(N, handicapStones);
+    hPositions.forEach(function(pos){
+      board[pos[0]][pos[1]] = ME;
+    });
+    turn = AI;
+    aiThinking = true;
+    document.getElementById('statusText').textContent = '🍬 黑棋已受讓 ' + handicapStones + ' 子！白棋魔王先攻中…👾';
+    document.getElementById('coachTacticsBadge').textContent = '🍬 讓子開局';
+    document.getElementById('coachMsg').textContent = '「黑棋星位已預先放置 ' + handicapStones + ' 顆果凍！魔王先下，小心防守喔！」';
+    buildGridDOM();
+    render();
+    setTimeout(aiTurn, 650);
+  } else {
+    if(gameMode === 'pvp'){
+      document.getElementById('statusText').textContent = '輪到 🩷 玩家一（粉粉果凍）落子 ✨';
+      document.getElementById('coachTacticsBadge').textContent = '✨ 對弈指引';
+      document.getElementById('coachMsg').textContent = '「新的一局開始囉！兩位棋士請就座～」';
+    } else {
+      document.getElementById('statusText').textContent = '輪到你囉！放下一顆彈嫩的小果凍 ✨';
+      document.getElementById('coachTacticsBadge').textContent = '✨ 戰術指引';
+      document.getElementById('coachMsg').textContent = '「新的一局開始囉！隨時點我，我會為你推薦最佳著手喔！」';
+    }
+    buildGridDOM();
+    render();
+  }
 }
 
 /* ================= 特效：粒子大爆破與浮空字 ================= */
@@ -2537,6 +3266,8 @@ function triggerConfetti(){
 
 /* ================= 啟動 ================= */
 initBoardArray();
+updateConfirmModeUI();
+updateHandicapUI();
 buildGridDOM();
 render();
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
