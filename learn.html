@@ -1452,6 +1452,23 @@
     100% { transform: translateY(-50px) scale(1.3); opacity: 0; }
   }
 
+  .water-splash-effect {
+    position: absolute;
+    font-size: 48px;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10;
+    animation: splashPop 0.8s ease-out forwards;
+    filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.6));
+  }
+  @keyframes splashPop {
+    0% { transform: translate(-50%, 0%) scale(0.5); opacity: 0; }
+    50% { transform: translate(-50%, -40%) scale(1.4); opacity: 1; }
+    100% { transform: translate(-50%, -80%) scale(1.1); opacity: 0; }
+  }
+
   /* ====== TAB 4: ROLEPLAY DIALOGUE ====== */
   .dialogue-container {
     max-width: 840px;
@@ -3105,6 +3122,12 @@
         </div>
       </div>
 
+      <!-- 闖關模式選擇 -->
+      <div class="kids-battle-mode-bar" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 2px;">
+        <button id="kidsModeVocabBtn" class="pill active" type="button">🎯 詞義打怪</button>
+        <button id="kidsModeRhymeBtn" class="pill" type="button">🦨 押韻大作戰 (Rhyme Match)</button>
+      </div>
+
       <!-- Monster Visual Stage -->
       <div class="glass-card monster-stage" id="monsterStage">
         <div class="monster-avatar" id="monsterAvatar">👾</div>
@@ -3802,6 +3825,18 @@ const SpeechSys = (() => {
    ========================================================================= */
 const DEFAULT_WORDS = [
   /* =========================================================================
+     🦨 自然發音繪本：《The Trunk and the Skunk》核心生字 (8 詞)
+     ========================================================================= */
+  { id: 'en-skunk-1', lang: 'en', level: 'A1', word: 'Trunk', phonetic: '/ˈtrʌŋk/', meaning: '象鼻、樹幹', pos: 'n.', example: 'The mammoth has a long trunk.', exampleZh: '長毛象有一根長長的象鼻。' },
+  { id: 'en-skunk-2', lang: 'en', level: 'A1', word: 'Skunk', phonetic: '/skʌŋk/', meaning: '臭鼬', pos: 'n.', example: 'A skunk has black and white fur.', exampleZh: '臭鼬有著黑白相間的毛皮。' },
+  { id: 'en-skunk-3', lang: 'en', level: 'A1', word: 'Mammoth', phonetic: '/ˈmæməθ/', meaning: '長毛象', pos: 'n.', example: 'The mammoth lived long ago.', exampleZh: '長毛象生活在很久很久以前。' },
+  { id: 'en-skunk-4', lang: 'en', level: 'A1', word: 'Tusk', phonetic: '/tʌsk/', meaning: '象牙', pos: 'n.', example: 'Elephants have two big tusks.', exampleZh: '大象有兩根大象牙。' },
+  { id: 'en-skunk-5', lang: 'en', level: 'A1', word: 'Stamp', phonetic: '/stæmp/', meaning: '跺腳、踩踏', pos: 'v.', example: 'I can stamp my feet on the ground.', exampleZh: '我可以在地上用力跺腳。' },
+  { id: 'en-skunk-6', lang: 'en', level: 'A1', word: 'Slosh', phonetic: '/slɑːʃ/', meaning: '潑水、晃蕩', pos: 'v.', example: 'Water can slosh in the tub.', exampleZh: '水在浴缸裡晃蕩潑灑。' },
+  { id: 'en-skunk-7', lang: 'en', level: 'A1', word: 'Smell', phonetic: '/smel/', meaning: '聞、聞起來', pos: 'v.', example: 'I can smell the sweet banana.', exampleZh: '我能聞到甜甜的香蕉香味。' },
+  { id: 'en-skunk-8', lang: 'en', level: 'A1', word: 'Stink', phonetic: '/stɪŋk/', meaning: '發臭、發出難聞氣味', pos: 'v.', example: 'The rotten food will stink.', exampleZh: '腐爛的食物會發出臭味。' },
+
+  /* =========================================================================
      🇬🇧 English A1 入門 (10 詞)
      ========================================================================= */
   { id: 'en-a1-1', lang: 'en', level: 'A1', word: 'Apple', phonetic: '/ˈæpl/', meaning: '蘋果', pos: 'n.', example: 'I eat a fresh apple every morning.', exampleZh: '我每天早上吃一顆新鮮的蘋果。' },
@@ -3961,6 +3996,27 @@ const DEFAULT_WORDS = [
    ========================================================================= */
 const PRESET_VIDEOS = [
   {
+    id: 'phonics-skunk',
+    title: '🦨 Songbirds: The Trunk and the Skunk',
+    category: 'kids-en',
+    videoId: 'sWh-dg0t5YU',
+    desc: '牛津自然發音繪本：長毛象與臭鼬的森林大冒險',
+    subtitles: [
+      { start: 7.9, end: 12.0, orig: "I am a mammoth.", zh: "我是一隻長毛象。" },
+      { start: 12.1, end: 18.0, orig: "I have big thick legs.", zh: "我有粗粗的大腿。" },
+      { start: 18.1, end: 24.0, orig: "I can stamp on things. Crash!", zh: "我可以在東西上面用力踩！碰！" },
+      { start: 24.5, end: 29.2, orig: "I have long tusks.", zh: "我有長長的象牙。" },
+      { start: 29.2, end: 34.5, orig: "I can dig with them.", zh: "我可以用它們挖土。" },
+      { start: 35.0, end: 38.5, orig: "I have a long trunk.", zh: "我有一根長長的大象鼻子。" },
+      { start: 38.5, end: 45.0, orig: "I can do lots of things with my trunk.", zh: "我可以用長鼻子做很多事。" },
+      { start: 45.2, end: 56.0, orig: "I can pick things up. I can lift things. I can drink.", zh: "我可以把東西撿起來、舉起來，還能喝水。" },
+      { start: 56.2, end: 65.3, orig: "I can slosh my mom and dad. Stop that!", zh: "我能用水噴爸爸媽媽。「快住手！」" },
+      { start: 66.0, end: 73.0, orig: "I can smell things with my trunk. I can smell good things: sniff sniff, bananas!", zh: "我能用鼻子聞味道。我能聞到好聞的東西：聞聞，香蕉！" },
+      { start: 73.5, end: 83.5, orig: "And I can smell bad things: sniff sniff, a skunk! This skunk stinks!", zh: "我也能聞到難聞的東西：聞聞，臭鼬！這隻臭鼬好臭啊！" },
+      { start: 84.0, end: 113.5, orig: "I will slosh him! Help! Slosh! That will get rid of the smell. Sniff sniff... Oh no! The skunk still smells of skunk!", zh: "我要用水噴牠！救命！嘩啦！這樣就能去掉臭味了吧。聞聞⋯哎呀！臭鼬聞起來還是臭鼬味！" }
+    ]
+  },
+  {
     id: 'peppa-cleaning',
     title: '🐷 Peppa Pig: Cleaning Up',
     category: 'kids-en',
@@ -4064,6 +4120,7 @@ const AppState = {
   blindSubEnabled: false,
 
   // Practice Quiz / Battle State
+  kidsBattleMode: 'vocab', // 'vocab' | 'rhyme'
   kidsHp: 100,
   monsterHp: 100,
   monsterMaxHp: 100,
@@ -4558,13 +4615,33 @@ const UI = {
   initQuiz() {
     const monsters = [
       { name: '貪吃字魔', avatar: '👾', hp: 100 },
+      { name: '森林臭屁鼬', avatar: '🦨', hp: 130 },
       { name: '噴火小火龍', avatar: '🦖', hp: 120 },
+      { name: '撼地長毛象', avatar: '🦣', hp: 160 },
       { name: '暗影蝙蝠王', avatar: '🦇', hp: 150 },
       { name: '頑皮幽靈魔', avatar: '👻', hp: 180 }
     ];
     this.monsters = monsters;
     this.currentMonsterIdx = 0;
     this.loadMonster(0);
+
+    const modeVocabBtn = document.getElementById('kidsModeVocabBtn');
+    const modeRhymeBtn = document.getElementById('kidsModeRhymeBtn');
+    if (modeVocabBtn && modeRhymeBtn) {
+      modeVocabBtn.onclick = () => {
+        AppState.kidsBattleMode = 'vocab';
+        modeVocabBtn.classList.add('active');
+        modeRhymeBtn.classList.remove('active');
+        this.nextMonsterBattleQuestion();
+      };
+      modeRhymeBtn.onclick = () => {
+        AppState.kidsBattleMode = 'rhyme';
+        modeRhymeBtn.classList.add('active');
+        modeVocabBtn.classList.remove('active');
+        this.nextMonsterBattleQuestion();
+      };
+    }
+
     this.nextMonsterBattleQuestion();
   },
 
@@ -4584,6 +4661,11 @@ const UI = {
   },
 
   nextMonsterBattleQuestion() {
+    if (AppState.kidsBattleMode === 'rhyme') {
+      this.nextRhymeBattleQuestion();
+      return;
+    }
+
     const words = [...DEFAULT_WORDS, ...AppState.customWords];
     if (words.length < 4) return;
 
@@ -4625,6 +4707,55 @@ const UI = {
     });
   },
 
+  nextRhymeBattleQuestion() {
+    const qList = [
+      { word: 'Trunk', family: '-unk 家族', answer: 'Skunk', distractors: ['Pig', 'Leg', 'Cat'] },
+      { word: 'Skunk', family: '-unk 家族', answer: 'Trunk', distractors: ['Apple', 'Book', 'Fish'] },
+      { word: 'Stamp', family: '-amp 家族', answer: 'Camp', distractors: ['Trunk', 'Milk', 'Wind'] },
+      { word: 'Tusk', family: '-usk 家族', answer: 'Dusk', distractors: ['Smile', 'Water', 'Leg'] },
+      { word: 'Slosh', family: '-osh 家族', answer: 'Wash', distractors: ['Tusk', 'Book', 'Pig'] },
+      { word: 'Smell', family: '-ell 家族', answer: 'Bell', distractors: ['Elephant', 'Nose', 'Tree'] },
+      { word: 'Stink', family: '-ink 家族', answer: 'Drink', distractors: ['Slosh', 'Stamp', 'Hop'] },
+      { word: 'Drink', family: '-ink 家族', answer: 'Stink', distractors: ['Banana', 'Music', 'Cloud'] },
+      { word: 'Leg', family: '-eg 家族', answer: 'Egg', distractors: ['Trunk', 'Water', 'Big'] },
+      { word: 'Big', family: '-ig 家族', answer: 'Dig', distractors: ['Skunk', 'Stop', 'Smell'] },
+      { word: 'Dig', family: '-ig 家族', answer: 'Pig', distractors: ['Stamp', 'Stink', 'Car'] },
+      { word: 'Stop', family: '-op 家族', answer: 'Hop', distractors: ['Drink', 'Tusk', 'Crash'] }
+    ];
+
+    const target = qList[Math.floor(Math.random() * qList.length)];
+    AppState.currentQuizWord = { word: target.word, lang: 'en', answer: target.answer, isRhyme: true };
+
+    document.getElementById('quizWord').textContent = target.word;
+    document.getElementById('quizHint').textContent = `誰跟 [${target.word}] 押韻？（${target.family}）：`;
+
+    setTimeout(() => {
+      SpeechSys.speak(target.word, 'en');
+    }, 200);
+
+    const distractors = [...target.distractors].sort(() => Math.random() - 0.5).slice(0, 3);
+    const options = [target.answer, ...distractors].sort(() => Math.random() - 0.5);
+    const container = document.getElementById('quizChoicesGrid');
+    container.innerHTML = '';
+
+    options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `choice-btn btn-c${idx % 4}`;
+      btn.textContent = opt;
+
+      btn.addEventListener('click', () => {
+        if (opt === target.answer) {
+          SpeechSys.speak(opt, 'en');
+          this.handleCorrectAnswer(btn);
+        } else {
+          this.handleWrongAnswer(btn, target.answer);
+        }
+      });
+
+      container.appendChild(btn);
+    });
+  },
+
   handleCorrectAnswer(button) {
     AudioSys.hit();
     AppState.combo++;
@@ -4637,9 +4768,15 @@ const UI = {
     void monsterAvatar.offsetWidth;
     monsterAvatar.classList.add('hit');
 
-    const damage = 25;
+    const isRhyme = AppState.kidsBattleMode === 'rhyme';
+    const damage = isRhyme ? 35 : 25;
     AppState.monsterHp -= damage;
-    this.showFloatingDamage(`💥 -${damage} HP!`);
+    if (isRhyme) {
+      this.showFloatingDamage(`💦 Slosh! 象鼻噴水 -${damage} HP!`);
+      this.triggerWaterSplash();
+    } else {
+      this.showFloatingDamage(`💥 -${damage} HP!`);
+    }
     this.updateMonsterHpBar();
 
     if (AppState.monsterHp <= 0) {
@@ -4659,6 +4796,16 @@ const UI = {
     setTimeout(() => {
       this.nextMonsterBattleQuestion();
     }, 600);
+  },
+
+  triggerWaterSplash() {
+    const stage = document.getElementById('monsterStage');
+    if (!stage) return;
+    const splash = document.createElement('div');
+    splash.className = 'water-splash-effect';
+    splash.textContent = '💦 🌊 💦';
+    stage.appendChild(splash);
+    setTimeout(() => splash.remove(), 800);
   },
 
   handleWrongAnswer(button, correctMeaning) {
@@ -7055,6 +7202,28 @@ const WOO_CH2_STORY = {
   ]
 };
 
+const SKUNK_STORY = {
+  id: 'skunk-story',
+  title: '🦨 自然發音：The Trunk and the Skunk',
+  titleZh: '長毛象與臭鼬',
+  source: 'localaudio',
+  audioFile: 'skunk_audio.webm',
+  lang: 'en',
+  sentences: [
+    { start: 7.9, end: 12.0, text: "I am a mammoth.", zh: "我是一隻長毛象。", pauseHint: "" },
+    { start: 12.1, end: 18.0, text: "I have big thick legs.", zh: "我有粗粗的大腿。", pauseHint: "" },
+    { start: 18.1, end: 24.0, text: "I can stamp on things. Crash!", zh: "我可以在東西上面用力踩！碰！", pauseHint: "" },
+    { start: 24.5, end: 29.2, text: "I have long tusks.", zh: "我有長長的象牙。", pauseHint: "" },
+    { start: 29.2, end: 34.5, text: "I can dig with them.", zh: "我可以用它們挖土。", pauseHint: "" },
+    { start: 35.0, end: 38.5, text: "I have a long trunk.", zh: "我有一根長長的大象鼻子。", pauseHint: "" },
+    { start: 38.5, end: 45.0, text: "I can do lots of things with my trunk.", zh: "我可以用長鼻子做很多事。", pauseHint: "" },
+    { start: 45.2, end: 56.0, text: "I can pick things up. I can lift things. I can drink.", zh: "我可以把東西撿起來、舉起來，還能喝水。", pauseHint: "" },
+    { start: 56.2, end: 65.3, text: "I can slosh my mom and dad. Stop that!", zh: "我能用水噴爸爸媽媽。「快住手！」", pauseHint: "" },
+    { start: 66.0, end: 73.0, text: "I can smell things with my trunk. I can smell good things: sniff sniff, bananas!", zh: "我能用鼻子聞味道。我能聞到好聞的東西：聞聞，香蕉！", pauseHint: "" },
+    { start: 73.5, end: 83.5, text: "And I can smell bad things: sniff sniff, a skunk! This skunk stinks!", zh: "我也能聞到難聞的東西：聞聞，臭鼬！這隻臭鼬好臭啊！", pauseHint: "" },
+    { start: 84.0, end: 113.5, text: "I will slosh him! Help! Slosh! That will get rid of the smell. Sniff sniff... Oh no! The skunk still smells of skunk!", zh: "我要用水噴牠！救命！嘩啦！這樣就能去掉臭味了吧。聞聞⋯哎呀！臭鼬聞起來還是臭鼬味！", pauseHint: "" }
+  ]
+};
 
 /* =========================================================================
    12. 影子跟讀訓練室模組 (ShadowingStudio Module)
@@ -7189,6 +7358,7 @@ const ShadowingStudio = (() => {
       });
     }
     if (lang === 'en') {
+      if (typeof SKUNK_STORY !== 'undefined') out.push(SKUNK_STORY);
       if (typeof WOO_CH1_STORY !== 'undefined') out.push(WOO_CH1_STORY);
       if (typeof WOO_CH2_STORY !== 'undefined') out.push(WOO_CH2_STORY);
     }
@@ -7209,6 +7379,9 @@ const ShadowingStudio = (() => {
   }
 
   function getCurrentStory() {
+    if (currentStoryId && (currentStoryId === 'skunk-story' || currentStoryId.startsWith('skunk-'))) {
+      if (typeof SKUNK_STORY !== 'undefined') return SKUNK_STORY;
+    }
     if (currentStoryId && currentStoryId.startsWith('woo-')) {
       return getWooStories().find(s => s.id === currentStoryId) || null;
     }
@@ -7286,6 +7459,21 @@ const ShadowingStudio = (() => {
         opt.textContent = `${s.title}（${s.titleZh}）${badge} (${completedCount}/${total})`;
         sel.appendChild(opt);
       });
+    }
+
+    // 🦨 自然發音繪本（真人原聲）
+    if (typeof SKUNK_STORY !== 'undefined' && currentLang === 'en') {
+      const group = document.createElement('optgroup');
+      group.label = '── 🦨 自然發音繪本（真人原聲）──';
+      const s = SKUNK_STORY;
+      const progress = loadProgress(s.id);
+      const completedCount = progress && Array.isArray(progress.completed) ? progress.completed.length : 0;
+      const total = s.sentences ? s.sentences.length : 0;
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = `${s.title}（${s.titleZh}） (${completedCount}/${total})`;
+      group.appendChild(opt);
+      sel.appendChild(group);
     }
 
     // 影音精聽室精選影片（自動同步，永遠一致）
@@ -8147,7 +8335,11 @@ const ShadowingStudio = (() => {
     if (story && story.source === 'localaudio') {
       const s = story.sentences[currentSentenceIdx];
       if (s && typeof s.start === 'number' && typeof s.end === 'number') {
-        playLocalAudioSegment(s.start, s.end, onEnd);
+        if (currentStep === 5) {
+          playEchoLocalSentence(s.start, s.end, onEnd);
+        } else {
+          playLocalAudioSegment(s.start, s.end, onEnd);
+        }
         return;
       }
     }
@@ -8895,6 +9087,22 @@ const ShadowingStudio = (() => {
     }
   }
 
+  function playEchoLocalSentence(start, end, onEnd) {
+    stopAllAudio();
+    const PAUSE_MS = 5000; // 暫停 5 秒讓使用者複述
+    setBanner('🔊 第一遍：請仔細聆聽...', '#1a1a2e', '#e0e0e0');
+    playLocalAudioSegment(start, end, () => {
+      setBanner('🎤 換你說！聽完後複述這句', '#2d1a4e', '#e0c3fc');
+      echoPauseTimer = setTimeout(() => {
+        setBanner('🔊 再聽一次原音...', '#1a1a2e', '#e0e0e0');
+        playLocalAudioSegment(start, end, () => {
+          setBanner('🔊 聽一句 → 暫停複述 → 再聽一次', '#1a1a2e', '#e0e0e0');
+          if (onEnd) onEnd();
+        });
+      }, PAUSE_MS);
+    });
+  }
+
   function stopAllAudio() {
     stopBgListen();
     isPlaying = false;
@@ -8943,6 +9151,14 @@ const ShadowingStudio = (() => {
   }
 
   function loadStory(storyId) {
+    if (storyId === 'skunk-story' || (storyId && storyId.startsWith('woo-'))) {
+      if (currentLang !== 'en') {
+        currentLang = 'en';
+        document.querySelectorAll('.shadow-lang-selector .pill').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-slang') === 'en');
+        });
+      }
+    }
     const userVideos = AppState.getUserVideos ? AppState.getUserVideos() : [];
     const found = userVideos.find(v => (v.id === storyId || 'yt-' + v.videoId === storyId));
     if (found && found.lang && found.lang !== currentLang) {
@@ -9077,6 +9293,7 @@ const ShadowingStudio = (() => {
       }
     },
     getAllStories,
+    getCurrentStory,
     loadStory,
     stopAllAudio,
     openFullTextViewEx,
