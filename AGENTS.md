@@ -129,10 +129,19 @@
   - 🔄 PWA 快取升級至 `kids-games-v38`。
   - ✅ e2e 10/10＋新功能探針 8/8（`C:\Users\PXP\AppData\Local\Temp\opencode\new_tab_probe.js`）。
 
+- [x] **牛津自然發音繪本《The Trunk and the Skunk》整合與押韻打怪闖關（v44）**：
+  - 🦨 影音精聽室：加入 `sWh-dg0t5YU` 兒童精選推薦與 12 句精準時間戳雙語字幕。
+  - 🎧 本地原音故事庫：收編 `SKUNK_STORY`（`skunk_audio.webm`，離線可聽），支援 5 步驟跟讀法與本機回音法（Echo Method）雙遍對照。
+  - 📖 純文字閱讀器：自動收納進兒童繪本選單，支援字級調整與單句原音點擊播放。
+  - 🎮 小朋友闖關新玩法「🦨 押韻大作戰 (Rhyme Match)」：新增森林臭屁鼬與撼地長毛象 Boss，實作自然發音家族押韻題庫（-unk, -amp, -usk, -ink 等），答對觸發象鼻潑水特效（Slosh!）。
+  - 📚 單字庫擴充：新增 `Trunk`, `Skunk`, `Mammoth`, `Tusk`, `Stamp`, `Slosh`, `Smell`, `Stink` 8 個基礎繪本生字。
+  - 🔄 PWA 快取推進至 `kids-games-v44`。
+
 ## 🕐 最後更新
 
-- **日期**：2026-09-29
-- **更新者**：Antigravity (Phase 2 能力分級重整)
-- **內容**：黏黏圍棋 Phase 2 升級完成——🌱 萌芽慈悲 AI 放水模式（瀕死不提吃 -9999、40% 送吃破綻、散步模式）、🍬 讓子選擇開局機制（分先/讓2/讓4/讓9子，白棋先攻）、🚨 星光教練瀕死即時強警報、🔥 宗師 AI 深度強化（征子模擬 Ladder Lookahead、切斷弱棋、做真眼與破敵眼），無頭 CDP 測試探針全數通過，sw.js 升級至 v43
-- **Git 狀態**：✅ 修改完成，測試通過
+- **日期**：2026-10-11
+- **更新者**：Antigravity
+- **內容**：完成《The Trunk and the Skunk》自然發音教材全面整合、本地音訊擷取、影子跟讀回音法相容、押韻打怪闖關新遊戲模式，sw.js 快取升級至 v44，推送到 GitHub 遠端。
+- **Git 狀態**：✅ 已 commit 並成功 push 到 main
+
 
