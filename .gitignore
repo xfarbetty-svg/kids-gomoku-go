@@ -1,1 +1,13 @@
 temp/
+
+# 小三數學題庫排除項目（媒體檔、大宗資料檔、快取）
+小三數學題庫/app/tts_cache/
+小三數學題庫/app/questions/
+小三數學題庫/app/pages/
+小三數學題庫/app/bank/
+小三數學題庫/app/.netlify/
+小三數學題庫/app/netlify/
+小三數學題庫/三年級/
+小三數學題庫/_scratch/
+**/__pycache__/
+**/*.pyc
