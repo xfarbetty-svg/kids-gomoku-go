@@ -157,5 +157,38 @@ if (!doneHidden || !lockedHidden) process.exit(1);
 | 手機單一聚焦與收合模式 | ✅ 通過 | Antigravity | 零滾動一屏作答 |
 | 第七層直式加法指引助手 | ✅ 通過 | Antigravity | 逐位加法看板＋動態進位 |
 | 全量 506 題巡檢 | ✅ 通過 | Antigravity | 零拋錯無 undefined |
-| OPENCODE 接收準備 | ⏳ 待簽核 | OPENCODE | 依本文件探針驗證即可 |
+| OPENCODE 接收準備 | ✅ 通過 | OPENCODE (space-bunny-free @ DESKTOP-6ELKIRH) | 三大探針全綠，詳見下方簽核紀錄 |
+
+---
+
+## 六、 🖋️ OPENCODE 驗證簽核紀錄（2026-10-13）
+
+> 驗證者：space-bunny-free @ DESKTOP-6ELKIRH｜結論：**3/3 探針全數合格（Exit Code 0）**
+
+| 探針 | 指令 | Exit Code | 實測輸出摘要 |
+| :--- | :--- | :---: | :--- |
+| 探針 1 | `python -X utf8 validate_grade4.py` | `0` | 末行 `🎉【國小四年級全套驗收守門員】全數合格 (Exit Code 0)！`；506 題／鷹架 132／乘法加法指引 22 題全綠 |
+| 探針 2 | `node` 載入 `generateThreeDigitMulTwoDigitScaffolding` | `0` | 400×37=14800、246×34=8364，第 7 層逐位算式與進位地圖逐字相符 |
+| 探針 3 | `node` 正則檢查手機版 CSS | `0` | `Done hidden: true Locked hidden: true` |
+
+### 6.1 獨立覆核（不採信對方自我報告）
+
+- **SHA256 自行重算**：`app/index.html` 與 `app/rpg_adventure.html` = `6378886FEDBFE2D2CF052B33BD7D0D208DD934F4A2A837400E404D2E0BA9CCE4`，逐位元組一致（非僅信守門員自述）。
+- **乘法交錯驗算補測 6 題**（守門員未覆蓋的邊界）：
+  | 算式 | 期望 | 實測 |
+  | :--- | ---: | ---: |
+  | 400 × 37 | 14800 | ✅ 14800 |
+  | 246 × 34 | 8364 | ✅ 8364 |
+  | 269 × 34 | 9146 | ✅ 9146 |
+  | 245 × 18 | 4410 | ✅ 4410 |
+  | 123 × 99 | 12177 | ✅ 12177 |
+  | 405 × 60 | 24300 | ✅ 24300 |
+- **進位地圖手工驗算**：`246 × 34` → `8+8=16` 進 1 → `9+3+1=13` 進 1 → `0+7+1=8` → `8364`，與 `{T:0, H:1, Th:1, TTh:0}` 相符。
+- **任務書「驗收步驟 2」一併補跑**（`vertical_math_explainer.js`）：`MULTIPLICATION 4410` / `TWO_STEP 160` / `DIVISION 30`，皆符合預期。
+
+### 6.2 驗收結論
+
+- ✅ 交付物 4 項（506 題題庫、直式引擎、APP 雛型、守門員腳本）**全部驗收通過**，可進入下一階段（手機實機走查）。
+- ⚠️ **已知限制（非缺陷）**：本次為靜態／無頭驗證，未做真機觸控與 AudioContext 實測；`GET_FILE_HASH`、YT 嵌入限制仍待手機實測確認。
+- 🔺 **觀察事項（已記錄，本階段不動手）**：`git status` 顯示 `小三數學題庫/`、`小三自然/` 兩個資料夾未納入版控，與本專案驗收無關，後續另案處理。
 

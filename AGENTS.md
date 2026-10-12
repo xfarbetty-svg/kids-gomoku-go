@@ -146,8 +146,13 @@
 ## 🕐 最後更新
 
 - **日期**：2026-10-13
-- **更新者**：Antigravity
-- **內容**：完成小四數學（Grade 4 Math RPG）三位數乘兩位數直式對位修復（解決 2800 只有 00、第二層十位 0 跑偏百位）、手機極致緊湊單一聚焦模式（做過自動收合）、第七層直式加法助手（常駐看板、進位指示 +1、由右往左逐格彈跳填入）、全量 506 題巡檢全綠、產出 OPENCODE 交替式驗證任務書（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）。
-- **Git 狀態**：✅ 已 commit 並成功 push 到 main（commit 1047950）
+- **更新者**：space-bunny-free（OPENCODE 驗證端）
+- **內容**：執行 Antigravity 交接的交替式驗證任務書（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）三大探針，**3/3 全綠（Exit Code 0）**。
+  - 探針 1：`python -X utf8 validate_grade4.py` → 全套驗收守門員全數合格（506 題／鷹架 132／乘法加法指引 22 題）。
+  - 探針 2：`400×37` 第 7 層逐位加法算式與進位地圖逐字相符；`246×34` → `8364` 相符。
+  - 探針 3：`.step-card.done` / `.step-card.locked` 皆 `display:none !important`，手機單一聚焦模式成立。
+  - 🔬 另做獨立覆核：SHA256 自行重算雙檔一致（`6378886F…9CCE4`）、乘法交錯驗算補測 6 題全對、`vertical_math_explainer.js` 乘／括號／除三型別單元測試通過。
+  - 📋 已於任務書**附加**第六節「OPENCODE 驗證簽核紀錄」並將簽核表改為 ✅ 通過（未覆寫對方原文）。
+- **Git 狀態**：待 commit（收工同步中）
 
 

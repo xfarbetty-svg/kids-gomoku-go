@@ -4,178 +4,57 @@
 
 ## ⏯️ 目前做到哪
 
-1. **國小四年級數學大冒險（小四數學）直式對位修復、手機聚焦與第 7 步加法助手全量完成 (2026-10-13)**：
-   - 📐 **直式對位 Bug 徹底修復**：
-     - 解決 $400 \times 37$ 第 1 層 2800 只有 00 的問題（修復 `ws-empty-cell` 造成文字 transparent 隱形，改賦予 `ws-res-box filled`）。
-     - 解決第二層十位 0 跑偏到百位的問題（標頭與所有行統一為固定 5 欄實體網格，全部 `display: flex`，空位佔位格保證 100% 絕對垂直對齊）。
-   - 📱 **手機單一聚焦模式實裝**：
-     - `.step-card.done` 與 `.step-card.locked` 設為 `display: none !important;`。
-     - 畫面上永遠只保留 1 張當前活躍步驟卡片，消除上下滾動，上方直式下方按鈕一屏全覽。
-   - ➕ **第七層「直式加法指引助手」實裝**：
-     - 進入第 7 步時，直式進位列 `wsCarryRow` 同步高亮顯示加法進位指示（`+1`）。
-     - 卡片常駐展開「📐 直式加法指引看板」，逐位條列（個位、十位、百位、千位）加法算式與進位。
-     - 答對時，直式總和層由右至左（個位 ➔ 十位 ➔ 百位 ➔ 千位 ➔ 萬位）動態彈跳填入答案。
-   - 🛡️ **全量 506 題巡檢守門員全綠**：
-     - `tools/verify_scaffoldings.js` 全量 506 題巡檢（鷹架 132 題、乘法加法指引 22 題全部通過，零拋錯無 undefined）。
-     - `validate_grade4.py` exit code 0 全綠通過。
-   - 📋 **產出 OPENCODE 交替式驗證任務書**（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）。
+1. **小四數學（Grade 4 Math RPG）— 交接驗收完成（2026-10-13）**
+   - Antigravity 端已完成：直式對位修復、手機單一聚焦模式、第七層直式加法助手、506 題巡檢守門員全綠。
+   - OPENCODE 端**三大交替式驗證探針 3/3 全綠（Exit Code 0）**，簽核完成：
+     - 探針 1 `python -X utf8 validate_grade4.py` → 全套守門員合格。
+     - 探針 2 `400×37=14800` / `246×34=8364`，第 7 層逐位加法算式與進位地圖逐字相符。
+     - 探針 3 `.step-card.done` / `.step-card.locked` 皆 `display:none !important`。
+   - 獨立覆核：SHA256 自行重算雙檔一致、乘法交錯驗算補測 6 題全對、`vertical_math_explainer.js` 乘／括號／除三型別通過。
+   - 簽核紀錄寫在 `小四數學/OPENCODE_TASK_GRADE4_MATH.md` 第六節（附加，未覆寫原文）。
 
-2. **影子跟讀第 5 步驟「回音法」（Echo Method）全套實作完成**（commit a736e19 / 888ef19，已 push）：
-   - `learn.html` 新增第 5 個步驟 Tab `[🔊 回音]`，CSS `.step-tabs` 改為 5 欄等寬網格。
-   - `applyStepUI()` 實作 Step 5 盲聽狀態（隱藏 ruby/romaji/zh/hint/badge，常駐錄音按鈕）。
-   - `playEchoSentence()` 實作原音播放 → 5 秒複述倒數「換你說！」→ 原音對照重播 → 銜接下一句。
-   - `speakSentence()` 智慧分流，YouTube 來源在 Step 5 自動導向回音法。
-   - `zhHidden` 與音訊定時器清理邏輯同步整合。
-2. **BBT《The Big Bang Theory》素材整合**（commit 888ef19，已 push）：
-   - `PRESET_VIDEOS` 納入 Sheldon 考駕照經典對白（13 句中英對照字幕）。
-   - 支援「📤 送到影子跟讀」與 Step 5 回音法練習。
-3. **綠野仙蹤影子跟讀版第 1 章完成**（commit f26bb8e）：
-   - `woo_shadow_ch1.html`（獨立檔案，49 句英中對照，Read Me A Classic 朗讀版）。
-4. **平板橫向版面最佳化**（commit a9a1889）。
-5. **影音精聽室 YouTube 無法播放修復**：
-   - 根因：載入時精聽室 Tab 為 `display:none`，`new YT.Player` 在零尺寸容器內初始化 → 黑畫面。
-   - 修復：YTPlayerSys 改為 `playerBuilt` flag + `ensureReady()` 延後到第一次打開精聽室才建立播放器；`UI.switchTab()` 切到 video Tab 時呼叫。
-6. **影子跟讀「📖 全文雙語對照」檢視器**：
-   - `.shadow-story-row-1` 新增「📖 全文對照」按鈕 → `#fullTextViewModal` 彈窗（逐句 中英/中日對照 + 時間戳 + 🎯 跳句回訓練）。
-   - ShadowingStudio 新增 `fmtFullTextTime/openFullTextView/renderFullTextView/jumpToSentenceFromFullText/closeFullTextView/toggleFullTextZh/initFullTextViewEvents`。
-7. **影音精聽室精選自動同步進影子跟讀故事庫**：
-   - `getPresetStories()` 依 mode+lang 將 PRESET_VIDEOS 自動轉成 `yt-` 故事（source:youtube）；`getCurrentStory()`/`populateStorySelect()` 已擴充。
-   - 手動「📤 送到影子跟讀」僅保留給用戶自訂影片/字幕。
-8. **綠野仙蹤 Ch.1 正式收編 learn.html 故事庫**：
-   - `WOO_CH1_STORY` const（`source:'localaudio'`，`audioFile:'woo_shadow_ch1.webm'`，81 句 `{start,end,text,zh}`）。
-   - 新增 `playLocalAudioSegment()`（seek 到 start、追到 end 自動停、`playbackRate` 跟語速）並掛進 `speakSentence()` 與 `stopAllAudio()`；Step 5 回音法對 localaudio 退化為一般播放。
-   - 修正 `woo_shadow_ch1.html` 兩處字典型 typo（`start:375.5,en:378.88`、`start:419,en:424` → `end:`）。
-   - `sw.js` 快取版本升為 `kids-games-v37`，加入 `woo_shadow_ch1.webm` 與 `woo_shadow_ch1.html`。
+2. **小四數學 現有可執行成果**
+   - `小四數學/app/rpg_world_map.json`：23 王國／506 題課綱對齊題庫（108 課綱，零敘述性污染）。
+   - `小四數學/app/index.html` ＝ `rpg_adventure.html`（Byte-for-Byte 同步，SHA256 `6378886F…9CCE4`）。
+   - `小四數學/app/js/vertical_math_explainer.js`：三位數乘兩位數分層直式、括號兩步驟四則、長除法試商。
+   - `小四數學/validate_grade4.py`：整合三套子守門員的總開關。
 
-9. **網頁版＋無頭瀏覽器驗收＆Bug 修復＋閱讀器分頁＋YT 153 降級（本次）**：
-   - 🔴 修 `openFullTextView()` 的 `$('#fullTextViewModal')` → `$('fullTextViewModal')`（`$`=getElementById，null.classList 曾讓「全文對照」完全無法開啟）。
-   - 🔴 修 `playLocalAudioSegment()` 播放斷裂：`stopLocalAudioSegment()` 對舊元素設 `src=''` 會觸發非同步 `error`（Empty src attribute）→ 舊 `onerror` 再呼叫 `finish()`＋`speakSentence()` 回退，把新元素清掉並無限 rebuild。改為「先解綁事件 handler → pause → removeAttribute('src')+load()」；localaudio 的 `onerror` 不再觸發 TTS 回退（避免無限遞迴）。
-   - 🔴 修語速無效：`audio.playbackRate = currentSpeed` 在 `audio.load()` 之前設定會被 Chrome 重設回 1.0。移到 `begin()`（load 之後、play 之前）再設一次；speed-btn 對播放中的 `localSegmentAudio`／`realAudioEl` 即時套用。
-   - 🟢 `common.js:156` sparkle `document.body.appendChild` 在 `<head>` 載入時 body 尚未解析 → 加 null 防護（原本 sparkles 全消失＋console error）。
-   - 📖 全文對照升級為「閱讀器」：`openFullTextViewEx(title, rows, onJump)` 可重用（故事與影片字幕共用）＋整排可點跳句；精聽室載入列新增「📖 全文閱讀」按鈕。
-   - 🗑️ 移除影子跟讀列「📖 全文對照」按鈕；新增**獨立「📖 閱讀器」導航分頁**（`FULL_TEXT_READER`）：純文字全文互動，不錄音／不跟讀／不播影片；語系切換（🇬🇧/🇯🇵）、文章下拉（新公開 API `ShadowingStudio.getAllStories(lang, mode)` 共用目錄）、逐句卡片（編號＋時間戳＋原文＋音標＋中文）、🙈 隱藏中文、A+/A− 字級（13–24px、localStorage 持久化、文章記憶）。
-   - ⚠️ **YT 錯誤 153/150 處理**：PRESET_VIDEOS 全部 5 支皆 embed-restricted（探針實測確認為影片端限制，非 code bug）。
-     - 精聽室：`createPlayer` 掛 `onError` → `#ytEmbedNotice` 醒目提示（附使用建議），切換影片自動清除。
-     - 影子跟讀：`youtubeEmbedBlocked` 旗標＋onError 偵測；句子播放遇 153 自動改雲端 TTS（Google/有道）朗讀該句，不再死等無聲播放。
-     - 原版音訊抽取（yt-dlp）需在**使用者自己的網路**跑（沙箱 IP 限制，測試片 BaW_jenozKc 也失敗）；之後 preset 加 `audioFile` 走 localaudio 即可。
-   - 🔄 `sw.js` 快取升為 `kids-games-v38`。
-   - ✅ e2e 10/10＋新功能探針 8/8（`C:\Users\PXP\AppData\Local\Temp\opencode\new_tab_probe.js`）。
-   - ⚠️ 已知測試工具陷阱：YT.Player 會把 `#player` div「替換成」同 id 的 iframe（內部不會再巢狀 iframe）；puppeteer 新版無 `page.waitForTimeout`，須自製 setTimeout promise；語速測試時 `load()` 會重設 rate。e2e 腳本在 `C:\Users\PXP\AppData\Local\Temp\opencode\`。
+3. **綠野仙蹤影子跟讀教材管線跑通**
+   - Ch.1（`woo_shadow_ch1.html` ＋ `woo_shadow_ch1.webm` 81 句）、Ch.2（`woo_shadow_ch2.html` ＋ `.webm` 134 句）已收編進 `learn.html`。
+   - 流程：yt-dlp 取音 → Whisper Large-v3 word-level 錨定 → 本地 `qwen3:8b` 批次翻譯 → 人工嚴格覆核。
+   - sw.js 已到 `kids-games-v39`。
 
-10. **本機地端 AI 環境建置與評估（本次；非專案程式碼變更）**：
-    - Ollama `qwen2.5-coder:7b` 已安裝，經 opencode 實測可用（`opencode run -m ollama/qwen2.5-coder:7b` 正常回應）。
-    - Open-WebUI（`localhost:3000`）＋Python 3.11＋Cline（VS Code）環境皆已就緒。
-    - **改了全域設定** `~/.config/opencode/opencode.json`（⚠️ 不在 repo、push 不會帶走）：
-      - ollama provider 補 `"apiKey": "ollama"`、npm 換成 `@ai-sdk/openai-compatible`（`@ai-sdk/openai` 會一直報 "OpenAI API key is missing"）。
-      - permission：`edit`、`bash` 改 `"ask"`（7B 會hallucinate 亂叫 `write` 工具；原本 `"*": "allow"` 下會不問就寫檔）。
-    - 硬體盤點：Ryzen 9 3950X（16C/32T）、RAM 64GB、GPU RTX 5060 **8GB** VRAM。
-    - **評估決策（2026-09-15 完成）**：
-      - 8GB VRAM 鐵律：模型 + KV/compute buffer 只能塞 ~7GB → **全 VRAM 極限就是 7~8B 級**；任何 14B（q4 9.0GB 或 q3_K_S 8.4GB）都 >26% 丟 CPU，實測 **7.4 / 15.5 tok/s**，agentic 無法用，已刪除。
-      - 30B（`qwen3-coder:30b-a3b` 19GB）→ 60%+ offload，估 3~8 tok/s，**確認跳過**；`qwen3-coder-next` 52GB 更大不考慮。
-      - ✅ **採用 `qwen3:8b`（5.2GB）為本地主模型**：100% GPU、52~69 tok/s、**唯一通過原生工具呼叫測試的**（`qwen2.5-coder:7b` 不會回結構化 `tool_calls`，只把 JSON 當文字吐；qwen3 多步迴圈 read→edit 全通）。缺點：純文字回答偏長篇（沉默無效），走 agent 工具迴圈時簡潔。
-      - 已把 `qwen3:8b` 寫進開場設定為預設 `model`（`options.enable_thinking:false`、limit context 40960）、`qwen2.5-coder:7b` 留作 `small_model`（標題/摘要用，78 tok/s）；benchmark 腳本 `C:\Users\PXP\AppData\Local\Temp\opencode\bench.ps1`。
-      - **需重啟 opencode 才生效**（config 開機才載入）。
-      - 待辦：重啟後用 `opencode run -m ollama/qwen3:8b` 實測 agentic 小任務。
-
-11. **Ollama 桌面開關捷徑（本次；環境設定，非 repo 檔案）**：
-    - 診斷本地模型 "CANNOT CONTACT to API"：根因是 Ollama 服務沒跑（`localhost:11434` 無監聽）。
-    - 桌面新增單一「Ollama」捷徑（雙擊切換開關）：`Ollama.lnk` → `%LOCALAPPDATA%\opencode-scripts\start-ollama.ps1`（腳本已移出桌面，避免誤認成兩個捷徑）。
-    - 捷徑圖示換成 Ollama 羊駝圖示（原 PowerShell 藍圖示易混淆）。
-    - 踩坑：PS 5.1 控制台中文顯示為 `??` 亂碼 → 腳本輸出改純英文 `[ON]/[OFF]`。
-    - Ollama 0.34.0 已驗證運行中（綠燈）；以後用 opencode 前先雙擊捷徑確認啟動。
-    - ⚠️ 捷徑與腳本都在 repo 之外，push 不會帶走；換電腦需重建。
-
-12. **綠野仙蹤 Ch.1 錯位修復 ＋ Ch.2 本地模型流水線全套上線（本次，sw.js v39）**：
-    - 🔴 **第 1 章切片錯位修復**：找出 350s～465s（原始 segment 61 處）人為標記 off-by-one 造成後面 22 句文字聲音脫節的根本原因；全面校準 `woo_shadow_ch1.html` 與 `learn.html`（`WOO_CH1_STORY` 81 句）。
-    - 🌪️ **第 2 章全套製作並收編**：
-      - 音訊壓制：`woo_shadow_ch2.webm`（6.2MB，11 分 41 秒）。
-      - Whisper Large-v3 逐詞/逐段轉錄：134 句、2013 單字 word-level timestamps 精準錨定，0 漂移、0 倒流。
-      - 本地模型（Ollama `qwen3:8b`）批次高速翻譯（190s 完成 134 句）。
-      - 人工嚴格覆核與精修：補齊 10 句缺漏、統一臺灣童書專有名詞規範（桃樂絲／芒奇金人／北方女巫／翡翠城／奧茲／托托／博克）。
-      - 獨立播放頁：`woo_shadow_ch2.html`（134 句）。
-      - 整合進 `learn.html`：新增 `WOO_CH2_STORY`、擴充 `getWooStories()` / `getCurrentStory()` / `getAllStories()`，影子跟讀與「📖 閱讀器」同步就緒。
-    - 🔄 **PWA 快取升級**：`sw.js` 升至 `kids-games-v39`（加入 `woo_shadow_ch2.webm` 與 `woo_shadow_ch2.html`）。
+4. **APP 主線現況**：`index.html`／`learn.html`／`toeic.html`／`sticky-gomoku-new.html` 純前端、無框架、無 build；sw.js 快取版本 `kids-games-v45`。
 
 ## 🚦 目前狀態
 
-- 專案：純前端 HTML/CSS/JS，無框架、無 build 步驟。
-- 主要應用：
-  - `index.html`：四關魔王討伐卡片 + 影子跟讀入口 + 星光單字星球入口
-  - `learn.html`：影子跟讀 V2（含 Step 5 回音法）、影音精聽室、情境對話、跟讀生字庫、語境記憶閃卡
-  - `toeic.html`：星光單字星球（兒童美語 684 + 多益 11,238 字）
-  - `sticky-gomoku-new.html`：黏黏圍棋（Gooey 果凍、4 段 AI、AI 教練）
-  - `woo_shadow_ch1.html`：綠野仙蹤 Ch.1 影子跟讀（獨立檔案）
-- 快取版本：`sw.js` = `kids-games-v38`
-- GitHub Pages：https://xfarbetty-svg.github.io/kids-gomoku-go/
-- 依賴工具鏈現況（DESKTOP-6ELKIRH）：
-  - `yt-dlp`：2026.08.19
-  - `ffmpeg`：9.0-full_build（已加入系統 PATH）
-  - `whisper`：openai-whisper 20250625 已安裝於 Python 3.10
-- 綠野仙蹤 Ch.1 音檔：`woo_shadow_ch1.webm`（6.1MB，已進 SW 快取）。
+- 小四數學：靜態／無頭驗證全綠 ✅，**待手機實機走查**（點擊流程、音訊、觸控）。
+- 語言學習主 APP（learn/toeic）：功能齊備，待真機體驗驗收。
+- 圍棋：5 段 AI（萌芽／初級／中級／大師／宗師）＋防誤按＋雙人對弈＋讓子，可玩。
+- 綠野仙蹤：Ch.3~24 共 22 集待製作（流程已跑通，批次產出即可）。
 
-## ➡️ 尚未做的工作清單（待辦路線圖）
+## ➡️ 下一步（建議順序）
 
-1. **綠野仙蹤後續**：
-    - ~~確認 Ch.1 影子跟讀版品質 → 正式加入 learn.html~~ ✅ 已完成（source:localaudio 直接收編）
-    - **待驗收**：手機/平板實機跑一遍精聽室→影子跟讀（YouTube 精選、WOO Ch.1、Step 5），確認全文對照跳句與音訊。
-    - 製作 Ch.2~24（YouTube playlist 已確認，流程已跑通）
-2. **平板與手機實機體驗走查**：
-    - 實機確認 Step 5「回音法」在 iPhone / Android 上之觸控與 5 個 Tab 寬度體驗。
-    - 平板橫向雙欄體驗驗收。
-3. **Sprint 2 手機體驗剩餘項**（見 `PLAN-MOBILE-FIX.md`）。
-4. **Sprint 3-5**（音訊 PWA、效能資料、收尾測試）。
-5. **單字星球優化**：PDF 題庫擴充、閃卡左右翻動效、主題 Pills 修復。
-6. **TASK-008 內容包**（VOA + BBC 素材）。
-7. **魔王討伐動畫／音效**。
-8. **新 APP：小三英文學習應用程式**（`kids-english.html`，檔名待定）：
-    - 需求規格已確認（用戶已同意），待產出 HTML 互動介面原型。
-    - 4 大模組：📚 學單字（中英對照＋kids.json 684 字）、🔤 練拼讀（按字母發音）、🗣️ 說英文（跟讀＋Web Speech 評分）、🤖 歐拉博士（AI 即時對話回饋）。
-    - 技術要點：全新獨立檔案（不沿用 toeic.html 深色主題）、手機優先、大按鈕卡通風格、SM-2 SRS 記憶、成就系統（星星／等級／連續打卡）、Web Speech API。
-    - 待確認：課本音檔形式（MP3 大檔？已切分？還沒有？），影響音訊整合方案。
+1. **手機實機走查 小四數學 APP**（本次唯一未驗證的缺口）：開 `小四數學/app/index.html`，實跑萬位加法、三位數乘兩位數（含 400×37 對位）、括號四則、長除法，確認一屏作答與逐格彈跳。
+2. **綠野仙蹤 Ch.3~24 批次製作**（23 集，流程已全通，注意時軸人工覆核）。
+3. `PLAN-MOBILE-FIX.md` Sprint 2~5（手機體驗、音訊 PWA、效能資料、收尾測試）。
+4. 單字星球（`toeic.html`）優化：PDF 題庫擴充、閃卡 3D 左右翻、主題 Pills 橫向滾動。
+5. 綠野仙蹤 YT 精選 5 支全數 embed 受限（錯誤 153），需在**使用者自己網路**用 yt-dlp 抽原音後於 preset 加 `audioFile`。
 
 ## ⚠️ 注意事項
 
-- 本機目前未配置 Obsidian MCP 工具，L3 筆記暫未自動同步，待回到有 Obsidian 工具之環境時補齊。
-- 綠野仙蹤素材來源：`youtube.com/playlist?list=PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`（Read Me A Classic，24 章）。
+- **本機未配置 Obsidian MCP**，L3 筆記未同步，待有工具的環境補齊。
+- 本次驗證是靜態／無頭，**未做真機觸控與 AudioContext 實測**——別當成已手機驗收。
+- 🔺 未納入版控：`小三數學題庫/`、`小三自然/` 兩個資料夾（與本專案驗收無關，另案處理）。
+- 修 `learn.html` 務必保留 ShadowingStudio 生命週期與各 Step UI 獨立分流。
+- 新 APP（小三英文 `kids-english.html`）待產出：全新獨立檔案、**不要沿用 `toeic.html` 深色太空主題**、手機優先大按鈕、單字庫共用 `data/kids.json`（684 字）。
 - 平板斷點慣例：`@media (min-width: 900~960px) and (orientation: landscape)`。
-- 修改 `learn.html` 時務必保留 ShadowingStudio 生命週期與各 Step UI 獨立分流機制。
-- **新 APP（小三英文）開發注意**：
-  - 全新獨立檔案，不要沿用 `toeic.html` 深色太空主題。
-  - 手機優先、大按鈕、鮮豔卡通風格。
-  - 單字庫共用 `data/kids.json`（684 字，33 主題）。
-  - SRS 可參考 `toeic.html` 的 SM-2 實作。
-  - Web Speech API（發音＋辨識評分）可參考 `learn.html` 的影子跟讀實作。
-
-13. **黏黏圍棋大升級（手機防誤按 + 👥 雙人對弈 + 能力分級重整，commit 1222f51，sw.js v43）**：
-    - 🎯 **手機防誤按落子機制**：13×13 與 19×19 預設啟用點擊預選（Touch Preview），浮現 `[✓ 下子] [✕ 取消]` 懸浮確認泡泡（雙擊亦可下子），頂部兩列自動下浮防遮擋，頂部導航列常駐 `🎯 防誤按` 開關。
-    - 👥 **雙人同機對弈（Pass & Play）**：頂部模式選單切換 `[🤖 單人魔王 | 👥 雙人對弈]`，比分板即時轉為粉紫雙方玩家，雙方輪流本機落子，連續兩次 Pass 終局點目。
-    - 🌱 **萌芽難度（慈悲模式 Mercy AI）**：AI 遇玩家 1 氣瀕死絕不殺（-9999），40% 機率破綻留氣引導提子，散步模式不切斷。
-    - 🍬 **開局讓子機制（Handicap）**：支援讓 2/4/9 子，開局星位預置黑子，白棋魔王先攻。
-    - 🚨 **星光教練瀕死即時強警報**：1 氣危機自動發出「🚨 救命！粉粉果凍快沒氣了！」，棋盤黃金光環標記逃跑點。
-    - 🔥 **宗師 AI 深度強化**：征子模擬（Ladder Lookahead 4~6 步）、分斷弱棋 (+420)、做真眼 (+550) 與破除假眼 (+380)。
-    - 🔄 **PWA 快取版本**：升級至 `kids-games-v43`，無頭 CDP 測試全數通過。
-
-## 🚦 目前狀態
-
-- 專案：純前端 HTML/CSS/JS，無框架、無 build 步驟。
-- 主要應用：
-  - `index.html`：四關魔王討伐卡片 + 影子跟讀入口 + 星光單字星球入口
-  - `learn.html`：影子跟讀 V2（含 Step 5 回音法）、影音精聽室、情境對話、跟讀生字庫、語境記憶閃卡
-  - `toeic.html`：星光單字星球（兒童美語 684 + 多益 11,238 字）
-  - `sticky-gomoku-new.html`：黏黏圍棋（Gooey 果凍、5 段 AI、防誤按、雙人對弈、讓子）
-  - `woo_shadow_ch1.html`：綠野仙蹤 Ch.1 影子跟讀（獨立檔案）
-- 快取版本：`sw.js` = `kids-games-v43`
-- GitHub Pages：https://xfarbetty-svg.github.io/kids-gomoku-go/
+- PowerShell 主控台是 cp950：`Get-Content` 讀 UTF-8 檔會亂碼，請加 `-Encoding UTF8`（AGENTS.md 全域規則第 6 條）。
+- 綠野仙蹤素材來源：`youtube.com/playlist?list=PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`。
 
 ## 🕐 最後更新
 
 - 時間：2026-10-13
-- 更新者：Antigravity @ DESKTOP-6ELKIRH
-- 內容：
-  - **小四數學**：
-    - 修復三位數乘兩位數直式對位（解決 2800 只有 00、第二層十位 0 跑偏百位）。
-    - 實裝手機單一聚焦模式（已完成自動收合，未解鎖隱藏，零滾動作答）。
-    - 實裝第七層直式加法指引助手（常駐看板、進位列同步亮起 +1、由右往左逐格彈跳填入）。
-    - 全量 506 題巡檢守門員全綠通過。
-    - 產出 OPENCODE 交替式驗證任務書（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）。
-- Git push：✅ 已推（本次，commit 1047950）
+- 更新者：space-bunny-free（OPENCODE） @ DESKTOP-6ELKIRH
+- 內容：小四數學交接驗收簽核完成（3/3 探針全綠 ＋ 獨立覆核）；`handoff.md` 整份重寫，修正重複段落、編號錯亂與 sw.js 版本不一致（v38/v43 → v45）。
+- Git push：⏳ 待推（本次收工 commit）
