@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🦉 奧利博士的數學冒險島 - AI小老師原型</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #EEF2FF;
+      --accent: #F59E0B;
+      --accent-light: #FEF3C7;
+      --success: #10B981;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; }
+
+    /* 頂部導覽列 */
+    header {
+      background: white;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #E2E8F0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; color: #312E81; }
+    .stars { background: var(--accent-light); color: #B45309; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+
+    /* 題目切換指示 */
+    .level-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .page-nav { display: flex; gap: 8px; }
+    .page-btn {
+      background: white;
+      border: 1px solid #CBD5E1;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* 題目卡片 */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+      border: 2px solid #E2E8F0;
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .story-box {
+      background: #FFFBEB;
+      border: 2px dashed #FDE68A;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #78350F;
+      margin-bottom: 14px;
+    }
+    .original-math {
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 10px;
+      background: #F1F5F9;
+      border-radius: 12px;
+      color: #1E293B;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    /* 選項大按鈕 */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .opt-btn {
+      background: white;
+      border: 2px solid #CBD5E1;
+      border-radius: 14px;
+      padding: 16px 10px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .opt-btn:hover { border-color: var(--primary); background: var(--primary-light); }
+    .opt-btn:active { transform: scale(0.96); }
+    .opt-btn.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .opt-btn.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; opacity: 0.7; }
+
+    /* AI 小老師對話區 */
+    .teacher-section {
+      background: #FFFFFF;
+      border-radius: var(--radius);
+      border: 2px solid #C7D2FE;
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.08);
+      overflow: hidden;
+      margin-top: 18px;
+    }
+    .teacher-header {
+      background: linear-gradient(135deg, #4F46E5, #6366F1);
+      color: white;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .teacher-name { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; }
+    .status-dot { width: 8px; height: 8px; background: #34D399; border-radius: 50%; display: inline-block; }
+
+    .chat-box {
+      height: 220px;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #FAFAFD;
+    }
+    .chat-bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .chat-bubble.teacher {
+      align-self: flex-start;
+      background: white;
+      border: 1px solid #E0E7FF;
+      color: #1E293B;
+      border-top-left-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: white;
+      border-top-right-radius: 4px;
+    }
+
+    /* 快捷求助按鈕 */
+    .quick-chips {
+      display: flex;
+      gap: 6px;
+      padding: 8px 14px;
+      background: #F1F5F9;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .quick-btn {
+      background: white;
+      border: 1px solid #CBD5E1;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+    }
+    .quick-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+    /* 對話輸入框 */
+    .chat-input-bar {
+      display: flex;
+      padding: 10px 14px;
+      background: white;
+      border-top: 1px solid #E2E8F0;
+      gap: 8px;
+    }
+    .chat-input {
+      flex: 1;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .chat-input:focus { border-color: var(--primary); }
+    .send-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .send-btn:disabled { opacity: 0.5; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <span>🦉</span> 奧利博士的數學島
+    </div>
+    <div class="stars" id="starCounter">⭐ 探險星星: 0</div>
+  </header>
+
+  <div class="container">
+    <div class="level-bar">
+      <div class="badge" id="qBadge">第 1 關 / 多位數借位減法</div>
+      <div class="page-nav">
+        <button class="page-btn" id="prevBtn" onclick="prevQ()">◀ 上一題</button>
+        <button class="page-btn" id="nextBtn" onclick="nextQ()">下一題 ▶</button>
+      </div>
+    </div>
+
+    <!-- 題目主卡片 -->
+    <div class="card">
+      <div class="card-title">
+        <span id="qTitle">魔王城堡的密碼鎖</span>
+      </div>
+
+      <div class="story-box" id="qStory">
+        城堡的大門上閃爍著古老符文：『從 9808 點魔力中，抽取 493 點封印，剩餘的數字就是通行密碼！』
+      </div>
+
+      <div class="original-math" id="qMath">
+        9808 − 493 = ？
+      </div>
+
+      <div class="options-grid" id="optionsBox">
+        <!-- 動態渲染選項按鈕 -->
+      </div>
+    </div>
+
+    <!-- AI 小老師對話區 -->
+    <div class="teacher-section">
+      <div class="teacher-header">
+        <div class="teacher-name">
+          <span>🦉</span> 奧利博士 (Dr. Ollie)
+          <span class="status-dot" title="AMD3950 35B 在線"></span>
+        </div>
+        <span style="font-size: 0.8rem; opacity: 0.9;">AI 學習夥伴</span>
+      </div>
+
+      <div class="chat-box" id="chatBox">
+        <div class="chat-bubble teacher">
+          咕咕！小勇者你好呀！我是奧利博士 🦉。<br>遇到難題隨時可以找我討論，我們一起把它解開！
+        </div>
+      </div>
+
+      <div class="quick-chips">
+        <button class="quick-btn" onclick="quickAsk('🦉 奧利博士，這題好大，我卡住了！')">💡 博士我卡住了！</button>
+        <button class="quick-btn" onclick="quickAsk('請問第一步要從哪裡開始算呢？')">🔍 第一步該怎麼做？</button>
+        <button class="quick-btn" onclick="quickAsk('如果需要借位，要怎麼向隔壁借？')">🚪 怎麼借位？</button>
+      </div>
+
+      <div class="chat-input-bar">
+        <input type="text" class="chat-input" id="chatInput" placeholder="想問奧利博士什麼？直接打字發問..." onkeydown="if(event.key==='Enter') sendChat()">
+        <button class="send-btn" id="sendBtn" onclick="sendChat()">傳送</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var currentIdx = 0;
+    var stars = 0;
+    var questions = [
+      {
+        id: "q1",
+        title: "魔王城堡的密碼鎖",
+        category: "多位數借位減法",
+        original: "9808 − 493 = ？",
+        story: "城堡的大門上閃爍著古老符文：『從 9808 點魔力中，抽取 493 點封印，剩餘的數字就是通行密碼！』",
+        options: ["8315", "9305", "9314", "9315"],
+        correct: 3,
+        firstHello: "咕咕！這道題的數字看起來好大對不對？別怕，我們只要像拆積木一樣，從最右邊開始看就行囉！"
+      },
+      {
+        id: "q2",
+        title: "小玉的棉花糖兔",
+        category: "生活應用與除法餘數",
+        original: "57 ÷ 8 = ？ (算算看存錢天數與日期)",
+        story: "玩具店裡的棉花糖兔標價 57 元！小玉從 11 月 16 日開始，每天把撲滿投入 8 元零用錢，他要存到哪一天才能把兔子抱回家呢？",
+        options: ["11月22日", "11月23日", "11月24日", "11月25日"],
+        correct: 1,
+        firstHello: "哇！是超可愛的棉花糖兔！想想看，如果存了 7 天，錢夠買嗎？剩下的零頭還需要幾天呢？"
+      },
+      {
+        id: "q3",
+        title: "森林小火車的神秘車站",
+        category: "等差數列與規律推理",
+        original: "規律數線：266, 272, 278, 甲, 丁... 請問甲是多少？",
+        story: "森林小火車依序開過 266 號站、272 號站、278 號站... 下一站是神秘的『甲車站』，請問它的站牌號碼是多少？",
+        options: ["282", "284", "286", "290"],
+        correct: 1,
+        firstHello: "嘟嘟～火車站的號碼藏著秘密魔法！算算看，每前進一站，數字都增加了多少呢？"
+      }
+    ];
+
+    var historyLog = [];
+
+    function renderQuestion() {
+      var q = questions[currentIdx];
+      document.getElementById("qTitle").textContent = q.title;
+      document.getElementById("qBadge").textContent = "第 " + (currentIdx + 1) + " 關 / " + q.category;
+      document.getElementById("qStory").textContent = q.story;
+      document.getElementById("qMath").textContent = q.original;
+      document.getElementById("prevBtn").disabled = (currentIdx === 0);
+      document.getElementById("nextBtn").disabled = (currentIdx === questions.length - 1);
+
+      // 選項渲染
+      var box = document.getElementById("optionsBox");
+      box.innerHTML = "";
+      q.options.forEach(function(opt, idx) {
+        var btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.textContent = opt;
+        btn.onclick = function() { checkAnswer(btn, idx, q.correct); };
+        box.appendChild(btn);
+      });
+
+      // 清理並更新對話
+      var chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML = "";
+      historyLog = [];
+      addBubble("teacher", q.firstHello);
+    }
+
+    function checkAnswer(btn, chosen, correct) {
+      if (chosen === correct) {
+        btn.classList.add("correct");
+        stars += 1;
+        document.getElementById("starCounter").textContent = "⭐ 探險星星: " + stars;
+        addBubble("teacher", "🎉 答對啦！太聰明了！你已經解開這個謎題，獲得了一顆探險星星！⭐ 準備好前進下一關了嗎？");
+      } else {
+        btn.classList.add("wrong");
+        addBubble("teacher", "哎呀，這個數字好像不太對喔～別灰心，問問我，我悄悄給你一個小提示！🦉");
+      }
+    }
+
+    function prevQ() {
+      if (currentIdx > 0) { currentIdx--; renderQuestion(); }
+    }
+    function nextQ() {
+      if (currentIdx < questions.length - 1) { currentIdx++; renderQuestion(); }
+    }
+
+    function addBubble(role, text) {
+      var box = document.getElementById("chatBox");
+      var b = document.createElement("div");
+      b.className = "chat-bubble " + role;
+      b.innerHTML = text.replace(/\n/g, "<br>");
+      box.appendChild(b);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function quickAsk(text) {
+      document.getElementById("chatInput").value = text;
+      sendChat();
+    }
+
+    function sendChat() {
+      var input = document.getElementById("chatInput");
+      var msg = input.value.trim();
+      if (!msg) return;
+
+      addBubble("user", msg);
+      input.value = "";
+      var sendBtn = document.getElementById("sendBtn");
+      sendBtn.disabled = true;
+
+      historyLog.push({ role: "user", content: msg });
+
+      // 呼叫 Proxy API (連接 AMD3950 35B)
+      fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question_id: questions[currentIdx].id,
+          message: msg,
+          history: historyLog
+        })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var reply = data.reply || "咕咕～我剛剛分心了，再問我一次好嗎？";
+        // 去除可能的降級註解
+        reply = reply.replace(/<!-- DEGRADED:[^>]* -->/g, "");
+        addBubble("teacher", reply);
+        historyLog.push({ role: "assistant", content: reply });
+      })
+      .catch(function(err) {
+        addBubble("teacher", "🦉 奧利博士正在翻找他的數學百科全書，你可以先看一下最右邊的個位數喔！");
+      })
+      .finally(function() {
+        sendBtn.disabled = false;
+      });
+    }
+
+    // 初始化
+    renderQuestion();
+  </script>
+</body>
+</html>

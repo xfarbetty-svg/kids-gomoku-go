@@ -9,5 +9,15 @@ temp/
 小三數學題庫/app/netlify/
 小三數學題庫/三年級/
 小三數學題庫/_scratch/
+
+# 小四數學排除項目（媒體檔、大宗資料檔、快取）
+小四數學/app/tts_cache/
+小四數學/app/questions/
+小四數學/app/pages/
+小四數學/app/bank/
+小四數學/app/.netlify/
+小四數學/app/netlify/
+小四數學/_scratch/
+
 **/__pycache__/
 **/*.pyc

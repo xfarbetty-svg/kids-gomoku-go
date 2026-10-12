@@ -29,6 +29,12 @@
   - [x] 第 2 章《The Council with the Munchkins》製作並收編（`woo_shadow_ch2.html` / `woo_shadow_ch2.webm` / `WOO_CH2_STORY` 134 句，本地 Qwen3:8b 批次翻譯 + Whisper Word-level 精準錨定，sw.js v39）
   - [ ] 其餘 22 集（Chapter 3-24）依相同流程製作（YouTube playlist PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU）
 - ⛔ Deep Work Session 頻道（lwAG7bBg4n8）不適合做影子跟讀（節奏斷裂、文本解析感）
+- [x] **國小四年級數學大冒險（小四數學）核心建置完成**：
+  - 📚 台灣 108 課綱標準對齊（`CURRICULUM_GRADE4.md`）：涵蓋一億以內大數 (N-4-1)、三位數乘除直式 (N-4-2)、四捨五入概數 (N-4-4)、同分母分數 (N-4-5)、二位小數百分位 (N-4-7)、兩步驟四則運算逐次減項 (R-4-1) 等 23 大主題。
+  - 🗺️ 23 王國 506 題冒險題庫全量生成（`app/rpg_world_map.json`）：每王國 22 題、含 4 隻魔王（第 5, 10, 15, 20 題手寫考核），零敘述性污染。
+  - 📐 直式運算引擎小四升級（`app/js/vertical_math_explainer.js`）：支援三位數乘兩位數雙層部分積直式、兩步驟四則運算括號最優先法則與長除法試商循環。
+  - 🛡️ 守門員全面驗收全綠（`validate_grade4.py` exit code 0）。
+  - 📋 產出交接驗證任務書給 OPENCODE（`OPENCODE_TASK_GRADE4_MATH.md`）。
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
 
@@ -139,9 +145,9 @@
 
 ## 🕐 最後更新
 
-- **日期**：2026-10-11
+- **日期**：2026-10-13
 - **更新者**：Antigravity
-- **內容**：完成《The Trunk and the Skunk》自然發音教材全面整合、本地音訊擷取、影子跟讀回音法相容、押韻打怪闖關新遊戲模式，sw.js 快取升級至 v44，推送到 GitHub 遠端。
-- **Git 狀態**：✅ 已 commit 並成功 push 到 main
+- **內容**：完成小四數學（Grade 4 Math RPG）三位數乘兩位數直式對位修復（解決 2800 只有 00、第二層十位 0 跑偏百位）、手機極致緊湊單一聚焦模式（做過自動收合）、第七層直式加法助手（常駐看板、進位指示 +1、由右往左逐格彈跳填入）、全量 506 題巡檢全綠、產出 OPENCODE 交替式驗證任務書（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）。
+- **Git 狀態**：待推（本次）
 
 

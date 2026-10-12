@@ -4,7 +4,23 @@
 
 ## ⏯️ 目前做到哪
 
-1. **影子跟讀第 5 步驟「回音法」（Echo Method）全套實作完成**（commit a736e19 / 888ef19，已 push）：
+1. **國小四年級數學大冒險（小四數學）直式對位修復、手機聚焦與第 7 步加法助手全量完成 (2026-10-13)**：
+   - 📐 **直式對位 Bug 徹底修復**：
+     - 解決 $400 \times 37$ 第 1 層 2800 只有 00 的問題（修復 `ws-empty-cell` 造成文字 transparent 隱形，改賦予 `ws-res-box filled`）。
+     - 解決第二層十位 0 跑偏到百位的問題（標頭與所有行統一為固定 5 欄實體網格，全部 `display: flex`，空位佔位格保證 100% 絕對垂直對齊）。
+   - 📱 **手機單一聚焦模式實裝**：
+     - `.step-card.done` 與 `.step-card.locked` 設為 `display: none !important;`。
+     - 畫面上永遠只保留 1 張當前活躍步驟卡片，消除上下滾動，上方直式下方按鈕一屏全覽。
+   - ➕ **第七層「直式加法指引助手」實裝**：
+     - 進入第 7 步時，直式進位列 `wsCarryRow` 同步高亮顯示加法進位指示（`+1`）。
+     - 卡片常駐展開「📐 直式加法指引看板」，逐位條列（個位、十位、百位、千位）加法算式與進位。
+     - 答對時，直式總和層由右至左（個位 ➔ 十位 ➔ 百位 ➔ 千位 ➔ 萬位）動態彈跳填入答案。
+   - 🛡️ **全量 506 題巡檢守門員全綠**：
+     - `tools/verify_scaffoldings.js` 全量 506 題巡檢（鷹架 132 題、乘法加法指引 22 題全部通過，零拋錯無 undefined）。
+     - `validate_grade4.py` exit code 0 全綠通過。
+   - 📋 **產出 OPENCODE 交替式驗證任務書**（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）。
+
+2. **影子跟讀第 5 步驟「回音法」（Echo Method）全套實作完成**（commit a736e19 / 888ef19，已 push）：
    - `learn.html` 新增第 5 個步驟 Tab `[🔊 回音]`，CSS `.step-tabs` 改為 5 欄等寬網格。
    - `applyStepUI()` 實作 Step 5 盲聽狀態（隱藏 ruby/romaji/zh/hint/badge，常駐錄音按鈕）。
    - `playEchoSentence()` 實作原音播放 → 5 秒複述倒數「換你說！」→ 原音對照重播 → 銜接下一句。
@@ -100,17 +116,22 @@
 ## ➡️ 尚未做的工作清單（待辦路線圖）
 
 1. **綠野仙蹤後續**：
-   - ~~確認 Ch.1 影子跟讀版品質 → 正式加入 learn.html~~ ✅ 已完成（source:localaudio 直接收編）
-   - **待驗收**：手機/平板實機跑一遍精聽室→影子跟讀（YouTube 精選、WOO Ch.1、Step 5），確認全文對照跳句與音訊。
-   - 製作 Ch.2~24（YouTube playlist 已確認，流程已跑通）
+    - ~~確認 Ch.1 影子跟讀版品質 → 正式加入 learn.html~~ ✅ 已完成（source:localaudio 直接收編）
+    - **待驗收**：手機/平板實機跑一遍精聽室→影子跟讀（YouTube 精選、WOO Ch.1、Step 5），確認全文對照跳句與音訊。
+    - 製作 Ch.2~24（YouTube playlist 已確認，流程已跑通）
 2. **平板與手機實機體驗走查**：
-   - 實機確認 Step 5「回音法」在 iPhone / Android 上之觸控與 5 個 Tab 寬度體驗。
-   - 平板橫向雙欄體驗驗收。
+    - 實機確認 Step 5「回音法」在 iPhone / Android 上之觸控與 5 個 Tab 寬度體驗。
+    - 平板橫向雙欄體驗驗收。
 3. **Sprint 2 手機體驗剩餘項**（見 `PLAN-MOBILE-FIX.md`）。
 4. **Sprint 3-5**（音訊 PWA、效能資料、收尾測試）。
 5. **單字星球優化**：PDF 題庫擴充、閃卡左右翻動效、主題 Pills 修復。
 6. **TASK-008 內容包**（VOA + BBC 素材）。
 7. **魔王討伐動畫／音效**。
+8. **新 APP：小三英文學習應用程式**（`kids-english.html`，檔名待定）：
+    - 需求規格已確認（用戶已同意），待產出 HTML 互動介面原型。
+    - 4 大模組：📚 學單字（中英對照＋kids.json 684 字）、🔤 練拼讀（按字母發音）、🗣️ 說英文（跟讀＋Web Speech 評分）、🤖 歐拉博士（AI 即時對話回饋）。
+    - 技術要點：全新獨立檔案（不沿用 toeic.html 深色主題）、手機優先、大按鈕卡通風格、SM-2 SRS 記憶、成就系統（星星／等級／連續打卡）、Web Speech API。
+    - 待確認：課本音檔形式（MP3 大檔？已切分？還沒有？），影響音訊整合方案。
 
 ## ⚠️ 注意事項
 
@@ -118,6 +139,12 @@
 - 綠野仙蹤素材來源：`youtube.com/playlist?list=PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`（Read Me A Classic，24 章）。
 - 平板斷點慣例：`@media (min-width: 900~960px) and (orientation: landscape)`。
 - 修改 `learn.html` 時務必保留 ShadowingStudio 生命週期與各 Step UI 獨立分流機制。
+- **新 APP（小三英文）開發注意**：
+  - 全新獨立檔案，不要沿用 `toeic.html` 深色太空主題。
+  - 手機優先、大按鈕、鮮豔卡通風格。
+  - 單字庫共用 `data/kids.json`（684 字，33 主題）。
+  - SRS 可參考 `toeic.html` 的 SM-2 實作。
+  - Web Speech API（發音＋辨識評分）可參考 `learn.html` 的影子跟讀實作。
 
 13. **黏黏圍棋大升級（手機防誤按 + 👥 雙人對弈 + 能力分級重整，commit 1222f51，sw.js v43）**：
     - 🎯 **手機防誤按落子機制**：13×13 與 19×19 預設啟用點擊預選（Touch Preview），浮現 `[✓ 下子] [✕ 取消]` 懸浮確認泡泡（雙擊亦可下子），頂部兩列自動下浮防遮擋，頂部導航列常駐 `🎯 防誤按` 開關。
@@ -142,7 +169,13 @@
 
 ## 🕐 最後更新
 
-- 時間：2026-09-29
-- 更新者：antigravity @ DESKTOP-6ELKIRH
-- 內容：黏黏圍棋手機防誤按確認模式、👥 雙人同機對弈模式、🌱 萌芽慈悲 AI、🍬 開局讓子、🚨 瀕死強警報、🔥 宗師征子深算全面實作與驗收通過，sw.js v43 已 push 至 GitHub Pages。
-- Git push：✅ 已推（本次）
+- 時間：2026-10-13
+- 更新者：Antigravity @ DESKTOP-6ELKIRH
+- 內容：
+  - **小四數學**：
+    - 修復三位數乘兩位數直式對位（解決 2800 只有 00、第二層十位 0 跑偏百位）。
+    - 實裝手機單一聚焦模式（已完成自動收合，未解鎖隱藏，零滾動作答）。
+    - 實裝第七層直式加法指引助手（常駐看板、進位列同步亮起 +1、由右往左逐格彈跳填入）。
+    - 全量 506 題巡檢守門員全綠通過。
+    - 產出 OPENCODE 交替式驗證任務書（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）。
+- Git push：待推（本次）
