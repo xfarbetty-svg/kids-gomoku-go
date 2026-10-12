@@ -57,4 +57,4 @@
 - 時間：2026-10-13
 - 更新者：space-bunny-free（OPENCODE） @ DESKTOP-6ELKIRH
 - 內容：小四數學交接驗收簽核完成（3/3 探針全綠 ＋ 獨立覆核）；`handoff.md` 整份重寫，修正重複段落、編號錯亂與 sw.js 版本不一致（v38/v43 → v45）。
-- Git push：⏳ 待推（本次收工 commit）
+- Git push：✅ 已推（commit `942980f` → `origin/main`）
