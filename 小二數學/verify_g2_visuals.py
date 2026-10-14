@@ -32,6 +32,7 @@ EXPECTED_TYPES = {
     "block_sub": 22,
     "ruler_jump": 22,
     "shape_superposition": 22,
+    "clock_face": 22,
 }
 
 def verify():
@@ -56,8 +57,9 @@ def verify():
         errors.append(f"Invalid JSON in {JSON_PATH}: {e}")
         return errors
 
-    if len(data) != 176:
-        errors.append(f"Expected 176 items in registry, got {len(data)}")
+    expected_total = sum(EXPECTED_TYPES.values())
+    if len(data) != expected_total:
+        errors.append(f"Expected {expected_total} items in registry, got {len(data)}")
 
     type_counts = {}
     for qid, item in data.items():
@@ -127,6 +129,16 @@ def verify():
             if ca <= 0 or cb <= 0:
                 errors.append(f"{qid}: shape_superposition count invalid ({ca}, {cb})")
 
+        elif itype == "clock_face":
+            h = params.get("hours", 0)
+            m = params.get("minutes", -1)
+            if not (1 <= h <= 12 and 0 <= m <= 59):
+                errors.append(f"{qid}: clock_face invalid time {h}:{m}")
+            ha = params.get("hour_angle", -1)
+            ma = params.get("minute_angle", -1)
+            if ha < 0 or ma < 0:
+                errors.append(f"{qid}: clock_face invalid angles {ha}, {ma}")
+
     for etype, exp_count in EXPECTED_TYPES.items():
         actual = type_counts.get(etype, 0)
         if actual != exp_count:
@@ -142,7 +154,7 @@ def main():
             print("  - " + e)
         sys.exit(1)
 
-    print("[PASS] 3B1B G2 Visual Morph Guardrail: 176 questions mathematically verified.")
+    print(f"[PASS] 3B1B G2 Visual Morph Guardrail: {sum(EXPECTED_TYPES.values())} questions mathematically verified.")
     print("  - mul_group: 22")
     print("  - mul_table: 22")
     print("  - mul_rotate: 22")
@@ -151,6 +163,7 @@ def main():
     print("  - block_sub: 22")
     print("  - ruler_jump: 22")
     print("  - shape_superposition: 22")
+    print("  - clock_face: 22")
     sys.exit(0)
 
 if __name__ == "__main__":

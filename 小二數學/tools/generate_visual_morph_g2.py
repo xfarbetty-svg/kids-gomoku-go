@@ -36,6 +36,7 @@ TARGET_KINGDOMS = [
     "g2-05",
     "g2-19",
     "g2-20",
+    "g2-11",
 ]
 
 
@@ -289,6 +290,43 @@ def parse_shape_superposition(qid, q_text, math_text, v_data, ans):
     }
 
 
+def parse_clock_face(qid, q_text, math_text, v_data, ans):
+    """
+    g2-11: clock_face (時間鐘面)
+    formula: "時針走過 2 點、分針走 10 分 ➔ 2點10分"
+    params: { "hours": 2, "minutes": 10, "hour_angle": 65.0, "minute_angle": 60.0 }
+    """
+    m_match = re.search(r"(\d+)\s*點\s*(\d+)\s*分", math_text)
+    if not m_match:
+        m_match = re.search(r"(\d+)\s*點\s*(\d+)\s*分", q_text)
+    if not m_match:
+        q_match = re.search(r"時針在\s*(\d+)\s*附近.*?分針指向\s*(\d+)\s*分", q_text)
+        if q_match:
+            hours = int(q_match.group(1))
+            minutes = int(q_match.group(2))
+        else:
+            raise ValueError(f"[{qid}] Unable to parse clock_face: Q='{q_text}', M='{math_text}'")
+    else:
+        hours = int(m_match.group(1))
+        minutes = int(m_match.group(2))
+
+    minute_angle = (minutes / 60.0) * 360.0
+    hour_angle = ((hours % 12) + minutes / 60.0) * 30.0
+    min_str = f"{minutes:02d}"
+    formula = f"時針在 {hours} 點過、分針指向 {min_str} 分 ➔ {hours}點{min_str}分"
+
+    return {
+        "type": "clock_face",
+        "params": {
+            "hours": hours,
+            "minutes": minutes,
+            "hour_angle": round(hour_angle, 2),
+            "minute_angle": round(minute_angle, 2),
+        },
+        "formula": formula,
+    }
+
+
 PARSER_MAP = {
     "g2-08": parse_mul_group,
     "g2-09": parse_mul_table,
@@ -298,6 +336,7 @@ PARSER_MAP = {
     "g2-05": parse_block_sub,
     "g2-19": parse_ruler_jump,
     "g2-20": parse_shape_superposition,
+    "g2-11": parse_clock_face,
 }
 
 
@@ -389,10 +428,11 @@ def main():
     print(f"✅ Generated JS Data: {out_js}")
 
     # 3. Post-write verification
+    expected_items = len(TARGET_KINGDOMS) * 22
     with open(out_json, "r", encoding="utf-8") as f:
         re_json = json.load(f)
-    if len(re_json) != 176:
-        raise ValueError(f"Post-write verify failed: JSON item count {len(re_json)} != 176")
+    if len(re_json) != expected_items:
+        raise ValueError(f"Post-write verify failed: JSON item count {len(re_json)} != {expected_items}")
 
     with open(out_js, "r", encoding="utf-8") as f:
         re_js = f.read().strip()
@@ -401,8 +441,8 @@ def main():
         raise ValueError("Post-write verify failed: JS file prefix or suffix mismatch")
     js_json_part = re_js[len(prefix) : -1]
     re_parsed = json.loads(js_json_part)
-    if len(re_parsed) != 176:
-        raise ValueError(f"Post-write verify failed: JS parsed item count {len(re_parsed)} != 176")
+    if len(re_parsed) != expected_items:
+        raise ValueError(f"Post-write verify failed: JS parsed item count {len(re_parsed)} != {expected_items}")
 
     print("🎉 All outputs generated and verified successfully! Exit 0.")
     sys.exit(0)

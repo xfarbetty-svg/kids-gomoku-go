@@ -1077,6 +1077,226 @@
     },
     "formula": "12 顆每 3 顆一袋 ➔ 4 袋"
   },
+  "g2-11-m01": {
+    "type": "clock_face",
+    "params": {
+      "hours": 2,
+      "minutes": 10,
+      "hour_angle": 65.0,
+      "minute_angle": 60.0
+    },
+    "formula": "時針在 2 點過、分針指向 10 分 ➔ 2點10分"
+  },
+  "g2-11-m02": {
+    "type": "clock_face",
+    "params": {
+      "hours": 3,
+      "minutes": 20,
+      "hour_angle": 100.0,
+      "minute_angle": 120.0
+    },
+    "formula": "時針在 3 點過、分針指向 20 分 ➔ 3點20分"
+  },
+  "g2-11-m03": {
+    "type": "clock_face",
+    "params": {
+      "hours": 4,
+      "minutes": 30,
+      "hour_angle": 135.0,
+      "minute_angle": 180.0
+    },
+    "formula": "時針在 4 點過、分針指向 30 分 ➔ 4點30分"
+  },
+  "g2-11-m04": {
+    "type": "clock_face",
+    "params": {
+      "hours": 5,
+      "minutes": 40,
+      "hour_angle": 170.0,
+      "minute_angle": 240.0
+    },
+    "formula": "時針在 5 點過、分針指向 40 分 ➔ 5點40分"
+  },
+  "g2-11-m05": {
+    "type": "clock_face",
+    "params": {
+      "hours": 6,
+      "minutes": 0,
+      "hour_angle": 180.0,
+      "minute_angle": 0.0
+    },
+    "formula": "時針在 6 點過、分針指向 00 分 ➔ 6點00分"
+  },
+  "g2-11-m06": {
+    "type": "clock_face",
+    "params": {
+      "hours": 7,
+      "minutes": 10,
+      "hour_angle": 215.0,
+      "minute_angle": 60.0
+    },
+    "formula": "時針在 7 點過、分針指向 10 分 ➔ 7點10分"
+  },
+  "g2-11-m07": {
+    "type": "clock_face",
+    "params": {
+      "hours": 8,
+      "minutes": 20,
+      "hour_angle": 250.0,
+      "minute_angle": 120.0
+    },
+    "formula": "時針在 8 點過、分針指向 20 分 ➔ 8點20分"
+  },
+  "g2-11-m08": {
+    "type": "clock_face",
+    "params": {
+      "hours": 9,
+      "minutes": 30,
+      "hour_angle": 285.0,
+      "minute_angle": 180.0
+    },
+    "formula": "時針在 9 點過、分針指向 30 分 ➔ 9點30分"
+  },
+  "g2-11-m09": {
+    "type": "clock_face",
+    "params": {
+      "hours": 1,
+      "minutes": 40,
+      "hour_angle": 50.0,
+      "minute_angle": 240.0
+    },
+    "formula": "時針在 1 點過、分針指向 40 分 ➔ 1點40分"
+  },
+  "g2-11-m10": {
+    "type": "clock_face",
+    "params": {
+      "hours": 2,
+      "minutes": 0,
+      "hour_angle": 60.0,
+      "minute_angle": 0.0
+    },
+    "formula": "時針在 2 點過、分針指向 00 分 ➔ 2點00分"
+  },
+  "g2-11-m11": {
+    "type": "clock_face",
+    "params": {
+      "hours": 3,
+      "minutes": 10,
+      "hour_angle": 95.0,
+      "minute_angle": 60.0
+    },
+    "formula": "時針在 3 點過、分針指向 10 分 ➔ 3點10分"
+  },
+  "g2-11-m12": {
+    "type": "clock_face",
+    "params": {
+      "hours": 4,
+      "minutes": 20,
+      "hour_angle": 130.0,
+      "minute_angle": 120.0
+    },
+    "formula": "時針在 4 點過、分針指向 20 分 ➔ 4點20分"
+  },
+  "g2-11-m13": {
+    "type": "clock_face",
+    "params": {
+      "hours": 5,
+      "minutes": 30,
+      "hour_angle": 165.0,
+      "minute_angle": 180.0
+    },
+    "formula": "時針在 5 點過、分針指向 30 分 ➔ 5點30分"
+  },
+  "g2-11-m14": {
+    "type": "clock_face",
+    "params": {
+      "hours": 6,
+      "minutes": 40,
+      "hour_angle": 200.0,
+      "minute_angle": 240.0
+    },
+    "formula": "時針在 6 點過、分針指向 40 分 ➔ 6點40分"
+  },
+  "g2-11-m15": {
+    "type": "clock_face",
+    "params": {
+      "hours": 7,
+      "minutes": 0,
+      "hour_angle": 210.0,
+      "minute_angle": 0.0
+    },
+    "formula": "時針在 7 點過、分針指向 00 分 ➔ 7點00分"
+  },
+  "g2-11-m16": {
+    "type": "clock_face",
+    "params": {
+      "hours": 8,
+      "minutes": 10,
+      "hour_angle": 245.0,
+      "minute_angle": 60.0
+    },
+    "formula": "時針在 8 點過、分針指向 10 分 ➔ 8點10分"
+  },
+  "g2-11-m17": {
+    "type": "clock_face",
+    "params": {
+      "hours": 9,
+      "minutes": 20,
+      "hour_angle": 280.0,
+      "minute_angle": 120.0
+    },
+    "formula": "時針在 9 點過、分針指向 20 分 ➔ 9點20分"
+  },
+  "g2-11-m18": {
+    "type": "clock_face",
+    "params": {
+      "hours": 1,
+      "minutes": 30,
+      "hour_angle": 45.0,
+      "minute_angle": 180.0
+    },
+    "formula": "時針在 1 點過、分針指向 30 分 ➔ 1點30分"
+  },
+  "g2-11-m19": {
+    "type": "clock_face",
+    "params": {
+      "hours": 2,
+      "minutes": 40,
+      "hour_angle": 80.0,
+      "minute_angle": 240.0
+    },
+    "formula": "時針在 2 點過、分針指向 40 分 ➔ 2點40分"
+  },
+  "g2-11-m20": {
+    "type": "clock_face",
+    "params": {
+      "hours": 3,
+      "minutes": 0,
+      "hour_angle": 90.0,
+      "minute_angle": 0.0
+    },
+    "formula": "時針在 3 點過、分針指向 00 分 ➔ 3點00分"
+  },
+  "g2-11-m21": {
+    "type": "clock_face",
+    "params": {
+      "hours": 4,
+      "minutes": 10,
+      "hour_angle": 125.0,
+      "minute_angle": 60.0
+    },
+    "formula": "時針在 4 點過、分針指向 10 分 ➔ 4點10分"
+  },
+  "g2-11-m22": {
+    "type": "clock_face",
+    "params": {
+      "hours": 5,
+      "minutes": 20,
+      "hour_angle": 160.0,
+      "minute_angle": 120.0
+    },
+    "formula": "時針在 5 點過、分針指向 20 分 ➔ 5點20分"
+  },
   "g2-19-m01": {
     "type": "ruler_jump",
     "params": {

@@ -94,8 +94,8 @@ The successful probe proves the Grade 2 unit list; the 16 PDFs prove local sourc
   - 動畫與音效：答對爆金幣與經驗值浮動動畫、Confetti 彩帶、Web Audio 音效。
 - **驗證確認**：`validate_grade2.py` (PASS)、`validate_grade2_provenance.py` (PASS)、Edge CDP 端到端測試 4/4 PASS。
 
-## 3B1B 動態幾何與具象量感視覺化系統全量落實 (2026-10-14)
-- **8 大王國 176 題 100% 覆蓋**：
+## 3B1B 動態幾何與具象量感視覺化系統全量落實 (2026-10-15 擴充至 9 大王國 198 題)
+- **9 大王國 198 題 100% 覆蓋**：
   1. `g2-08` 乘法小屋（22 題）：連加收攏為二維陣列矩陣（Array Model）。
   2. `g2-09` 九九乘法（22 題）：倍數矩陣波浪流光點亮與累計膠囊。
   3. `g2-24` 排列乘法（22 題）：矩陣 90° 平滑旋轉演示乘法交換律空間不變性。
@@ -104,12 +104,13 @@ The successful probe proves the Grade 2 unit list; the 16 PDFs prove local sourc
   6. `g2-05` 二位數減法（22 題）：十位積木崩解為 10 顆個位塊（借位退位）與劃線消隱。
   7. `g2-19` 直尺線段（22 題）：擬真公分直尺與黃金跳步拱橋（+1cm 波浪）。
   8. `g2-20` 圖形大小（22 題）：半透明圖形平移疊合（Superposition）與多餘區霓虹高亮。
+  9. `g2-11` 時間鐘面（22 題）：雙針 1:12 齒輪物理聯動、發光扇形掃掠（Sector Sweep）與數位時間膠囊。
 - **純原生 Canvas 2D 物理形變引擎 (`app/js/visual_morph_engine_g2.js`)**：
   - 3B1B 經典深黑底與調色盤、DPR 銳利度補償、Web Audio 諧音回饋、0~1 平滑來回動畫循環。
 - **離線全相容與註冊表**：
   - `app/data/visual_morph_registry_g2.json` ＋ `app/js/visual_morph_registry_g2_data.js` 免伺服器秒開。
 - **守門員全面驗收全綠 (Exit Code 0)**：
-  - `verify_g2_visuals.py`：176 題幾何算理型別數學一致性檢驗 100% PASS。
-  - `_scratch/verify_3b1b_g2_cdp.js`：無頭 Edge CDP 實測動態展開與拉動 Slider 100% PASS。
+  - `verify_g2_visuals.py`：198 題幾何算理型別數學一致性檢驗 100% PASS。
+  - `_scratch/verify_3b1b_g2_cdp.js`：無頭 Edge CDP 實測動態展開、鐘面雙針跳轉與拉動 Slider 100% PASS。
   - `_scratch/verify_web_cdp.js`：4/4 整合雙向導航與冒險流程 PASS。
 

@@ -341,6 +341,9 @@
         case "shape_superposition":
           this.renderShapeSuperposition(w, h, params);
           break;
+        case "clock_face":
+          this.renderClockFace(w, h, params);
+          break;
         default:
           console.warn("[VisualMorphG2] 未知圖形類型:", type);
           break;
@@ -1311,6 +1314,205 @@
         resultStr = "甲圖 (" + countA + "塊) vs 乙圖 (" + countB + "塊) ➔ " + larger + "圖較大 (多出 " + diffCount + " " + unit + ")";
       }
       drawBadge(ctx, resultStr, w * 0.5, formulaY, "rgba(154, 114, 172, 0.25)", (larger === "一樣大" ? COLORS.green : COLORS.yellow), 13, true);
+
+      ctx.restore();
+    },
+
+    // 9. ⏰ 時間鐘面渲染器 (clock_face)
+    renderClockFace: function (w, h, params) {
+      var ctx = this.currentCtx;
+      var p = this.progress;
+      var hours = params.hours || 12;
+      var minutes = params.minutes !== undefined ? params.minutes : 0;
+      var targetMinAngle = params.minute_angle !== undefined ? params.minute_angle : (minutes / 60) * 360;
+
+      ctx.save();
+
+      // 標題
+      var titleY = 22;
+      drawBadge(ctx, "⏰ 3B1B 鐘面齒輪聯動透視：時針走大格、分針走小格", w * 0.5, titleY, "rgba(88, 196, 221, 0.2)", COLORS.blue, 13, true);
+
+      // 鐘面幾何尺寸
+      var isMobile = w < 420;
+      var cx = isMobile ? w * 0.36 : w * 0.38;
+      var cy = h * 0.52;
+      var R = Math.min(w * 0.26, h * 0.36);
+
+      // 動態插值角度：p 從 0 到 1
+      var curMinAngle = p * targetMinAngle;
+      var curHourAngle = ((hours % 12) * 30) + p * ((minutes / 60) * 30);
+      var curMinutes = Math.round(p * minutes);
+
+      // 1. 鐘盤底盤與雙層同心圓環
+      var dialGrad = ctx.createRadialGradient(cx, cy, R * 0.1, cx, cy, R);
+      dialGrad.addColorStop(0, "#1E2230");
+      dialGrad.addColorStop(0.85, "#10131A");
+      dialGrad.addColorStop(1, "#0A0C12");
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.fillStyle = dialGrad;
+      ctx.fill();
+
+      // 外外圈金屬邊框
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, R + 4, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // 2. 扇形掃掠光芒 (Sector Sweep) - 分針走過的軌跡
+      if (curMinAngle > 0.5) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        var startRad = -Math.PI / 2;
+        var endRad = startRad + (curMinAngle * Math.PI) / 180;
+        ctx.arc(cx, cy, R * 0.88, startRad, endRad, false);
+        ctx.closePath();
+
+        var sweepGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.9);
+        sweepGrad.addColorStop(0, "rgba(255, 101, 132, 0.45)");
+        sweepGrad.addColorStop(0.7, "rgba(255, 101, 132, 0.2)");
+        sweepGrad.addColorStop(1, "rgba(255, 101, 132, 0.05)");
+        ctx.fillStyle = sweepGrad;
+        ctx.fill();
+
+        ctx.strokeStyle = "rgba(255, 101, 132, 0.8)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 3. 繪製 60 刻度與 12 個整點數字
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      for (var i = 1; i <= 60; i++) {
+        var tickDeg = i * 6;
+        var tickRad = (tickDeg - 90) * (Math.PI / 180);
+        var isHour = (i % 5 === 0);
+
+        var innerR = isHour ? R * 0.82 : R * 0.91;
+        var outerR = R * 0.96;
+
+        var x1 = cx + innerR * Math.cos(tickRad);
+        var y1 = cy + innerR * Math.sin(tickRad);
+        var x2 = cx + outerR * Math.cos(tickRad);
+        var y2 = cy + outerR * Math.sin(tickRad);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+
+        if (isHour) {
+          ctx.lineWidth = 2.5;
+          ctx.strokeStyle = (tickDeg <= curMinAngle && curMinAngle > 0) ? COLORS.pink : COLORS.yellow;
+        } else {
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = (tickDeg <= curMinAngle && curMinAngle > 0) ? "rgba(255, 101, 132, 0.6)" : "rgba(255, 255, 255, 0.25)";
+        }
+        ctx.stroke();
+
+        // 繪製 12 個大鐘面數字
+        if (isHour) {
+          var hNum = i / 5;
+          var numR = R * 0.68;
+          var nx = cx + numR * Math.cos(tickRad);
+          var ny = cy + numR * Math.sin(tickRad);
+
+          ctx.font = "bold 13px system-ui, sans-serif";
+          ctx.fillStyle = (hNum === hours || (hours === 12 && hNum === 12)) ? COLORS.blue : "#E2E8F0";
+          ctx.fillText(hNum.toString(), nx, ny);
+        }
+      }
+
+      // 4. 繪製時針 (Hour Hand) - 藍色短針
+      var hourRad = (curHourAngle - 90) * (Math.PI / 180);
+      var hLen = R * 0.52;
+      var hx = cx + hLen * Math.cos(hourRad);
+      var hy = cy + hLen * Math.sin(hourRad);
+
+      ctx.save();
+      ctx.strokeStyle = COLORS.blue;
+      ctx.lineWidth = 5.5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(cx - 8 * Math.cos(hourRad), cy - 8 * Math.sin(hourRad));
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
+
+      ctx.fillStyle = COLORS.blue;
+      ctx.beginPath();
+      ctx.arc(hx, hy, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 5. 繪製分針 (Minute Hand) - 粉紅色長針
+      var minRad = (curMinAngle - 90) * (Math.PI / 180);
+      var mLen = R * 0.82;
+      var mx = cx + mLen * Math.cos(minRad);
+      var my = cy + mLen * Math.sin(minRad);
+
+      ctx.save();
+      ctx.strokeStyle = COLORS.pink;
+      ctx.lineWidth = 3;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(cx - 12 * Math.cos(minRad), cy - 12 * Math.sin(minRad));
+      ctx.lineTo(mx, my);
+      ctx.stroke();
+
+      ctx.fillStyle = COLORS.pink;
+      ctx.beginPath();
+      ctx.arc(mx, my, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 6. 軸心圓盤 (Center Pivot Cap)
+      var pivotGrad = ctx.createRadialGradient(cx, cy, 1, cx, cy, 6);
+      pivotGrad.addColorStop(0, "#FFFF00");
+      pivotGrad.addColorStop(1, "#D97706");
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.fillStyle = pivotGrad;
+      ctx.fill();
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // 7. 右側算理解構儀表板 (Dashboard)
+      var rx = isMobile ? w * 0.76 : w * 0.74;
+      var rowGap = 34;
+      var startY = cy - 42;
+
+      drawBadge(ctx, "時針 (短針・藍色)", rx, startY, "rgba(88, 196, 221, 0.2)", COLORS.blue, 11);
+      drawBadge(ctx, "走過 " + hours + " 點", rx, startY + 18, "rgba(88, 196, 221, 0.1)", "#E2E8F0", 11);
+
+      drawBadge(ctx, "分針 (長針・粉色)", rx, startY + rowGap + 10, "rgba(255, 101, 132, 0.2)", COLORS.pink, 11);
+      drawBadge(ctx, "走了 " + curMinutes + " 分 (" + curMinutes + "格)", rx, startY + rowGap + 28, "rgba(255, 101, 132, 0.1)", "#E2E8F0", 11);
+
+      // 數位時鐘發光卡片
+      var digitalCardY = startY + rowGap * 2 + 24;
+      var padH = hours < 10 ? ("0" + hours) : hours;
+      var padM = curMinutes < 10 ? ("0" + curMinutes) : curMinutes;
+      var digiText = padH + " : " + padM;
+      drawRoundRect(ctx, rx - 55, digitalCardY - 14, 110, 28, 8, "#181824", "rgba(56, 189, 248, 0.5)", 1.5);
+      ctx.font = "bold 17px monospace, sans-serif";
+      ctx.fillStyle = COLORS.yellow;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(digiText, rx, digitalCardY);
+
+      // 8. 底部總結算式
+      var formulaY = h - 14;
+      var finalMinStr = minutes < 10 ? ("0" + minutes) : minutes;
+      var formulaStr = "時針在 " + hours + " 點過、分針指向 " + finalMinStr + " 分 ➔ " + hours + "點" + finalMinStr + "分";
+      drawBadge(ctx, formulaStr, w * 0.5, formulaY, "rgba(88, 196, 221, 0.25)", COLORS.yellow, 13, true);
 
       ctx.restore();
     }

@@ -44,8 +44,8 @@
   - 🚀 125B 全量生產管線完成（任務1情境題庫 + 任務2直式微步階鷹架 `vertical_math_explainer_g2.js` + 任務3切片重構）。
   - 🏰 國小數學勇者大冒險大廳（Hub）完成：小二、小三、小四三合一集中展示，雙向導航完全打通。
   - 🎮 戰鬥介面全面升級：小三、小四同款精緻 RPG 沉浸式戰鬥系統與 26 王國地圖 Modal。
-  - 🎨 **小二 3B1B 動態幾何與具象量感透視系統落地（8 王國 176 題）**：
-    - 覆蓋乘法陣列聚合、九九乘法流光、乘法交換律 90° 旋轉、分裝平分拋物線飛入、Base-10 積木滿十進位融合成棒、借位拆解崩解、直尺公分拱橋跳步、圖形疊合比較（`app/js/visual_morph_engine_g2.js`）。
+  - 🎨 **小二 3B1B 動態幾何與具象量感透視系統落地（9 王國 198 題）**：
+    - 覆蓋乘法陣列聚合、九九乘法流光、乘法交換律 90° 旋轉、分裝平分拋物線飛入、Base-10 積木滿十進位融合成棒、借位拆解崩解、直尺公分拱橋跳步、圖形疊合比較、時間鐘面雙針齒輪聯動與扇形掃掠（`app/js/visual_morph_engine_g2.js`）。
     - 離線資料包裝（`app/data/visual_morph_registry_g2.json` / `app/js/visual_morph_registry_g2_data.js`）。
     - 守門員（`verify_g2_visuals.py`、`_scratch/verify_3b1b_g2_cdp.js`）100% 全綠 PASS。
   - 🛡️ 雙守門員（`validate_grade2.py`, `validate_grade2_provenance.py`）與無頭 Edge CDP 驗收全綠。
@@ -205,7 +205,7 @@
     3. 任務 1（26王國情境題庫）：分 4 大批次全量生成在地生活情境規格（`source/curriculum_scenarios_task1_batch_*.md`）。
   - 🏰 **三合一數學大廳（Hub）**：`小三數學題庫/app/index.html` 正式收納 Grade 2、Grade 3、Grade 4 三年級卡片，並部署 `app/g2/`；`017_小朋友APP/index.html` 首頁同步加入入口。
   - 🧪 **真實無頭 Edge CDP 驗收**：`_scratch/verify_web_cdp.js` 4/4 全綠 PASS，小二冒險答題、解鎖、雙向導航及年級大廳運作完全正常。
-  - 🎨 **小二 3B1B 視覺透視系統（176 題）**：`app/js/visual_morph_engine_g2.js` ＋ `verify_g2_visuals.py` PASS ＋ `verify_3b1b_g2_cdp.js` PASS。
+  - 🎨 **小二 3B1B 視覺透視系統（9 大王國 198 題）**：擴充 `g2-11 時間鐘面` 雙針 1:12 齒輪聯動與扇形掃掠，`verify_g2_visuals.py` (198/198 PASS) ＋ `verify_3b1b_g2_cdp.js` PASS。
   - 🛡️ **雙守門員驗證**：`validate_grade2.py` 與 `validate_grade2_provenance.py` 全數 PASS。
 
 - **日期**：2026-10-13
