@@ -603,44 +603,120 @@
     var quotient = Math.floor(a / b);
     var remainder = a % b;
     var aStr = String(a);
-    var divLines = [];
+    var n = aStr.length;
+    var bStr = String(b);
+
     var curRem = 0;
-    for (var i = 0; i < aStr.length; i++) {
+    var started = false;
+    var qDigits = new Array(n).fill('');
+    var steps = [];
+
+    for (var i = 0; i < n; i++) {
       var digit = parseInt(aStr[i], 10);
       var curVal = curRem * 10 + digit;
       var qDigit = Math.floor(curVal / b);
       var prod = qDigit * b;
       var nextRem = curVal - prod;
-      divLines.push({
-        bringDown: curVal,
-        q: qDigit,
-        prod: prod,
-        diff: nextRem,
-        digitIdx: i
-      });
-      curRem = nextRem;
-    }
-    var qStr = String(quotient).split('').join('   ');
-    var html = '<div class="vme-longdiv-board">';
-    html += '<div class="vme-ld-quotient">' + qStr + '</div>';
-    html += '<div class="vme-ld-roof"><span class="vme-ld-divisor">' + b + ' ) </span><span class="vme-ld-dividend">' + aStr.split('').join('   ') + '</span></div>';
-    html += '<div class="vme-ld-body">';
-    divLines.forEach(function(dl, idx) {
-      if (dl.q > 0 || idx > 0) {
-        var pad = '&nbsp;'.repeat(idx * 3);
-        html += '<div class="vme-ld-step">' + pad + String(dl.prod).padStart(2, ' ') + '</div>';
-        html += '<div class="vme-ld-subline">' + pad + '----</div>';
-        if (idx < divLines.length - 1) {
-          var nextD = aStr[idx + 1];
-          html += '<div class="vme-ld-step">' + pad + dl.diff + ' ' + nextD + '</div>';
-        } else {
-          html += '<div class="vme-ld-remainder">' + pad + dl.diff + ' (餘數)</div>';
-        }
+
+      if (qDigit > 0 || started) {
+        started = true;
+        qDigits[i] = String(qDigit);
+        steps.push({
+          digitIdx: i,
+          curVal: curVal,
+          qDigit: qDigit,
+          prod: prod,
+          nextRem: nextRem
+        });
+        curRem = nextRem;
+      } else {
+        curRem = curVal;
       }
-    });
-    html += '</div></div>';
+    }
+
+    var cellStyle = 'width:36px; min-width:36px; max-width:36px; text-align:center; font-family:monospace; font-size:1.35rem; font-weight:bold; height:32px; padding:0;';
+    var sideStyle = 'text-align:right; font-family:monospace; font-size:1.35rem; font-weight:bold; color:#38BDF8; padding-right:6px; white-space:nowrap;';
+    var parenStyle = 'width:18px; text-align:center; font-family:monospace; font-size:1.45rem; font-weight:bold; color:#38BDF8; padding:0;';
+
+    var html = '<div class="vme-longdiv-wrap" style="overflow-x:auto; margin:12px auto; display:flex; justify-content:center;">';
+    html += '<table style="border-collapse:collapse; margin:0 auto; line-height:1.3;">';
+
+    // 1. 商數列
+    html += '<tr>';
+    html += '<td style="' + sideStyle + '"></td>';
+    html += '<td style="' + parenStyle + '"></td>';
+    for (var c = 0; c < n; c++) {
+      html += '<td style="' + cellStyle + ' color:#FBBF24;">' + (qDigits[c] || '') + '</td>';
+    }
+    html += '<td></td></tr>';
+
+    // 2. 被除數列 (Roof 橫線)
+    html += '<tr>';
+    html += '<td style="' + sideStyle + '">' + bStr + '</td>';
+    html += '<td style="' + parenStyle + '">)</td>';
+    for (var c = 0; c < n; c++) {
+      html += '<td style="' + cellStyle + ' color:#F8FAFC; border-top:3px solid #64748B;">' + aStr[c] + '</td>';
+    }
+    html += '<td></td></tr>';
+
+    // 3. 步驟列
+    for (var s = 0; s < steps.length; s++) {
+      var st = steps[s];
+      var pStr = String(st.prod);
+      var pEnd = st.digitIdx;
+      var pStart = pEnd - pStr.length + 1;
+
+      // 乘積行 (帶底線作為減法線)
+      html += '<tr>';
+      html += '<td style="' + sideStyle + '"></td>';
+      html += '<td style="' + parenStyle + '"></td>';
+      for (var c = 0; c < n; c++) {
+        var isLine = (c >= pStart && c <= pEnd);
+        var char = (isLine ? pStr[c - pStart] : '');
+        var lineBorder = isLine ? ' border-bottom:2px solid #64748B;' : '';
+        html += '<td style="' + cellStyle + ' color:#94A3B8;' + lineBorder + '">' + char + '</td>';
+      }
+      html += '<td></td></tr>';
+
+      // 差數與移下一位 / 餘數
+      if (s < steps.length - 1) {
+        var nextSt = steps[s + 1];
+        var combStr = String(nextSt.curVal);
+        var cEnd = nextSt.digitIdx;
+        var cStart = cEnd - combStr.length + 1;
+
+        html += '<tr>';
+        html += '<td style="' + sideStyle + '"></td>';
+        html += '<td style="' + parenStyle + '"></td>';
+        for (var c = 0; c < n; c++) {
+          var char = (c >= cStart && c <= cEnd) ? combStr[c - cStart] : '';
+          var isBring = (c === cEnd);
+          var color = isBring ? '#FBBF24' : '#E2E8F0';
+          html += '<td style="' + cellStyle + ' color:' + color + ';">' + char + '</td>';
+        }
+        html += '<td></td></tr>';
+      } else {
+        // 最後餘數
+        var remStr = String(remainder);
+        var rEnd = n - 1;
+        var rStart = rEnd - remStr.length + 1;
+
+        html += '<tr>';
+        html += '<td style="' + sideStyle + '"></td>';
+        html += '<td style="' + parenStyle + '"></td>';
+        for (var c = 0; c < n; c++) {
+          var char = (c >= rStart && c <= rEnd) ? remStr[c - rStart] : '';
+          html += '<td style="' + cellStyle + ' color:#34D399; font-weight:bold;">' + char + '</td>';
+        }
+        var remNote = remainder > 0 ? ' (餘數 ' + remainder + ')' : ' (整除 餘0)';
+        html += '<td style="color:#34D399; font-weight:bold; font-size:0.95rem; padding-left:8px; white-space:nowrap;">' + remNote + '</td></tr>';
+      }
+    }
+
+    html += '</table></div>';
     return html;
   }
+
 
   function renderOperationBoard(op, a, b) {
     if (op === '+') return renderAdditionGrid(a, b);
