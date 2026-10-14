@@ -4,14 +4,20 @@
 
 ## ⏯️ 目前做到哪
 
-1. **小三數學 3Blue1Brown 動態幾何與具象量感視覺化系統全量落實（2026-10-14）**
+1. **小四數學 3Blue1Brown 動態幾何與抽象量感透視系統規劃與首發引擎落地（2026-10-14）**
+   - 全 23 王國 506 題專屬 3B1B 視覺模型矩陣定稿（`PLAN_GRADE4_3B1B_VISUALS.md`）。
+   - 純原生 Canvas 60fps 渲染核心落地（`app/js/visual_morph_engine_g4.js`）：涵蓋量角器雙向吸附、Isometric 3D 等角積木與 X-Ray、矩陣面積乘法模型、Exploding Dots 爆裂點十進位、雙峰重力滾球數線。
+   - 原型互動展示台（`app/prototype_g4_3b1b.html`）免伺服器離線秒開，支援進度拉桿與 X-Ray 切換。
+   - 守門員全面驗收全綠（`tests/verify_g4_3b1b_engine.js` 31/31 通過，**Exit Code 0**）。
+
+2. **小三數學 3Blue1Brown 動態幾何與具象量感視覺化系統全量落實（2026-10-14）**
    - 解決圓規王國（t22）死套樣板問題，依據題幹情境打造 6 種生動幾何動畫（擬真圓規流光、小熊鬧鐘與摩天輪、披薩切片拉開牽絲、腳踏車輪滾動、水波與吸盤飛鏢、太陽神輪定理）。
    - 依據指示全量擴充具象思維王國（**t21 角與直角、t18 分數蛋糕、t10 經過時間、t13 公升毫升、t14 公斤公克**），連同前次周長（t16）與面積（t17），**共 8 大王國、176 題 100% 覆蓋**。
    - 核心繪圖引擎：`小三數學題庫/app/js/visual_morph_engine.js` 與 `app/g3/js/visual_morph_engine.js` 雙端同步。
    - 題庫註冊表：`visual_morph_registry.json` 與全域離線版 `visual_morph_registry_data.js`，解決 Windows `file:///` 協議限制，全離線秒開。
    - 守門員全面驗收：`verify_t22_diverse_visuals.js`、`verify_t21_t18_visuals.js`、`verify_t10_t13_t14_visuals.js` 三套驗收 176 題全綠，**Exit Code 0**。
 
-2. **小二、小三、小四三合一數學大廳（Hub）完備（2026-10-14）**
+3. **小二、小三、小四三合一數學大廳（Hub）完備（2026-10-14）**
    - 小二、小三、小四三大年級完整 RPG 冒險遊戲與直式微步階引導引擎皆已就緒。
    - 大廳（`小三數學題庫/app/index.html`）打通三者雙向導航，首頁（`017_小朋友APP/index.html`）直通入口正常。
 

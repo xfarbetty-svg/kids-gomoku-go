@@ -35,11 +35,19 @@
   - 📐 直式運算引擎小四升級（`app/js/vertical_math_explainer.js`）：支援三位數乘兩位數雙層部分積直式、兩步驟四則運算括號最優先法則與長除法試商循環。
   - 🛡️ 守門員全面驗收全綠（`validate_grade4.py` exit code 0）。
   - 📋 產出交接驗證任務書給 OPENCODE（`OPENCODE_TASK_GRADE4_MATH.md`）。
+  - 🎨 **小四 3B1B 動態幾何與抽象量感透視系統建置**：
+    - 規格藍圖定稿（`PLAN_GRADE4_3B1B_VISUALS.md`）：全 23 王國 506 題 3B1B 視覺模型對應矩陣。
+    - 核心引擎 Phase 1 原型落地（`app/js/visual_morph_engine_g4.js`）：支援量角器雙向吸附、Isometric 3D 等角積木 X-Ray 透視、Area Model 矩陣乘法色塊展開、Exploding Dots 爆裂點十進位、雙峰重力滾球數線。
+    - 互動展示台（`app/prototype_g4_3b1b.html`）與守門員（`tests/verify_g4_3b1b_engine.js` 31/31 通過，exit code 0）。
 - [x] **國小二年級數學大冒險（小二數學）與三合一數學大廳完成**：
   - 🧠 125B (Strata) 審查簽核 26 王國 572 題 seed bank 合規 PASS（`source/AUDIT_REPORT_125B.md`）。
   - 🚀 125B 全量生產管線完成（任務1情境題庫 + 任務2直式微步階鷹架 `vertical_math_explainer_g2.js` + 任務3切片重構）。
   - 🏰 國小數學勇者大冒險大廳（Hub）完成：小二、小三、小四三合一集中展示，雙向導航完全打通。
   - 🎮 戰鬥介面全面升級：小三、小四同款精緻 RPG 沉浸式戰鬥系統與 26 王國地圖 Modal。
+  - 🎨 **小二 3B1B 動態幾何與具象量感透視系統落地（8 王國 176 題）**：
+    - 覆蓋乘法陣列聚合、九九乘法流光、乘法交換律 90° 旋轉、分裝平分拋物線飛入、Base-10 積木滿十進位融合成棒、借位拆解崩解、直尺公分拱橋跳步、圖形疊合比較（`app/js/visual_morph_engine_g2.js`）。
+    - 離線資料包裝（`app/data/visual_morph_registry_g2.json` / `app/js/visual_morph_registry_g2_data.js`）。
+    - 守門員（`verify_g2_visuals.py`、`_scratch/verify_3b1b_g2_cdp.js`）100% 全綠 PASS。
   - 🛡️ 雙守門員（`validate_grade2.py`, `validate_grade2_provenance.py`）與無頭 Edge CDP 驗收全綠。
 - [ ] **國小數學 G1、G5、G6 全量生產與六合一大廳建置**（依 `PLAN-ALL-GRADES-MATH-125B-35B.md`）：
   - [ ] **Grade 1 小一（初生森林）**：20 王國 / 440 題（35B 題幹生活化潤色 + 125B 10以內分合/錢幣/整半點鐘面題庫與守門員）
@@ -156,6 +164,14 @@
 
 ## 🕐 最後更新
 
+- **小四數學 3Blue1Brown 動態幾何與抽象量感透視系統規劃與首發引擎落地（2026-10-14）**：
+  - 📐 **全 23 王國 506 題 3B1B 視覺模型完整規劃（`PLAN_GRADE4_3B1B_VISUALS.md`）**：
+    - 涵蓋大數十進位爆裂點、直式位值光柱、矩陣面積乘法模型、長除法分堆、雙峰重力滾球數線、語法樹坍塌、等值分數切刀、量角器自適應雙圈吸附、Isometric 3D 等角透視積木與 X-Ray 等。
+  - ⚡ **純原生 Canvas 幾何透視引擎（`app/js/visual_morph_engine_g4.js`）**：
+    - 實作 5 大核心渲染器（量角器、等角透視積木、矩陣面積、Exploding Dots、四捨五入滾球），支援 60fps rAF 平滑緩動與 X-Ray 透視。
+  - 🖥️ **互動原型展示台（`app/prototype_g4_3b1b.html`）**：提供時間軸進度拉桿、自動播放、X-Ray 自由切換。
+  - 🛡️ **獨立守門員測試通過（`tests/verify_g4_3b1b_engine.js`）**：31/31 組渲染條件 100% PASS，Exit Code 0。
+
 - **小三數學 3Blue1Brown 動態幾何與具象量感視覺化系統全量落實（2026-10-14）**：
   - 🎨 **8 大王國 176 題 100% 覆蓋**：
     - `t16` 城堡周長（22 題）：四邊物理鉸鏈平鋪拉直成線段。
@@ -179,6 +195,7 @@
     3. 任務 1（26王國情境題庫）：分 4 大批次全量生成在地生活情境規格（`source/curriculum_scenarios_task1_batch_*.md`）。
   - 🏰 **三合一數學大廳（Hub）**：`小三數學題庫/app/index.html` 正式收納 Grade 2、Grade 3、Grade 4 三年級卡片，並部署 `app/g2/`；`017_小朋友APP/index.html` 首頁同步加入入口。
   - 🧪 **真實無頭 Edge CDP 驗收**：`_scratch/verify_web_cdp.js` 4/4 全綠 PASS，小二冒險答題、解鎖、雙向導航及年級大廳運作完全正常。
+  - 🎨 **小二 3B1B 視覺透視系統（176 題）**：`app/js/visual_morph_engine_g2.js` ＋ `verify_g2_visuals.py` PASS ＋ `verify_3b1b_g2_cdp.js` PASS。
   - 🛡️ **雙守門員驗證**：`validate_grade2.py` 與 `validate_grade2_provenance.py` 全數 PASS。
 
 - **日期**：2026-10-13

@@ -1,4 +1,4 @@
-const CACHE="g2-math-v2";const FILES=["./","index.html","style.css","app.js","rpg_world_map.json","manifest.webmanifest"];
+const CACHE="g2-math-v3";const FILES=["./","index.html","style.css","app.js","rpg_world_map.json","manifest.webmanifest","js/visual_morph_engine_g2.js","js/visual_morph_registry_g2_data.js","data/visual_morph_registry_g2.json"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(async c=>{for(const f of FILES){try{await c.add(f)}catch(err){console.warn("cache skip",f,err)}}return self.skipWaiting()})));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))).then(()=>self.clients.claim()))));
 self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r}).catch(()=>caches.match(e.request).then(r=>r||Response.error())))});

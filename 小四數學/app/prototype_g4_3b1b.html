@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小四數學 3B1B 視覺幾何透視展示台</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #0f111a;
+      color: #f0f4f8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 22px;
+      color: #58c4dd;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    p.sub {
+      font-size: 13px;
+      color: #8b9bb4;
+    }
+    .tabs-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 14px;
+      max-width: 900px;
+    }
+    .tab-btn {
+      background: #1c2030;
+      color: #cad5e2;
+      border: 1px solid #2d3548;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      background: #2a324b;
+      color: #fff;
+    }
+    .tab-btn.active {
+      background: #58c4dd;
+      color: #0b1320;
+      font-weight: bold;
+      border-color: #58c4dd;
+    }
+    .stage-container {
+      background: #181a26;
+      border: 1px solid #262c3e;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 760px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    canvas {
+      width: 100%;
+      height: 440px;
+      display: block;
+    }
+    .control-panel {
+      width: 100%;
+      background: #141722;
+      border-top: 1px solid #262c3e;
+      padding: 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slider-row label {
+      font-size: 13px;
+      color: #8b9bb4;
+      min-width: 65px;
+    }
+    input[type=range] {
+      flex: 1;
+      accent-color: #58c4dd;
+      cursor: pointer;
+    }
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+    .action-btn {
+      background: #222a3f;
+      color: #fff;
+      border: 1px solid #364260;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .action-btn:hover {
+      background: #2f3a58;
+    }
+    .action-btn.primary {
+      background: #83c167;
+      color: #09200b;
+      font-weight: bold;
+      border-color: #83c167;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      background: rgba(88, 196, 221, 0.15);
+      color: #58c4dd;
+      border: 1px solid rgba(88, 196, 221, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>3B1B 幾何透視展示台 (Grade 4)</h1>
+    <p class="sub">108 課綱小四數學 23 王國專屬動態物理幾何引擎原型</p>
+  </header>
+
+  <div class="tabs-bar">
+    <button class="tab-btn active" data-type="protractor">📐 量角器與旋轉角 (t15)</button>
+    <button class="tab-btn" data-type="voxel">🧊 體積積木與 X-Ray (t14)</button>
+    <button class="tab-btn" data-type="area_model">⚒️ 乘法矩陣面積模型 (t05)</button>
+    <button class="tab-btn" data-type="exploding_dots">🌌 十進位爆裂點 (t01)</button>
+    <button class="tab-btn" data-type="rounding">🔭 四捨五入重力滾球 (t10)</button>
+  </div>
+
+  <div class="stage-container">
+    <canvas id="morphCanvas"></canvas>
+    
+    <div class="control-panel">
+      <div class="slider-row">
+        <label>幾何進度：</label>
+        <input type="range" id="progressSlider" min="0" max="100" value="100">
+        <span id="progressText" class="badge">100%</span>
+      </div>
+
+      <div class="actions-row">
+        <div class="btn-group">
+          <button id="btnPlay" class="action-btn primary">▶ 動畫播放</button>
+          <button id="btnReset" class="action-btn">↺ 重設起點</button>
+          <button id="btnXray" class="action-btn" style="display: none;">🔍 X-Ray 透視</button>
+        </div>
+        <span id="modelTag" class="badge">t15 角度與量角器星際站</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/visual_morph_engine_g4.js"></script>
+  <script>
+    (function () {
+      var canvas = document.getElementById("morphCanvas");
+      VisualMorphG4.initCanvas(canvas);
+
+      var slider = document.getElementById("progressSlider");
+      var progressText = document.getElementById("progressText");
+      var btnPlay = document.getElementById("btnPlay");
+      var btnReset = document.getElementById("btnReset");
+      var btnXray = document.getElementById("btnXray");
+      var modelTag = document.getElementById("modelTag");
+      var tabBtns = document.querySelectorAll(".tab-btn");
+
+      var currentType = "protractor";
+      var xrayEnabled = false;
+
+      var MODELS = {
+        protractor: {
+          type: "smart_protractor_spin",
+          angle: 125,
+          direction: "ccw",
+          tag: "t15 📐 角度與量角器星際站"
+        },
+        voxel: {
+          type: "isometric_voxel_xray",
+          blocks: [
+            { x: 0, y: 0, z: 0 }, { x: 1, y: 0, z: 0 }, { x: 2, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 }, { x: 1, y: 1, z: 0 }, { x: 2, y: 1, z: 0 },
+            { x: 0, y: 2, z: 0 }, { x: 1, y: 2, z: 0 }, { x: 2, y: 2, z: 0 },
+            { x: 0, y: 0, z: 1 }, { x: 1, y: 0, z: 1 },
+            { x: 0, y: 1, z: 1 }, { x: 1, y: 1, z: 1 },
+            { x: 0, y: 0, z: 2 }
+          ],
+          tag: "t14 🧊 立方公分積木體積島"
+        },
+        area_model: {
+          type: "area_model_multiplication",
+          numA: 246,
+          numB: 34,
+          tag: "t05 ⚒️ 三位數乘兩位數直式工坊"
+        },
+        exploding_dots: {
+          type: "exploding_dots_large",
+          tag: "t01 🌌 一億以內大數神殿"
+        },
+        rounding: {
+          type: "hillside_gravity_rounding",
+          leftVal: 40000,
+          rightVal: 50000,
+          val: 46800,
+          tag: "t10 🔭 四捨五入概數天文台"
+        }
+      };
+
+      function updateRender(prog) {
+        slider.value = Math.round(prog * 100);
+        progressText.innerText = Math.round(prog * 100) + "%";
+        VisualMorphG4.render(MODELS[currentType], prog);
+      }
+
+      function switchTab(type) {
+        currentType = type;
+        tabBtns.forEach(function (btn) {
+          btn.classList.toggle("active", btn.getAttribute("data-type") === type);
+        });
+
+        modelTag.innerText = MODELS[type].tag;
+        btnXray.style.display = (type === "voxel") ? "inline-block" : "none";
+        VisualMorphG4.stopAnimation();
+        updateRender(1.0);
+      }
+
+      tabBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          switchTab(this.getAttribute("data-type"));
+        });
+      });
+
+      slider.addEventListener("input", function () {
+        VisualMorphG4.stopAnimation();
+        var prog = parseFloat(this.value) / 100;
+        updateRender(prog);
+      });
+
+      btnPlay.addEventListener("click", function () {
+        VisualMorphG4.startAnimation(MODELS[currentType], 2200, function (prog) {
+          slider.value = Math.round(prog * 100);
+          progressText.innerText = Math.round(prog * 100) + "%";
+        });
+      });
+
+      btnReset.addEventListener("click", function () {
+        VisualMorphG4.stopAnimation();
+        updateRender(0.0);
+      });
+
+      btnXray.addEventListener("click", function () {
+        xrayEnabled = !xrayEnabled;
+        this.classList.toggle("primary", xrayEnabled);
+        VisualMorphG4.setXRay(xrayEnabled);
+      });
+
+      window.addEventListener("resize", function () {
+        VisualMorphG4.handleResize();
+        updateRender(parseFloat(slider.value) / 100);
+      });
+
+      // 初始化
+      switchTab("protractor");
+    })();
+  </script>
+</body>
+</html>
