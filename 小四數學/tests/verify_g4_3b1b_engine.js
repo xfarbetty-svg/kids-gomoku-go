@@ -28,6 +28,8 @@ function createMockContext() {
     strokeRect: () => {},
     save: () => {},
     restore: () => {},
+    translate: () => {},
+    rotate: () => {},
     setTransform: () => {},
     scale: () => {},
     fillText: () => {},
@@ -117,6 +119,18 @@ const testModels = [
   {
     name: "🔭 四捨五入重力滾球 (t10)",
     data: { type: "hillside_gravity_rounding", leftVal: 40000, rightVal: 50000, val: 46800 }
+  },
+  {
+    name: "🏭 長方形面積與網格 (t21)",
+    data: { type: "area_cut_and_fill", length: 22, width: 14 }
+  },
+  {
+    name: "🍰 分數披薩切片合體 (t12)",
+    data: { type: "fraction_pizza_combine", num1: 2, num2: 2, denominator: 6 }
+  },
+  {
+    name: "💧 二位小數百格板 (t16)",
+    data: { type: "hundreds_grid_decimal", valA: 3.02, valB: 2.6 }
   }
 ];
 

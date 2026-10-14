@@ -66,6 +66,28 @@
       }
     },
 
+    initRegistry: function (data) {
+      this.registry = data || {};
+    },
+
+    getMorphData: function (qid) {
+      return this.registry[qid] || null;
+    },
+
+    loadRegistryAsync: function (url, cb) {
+      var self = this;
+      fetch(url)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          self.registry = data;
+          if (cb) cb(null, data);
+        })
+        .catch(function (err) {
+          console.warn("VisualMorphG4: Registry load warning", err);
+          if (cb) cb(err);
+        });
+    },
+
     // 核心渲染進入點
     render: function (modelData, progress) {
       if (!this.ctx) return;
@@ -109,6 +131,18 @@
         case "hillside_gravity_rounding":
         case "rounding":
           this.renderHillsideRounding(ctx, w, h, modelData, this.progress);
+          break;
+        case "area_cut_and_fill":
+        case "rect_area":
+          this.renderAreaCutAndFill(ctx, w, h, modelData, this.progress);
+          break;
+        case "fraction_pizza_combine":
+        case "fraction_combine":
+          this.renderFractionPizza(ctx, w, h, modelData, this.progress);
+          break;
+        case "hundreds_grid_decimal":
+        case "decimal_grid":
+          this.renderHundredsGridDecimal(ctx, w, h, modelData, this.progress);
           break;
         default:
           this.drawFallbackModel(ctx, w, h, modelData, this.progress);
@@ -618,6 +652,234 @@
     },
 
     /* =====================================================================
+       6. 🏭 長方形面積與網格展開 (t21 平方公尺與長方形面積工廠)
+       ===================================================================== */
+    renderAreaCutAndFill: function (ctx, w, h, data, progress) {
+      var lenA = data.length || 22;
+      var lenB = data.width || 14;
+      var totalArea = lenA * lenB;
+
+      var cx = w * 0.5;
+      var cy = h * 0.55;
+      var maxBoxW = w * 0.55;
+      var maxBoxH = h * 0.48;
+
+      var scale = Math.min(maxBoxW / Math.max(lenA, 1), maxBoxH / Math.max(lenB, 1));
+      var rectW = lenA * scale;
+      var rectH = lenB * scale;
+
+      var startX = cx - rectW / 2;
+      var startY = cy - rectH / 2;
+
+      // 動態展開長度與寬度
+      var currentW = rectW * Math.min(1, progress * 1.5);
+      var currentH = rectH * Math.max(0, Math.min(1, (progress - 0.2) * 1.25));
+
+      // 繪製展開的矩形色塊
+      ctx.fillStyle = "rgba(88, 196, 221, 0.25)";
+      ctx.fillRect(startX, startY, currentW, currentH);
+      ctx.strokeStyle = COLORS.blue;
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(startX, startY, currentW, currentH);
+
+      // 網格線 (若長寬適中)
+      if (progress > 0.6) {
+        var gridAlpha = (progress - 0.6) / 0.4;
+        ctx.strokeStyle = "rgba(255, 255, 255, " + (0.15 * gridAlpha) + ")";
+        ctx.lineWidth = 1;
+        var stepX = rectW / Math.min(lenA, 15);
+        for (var gx = startX + stepX; gx < startX + rectW - 1; gx += stepX) {
+          ctx.beginPath();
+          ctx.moveTo(gx, startY);
+          ctx.lineTo(gx, startY + rectH);
+          ctx.stroke();
+        }
+        var stepY = rectH / Math.min(lenB, 10);
+        for (var gy = startY + stepY; gy < startY + rectH - 1; gy += stepY) {
+          ctx.beginPath();
+          ctx.moveTo(startX, gy);
+          ctx.lineTo(startX + rectW, gy);
+          ctx.stroke();
+        }
+      }
+
+      // 標註長與寬
+      ctx.fillStyle = COLORS.yellow;
+      ctx.font = "bold 16px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("長 = " + lenA + " m", cx, startY - 14);
+
+      ctx.save();
+      ctx.translate(startX - 18, cy);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("寬 = " + lenB + " m", 0, 0);
+      ctx.restore();
+
+      // 儀表板結果
+      ctx.fillStyle = COLORS.white;
+      ctx.font = "bold 22px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("長方形面積: " + lenA + " × " + lenB + " = " + totalArea + " 平方公尺 (m²)", w / 2, 45);
+
+      ctx.font = "14px sans-serif";
+      ctx.fillStyle = COLORS.green;
+      ctx.fillText("面積公式：長 × 寬 ＝ 矩形所覆蓋的單位平方量總和", w / 2, 72);
+    },
+
+    /* =====================================================================
+       7. 🍰 真假帶分數烘焙城堡 (t12 分數披薩切片動態合體)
+       ===================================================================== */
+    renderFractionPizza: function (ctx, w, h, data, progress) {
+      var den = data.denominator || 6;
+      var num1 = data.num1 || 2;
+      var num2 = data.num2 || 2;
+      var totalNum = num1 + num2;
+
+      var cx = w * 0.5;
+      var cy = h * 0.58;
+      var r = Math.min(w, h) * 0.28;
+
+      // 繪製背景底盤 (虛線圓)
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // 等分輻射線
+      for (var d = 0; d < den; d++) {
+        var rad = (d / den) * Math.PI * 2 - Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + r * Math.cos(rad), cy + r * Math.sin(rad));
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.stroke();
+      }
+
+      var sliceAngle = (Math.PI * 2) / den;
+
+      // 1. 第一部分扇形 (固定已在盤上)
+      for (var s1 = 0; s1 < num1; s1++) {
+        var startAng = s1 * sliceAngle - Math.PI / 2;
+        var endAng = (s1 + 1) * sliceAngle - Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, startAng, endAng);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(88, 196, 221, 0.75)";
+        ctx.fill();
+        ctx.strokeStyle = COLORS.white;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // 2. 第二部分扇形 (隨進度自外側滑入咬合)
+      var incomingAlpha = Math.min(1, progress * 1.2);
+      var offsetDist = (1 - progress) * 60;
+
+      for (var s2 = 0; s2 < num2; s2++) {
+        var idx = num1 + s2;
+        var sAng = idx * sliceAngle - Math.PI / 2;
+        var eAng = (idx + 1) * sliceAngle - Math.PI / 2;
+        var midA = (sAng + eAng) / 2;
+
+        var shiftX = cx + offsetDist * Math.cos(midA);
+        var shiftY = cy + offsetDist * Math.sin(midA);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(shiftX, shiftY);
+        ctx.arc(shiftX, shiftY, r, sAng, eAng);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(255, 101, 132, " + incomingAlpha + ")";
+        ctx.fill();
+        ctx.strokeStyle = COLORS.white;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 滿版金光
+      if (totalNum >= den && progress > 0.85) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r + 6, 0, Math.PI * 2);
+        ctx.strokeStyle = COLORS.yellow;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+
+      // 儀表板結果
+      ctx.fillStyle = COLORS.white;
+      ctx.font = "bold 22px sans-serif";
+      ctx.textAlign = "center";
+      var sumFraction = totalNum + "/" + den;
+      if (totalNum >= den && totalNum % den === 0) sumFraction += " = " + (totalNum / den);
+      else if (totalNum > den) sumFraction += " = 1又" + (totalNum % den) + "/" + den;
+
+      ctx.fillText("同分母分數相加: " + num1 + "/" + den + " + " + num2 + "/" + den + " = " + sumFraction, w / 2, 45);
+      ctx.font = "14px sans-serif";
+      ctx.fillStyle = COLORS.yellow;
+      ctx.fillText("分母不變，分子相加 ➔ 扇形拼盤連續聚合", w / 2, 72);
+    },
+
+    /* =====================================================================
+       8. 💧 二位小數百分位溪流 (t16 百格板小數碎化)
+       ===================================================================== */
+    renderHundredsGridDecimal: function (ctx, w, h, data, progress) {
+      var valA = data.valA || 3.02;
+      var valB = data.valB || 2.6;
+      var total = Math.round((valA + valB) * 100) / 100;
+
+      var cx = w * 0.5;
+      var cy = h * 0.58;
+      var gridSize = Math.min(w * 0.45, h * 0.52);
+      var cellSize = gridSize / 10;
+      var startX = cx - gridSize / 2;
+      var startY = cy - gridSize / 2;
+
+      // 繪製 10x10 百格板
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(startX, startY, gridSize, gridSize);
+
+      // 小數百分位填色 (以 valB 為主展示 0.1 條棒與 0.01 小格)
+      var decPartB = Math.round((valB % 1) * 100);
+      var filledCells = Math.floor(decPartB * progress);
+
+      for (var r = 0; r < 10; r++) {
+        for (var c = 0; c < 10; c++) {
+          var cellIdx = r * 10 + c;
+          var x = startX + c * cellSize;
+          var y = startY + r * cellSize;
+
+          if (cellIdx < filledCells) {
+            ctx.fillStyle = (c === 0 || cellIdx % 10 === 0) ? COLORS.blue : "rgba(88, 196, 221, 0.7)";
+            ctx.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
+          } else {
+            ctx.strokeRect(x, y, cellSize, cellSize);
+          }
+        }
+      }
+
+      // 整條十格高亮 (0.1)
+      ctx.strokeStyle = COLORS.yellow;
+      ctx.lineWidth = 2;
+      var fullCols = Math.floor(filledCells / 10);
+      if (fullCols > 0) {
+        ctx.strokeRect(startX, startY, fullCols * cellSize, gridSize);
+      }
+
+      // 儀表板結果
+      ctx.fillStyle = COLORS.white;
+      ctx.font = "bold 22px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("二位小數直式加法: " + valA + " + " + valB + " = " + total, w / 2, 45);
+      ctx.font = "14px sans-serif";
+      ctx.fillStyle = COLORS.blue;
+      ctx.fillText("10 個 0.01 小格合體成 1 條 0.1，對齊小數點是核心！", w / 2, 72);
+    },
+
+    /* =====================================================================
        動畫引擎主迴圈控制 (60fps rAF)
        ===================================================================== */
     startAnimation: function (modelData, durationMs, onUpdate, onComplete) {
@@ -654,6 +916,41 @@
       if (this.animFrameId) {
         cancelAnimationFrame(this.animFrameId);
         this.animFrameId = null;
+      }
+    },
+
+    mount: function (canvasElem, modelData) {
+      this.initCanvas(canvasElem);
+      this.currentModel = modelData;
+      this.progress = 0.0;
+      this.render(modelData, 0.0);
+    },
+
+    setProgress: function (prog) {
+      this.stopAnimation();
+      this.progress = Math.max(0, Math.min(1, prog));
+      if (this.currentModel) {
+        this.render(this.currentModel, this.progress);
+      }
+    },
+
+    toggleAnimation: function (onUpdate, onComplete) {
+      if (this.isAnimating) {
+        this.stopAnimation();
+      } else {
+        if (!this.currentModel) return;
+        var self = this;
+        this.startAnimation(this.currentModel, 2200, function (p) {
+          self.progress = p;
+          if (onUpdate) onUpdate(p);
+        }, onComplete);
+      }
+    },
+
+    resize: function () {
+      this.handleResize();
+      if (this.currentModel) {
+        this.render(this.currentModel, this.progress);
       }
     }
   };

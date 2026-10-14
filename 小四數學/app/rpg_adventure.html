@@ -1852,8 +1852,37 @@
         padding: 10px 14px;
         font-size: 0.85rem;
       }
+    /* 🎨 3B1B 視覺透視區樣式 */
+    .visual-morph-container {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(88, 196, 221, 0.35);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .morph-toggle-btn {
+      width: 100%;
+      background: rgba(88, 196, 221, 0.12);
+      border: 1px solid rgba(88, 196, 221, 0.3);
+      color: #58C4DD;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .morph-toggle-btn:hover {
+      background: rgba(88, 196, 221, 0.2);
+    }
+    .morph-panel-body {
+      margin-top: 8px;
     }
   </style>
+  <script src="js/visual_morph_registry_g4_data.js"></script>
+  <script src="js/visual_morph_engine_g4.js"></script>
   <script src="js/vertical_math_explainer.js?v=20261010"></script>
 </head>
 <body>
@@ -1916,6 +1945,24 @@
       </div>
 
       <div class="spell-math" id="mathProblem">450 − 180 = ？</div>
+
+      <!-- 🎨 方案 C：3B1B 動態幾何透視板 -->
+      <div id="visualMorphContainer" class="visual-morph-container" style="display:none; margin: 10px 0;">
+        <button type="button" class="morph-toggle-btn" id="btnToggleMorph" onclick="toggleVisualMorph()">
+          <span>🎨 3B1B 幾何透視（點擊展開觀察）</span>
+          <span id="morphToggleArrow">▼ 展開</span>
+        </button>
+        <div id="morphPanel" class="morph-panel-body" style="display:none;">
+          <div class="morph-canvas-wrap" style="width: 100%; height: 220px; background: #181A26; border-radius: 12px; position: relative; overflow:hidden;">
+            <canvas id="rpgMorphCanvas" style="width:100%; height:100%; display:block;"></canvas>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
+            <input type="range" id="rpgMorphSlider" min="0" max="100" value="0" style="flex:1; accent-color:#58c4dd;" oninput="onRpgMorphSlider(this.value)">
+            <button type="button" class="sp-action-btn" style="padding: 6px 12px; font-size: 0.82rem; background: #0284C7; border:none; border-radius:8px; color:#FFF; font-weight:800; cursor:pointer;" onclick="onRpgMorphPlay()">▶ 動態播放</button>
+          </div>
+          <div id="rpgMorphFormula" style="margin-top: 6px; font-size: 0.88rem; color: #58C4DD; text-align: center; font-weight: 800;"></div>
+        </div>
+      </div>
 
       <!-- 📐 方案 B：互動分步直式板 -->
       <div class="column-math-board" id="columnMathBoard" style="display:none;">
@@ -3030,6 +3077,9 @@
     }
 
     function loadChapters() {
+      if (window.__VISUAL_MORPH_REGISTRY_G4__ && window.VisualMorphG4) {
+        VisualMorphG4.initRegistry(window.__VISUAL_MORPH_REGISTRY_G4__);
+      }
       function processChapters(chapters) {
         if (chapters && chapters.length) {
           chaptersData = chapters;
@@ -4903,6 +4953,27 @@
 
       document.getElementById("ollieBubble").textContent = welcome;
 
+      // 🎨 3B1B 視覺透視動態掛載
+      var morphBox = document.getElementById("visualMorphContainer");
+      if (morphBox) {
+        if (window.VisualMorphG4 && window.VisualMorphG4.getMorphData) {
+          var morphData = VisualMorphG4.getMorphData(m.id);
+          if (morphData && morphData.type) {
+            morphBox.style.display = "block";
+            var mCanvas = document.getElementById("rpgMorphCanvas");
+            if (mCanvas) {
+              VisualMorphG4.mount(mCanvas, morphData);
+              var formEl = document.getElementById("rpgMorphFormula");
+              if (formEl) formEl.textContent = morphData.tag || morphData.title || "";
+              var sl = document.getElementById("rpgMorphSlider");
+              if (sl) sl.value = 0;
+            }
+          } else {
+            morphBox.style.display = "none";
+          }
+        }
+      }
+
       // 適度延遲（300ms）才朗讀新關卡題目，100% 杜絕「兩個聲音同時在說話」
       if (renderStageTtsTimer) clearTimeout(renderStageTtsTimer);
       renderStageTtsTimer = setTimeout(function() {
@@ -4912,6 +4983,33 @@
           speakText(welcome);
         }
       }, 300);
+    }
+
+    function toggleVisualMorph() {
+      var p = document.getElementById("morphPanel");
+      var btn = document.getElementById("morphToggleArrow");
+      if (!p) return;
+      var isOpen = p.style.display !== "none";
+      p.style.display = isOpen ? "none" : "block";
+      if (btn) btn.textContent = isOpen ? "▼ 展開" : "▲ 收合";
+      if (!isOpen && window.VisualMorphG4) {
+        VisualMorphG4.resize();
+      }
+    }
+
+    function onRpgMorphSlider(val) {
+      if (window.VisualMorphG4) {
+        VisualMorphG4.setProgress(parseFloat(val) / 100);
+      }
+    }
+
+    function onRpgMorphPlay() {
+      if (window.VisualMorphG4) {
+        var sl = document.getElementById("rpgMorphSlider");
+        VisualMorphG4.toggleAnimation(function(p) {
+          if (sl) sl.value = Math.round(p * 100);
+        });
+      }
     }
 
     function resetColStepUI(col) {
