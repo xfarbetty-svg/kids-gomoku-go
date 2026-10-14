@@ -35,6 +35,12 @@
   - 📐 直式運算引擎小四升級（`app/js/vertical_math_explainer.js`）：支援三位數乘兩位數雙層部分積直式、兩步驟四則運算括號最優先法則與長除法試商循環。
   - 🛡️ 守門員全面驗收全綠（`validate_grade4.py` exit code 0）。
   - 📋 產出交接驗證任務書給 OPENCODE（`OPENCODE_TASK_GRADE4_MATH.md`）。
+- [x] **國小二年級數學大冒險（小二數學）與三合一數學大廳完成**：
+  - 🧠 125B (Strata) 審查簽核 26 王國 572 題 seed bank 合規 PASS（`source/AUDIT_REPORT_125B.md`）。
+  - 🚀 125B 全量生產管線完成（任務1情境題庫 + 任務2直式微步階鷹架 `vertical_math_explainer_g2.js` + 任務3切片重構）。
+  - 🏰 國小數學勇者大冒險大廳（Hub）完成：小二、小三、小四三合一集中展示，雙向導航完全打通。
+  - 🎮 戰鬥介面全面升級：小三、小四同款精緻 RPG 沉浸式戰鬥系統與 26 王國地圖 Modal。
+  - 🛡️ 雙守門員（`validate_grade2.py`, `validate_grade2_provenance.py`）與無頭 Edge CDP 驗收全綠。
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
 
@@ -145,6 +151,16 @@
 
 ## 🕐 最後更新
 
+- **小二數學 ＆ 數學年級大廳整合（2026-10-14）**：
+  - 🧠 **125B Strata 審查完成**：以 `reasoning_effort=none` 分 3 步完成審查。7 筆子由 OCR 候選因題幹殘缺全數 REJECT；26 王國 572 題 seed bank 經課綱守門員審查全數 PASS 獲簽核為權威題庫（`source/AUDIT_REPORT_125B.md`）。
+  - 🚀 **125B 全量生產管線（任務1+2+3）**：執行 6 個任務管線，耗時 465.37 秒，消耗 17,204 tokens，平均速度 30.70 tokens/s（`source/PRODUCTION_REPORT_125B.md`）：
+    1. 任務 3（切片重構）：成功修復 7 筆破損候選題，補足生活題幹與奧利博士解法（`source/ziyou_reconstructed_candidates.json`）。
+    2. 任務 2（直式微步階鷹架）：生成小二加減進退位與九九乘法連加微步階引擎（`app/js/vertical_math_explainer_g2.js`）。
+    3. 任務 1（26王國情境題庫）：分 4 大批次全量生成在地生活情境規格（`source/curriculum_scenarios_task1_batch_*.md`）。
+  - 🏰 **三合一數學大廳（Hub）**：`小三數學題庫/app/index.html` 正式收納 Grade 2、Grade 3、Grade 4 三年級卡片，並部署 `app/g2/`；`017_小朋友APP/index.html` 首頁同步加入入口。
+  - 🧪 **真實無頭 Edge CDP 驗收**：`_scratch/verify_web_cdp.js` 4/4 全綠 PASS，小二冒險答題、解鎖、雙向導航及年級大廳運作完全正常。
+  - 🛡️ **雙守門員驗證**：`validate_grade2.py` 與 `validate_grade2_provenance.py` 全數 PASS。
+
 - **日期**：2026-10-13
 - **更新者**：space-bunny-free（OPENCODE 驗證端）
 - **內容**：執行 Antigravity 交接的交替式驗證任務書（`小四數學/OPENCODE_TASK_GRADE4_MATH.md`）三大探針，**3/3 全綠（Exit Code 0）**。
@@ -152,7 +168,6 @@
   - 探針 2：`400×37` 第 7 層逐位加法算式與進位地圖逐字相符；`246×34` → `8364` 相符。
   - 探針 3：`.step-card.done` / `.step-card.locked` 皆 `display:none !important`，手機單一聚焦模式成立。
   - 🔬 另做獨立覆核：SHA256 自行重算雙檔一致（`6378886F…9CCE4`）、乘法交錯驗算補測 6 題全對、`vertical_math_explainer.js` 乘／括號／除三型別單元測試通過。
-  - 📋 已於任務書**附加**第六節「OPENCODE 驗證簽核紀錄」並將簽核表改為 ✅ 通過（未覆寫對方原文）。
-- **Git 狀態**：待 commit（收工同步中）
+- **Git 狀態**：✅ 已推（`math3-bank` 與 `017_小朋友APP` 同步推向 `origin/main`）
 
 

@@ -26,6 +26,14 @@
 
 4. **APP 主線現況**：`index.html`／`learn.html`／`toeic.html`／`sticky-gomoku-new.html` 純前端、無框架、無 build；sw.js 快取版本 `kids-games-v45`。
 
+5. **小二數學（Grade 2 Math RPG）與三年級/四年級大廳整合（2026-10-14）**
+   - **125B (Strata) 審查與生產全量上線**：
+     - 審查 7 筆 OCR 殘缺題判定 REJECT，簽核 26 王國 572 題 seed bank 獲 PASS。
+     - 執行 6 個任務流水線（耗時 465.37s，消耗 17,204 tokens，30.70 tokens/s），生成 26 王國生活題、直式微步階鷹架（`vertical_math_explainer_g2.js`）與切片重構。
+   - **戰鬥介面全面升級**：升級為小三、小四同款精緻 RPG 沉浸式戰鬥系統（血條、怪獸頭像、4 顆魔法選項卡片、奧利博士軍師對話氣泡、26 王國地圖 Modal）。
+   - **三合一數學大廳（Hub）**：`小三數學題庫/app/index.html` 正式收納 G2, G3, G4 卡片，並部署 `app/g2/`；`017_小朋友APP/index.html` 首頁新增直通入口。
+   - **驗收全綠**：雙守門員（`validate_grade2.py`, `validate_grade2_provenance.py`）PASS，無頭 Edge CDP 4/4 全綠。
+
 ## 🚦 目前狀態
 
 - 小四數學：靜態／無頭驗證全綠 ✅，**待手機實機走查**（點擊流程、音訊、觸控）。
@@ -52,9 +60,12 @@
 - PowerShell 主控台是 cp950：`Get-Content` 讀 UTF-8 檔會亂碼，請加 `-Encoding UTF8`（AGENTS.md 全域規則第 6 條）。
 - 綠野仙蹤素材來源：`youtube.com/playlist?list=PLgQjk-xm2AGXx0mwnIuQiDocH9wssCTeU`。
 
+
+
 ## 🕐 最後更新
 
-- 時間：2026-10-13
-- 更新者：space-bunny-free（OPENCODE） @ DESKTOP-6ELKIRH
-- 內容：小四數學交接驗收簽核完成（3/3 探針全綠 ＋ 獨立覆核）；`handoff.md` 整份重寫，修正重複段落、編號錯亂與 sw.js 版本不一致（v38/v43 → v45）。
-- Git push：✅ 已推（commit `942980f` → `origin/main`）
+- 時間：2026-10-14
+- 更新者：Antigravity
+- 內容：小二數學 125B 審查與全量生產、精緻 RPG 戰鬥介面升級、三合一數學年級大廳整合與 Edge CDP 端到端驗證通過。
+- Git push：✅ 已推（`math3-bank` 與 `017_小朋友APP` 同步推向 `origin/main`）
+

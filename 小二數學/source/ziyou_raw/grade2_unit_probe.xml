@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8" ?><xjx><cmd cmd="jc" func="set_hidden"><xjxobj><e><k>N0</k><v>Soutput</v></e><e><k>N1</k><v>Soutput2</v></e></xjxobj></cmd><cmd cmd="jc" func="set_hidden"><xjxobj><e><k>N0</k><v>Sonline_output</v></e><e><k>N1</k><v>Sonline_output2</v></e></xjxobj></cmd><cmd cmd="as" id="vol_title" prop="innerHTML"><![CDATA[S二&nbsp;年級]]></cmd><cmd cmd="as" id="hide_msg_3" prop="innerHTML">N16</cmd><cmd cmd="as" id="unit_box_body" prop="innerHTML"><![CDATA[S<ul><li onclick="xajax_check_unit(16,8,1); switch_hide_one(1,0)" id='1-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>1</div>
+							<div id='unit_ch1' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>數數看</div><div class='down row mg0 hidden_div' id='1-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='1-a-num'>115</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='1-e-num'>29</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='1-n-num'>80</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='1-h-num'>6</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='1-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,1,2); switch_hide_one(2,0)" id='2-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>2</div>
+							<div id='unit_ch2' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>加法</div><div class='down row mg0 hidden_div' id='2-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='2-a-num'>339</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='2-e-num'>37</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='2-n-num'>222</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='2-h-num'>65</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='2-c-num'>15</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,3,3); switch_hide_one(3,0)" id='3-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>3</div>
+							<div id='unit_ch3' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>加減法</div><div class='down row mg0 hidden_div' id='3-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='3-a-num'>560</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='3-e-num'>34</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='3-n-num'>303</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='3-h-num'>190</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='3-c-num'>33</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,24,4); switch_hide_one(4,0)" id='4-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>4</div>
+							<div id='unit_ch4' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>錢幣</div><div class='down row mg0 hidden_div' id='4-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='4-a-num'>99</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='4-e-num'>8</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='4-n-num'>85</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='4-h-num'>6</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='4-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,2,5); switch_hide_one(5,0)" id='5-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>5</div>
+							<div id='unit_ch5' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>減法</div><div class='down row mg0 hidden_div' id='5-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='5-a-num'>302</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='5-e-num'>21</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='5-n-num'>190</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='5-h-num'>79</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='5-c-num'>12</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,15,6); switch_hide_one(6,0)" id='6-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>6</div>
+							<div id='unit_ch6' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>兩步驟計算</div><div class='down row mg0 hidden_div' id='6-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='6-a-num'>236</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='6-e-num'>14</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='6-n-num'>173</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='6-h-num'>49</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='6-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,33,7); switch_hide_one(7,0)" id='7-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>7</div>
+							<div id='unit_ch7' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>未知數</div><div class='down row mg0 hidden_div' id='7-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='7-a-num'>26</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='7-e-num'>0</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='7-n-num'>13</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='7-h-num'>13</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='7-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,17,8); switch_hide_one(8,0)" id='8-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>8</div>
+							<div id='unit_ch8' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>分配律、交換律、結合律</div><div class='down row mg0 hidden_div' id='8-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='8-a-num'>38</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='8-e-num'>4</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='8-n-num'>13</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='8-h-num'>14</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='8-c-num'>7</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,23,9); switch_hide_one(9,0)" id='9-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>9</div>
+							<div id='unit_ch9' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>容量</div><div class='down row mg0 hidden_div' id='9-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='9-a-num'>14</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='9-e-num'>4</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='9-n-num'>10</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='9-h-num'>0</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='9-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,22,10); switch_hide_one(10,0)" id='10-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>10</div>
+							<div id='unit_ch10' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>重量</div><div class='down row mg0 hidden_div' id='10-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='10-a-num'>26</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='10-e-num'>0</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='10-n-num'>20</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='10-h-num'>6</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='10-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,20,11); switch_hide_one(11,0)" id='11-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>11</div>
+							<div id='unit_ch11' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>長度</div><div class='down row mg0 hidden_div' id='11-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='11-a-num'>83</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='11-e-num'>18</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='11-n-num'>47</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='11-h-num'>15</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='11-c-num'>3</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,19,12); switch_hide_one(12,0)" id='12-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>12</div>
+							<div id='unit_ch12' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>時間</div><div class='down row mg0 hidden_div' id='12-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='12-a-num'>115</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='12-e-num'>5</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='12-n-num'>62</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='12-h-num'>36</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='12-c-num'>12</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,4,13); switch_hide_one(13,0)" id='13-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>13</div>
+							<div id='unit_ch13' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>乘法</div><div class='down row mg0 hidden_div' id='13-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='13-a-num'>177</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='13-e-num'>43</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='13-n-num'>124</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='13-h-num'>10</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='13-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,5,14); switch_hide_one(14,0)" id='14-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>14</div>
+							<div id='unit_ch14' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>除法</div><div class='down row mg0 hidden_div' id='14-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='14-a-num'>4</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='14-e-num'>2</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='14-n-num'>2</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='14-h-num'>0</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='14-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,27,15); switch_hide_one(15,0)" id='15-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>15</div>
+							<div id='unit_ch15' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>面積</div><div class='down row mg0 hidden_div' id='15-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='15-a-num'>2</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='15-e-num'>0</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='15-n-num'>2</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='15-h-num'>0</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='15-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li><li onclick="xajax_check_unit(16,30,16); switch_hide_one(16,0)" id='16-cc-num'><div class='unit_box row mg0'>
+							<div class='unit_title_num col-sm-2 col-md-2 col-lg-2 pd0'>16</div>
+							<div id='unit_ch16' class='unit_title col-sm-10 col-md-10 col-lg-10 pd0'>幾何圖形、立體形體</div><div class='down row mg0 hidden_div' id='16-b-num'><div class='unit_total_num col-sm-12 col-md-4 col-lg-4 pd0' id='16-a-num'>9</div>
+								<div class='col-sm-12 col-md-8 col-lg-8 pd0'>
+									<div class='row mg0'>
+										<div class='unit_easy col-sm-6 col-md-3 col-lg-3 pd0' id='16-e-num'>6</div>
+										<div class='unit_normal col-sm-6 col-md-3 col-lg-3 pd0' id='16-n-num'>3</div>
+										<div class='unit_hard col-sm-6 col-md-3 col-lg-3 pd0' id='16-h-num'>0</div>
+										<div class='unit_chall col-sm-6 col-md-3 col-lg-3 pd0' id='16-c-num'>0</div>
+									</div>
+								</div>
+							</div>
+						</div></li></ul>]]></cmd><cmd cmd="as" id="hide_msg_1" prop="innerHTML">N2</cmd><cmd cmd="as" id="vol_choose" prop="className">Spanel-collapse collapse</cmd><cmd cmd="as" id="ch_vol_msg" prop="className">Shidden_div</cmd><cmd cmd="as" id="phonic" prop="checked">Schecked</cmd><cmd cmd="as" id="fsize" prop="innerHTML"><![CDATA[S<option value='normalsize'>正常</option><option value='large' selected='on'>稍大</option><option value='Large'>最大</option>]]></cmd></xjx>

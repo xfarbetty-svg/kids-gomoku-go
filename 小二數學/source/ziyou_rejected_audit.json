@@ -1,0 +1,303 @@
+[
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 1,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 2,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page001_q002.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "92e5a4f95ea9a581244efc7f769099164b57ab1c07d99a0c3cd7761847afac86"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 1,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 3,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n1\n(3) (1) ( ) (2)\n⃝\n2\n(2) (1) ( ) (3)\n⃝\n3\n(2) ( ) (1) (3)\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page001_q003.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "bf8740d940178c06a5c8cb8da038e69fe0ef3ee5ac9eb910d9fbd18e7c12236f"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 2,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 1,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page002_q001.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "b393e1360124a953ca900c4c18098a5c1a1079ec0b5b90060197cd0b8343bae0"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 2,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q002.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "85895533a17951e0d5447bdebbc7775771f4ae69bf0c69495e0f1cd0134a8dd2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 3,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n1\n(2) (1) ( ) (3)\n⃝\n2\n(2) ( ) (1) (3)\n⃝\n3\n(3) (1) ( ) (2)\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q003.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "2de4f8e95b1cb931d539185309f711f9cd916a23909e3e6a7f72c542cb1348ee"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 1,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q001.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "85895533a17951e0d5447bdebbc7775771f4ae69bf0c69495e0f1cd0134a8dd2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 2,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q002.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "85895533a17951e0d5447bdebbc7775771f4ae69bf0c69495e0f1cd0134a8dd2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 1,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q001.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "85895533a17951e0d5447bdebbc7775771f4ae69bf0c69495e0f1cd0134a8dd2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 2,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q002.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "85895533a17951e0d5447bdebbc7775771f4ae69bf0c69495e0f1cd0134a8dd2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 4,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 1,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n1\n(1) (2) (3) ( )\n⃝\n2\n(1) (3) (2) ( )\n⃝\n3\n( ) (2) (3) (1)\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page004_q001.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "19d675695d4b80e8cca2e545fa16740b522aaa4027dcbd915c70194a4f485537"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u11_20_長度.pdf",
+    "page": 2,
+    "unit": {
+      "unit_id": 20,
+      "unit_index": 11,
+      "name": "長度"
+    },
+    "question_number": 1,
+    "sha256": "bae6795c57e68839cd9fd7c9d23e596dcdc28844b959f6f5114c9c8475d009db",
+    "raw_text": "(1)",
+    "image_path": "source/ziyou_questions/g2_u11_20_長度/page002_q001.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "a76d549c198828c077be82ba11b2c0d992a1b9625bc38f25eb8dcd7a78c25bf2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u11_20_長度.pdf",
+    "page": 2,
+    "unit": {
+      "unit_id": 20,
+      "unit_index": 11,
+      "name": "長度"
+    },
+    "question_number": 2,
+    "sha256": "bae6795c57e68839cd9fd7c9d23e596dcdc28844b959f6f5114c9c8475d009db",
+    "raw_text": "(1)\n(2)",
+    "image_path": "source/ziyou_questions/g2_u11_20_長度/page002_q002.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "5e7dc6ace0f8e15b3681b19f4cd5e66b57d7638009b7c8031fdd05ff368529e0"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u11_20_長度.pdf",
+    "page": 2,
+    "unit": {
+      "unit_id": 20,
+      "unit_index": 11,
+      "name": "長度"
+    },
+    "question_number": 3,
+    "sha256": "bae6795c57e68839cd9fd7c9d23e596dcdc28844b959f6f5114c9c8475d009db",
+    "raw_text": "(2)\n(3)\n⃝\n1\n1\n⃝\n2\n2\n⃝\n3\n3\n⃝\n4\n4\n11 (\n)\n比大小：\n13 公尺+ 69 公尺\n91 公尺−6 公尺\n⃝\n1\n＞\n⃝\n2\n＝\n⃝\n3\n＜\n12 (\n)\n找出正確的長度？\n5\n6\n7\n8\n9\n10cm\n1\n2\n3\n4\n5\n6\n..... .......\n......................................\n..... .... .... .... .... ....\n......\n....\n....\n.......\n....\n....\n...\n............\n................. .................\n(a)\n(b)\n(c)\n⃝\n1\nc: 2 公分\n⃝\n2\nb: 2 公分\n⃝\n3\na: 2 公分\n⃝\n4\na: 1 公分\n13 (\n)\n下圖中的筆長為幾公分？\n2\n國立中央大學數學系\n國小數學題目自動化研究室\n2",
+    "image_path": "source/ziyou_questions/g2_u11_20_長度/page002_q003.png",
+    "reason": [
+      "長度題出現公尺，需人工確認二年級界線",
+      "公尺公分混合運算"
+    ],
+    "category": "unit_or_curriculum",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "4a687763d01890788a2d99db75a395d83d00789c4484b042e6774b8169a393eb"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u11_20_長度.pdf",
+    "page": 4,
+    "unit": {
+      "unit_id": 20,
+      "unit_index": 11,
+      "name": "長度"
+    },
+    "question_number": 1,
+    "sha256": "bae6795c57e68839cd9fd7c9d23e596dcdc28844b959f6f5114c9c8475d009db",
+    "raw_text": "(1)",
+    "image_path": "source/ziyou_questions/g2_u11_20_長度/page004_q001.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "eef6051e9e0e15a58a704638fccef38b4563e40f27a1041a2d9a6af7c91cbf8d"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u11_20_長度.pdf",
+    "page": 4,
+    "unit": {
+      "unit_id": 20,
+      "unit_index": 11,
+      "name": "長度"
+    },
+    "question_number": 2,
+    "sha256": "bae6795c57e68839cd9fd7c9d23e596dcdc28844b959f6f5114c9c8475d009db",
+    "raw_text": "(1)\n(2)",
+    "image_path": "source/ziyou_questions/g2_u11_20_長度/page004_q002.png",
+    "reason": [
+      "題幹文字不足，無法判讀"
+    ],
+    "category": "text_insufficient",
+    "curriculum_id_guess": "unknown",
+    "manual_review_required": true,
+    "stable_question_hash": "42f790d8ad0a43f42181e7278e9fa5914922c4a433d6e6fffad3aee0dafdf2e2"
+  }
+]

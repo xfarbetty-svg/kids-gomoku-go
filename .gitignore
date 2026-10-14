@@ -21,3 +21,7 @@ temp/
 
 **/__pycache__/
 **/*.pyc
+
+# 小二數學排除項目
+小二數學/app/tts_cache/
+小二數學/_scratch/

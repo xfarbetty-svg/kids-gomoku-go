@@ -1,0 +1,137 @@
+{
+  "provider": "Ziyou Mathematics School",
+  "url": "https://emath.math.ncu.edu.tw/e_school/drive_through.php",
+  "status": "seed_pending_local_ziyou_review",
+  "themes": [
+    {
+      "id": "g2-01",
+      "name": "百位數探險",
+      "curriculum": "2-n-01"
+    },
+    {
+      "id": "g2-02",
+      "name": "錢幣市集",
+      "curriculum": "2-n-02"
+    },
+    {
+      "id": "g2-03",
+      "name": "大小比較台",
+      "curriculum": "2-n-03"
+    },
+    {
+      "id": "g2-04",
+      "name": "二位數加法",
+      "curriculum": "2-n-04"
+    },
+    {
+      "id": "g2-05",
+      "name": "二位數減法",
+      "curriculum": "2-n-04"
+    },
+    {
+      "id": "g2-06",
+      "name": "三位數加減",
+      "curriculum": "2-n-05"
+    },
+    {
+      "id": "g2-07",
+      "name": "連加連減",
+      "curriculum": "2-n-09"
+    },
+    {
+      "id": "g2-08",
+      "name": "乘法小屋",
+      "curriculum": "2-n-06"
+    },
+    {
+      "id": "g2-09",
+      "name": "九九乘法",
+      "curriculum": "2-n-08"
+    },
+    {
+      "id": "g2-10",
+      "name": "分裝平分",
+      "curriculum": "2-n-07"
+    },
+    {
+      "id": "g2-11",
+      "name": "時間鐘面",
+      "curriculum": "2-n-12"
+    },
+    {
+      "id": "g2-12",
+      "name": "長度測量",
+      "curriculum": "2-n-15"
+    },
+    {
+      "id": "g2-13",
+      "name": "圖形觀察",
+      "curriculum": "2-sc-01"
+    },
+    {
+      "id": "g2-14",
+      "name": "容量比較",
+      "curriculum": "2-n-16"
+    },
+    {
+      "id": "g2-15",
+      "name": "重量比較",
+      "curriculum": "2-n-17"
+    },
+    {
+      "id": "g2-16",
+      "name": "兩步驟乘法",
+      "curriculum": "2-n-10"
+    },
+    {
+      "id": "g2-17",
+      "name": "生活中的線",
+      "curriculum": "2-sc-02"
+    },
+    {
+      "id": "g2-18",
+      "name": "月曆小幫手",
+      "curriculum": "2-n-13"
+    },
+    {
+      "id": "g2-19",
+      "name": "直尺線段",
+      "curriculum": "2-sc-03"
+    },
+    {
+      "id": "g2-20",
+      "name": "圖形大小",
+      "curriculum": "2-sc-04"
+    },
+    {
+      "id": "g2-21",
+      "name": "圖形邊長",
+      "curriculum": "2-sc-05"
+    },
+    {
+      "id": "g2-22",
+      "name": "大小推理",
+      "curriculum": "2-a-01"
+    },
+    {
+      "id": "g2-23",
+      "name": "加法好方法",
+      "curriculum": "2-a-02"
+    },
+    {
+      "id": "g2-24",
+      "name": "排列乘法",
+      "curriculum": "2-a-03"
+    },
+    {
+      "id": "g2-25",
+      "name": "算式檢查",
+      "curriculum": "2-a-04"
+    },
+    {
+      "id": "g2-26",
+      "name": "不同單位",
+      "curriculum": "2-n-14"
+    }
+  ]
+}

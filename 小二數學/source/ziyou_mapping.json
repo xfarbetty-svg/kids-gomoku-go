@@ -1,0 +1,100 @@
+[
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 1,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 2,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n4\n(2) (3) ( ) (1)\n4 (\n)\n如果建民的馬克杯容積比小華的小，同時阿亮的馬克杯容積比小華的小，則以下哪個\n一定是對的？\n⃝\n1\n建民的馬克杯容積最小\n⃝\n2\n阿亮的馬克杯容積最大\n⃝\n3\n建民\n的馬克杯容積最大\n⃝\n4\n小華的馬克杯容積最大\n5 (\n)\n哪一個杯子的飲料最多，請找出來？\n⃝\n1\n1\n⃝\n2\n2\n⃝\n3\n3\n⃝\n4\n4\n1\n2\n3\n4\n6 (\n)\n比比看，以下每個神奇杯子都可裝滿一樣多的水，請在水最多的杯子下方( ) 打勾。\n(\n)\n(\n)\n(\n)\n1\n國立中央大學數學系\n國小數學題目自動化研究室\n1",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page001_q002.png",
+    "answer": "4"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 2,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 3,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n1\n(1) (2) ( ) (3)\n⃝\n2\n(1) ( ) (2) (3)\n⃝\n3\n(3) (2) ( ) (1)\n⃝\n4\n( ) (2) (1) (3)\n2\n國立中央大學數學系\n國小數學題目自動化研究室\n2",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page002_q003.png",
+    "answer": "2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 1,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n4\n(1) (2) ( ) (3)\n14 (\n)\n比比看，以下每個神奇杯子都可裝滿一樣多的水，找出水最多的三個杯子，由多到\n少，在( ) 內填入數字1、2、3。\n(\n)\n(\n)\n(\n)\n⃝\n⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q001.png",
+    "answer": "4"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 3,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n1\n(2) (1) (3)\n⃝\n2\n(3) (2) (1)\n⃝\n3\n(1) (2) (3)\n⃝\n4\n(1) (3) (2)\n15 (\n)\n比比看，請在水最多的杯子下方( ) 打勾。\n(\n)\n(\n)\n(\n)\n⃝\n1\n(ˇ) (　) (　)\n⃝\n2\n(　) (　) (ˇ)\n⃝\n3\n(　) (ˇ) (　)\n16 (\n)\n比比看，請在水最多的杯子下方( ) 打勾。\n(\n)\n(\n)\n(\n)\n⃝\n1\n(　) (　) (ˇ)\n⃝\n2\n(ˇ) (　) (　)\n⃝\n3\n(　) (ˇ) (　)\n17 (\n)\n比比看，找出水最多的三個杯子，由多到少，在( ) 內填入數字1、2、3。\n(\n)\n(\n)\n(\n)\n⃝\n⃝\n⃝\n⃝",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q003.png",
+    "answer": "2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 3,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 3,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n1\n(2) (1) (3)\n⃝\n2\n(3) (2) (1)\n⃝\n3\n(1) (3) (2)\n⃝\n4\n(2) (3) (1)\n3\n國立中央大學數學系\n國小數學題目自動化研究室\n3",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page003_q003.png",
+    "answer": "2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "page": 4,
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "question_number": 3,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "raw_text": "⃝\n4\n(3) (2) (1) ( )\n4\n國立中央大學數學系\n國小數學題目自動化研究室\n4",
+    "image_path": "source/ziyou_questions/g2_u09_23_容量/page004_q003.png",
+    "answer": "2"
+  },
+  {
+    "source_pdf": "source/ziyou_raw/pdfs/g2_u11_20_長度.pdf",
+    "page": 4,
+    "unit": {
+      "unit_id": 20,
+      "unit_index": 11,
+      "name": "長度"
+    },
+    "question_number": 3,
+    "sha256": "bae6795c57e68839cd9fd7c9d23e596dcdc28844b959f6f5114c9c8475d009db",
+    "raw_text": "(2)\n(3)\n⃝\n1\n2 1 3\n⃝\n2\n1 3 2\n⃝\n3\n2 3 1\n⃝\n4\n3 2 1\n4\n國立中央大學數學系\n國小數學題目自動化研究室\n4",
+    "image_path": "source/ziyou_questions/g2_u11_20_長度/page004_q003.png",
+    "answer": "3"
+  }
+]

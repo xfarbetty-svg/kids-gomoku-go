@@ -1,0 +1,626 @@
+[
+  {
+    "unit": {
+      "unit_id": 8,
+      "unit_index": 1,
+      "name": "數數看"
+    },
+    "retrieved_at": "2026-10-13T22:09:39Z",
+    "file": "source/ziyou_raw/pdfs/g2_u01_8_數數看.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:09:43_683913.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "數數看",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 215623,
+    "sha256": "a5fa2b3f5c30f25206c79715ceaf986127b52b7db7867564866f8bc15400eae2",
+    "status": "downloaded",
+    "parse": {
+      "pages": 5,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 1,
+      "unit_index": 2,
+      "name": "加法"
+    },
+    "retrieved_at": "2026-10-13T22:09:47Z",
+    "file": "source/ziyou_raw/pdfs/g2_u02_1_加法.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:09:51_684025.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "加法",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 164089,
+    "sha256": "1a7654f8a20ab41bfbfe7d287ce026c707736f928df8511a46405b2682b7005c",
+    "status": "downloaded",
+    "parse": {
+      "pages": 4,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 3,
+      "unit_index": 3,
+      "name": "加減法"
+    },
+    "retrieved_at": "2026-10-13T22:09:52Z",
+    "file": "source/ziyou_raw/pdfs/g2_u03_3_加減法.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:09:56_684137.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "加減法",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 146219,
+    "sha256": "52e715c8c43cad5adf98805b91b437b6db3834c96fe6ba300bd3ee19d1bd5d4a",
+    "status": "downloaded",
+    "parse": {
+      "pages": 3,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 24,
+      "unit_index": 4,
+      "name": "錢幣"
+    },
+    "retrieved_at": "2026-10-13T22:09:56Z",
+    "file": "source/ziyou_raw/pdfs/g2_u04_24_錢幣.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:00_684249.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "錢幣",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 245514,
+    "sha256": "fef674f3c7f1a41b918eb17038f061bcb74810a7027c038f8c5511ba91399ae4",
+    "status": "downloaded",
+    "parse": {
+      "pages": 5,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 2,
+      "unit_index": 5,
+      "name": "減法"
+    },
+    "retrieved_at": "2026-10-13T22:10:05Z",
+    "file": "source/ziyou_raw/pdfs/g2_u05_2_減法.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:09_684361.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "減法",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 164902,
+    "sha256": "a7cf9d6b557b0596b8afb3951ee1629289e4695022b381e3ee4b97a2fa72b512",
+    "status": "downloaded",
+    "parse": {
+      "pages": 3,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 15,
+      "unit_index": 6,
+      "name": "兩步驟計算"
+    },
+    "retrieved_at": "2026-10-13T22:10:09Z",
+    "file": "source/ziyou_raw/pdfs/g2_u06_15_兩步驟計算.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:13_684473.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "兩步驟計算",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 309504,
+    "sha256": "157d59a40a6cb5a7e8ae1573ef533d31379bfa5509b3a0d9d9fe377b60d63de8",
+    "status": "downloaded",
+    "parse": {
+      "pages": 5,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 33,
+      "unit_index": 7,
+      "name": "未知數"
+    },
+    "retrieved_at": "2026-10-13T22:10:16Z",
+    "file": "source/ziyou_raw/pdfs/g2_u07_33_未知數.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:20_684585.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "未知數",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 67751,
+    "sha256": "1b6ed8cc470fe61a3975869da171f64f86c30fdbe8702d3ee86c33a0dbff338f",
+    "status": "downloaded",
+    "parse": {
+      "pages": 3,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 17,
+      "unit_index": 8,
+      "name": "分配律、交換律、結合律"
+    },
+    "retrieved_at": "2026-10-13T22:10:20Z",
+    "file": "source/ziyou_raw/pdfs/g2_u08_17_分配律_交換律_結合律.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:24_684697.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "分配律、交換律、結合律",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 74077,
+    "sha256": "76f725c7aa94b853e4e41b0641c76b2e4c999ef39e6fddf98123fd7d71854e66",
+    "status": "downloaded",
+    "parse": {
+      "pages": 3,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 23,
+      "unit_index": 9,
+      "name": "容量"
+    },
+    "retrieved_at": "2026-10-13T22:10:23Z",
+    "file": "source/ziyou_raw/pdfs/g2_u09_23_容量.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:27_684809.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "容量",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 184544,
+    "sha256": "953fc79bbb502c94726c3247c593aea2b819266d79c1c5092630970d1bb4a8e8",
+    "status": "downloaded",
+    "parse": {
+      "pages": 5,
+      "questions": 16,
+      "accepted": 6,
+      "rejected": 10
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 22,
+      "unit_index": 10,
+      "name": "重量"
+    },
+    "retrieved_at": "2026-10-13T22:10:30Z",
+    "file": "source/ziyou_raw/pdfs/g2_u10_22_重量.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:34_684921.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "重量",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 156312,
+    "sha256": "6f0c03d658c5e42b933259b52a61f4e3df27d870fda5229abf4caf10be03979b",
+    "status": "downloaded",
+    "parse": {
+      "pages": 6,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 20,
+      "unit_index": 11,
+      "name": "長度"
+    },
+    "retrieved_at": "2026-10-13T22:10:36Z",
+    "file": "source/ziyou_raw/pdfs/g2_u11_20_長度.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:40_685033.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "長度",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 222684,
+    "sha256": "bae6795c57e68839cd9fd7c9d23e596dcdc28844b959f6f5114c9c8475d009db",
+    "status": "downloaded",
+    "parse": {
+      "pages": 5,
+      "questions": 6,
+      "accepted": 1,
+      "rejected": 5
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 19,
+      "unit_index": 12,
+      "name": "時間"
+    },
+    "retrieved_at": "2026-10-13T22:10:42Z",
+    "file": "source/ziyou_raw/pdfs/g2_u12_19_時間.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:46_685145.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "時間",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 253172,
+    "sha256": "3db39275bf30ca10fc7e2cd53cbcabcd681806fc63cff5eb36eb169c2fada4f5",
+    "status": "downloaded",
+    "parse": {
+      "pages": 5,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 4,
+      "unit_index": 13,
+      "name": "乘法"
+    },
+    "retrieved_at": "2026-10-13T22:10:48Z",
+    "file": "source/ziyou_raw/pdfs/g2_u13_4_乘法.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:52_685257.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "乘法",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 163648,
+    "sha256": "6bbb66959a93bfa4d81110e2d99e4890a187024f28864bbbf1b9ac960f46641b",
+    "status": "downloaded",
+    "parse": {
+      "pages": 4,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 5,
+      "unit_index": 14,
+      "name": "除法"
+    },
+    "retrieved_at": "2026-10-13T22:10:53Z",
+    "file": "source/ziyou_raw/pdfs/g2_u14_5_除法.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:10:57_685369.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "除法",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 109822,
+    "sha256": "c0586a12efe11134c90c672c9b1f4c622c6b719c22d4636aa91ef14f5e589976",
+    "status": "downloaded",
+    "parse": {
+      "pages": 3,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 27,
+      "unit_index": 15,
+      "name": "面積"
+    },
+    "retrieved_at": "2026-10-13T22:10:58Z",
+    "file": "source/ziyou_raw/pdfs/g2_u15_27_面積.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:11:02_685481.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "面積",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 92294,
+    "sha256": "1136b77d07cf5c3cdb1b86eb288443a5ed5e93a5e97d83b61c4b848e90eeff65",
+    "status": "downloaded",
+    "parse": {
+      "pages": 3,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  },
+  {
+    "unit": {
+      "unit_id": 30,
+      "unit_index": 16,
+      "name": "幾何圖形、立體形體"
+    },
+    "retrieved_at": "2026-10-13T22:11:01Z",
+    "file": "source/ziyou_raw/pdfs/g2_u16_30_幾何圖形_立體形體.pdf",
+    "url": "https://emath.math.ncu.edu.tw/e_school/emath/pubpdf/06:11:05_685593.pdf",
+    "xajax": {
+      "function": "produce_exam",
+      "args": [
+        "2",
+        "1,1,1,1,1"
+      ],
+      "object": {
+        "title_name": "幾何圖形、立體形體",
+        "oform": "a4",
+        "choice_num": "20",
+        "choice_par": "5",
+        "fill_num": "0",
+        "fill_par": "5",
+        "color": "Black",
+        "fsize": "normalsize",
+        "mono": "on",
+        "rand": "on"
+      }
+    },
+    "http_status": 200,
+    "bytes": 189134,
+    "sha256": "a19a9a58017970fc2170b41bb0d9f99264741eaf16530590d97038cc90941147",
+    "status": "downloaded",
+    "parse": {
+      "pages": 5,
+      "questions": 0,
+      "accepted": 0,
+      "rejected": 0
+    }
+  }
+]
