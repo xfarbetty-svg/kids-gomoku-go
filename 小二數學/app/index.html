@@ -1922,7 +1922,7 @@
       <div class="column-math-board" id="columnMathBoard" style="display:none;">
         <div class="col-header">
           <span>📐 互動直式計算板</span>
-          <span style="color:#A5B4FC;">四年級位值對齊</span>
+          <span style="color:#A5B4FC;">二年級位值對齊</span>
         </div>
         
         <!-- 📝 乘法直式方格工作紙排版區 (小四工作紙部分積風格) -->
@@ -2159,8 +2159,8 @@
   <div class="vme-modal" id="vmeModal" style="display:none;" onclick="if(event.target===this)closeVerticalExplainer()">
     <div class="vme-modal-dialog">
       <div class="vme-modal-header">
-        <div class="vme-modal-title">
-          <span>📐</span> 國小四年級直式教學教室
+        <div class="vme-modal-title" id="vmeModalTitle">
+          <span>📐</span> 國小二年級直式教學教室
         </div>
         <button class="vme-close-btn" onclick="closeVerticalExplainer()">✖ 關閉</button>
       </div>
@@ -3011,6 +3011,10 @@
         body.innerHTML = res.html;
         window.__currentVmeSteps = res.steps || [];
         window.__currentVmeSummary = res.summary || "";
+      }
+      var modalTitle = document.getElementById("vmeModalTitle");
+      if (modalTitle) {
+        modalTitle.innerHTML = "<span>📐</span> 國小二年級直式教學教室";
       }
       var modal = document.getElementById("vmeModal");
       if (modal) modal.style.display = "flex";

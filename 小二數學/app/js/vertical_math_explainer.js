@@ -37,7 +37,19 @@
         return explainFraction(fraction, m);
       }
 
-      // 2. 兩步驟四則混合題 (例如: 45 + 6 × 7, 80 − 48 ÷ 6, 450 − 120 − 80, 150 × 2 ＋ 80)
+      // 1.5 分號分步兩步驟題 (例如: 31＋10＝□；□－5＝□)
+      var semi = parseSemicolonSteps(mathStr, m);
+      if (semi) {
+        return explainSemicolonSteps(semi, m);
+      }
+
+      // 1.8 任意長度連加連減 / 錢幣累加運算鏈 (例如: 50＋10＋10＋5, 10＋10＋10＋10＋5, 450－120－80)
+      var chain = parseChainArithmetic(mathStr, m);
+      if (chain) {
+        return explainChainAddSub(chain, m);
+      }
+
+      // 2. 兩步驟四則混合題 (例如: 45 + 6 × 7, 80 − 48 ÷ 6, 150 × 2 ＋ 80)
       var twoStep = parseTwoStepArithmetic(mathStr);
       if (twoStep) {
         return explainTwoStep(twoStep, m);
@@ -73,9 +85,11 @@
   function cleanMathString(str) {
     if (!str) return '';
     return str
-      .replace(/[？\?=＝]/g, '')
+      .replace(/[？\?=＝□]/g, '')
       .replace(/\s*\.\.\.\s*？?/g, '')
       .replace(/\s*…\s*？?/g, '')
+      .replace(/[；;]\s*題號\s*\d+/g, '')
+      .replace(/[；;]\s*第\s*\d+\s*題.*/g, '')
       .replace(/(平方公分|伏特|分鐘|公分|毫米|公斤|公克|公升|毫升|公尺|單位)/g, '')
       .replace(/[下人件份位個元冊分包團塊天封尾度張批把支本朵束杯枚株根條次步滴片瓶盆盒盞盤秒箱籃袋輛道陣隻雙頁顆點]/g, '')
       .replace(/[＋+]/g, '+')
@@ -83,6 +97,63 @@
       .replace(/×/g, '×')
       .replace(/÷/g, '÷')
       .trim();
+  }
+
+  // 1.5 分號分步兩步驟題 (例如: 31＋10＝□；□－5＝□)
+  function parseSemicolonSteps(str, m) {
+    if (!str) return null;
+    var raw = str.replace(/[＋+]/g, '+').replace(/[−－\-]/g, '-').replace(/＝/g, '=');
+    var mMatch = raw.match(/^(\d+)\s*([\+\-])\s*(\d+)\s*=\s*[□\?？]?\s*[；;]\s*[□\?？]?\s*([\+\-])\s*(\d+)\s*=\s*[□\?？]?/);
+    if (mMatch) {
+      var a = parseInt(mMatch[1], 10);
+      var op1 = mMatch[2];
+      var b = parseInt(mMatch[3], 10);
+      var op2 = mMatch[4];
+      var c = parseInt(mMatch[5], 10);
+      var s1Ans = (op1 === '+' ? a + b : a - b);
+      var s2Ans = (op2 === '+' ? s1Ans + c : s1Ans - c);
+      return {
+        type: 'SEMICOLON_TWO_STEP',
+        step1: { a: a, op: op1, b: b, ans: s1Ans },
+        step2: { a: s1Ans, op: op2, b: c, ans: s2Ans },
+        finalAns: s2Ans,
+        raw: raw
+      };
+    }
+    return null;
+  }
+
+  // 1.8 任意長度連加連減運算鏈 (例如: 50＋10＋10＋5, 10＋10＋10＋10＋5, 450－120－80)
+  function parseChainArithmetic(str, m) {
+    if (!str) return null;
+    var clean = cleanMathString(str);
+    // 不得包含乘除或括號
+    if (/[\×\*\/÷\(\)（）]/.test(clean)) return null;
+    // 必須為純整數與加減號交替組合
+    if (!/^(\d+\s*[\+\-]\s*)+(\d+)$/.test(clean)) return null;
+
+    var nums = [];
+    var ops = [];
+    var parts = clean.split(/([\+\-])/);
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i].trim();
+      if (!p) continue;
+      if (p === '+' || p === '-') {
+        ops.push(p);
+      } else {
+        nums.push(parseInt(p, 10));
+      }
+    }
+
+    if (nums.length >= 3 && ops.length === nums.length - 1) {
+      return {
+        type: 'CHAIN_ADD_SUB',
+        numbers: nums,
+        operators: ops,
+        raw: clean
+      };
+    }
+    return null;
   }
 
   function parseBasicArithmetic(str) {
@@ -1028,6 +1099,135 @@
     };
   }
 
+  // ================= 4.8 任意長度連加連減 / 錢幣累加直式解說 =================
+  function explainChainAddSub(chain, m) {
+    var qText = (m.question || '') + ' ' + (m.hint || '') + ' ' + (m.explanation || '') + ' ' + (m.theme_name || '');
+    var isMoney = /元|錢|硬幣|銅板/.test(qText);
+    var unit = isMoney ? '元' : '';
+
+    var numbers = chain.numbers;
+    var operators = chain.operators;
+    var steps = [];
+    var boardsHtml = '';
+    var acc = numbers[0];
+
+    var stepChineseNames = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+
+    if (isMoney) {
+      steps.push('🪙 【錢幣點數原則】：從面額最大的錢幣開始，一步一步往後累加！');
+    } else {
+      steps.push('📐 【由左往右依序計算】：多個數相加減，按照算式順序一步一步算！');
+    }
+
+    var formulaParts = [];
+    formulaParts.push(numbers[0] + (unit ? '元' : ''));
+
+    for (var i = 0; i < operators.length; i++) {
+      var op = operators[i];
+      var nextNum = numbers[i + 1];
+      var prevAcc = acc;
+      var opSign = (op === '+' ? '＋' : '−');
+      formulaParts.push(opSign + ' ' + nextNum + (unit ? '元' : ''));
+
+      if (op === '+') {
+        acc = prevAcc + nextNum;
+      } else {
+        acc = prevAcc - nextNum;
+      }
+
+      var stepNum = i + 1;
+      var stepName = stepChineseNames[i] || (stepNum);
+      var sTitle = prevAcc + ' ' + opSign + ' ' + nextNum + ' ＝ ' + acc;
+
+      if (isMoney) {
+        steps.push('第 ' + stepNum + ' 步（累加錢幣）：' + prevAcc + ' 元 ＋ ' + nextNum + ' 元 ＝ ' + acc + ' 元');
+      } else {
+        steps.push('第 ' + stepNum + ' 步：' + prevAcc + ' ' + opSign + ' ' + nextNum + ' ＝ ' + acc);
+      }
+
+      var board = renderOperationBoard(op, prevAcc, nextNum);
+      boardsHtml += '<div class="vme-step-board-item ' + (op === '+' ? 'vme-addition' : 'vme-subtraction') + '" style="flex:1; min-width:200px; max-width:280px; background:rgba(30,41,59,0.7); border:1px solid #334155; border-radius:12px; padding:12px; text-align:center;">' +
+        '<div class="vme-step-badge" style="color:#38BDF8; font-weight:800; font-size:0.92rem; margin-bottom:8px;">📐 步驟' + stepName + '直式板：' + sTitle + '</div>' +
+        board +
+      '</div>';
+    }
+
+    var finalAns = acc;
+    var formulaDisplay = formulaParts.join(' ') + ' ＝ <span style="color:#10B981; font-weight:bold;">' + finalAns + (unit ? '元' : '') + '</span>';
+    var title = isMoney ? '🪙 錢幣點數與直式累加拆解板' : '📐 連加連減直式計算拆解板';
+
+    var html = '<div class="vme-box vme-chain">';
+    html += '<div class="vme-title">' + title + '</div>';
+    html += '<div class="vme-concept-formula" style="font-size:1.15rem; color:#FBBF24;">' + formulaDisplay + '</div>';
+    html += '<div class="vme-chain-boards" style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin:16px 0;">' + boardsHtml + '</div>';
+    html += '<div class="vme-steps-box">';
+    html += '<div class="vme-steps-header">💡 奧利軍師微步階解說：</div>';
+    html += '<ol class="vme-steps-list">';
+    steps.forEach(function(s) { html += '<li>' + s + '</li>'; });
+    html += '</ol>';
+    html += '<div class="vme-summary">🎉 計算完成！最終答案 ＝ <span class="vme-highlight">' + finalAns + (unit ? ' 元' : '') + '</span></div>';
+    html += '</div></div>';
+
+    return {
+      type: 'CHAIN_ADD_SUB',
+      steps: steps,
+      ans: finalAns,
+      html: html,
+      summary: '答案 ＝ ' + finalAns + (unit ? ' 元' : '')
+    };
+  }
+
+  // ================= 4.9 分號分步兩步驟直式解說 =================
+  function explainSemicolonSteps(semi, m) {
+    var s1 = semi.step1;
+    var s2 = semi.step2;
+    var s1Sign = (s1.op === '+' ? '＋' : '−');
+    var s2Sign = (s2.op === '+' ? '＋' : '−');
+
+    var s1Title = s1.a + ' ' + s1Sign + ' ' + s1.b + ' ＝ ' + s1.ans;
+    var s2Title = s2.a + ' ' + s2Sign + ' ' + s2.b + ' ＝ ' + s2.ans;
+
+    var s1Board = renderOperationBoard(s1.op, s1.a, s1.b);
+    var s2Board = renderOperationBoard(s2.op, s2.a, s2.b);
+
+    var steps = [
+      '1. 觀察題目分成兩個步驟：先算第一式，再把結果帶入第二式！',
+      '2. 步驟一直式板：' + s1Title,
+      '3. 將第一步算出的 ' + s1.ans + ' 帶入第二步：' + s2Title
+    ];
+
+    var boardsHtml = '<div class="vme-twostep-boards" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin:16px 0;">' +
+      '<div class="vme-step-board-item ' + (s1.op === '+' ? 'vme-addition' : 'vme-subtraction') + '" style="flex:1; min-width:220px; max-width:320px; background:rgba(30,41,59,0.7); border:1px solid #334155; border-radius:12px; padding:12px; text-align:center;">' +
+        '<div class="vme-step-badge" style="color:#38BDF8; font-weight:800; font-size:0.95rem; margin-bottom:8px;">📐 步驟一直式板：' + s1Title + '</div>' +
+        s1Board +
+      '</div>' +
+      '<div class="vme-step-board-item ' + (s2.op === '+' ? 'vme-addition' : 'vme-subtraction') + '" style="flex:1; min-width:220px; max-width:320px; background:rgba(30,41,59,0.7); border:1px solid #334155; border-radius:12px; padding:12px; text-align:center;">' +
+        '<div class="vme-step-badge" style="color:#38BDF8; font-weight:800; font-size:0.95rem; margin-bottom:8px;">📐 步驟二直式板：' + s2Title + '</div>' +
+        s2Board +
+      '</div>' +
+    '</div>';
+
+    var html = '<div class="vme-box vme-semicolon-step">';
+    html += '<div class="vme-title">📐 兩步驟問題直式計算拆解板</div>';
+    html += '<div class="vme-concept-formula" style="font-size:1.1rem; color:#FBBF24;">' + s1Title + ' ； ' + s2Title + '</div>';
+    html += boardsHtml;
+    html += '<div class="vme-steps-box">';
+    html += '<div class="vme-steps-header">💡 軍師解題步驟與直式微步階解說：</div>';
+    html += '<ol class="vme-steps-list">';
+    steps.forEach(function(s) { html += '<li>' + s + '</li>'; });
+    html += '</ol>';
+    html += '<div class="vme-summary">🎉 計算完成！最終答案 ＝ <span class="vme-highlight">' + semi.finalAns + '</span></div>';
+    html += '</div></div>';
+
+    return {
+      type: 'SEMICOLON_TWO_STEP',
+      steps: steps,
+      ans: semi.finalAns,
+      html: html,
+      summary: '答案 ＝ ' + semi.finalAns
+    };
+  }
+
   // ================= 5. 兩步驟四則運算直式解說 =================
   function explainTwoStep(p, m) {
     var steps = [];
@@ -1578,7 +1778,11 @@
     }
 
     // 通用題型
-    steps.push('1. 題目考點：' + (m.sub_cat || '國小四年級核心數學指標'));
+    var gradeName = (m.id && m.id.startsWith('g2')) ? '國小二年級' :
+                    (m.id && m.id.startsWith('g3')) ? '國小三年級' :
+                    (m.id && m.id.startsWith('g4')) ? '國小四年級' : '國小二年級';
+    var topicName = m.sub_cat || m.theme_name || (m.kingdom_name ? (gradeName + '・' + m.kingdom_name) : (gradeName + '核心數學觀念'));
+    steps.push('1. 題目考點：' + topicName);
     steps.push('2. 軍師解題關鍵：' + hint);
     if (m.options && typeof m.correct === 'number') {
       steps.push('3. 正確答案為選項：' + m.options[m.correct]);
