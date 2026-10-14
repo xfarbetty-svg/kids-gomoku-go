@@ -169,7 +169,7 @@
   - ⚡ **純前端 Canvas 數學物理運算（$0 雲端消耗）**：不需後端 API，高影格率流暢動態，極致節省 Token。
   - 🌐 **離線全相容**：解決 Windows `file:///` 協議限制，全域 JS 資料包裝，免伺服器秒開。
   - 🛡️ **三大守門員全綠通過（Exit Code 0）**：`verify_t22_diverse_visuals.js`、`verify_t21_t18_visuals.js`、`verify_t10_t13_t14_visuals.js` 176 題各 5 階段時間步階繪製測試 100% PASS。
-- **Git 狀態**：待推（待使用者確認 commit）
+- **Git 狀態**：✅ 已推（`017_小朋友APP` commit b6dfe3f、`math3-bank` commit 68ad090）
 
 - **小二數學 ＆ 數學年級大廳整合（2026-10-14）**：
   - 🧠 **125B Strata 審查完成**：以 `reasoning_effort=none` 分 3 步完成審查。7 筆子由 OCR 候選因題幹殘缺全數 REJECT；26 王國 572 題 seed bank 經課綱守門員審查全數 PASS 獲簽核為權威題庫（`source/AUDIT_REPORT_125B.md`）。
