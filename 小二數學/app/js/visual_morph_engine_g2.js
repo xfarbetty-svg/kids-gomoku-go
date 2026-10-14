@@ -253,6 +253,7 @@
       }
       this.resize();
       this.render();
+      this.updateControlsUI();
     },
 
     resize: function () {
@@ -350,24 +351,61 @@
       }
     },
 
+    updateControlsUI: function () {
+      if (typeof document === "undefined") return;
+      var slider = document.getElementById("rpgMorphSlider");
+      if (slider) {
+        slider.value = Math.round(this.progress * 100);
+      }
+      var playBtn = document.getElementById("rpgMorphPlayBtn");
+      if (playBtn) {
+        if (this.isAnimating) {
+          playBtn.textContent = "⏸️ 暫停";
+          playBtn.style.background = "#D97706";
+        } else if (this.progress >= 0.99) {
+          playBtn.textContent = "🔁 重新播放";
+          playBtn.style.background = "#0284C7";
+        } else if (this.progress > 0) {
+          playBtn.textContent = "▶️ 繼續播放";
+          playBtn.style.background = "#0284C7";
+        } else {
+          playBtn.textContent = "▶️ 展開動態";
+          playBtn.style.background = "#0284C7";
+        }
+      }
+    },
+
     setProgress: function (val) {
+      if (this.isAnimating) {
+        this.isAnimating = false;
+        if (this.animId) {
+          var caf = (typeof window !== "undefined" && window.cancelAnimationFrame) ? window.cancelAnimationFrame : function (id) { clearTimeout(id); };
+          caf(this.animId);
+          this.animId = null;
+        }
+      }
       this.progress = clamp(val, 0, 1);
       this.render();
+      this.updateControlsUI();
     },
 
     stepAnimation: function () {
       if (!this.isAnimating) return;
-      this.progress += 0.012 * this.animDir;
+      // 🎯 順暢單向動態前進 (~1.8 秒完成一次，絕不無限倒退倒轉)
+      this.progress += 0.009;
+
       if (this.progress >= 1.0) {
         this.progress = 1.0;
-        this.animDir = -1;
-        this.playTone(659, "triangle", 0.08);
-      } else if (this.progress <= 0.0) {
-        this.progress = 0.0;
-        this.animDir = 1;
-        this.playTone(330, "triangle", 0.08);
+        this.isAnimating = false;
+        this.animId = null;
+        this.playTone(659, "triangle", 0.12);
+        this.render();
+        this.updateControlsUI();
+        return; // 🎯 播完一次即停止！小朋友想再看可以按「🔁 重新播放」
       }
+
       this.render();
+      this.updateControlsUI();
 
       if (this.isAnimating) {
         var self = this;
@@ -379,14 +417,25 @@
     },
 
     toggleAnimation: function () {
-      this.isAnimating = !this.isAnimating;
       if (this.isAnimating) {
+        // 正在播放中 ➔ 暫停
+        this.isAnimating = false;
+        if (this.animId) {
+          var caf = (typeof window !== "undefined" && window.cancelAnimationFrame) ? window.cancelAnimationFrame : function (id) { clearTimeout(id); };
+          caf(this.animId);
+          this.animId = null;
+        }
+        this.updateControlsUI();
+      } else {
+        // 如果已經在結尾 (>= 0.99)，重置回 0.0 從頭演繹
+        if (this.progress >= 0.99) {
+          this.progress = 0.0;
+          this.render();
+        }
+        this.isAnimating = true;
         this.playTone(440, "sine", 0.05);
+        this.updateControlsUI();
         this.stepAnimation();
-      } else if (this.animId) {
-        var caf = (typeof window !== "undefined" && window.cancelAnimationFrame) ? window.cancelAnimationFrame : function (id) { clearTimeout(id); };
-        caf(this.animId);
-        this.animId = null;
       }
     },
 
