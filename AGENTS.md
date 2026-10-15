@@ -50,12 +50,18 @@
     - 守門員（`verify_g2_visuals.py`、`_scratch/verify_3b1b_g2_cdp.js`）100% 全綠 PASS。
   - 🛡️ 雙守門員（`validate_grade2.py`, `validate_grade2_provenance.py`）與無頭 Edge CDP 驗收全綠。
 - [ ] **國小數學 G1、G5、G6 全量生產與六合一大廳建置**（依 `PLAN-ALL-GRADES-MATH-125B-35B.md`）：
-  - [ ] **Grade 1 小一（初生森林）**：20 王國 / 440 題（35B 題幹生活化潤色 + 125B 10以內分合/錢幣/整半點鐘面題庫與守門員）
-  - [ ] **Grade 5 小五（蒼穹天域）**：22 王國 / 484 題（125B 異分母分數加減/乘法/體積容積微步階引擎與守門員）
-  - [ ] **Grade 6 小六（幻滅王座）**：20 王國 / 440 題（125B 質因數/公因倍數/分數小數除法/圓面積/速率/等量公理與守門員）
-  - [ ] **Math RPG Hub 六卡大廳升級**：年級大廳整合 G1~G6 六卡雙向導航
+  - 📚 **課綱先行原則**：依據教育部學習資源平臺（https://priori.moe.gov.tw/resource/material/），所有學科與單元開發必須先查閱 `課綱/` 資料夾之官方 108 課綱手冊，嚴格限定該年級學習表現與紅線。
+  - [x] **Grade 1 小一（初生森林）**：20 王國 / 440 題（子由情境對齊 + 80 隻魔王手寫題 + 湊十拆十鷹架 `vertical_math_explainer_g1.js` + 守門員 `validate_grade1.py` 全綠 PASS + 大廳 Hub `g1/` 雙向導航打通）
+  - [x] **Grade 5 小五（蒼穹天域）**：22 王國 / 484 題（子由情境對齊 + 88 隻魔王手寫題 + 通分體積鷹架 `vertical_math_explainer_g5.js` + 守門員 `validate_grade5.py` 全綠 PASS + 大廳 Hub `g5/` 雙向導航打通）
+  - [x] **Grade 6 小六（幻滅王座）**：20 王國 / 440 題（子由情境對齊 + 80 隻魔王手寫題 + 倒數等量公理鷹架 `vertical_math_explainer_g6.js` + 守門員 `validate_grade6.py` 全綠 PASS + 大廳 Hub `g6/` 雙向導航打通）
+  - [x] **Math RPG Hub 六合一大廳升級**：年級大廳整合 G1~G6 六卡雙向導航，自適應多欄排版與無頭 Edge CDP 驗證全綠 PASS
 - [ ] 實測魔王系統：手機跑一遍，確認鎖定／解鎖／討伐流程
 - [ ] 魔王討伐動畫／音效（目前只有文字狀態顯示）
+
+## 📚 課程開發官方參考資料庫
+- **教育部國民中小學課程與教學資源整合平臺 (PRIORI)**：https://priori.moe.gov.tw/resource/material/
+- **本地課綱庫目錄**：`D:\ANTIGRAVITY\017_小朋友APP\課綱\`（已備齊 `105-1年級數學.pdf`、`105-5年級數學.pdf`、`105-6年級數學.pdf`）
+- **規範**：以後任何學科（數學、英語、自然等）新課程與題庫開發，一律「課綱先行」，先檢索並比對該平台指標，確保難度邊界精準。
 
 ## 📁 資料夾結構
 
